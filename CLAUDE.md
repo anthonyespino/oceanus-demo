@@ -22,7 +22,8 @@ UI sessions consume this registry. Dispositions live in data, not scattered in c
 ## File map
 
 ```
-DATA_MODEL.md            spec of record (§ references in code point here)
+DATA_MODEL.md            spec of record, v2 (§ references in code point here)
+DECISIONS.md             ruling ledger — PM/customer rulings binding on implementation
 KICKOFF_PROMPT.md        session briefs from Anthony
 PROGRESS.md              session log: done / decisions / questions (PM-reviewed)
 scripts/verify.ts        CLI verification harness (npm run verify)

@@ -4,6 +4,7 @@
 // every efficiency judgment is mode-aware (§2).
 
 import { DAY_MS } from './rng';
+import { PORTS, distanceNm } from './fleet';
 import type {
   DerivedVesselMetrics,
   Freshness,
@@ -101,6 +102,46 @@ function slope(values: number[], span: number): number {
   return den ? (num / den) * span : 0;
 }
 
+/**
+ * Fallback mode derivation (v2 §2): mode is a REPORTED telemetry field; this
+ * inference from speed + position + engine load is retained as a validation
+ * cross-check (and the documented fallback for absent/stale status feeds).
+ */
+export function deriveMode(s: VesselSample): Mode {
+  if (s.position.speed_over_ground_kn > 4) return 'TRANSIT';
+  const inPortGeofence = PORTS.some((p) => distanceNm(s.position, p) < 3);
+  if (inPortGeofence) return 'PORT';
+  const mainsActive = s.engines.some((e) => e.role === 'MAIN' && e.running);
+  return mainsActive ? 'STATION' : 'STANDBY';
+}
+
+/**
+ * sustained_deviation (v2 §4): trend-weighted ranking score that sorts the
+ * fleet view — sustained drift outranks momentary spikes.
+ *
+ * Formula (proposed, DECISIONS.md ruling 11): over the last 30 daily deltas,
+ * a recency-weighted mean (linear weights, today counts 30× day-30) times a
+ * persistence factor (fraction of days whose sign agrees with the weighted
+ * mean). A 3-week monotonic drift keeps both terms high; a one-day spike is
+ * diluted ~30:1 by the weights AND halved by persistence (noise days carry
+ * random signs), so it cannot outrank a stable drifter.
+ */
+export function sustainedDeviation(dailyDeltas: number[]): number {
+  const window = dailyDeltas.slice(-30);
+  if (window.length < 2) return 0;
+  let wSum = 0;
+  let num = 0;
+  for (let i = 0; i < window.length; i++) {
+    const w = i + 1;
+    wSum += w;
+    num += w * window[i];
+  }
+  const wmean = num / wSum;
+  if (wmean === 0) return 0;
+  const agreeing = window.filter((d) => Math.sign(d) === Math.sign(wmean)).length;
+  return wmean * (agreeing / window.length);
+}
+
 function reconcile(history: VesselHistory): ReconciliationResult {
   // Tank-side fuel use vs metered flow over the trailing window. Walk back
   // from "now" and stop at any bunkering minute (total level rising), since
@@ -177,6 +218,9 @@ export function computeDerived(history: VesselHistory): DerivedVesselMetrics {
     .filter((s) => s.engines[0].running && s.engines[1].running && Math.abs(s.engines[0].load_pct - s.engines[1].load_pct) < 8)
     .map((s) => s.engines[1].exhaust_gas_temp_f - s.engines[0].exhaust_gas_temp_f);
 
+  // Cross-check: reported mode (status feed) vs fallback derivation, last 24h.
+  const agree = ms.filter((s) => deriveMode(s) === s.mode).length;
+
   const staleness = {} as Record<keyof StreamTimestamps, Freshness>;
   for (const k of Object.keys(history.timestamps) as (keyof StreamTimestamps)[]) {
     staleness[k] = now.t - history.timestamps[k] > STALE_AFTER_MS ? 'STALE' : 'FRESH';
@@ -191,6 +235,8 @@ export function computeDerived(history: VesselHistory): DerivedVesselMetrics {
     baseline_metric: mode === 'TRANSIT' ? 'gal_per_nm' : 'gph',
     trend_30d: Math.round(slope(dailyVals.slice(-30), 30) * 10) / 10,
     trend_90d: Math.round(slope(dailyVals.slice(-90), 90) * 10) / 10,
+    sustained_deviation: Math.round(sustainedDeviation(dailyVals) * 100) / 100,
+    mode_agreement_pct: Math.round((agree / ms.length) * 1000) / 10,
     endurance_hours: Math.round(enduranceH),
     endurance_nm: mode === 'TRANSIT' ? Math.round(enduranceH * now.position.speed_over_ground_kn) : null,
     sparkline_24h: sparkline,

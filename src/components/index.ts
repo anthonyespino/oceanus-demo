@@ -3,6 +3,7 @@
 // rename pass should only touch this file plus mechanical references.
 
 export { FleetView } from './FleetView';
+export { FleetTrend } from './FleetTrend'; // Figma: FleetView/FleetTrend
 export { VesselCard } from './VesselCard';
 export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';

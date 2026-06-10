@@ -31,6 +31,24 @@ export function resetFleet(): void {
   runtimes = null;
 }
 
+/**
+ * Whole-fleet efficiency trajectory over the year (v2 §8 fleet trend strip):
+ * per-day mean of every vessel's daily efficiency_delta.
+ */
+export function fleetDailyTrend(states: VesselState[]): { day: number; delta: number }[] {
+  const byDay = new Map<number, number[]>();
+  for (const v of states) {
+    for (const { day, delta } of v.derived.daily_delta_1y) {
+      let arr = byDay.get(day);
+      if (!arr) byDay.set(day, (arr = []));
+      arr.push(delta);
+    }
+  }
+  return [...byDay.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([day, arr]) => ({ day, delta: Math.round((arr.reduce((x, y) => x + y, 0) / arr.length) * 100) / 100 }));
+}
+
 function toState(rt: VesselRuntime): VesselState {
   const derived = computeDerived(rt.history);
   return {

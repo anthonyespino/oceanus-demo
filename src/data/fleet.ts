@@ -1,5 +1,6 @@
-// Static fleet definition: 16 fictional vessels, Gulf of Mexico operations.
-// ~11 smaller 150-170 ft coastal class, 5 larger 205-280 ft OSV class.
+// Static fleet definition: 15 fictional vessels, Gulf of Mexico operations
+// (DECISIONS.md ruling 9, per customer answer: fleet is 15).
+// 10 smaller 150-170 ft coastal class, 5 larger 205-280 ft OSV class.
 
 import type { VesselStatic } from './types';
 
@@ -86,7 +87,7 @@ export const VESSELS: VesselStatic[] = [
   vessel('v03', 'Marlin Ridge', 220, OSV, ['Galveston, TX', 'Freeport, TX']),
   vessel('v04', 'Frigate Bird', 280, OSV, ['Port Fourchon, LA', 'Morgan City, LA']),
   vessel('v05', 'Albatross', 205, OSV, ['Mobile, AL', 'Pascagoula, MS']),
-  // ---- 150-170 ft coastal class (11) ----
+  // ---- 150-170 ft coastal class (10) ----
   vessel('v06', 'Pelican Star', 150, COASTAL, ['Port Fourchon, LA']),
   vessel('v07', 'Bayou Runner', 155, COASTAL, ['Morgan City, LA', 'Port Fourchon, LA']),
   vessel('v08', 'Sandpiper', 150, COASTAL, ['Galveston, TX']),
@@ -103,7 +104,6 @@ export const VESSELS: VesselStatic[] = [
   }),
   vessel('v14', 'Osprey Point', 160, COASTAL, ['Pascagoula, MS', 'Mobile, AL']),
   vessel('v15', 'Calcasieu', 150, COASTAL, ['Port Fourchon, LA', 'Venice, LA']),
-  vessel('v16', 'Petrel', 170, COASTAL, ['Corpus Christi, TX']),
 ];
 
 // Crew name pools (fictional).

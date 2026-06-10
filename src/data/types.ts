@@ -65,7 +65,7 @@ export interface CrewMember {
 /** One simulated timestep for a vessel (hourly for the year, 1-min for last 24h). */
 export interface VesselSample {
   t: number; // epoch ms
-  mode: Mode;
+  mode: Mode; // REPORTED via the §3.4 vessel status feed (v2); derivation is a cross-check only
   engines: EngineSample[];
   tanks: TankSample[];
   flow_gps: number; // metered, vessel total to engines
@@ -79,6 +79,7 @@ export interface StreamTimestamps {
   engines: number;
   tanks: number;
   flow: number;
+  status: number; // §3.4 vessel status feed (reported mode), v2
   weather: number;
   crew: number;
   position: number;
@@ -120,11 +121,13 @@ export interface ReconciliationResult {
 export interface DerivedVesselMetrics {
   mode: Mode;
   burn_rate_gph: number;
-  efficiency_delta_pct: number; // current vs mode_baseline
+  efficiency_delta_pct: number; // current vs mode_baseline (context number in v2)
   baseline_value: number; // the mode_baseline the delta is judged against
   baseline_metric: 'gal_per_nm' | 'gph';
-  trend_30d: number; // efficiency_delta slope, % per 30 days
+  trend_30d: number; // efficiency_delta slope, % per 30 days — primary fleet signal (v2)
   trend_90d: number;
+  sustained_deviation: number; // trend-weighted ranking score (v2 §4); sorts the fleet view
+  mode_agreement_pct: number; // reported mode vs fallback derivation, last 24h (v2 §2 cross-check)
   endurance_hours: number;
   endurance_nm: number | null; // null when not underway
   sparkline_24h: number[]; // hourly efficiency_delta, fleet-card sparkline data

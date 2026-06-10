@@ -17,7 +17,7 @@ export function AlertRail({ fleet }: { fleet: VesselState[] }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }} aria-label="active alerts">
-      <div style={gb.label}>active alerts — fleet</div>
+      <div style={gb.label}>active alerts — context strip (v2: annotates the trend board, does not organize it)</div>
       {active.length === 0 ? (
         <div style={gb.dim}>no active warnings or cautions</div>
       ) : (

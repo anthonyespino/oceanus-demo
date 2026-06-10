@@ -1,6 +1,8 @@
 'use client';
-// One vessel row on the fleet view. Fleet-level dispositions decide every
-// field: VISIBLE renders flat, CONTEXTUAL goes behind one grouped reveal.
+// One vessel row on the trend board (v2): the 30/90d trend is the primary
+// graphic; current efficiency_delta is a context number. The 24h sparkline
+// demoted to CONTEXTUAL (ruling 12, pending Anthony's registry ruling).
+// sustained_deviation is HIDDEN — it's expressed as rank order, not numerals.
 
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
@@ -27,8 +29,17 @@ export function VesselCard({ vessel }: { vessel: VesselState }) {
       <Field level="fleet" field="mode">
         <span style={gb.boxTight}>{d.mode}</span>
       </Field>
+      {/* Primary graphic (v2): 90d daily-delta trend + slope numbers. */}
+      <Field level="fleet" field="trend_90d">
+        <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={180} height={28} />
+      </Field>
+      <Field level="fleet" field="trend_30d">
+        <span style={{ fontWeight: 700, minWidth: 110, display: 'inline-block' }}>
+          30d {fmtPct(d.trend_30d)} / 90d {fmtPct(d.trend_90d)}
+        </span>
+      </Field>
       <Field level="fleet" field="efficiency_delta">
-        <span style={{ fontWeight: 700, minWidth: 56, display: 'inline-block' }}>{fmtPct(d.efficiency_delta_pct)}</span>
+        <span style={{ ...gb.dim, minWidth: 70, display: 'inline-block' }}>now {fmtPct(d.efficiency_delta_pct)}</span>
       </Field>
       <Field level="fleet" field="alert_badges">
         <span style={{ minWidth: 80, display: 'inline-block' }}>{badge ? `[${badge}]` : ''}</span>
@@ -36,7 +47,7 @@ export function VesselCard({ vessel }: { vessel: VesselState }) {
       <Field level="fleet" field="endurance_hours">
         <span style={gb.dim}>endurance {d.endurance_hours} h</span>
       </Field>
-      <Field level="fleet" field="efficiency_sparkline_24h">
+      <Field level="fleet" field="efficiency_sparkline_24h" label="24h">
         <Sparkline values={d.sparkline_24h} />
       </Field>
       {/* Grouped reveal: one Contextual per card, not four hover targets. */}

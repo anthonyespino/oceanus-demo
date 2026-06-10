@@ -14,6 +14,7 @@
 
 import { createHash } from 'node:crypto';
 import { getFleet, advanceFleet, resetFleet } from '../src/data/fleetState';
+import { sustainedDeviation } from '../src/data/derived';
 import { worstLevel } from '../src/data/alerts';
 import { ANOMALY_START } from '../src/data/generator';
 import { DEMO_EPOCH, DAY_MS } from '../src/data/rng';
@@ -33,17 +34,17 @@ console.log(`Oceanus data layer verification — demo epoch ${new Date(DEMO_EPOC
 console.log('Generating fleet…');
 const t0 = Date.now();
 const fleet = getFleet();
-console.log(`16 vessels, 1y hourly + 24h 1-min, in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
+console.log(`15 vessels (v2), 1y hourly + 24h 1-min, in ${((Date.now() - t0) / 1000).toFixed(1)}s\n`);
 
 // ----------------------------------------------------------- 1. fleet table
-console.log('== Fleet table (ranked by |efficiency_delta|) ==');
-const ranked = [...fleet].sort((a, b) => Math.abs(b.derived.efficiency_delta_pct) - Math.abs(a.derived.efficiency_delta_pct));
-console.log('  vessel         mode     eff_delta  burn_gph  endur_h  recon     alerts');
+console.log('== Fleet table (trend board: ranked by |sustained_deviation|, v2) ==');
+const ranked = [...fleet].sort((a, b) => Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation));
+console.log('  vessel         mode     sust_dev  trend30d  eff_delta  endur_h  recon     alerts');
 for (const v of ranked) {
   const d = v.derived;
   const alerts = v.alerts.map((a) => `${a.level}:${a.code}`).join(', ') || '—';
   console.log(
-    `  ${v.static.name.padEnd(14)} ${d.mode.padEnd(8)} ${pct(d.efficiency_delta_pct).padStart(7)}   ${fmt(d.burn_rate_gph, 7)}  ${fmt(d.endurance_hours, 7)}  ${d.reconciliation.status.padEnd(8)}  ${alerts}`,
+    `  ${v.static.name.padEnd(14)} ${d.mode.padEnd(8)} ${pct(d.sustained_deviation).padStart(7)}  ${pct(d.trend_30d).padStart(7)}  ${pct(d.efficiency_delta_pct).padStart(7)}  ${fmt(d.endurance_hours, 7)}  ${d.reconciliation.status.padEnd(8)}  ${alerts}`,
   );
 }
 
@@ -52,6 +53,7 @@ const anomaly = fleet.find((v) => v.static.scripted.anomaly)!;
 const others = fleet.filter((v) => v !== anomaly);
 
 console.log('\n== Checks: fleet ==');
+check(fleet.length === 15, `fleet is 15 vessels (v2, ruling 9) — got ${fleet.length}`);
 check(cautionVessels.length === 1 && cautionVessels[0] === anomaly, `exactly one CAUTION-level vessel, and it is ${anomaly.static.name}`);
 check(fleet.every((v) => v.alerts.every((a) => a.level !== 'WARNING')), 'no WARNING-level alerts in the nominal fleet');
 const underway = others.filter((v) => v.derived.mode === 'TRANSIT' || v.derived.mode === 'STATION');
@@ -61,6 +63,30 @@ check(spread.every((x) => Math.abs(x) < 8), `other underway deltas within ±8% (
 check(anomaly.derived.efficiency_delta_pct >= 11 && anomaly.derived.efficiency_delta_pct <= 17, `${anomaly.static.name} efficiency_delta ≈ +14% (actual ${pct(anomaly.derived.efficiency_delta_pct)})`);
 check(anomaly.derived.mode === 'TRANSIT', `${anomaly.static.name} is in TRANSIT at demo epoch (mode: ${anomaly.derived.mode})`);
 check(fleet.every((v) => v.derived.sparkline_24h.length === 24), 'every vessel carries 24h sparkline data');
+
+// -------------------------------------------- sustained_deviation (v2 §4)
+console.log('\n== Checks: sustained_deviation (trend board ranking, rulings 11-12) ==');
+check(ranked[0] === anomaly, `${anomaly.static.name}'s 3-week drift ranks #1 by |sustained_deviation| (${pct(anomaly.derived.sustained_deviation)})`);
+check(
+  Math.abs(anomaly.derived.sustained_deviation) > 2 * Math.abs(ranked[1].derived.sustained_deviation),
+  `clear separation: #1 ${pct(ranked[0].derived.sustained_deviation)} vs #2 ${ranked[1].static.name} ${pct(ranked[1].derived.sustained_deviation)}`,
+);
+// Formula requirement: a one-day spike must NOT outrank stable-but-drifting
+// vessels. Synthetic series through the same scoring function.
+const drifter = Array.from({ length: 30 }, (_, i) => (i / 29) * 5); // steady 0→+5% drift
+const spiky = Array.from({ length: 30 }, (_, i) => (i === 29 ? 25 : (i % 2 ? 0.4 : -0.4))); // noise + one-day +25% spike
+check(
+  Math.abs(sustainedDeviation(drifter)) > Math.abs(sustainedDeviation(spiky)),
+  `one-day +25% spike (score ${sustainedDeviation(spiky).toFixed(2)}) does not outrank steady +5% drift (score ${sustainedDeviation(drifter).toFixed(2)})`,
+);
+
+// ------------------------------------- reported mode vs derivation (v2 §2)
+console.log('\n== Checks: reported mode vs fallback derivation (ruling 10) ==');
+const worstAgreement = Math.min(...fleet.map((v) => v.derived.mode_agreement_pct));
+check(
+  fleet.every((v) => v.derived.mode_agreement_pct >= 99.5),
+  `derived mode agrees with reported mode ≥99.5% over 24h for all vessels (worst ${worstAgreement}%) — no scripted status staleness exists to exempt`,
+);
 
 // ------------------------------------------------- 2. anomaly vessel story
 console.log(`\n== Anomaly story: ${anomaly.static.name} (§9) ==`);
@@ -83,7 +109,7 @@ for (let w = -1; w < 3; w++) {
 
 console.log('\n== Checks: anomaly (machine bucket IN, other three buckets OUT) ==');
 check(weekly[0].egtGap < 10, `baseline week shows no EGT gap (${weekly[0].egtGap.toFixed(0)}°F)`);
-check(weekly[3].egtGap >= 45 && weekly[3].egtGap <= 75, `EGT gap reaches ≈ +60°F by week 3 (${weekly[3].egtGap.toFixed(0)}°F)`);
+check(weekly[3].egtGap >= 45 && weekly[3].egtGap <= 65, `EGT gap reaches ≈ 50-60°F by week 3 (v2 §9 wording, ruling 8): ${weekly[3].egtGap.toFixed(0)}°F`);
 check(weekly[1].egtGap < weekly[2].egtGap && weekly[2].egtGap < weekly[3].egtGap, 'EGT gap rises monotonically across the 3 weeks');
 check(weekly[3].fuelGap > 15, `Engine 2 fuel rate diverged from twin (${pct(weekly[3].fuelGap)} at matched load)`);
 check(anomaly.alerts.some((a) => a.code === 'EFF_DELTA'), 'CAUTION EFF_DELTA active');

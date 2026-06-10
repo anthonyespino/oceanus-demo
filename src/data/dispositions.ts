@@ -25,11 +25,15 @@ export interface DispositionEntry {
 export const DISPOSITIONS: DispositionEntry[] = [
   // ------------------------------------------------------ fleet view level --
   { field: 'vessel_name', level: 'fleet', disposition: 'VISIBLE' },
-  { field: 'mode', level: 'fleet', disposition: 'VISIBLE', note: 'mode chip on card/row' },
-  { field: 'efficiency_delta', level: 'fleet', disposition: 'VISIBLE', note: 'the ranking number (§4)' },
-  { field: 'alert_badges', level: 'fleet', disposition: 'VISIBLE', note: 'worst active level' },
+  { field: 'mode', level: 'fleet', disposition: 'VISIBLE', note: 'mode chip on card/row; reported via §3.4 status feed (v2)' },
+  { field: 'efficiency_delta', level: 'fleet', disposition: 'VISIBLE', note: 'context number in v2; trend is the primary signal' },
+  { field: 'sustained_deviation', level: 'fleet', disposition: 'HIDDEN', note: 'sort key (v2 §4) — expressed through rank order, not numerals (ruling 11)' },
+  { field: 'trend_30d', level: 'fleet', disposition: 'VISIBLE', note: 'primary fleet-level signal (v2, ruling 13)' },
+  { field: 'trend_90d', level: 'fleet', disposition: 'VISIBLE', note: 'primary per-vessel graphic incl. 90d trend sparkline (v2, ruling 13)' },
+  { field: 'fleet_trend_1y', level: 'fleet', disposition: 'VISIBLE', note: 'whole-fleet trajectory strip (v2 §8, ruling 12)' },
+  { field: 'alert_badges', level: 'fleet', disposition: 'VISIBLE', note: 'worst active level; context layer in v2' },
   { field: 'endurance_hours', level: 'fleet', disposition: 'VISIBLE' },
-  { field: 'efficiency_sparkline_24h', level: 'fleet', disposition: 'VISIBLE' },
+  { field: 'efficiency_sparkline_24h', level: 'fleet', disposition: 'CONTEXTUAL', note: 'demoted from primary graphic (v2, ruling 12) — pending Anthony registry ruling' },
   { field: 'position', level: 'fleet', disposition: 'VISIBLE', note: 'as map marker, not numerals' },
   { field: 'next_port_eta', level: 'fleet', disposition: 'CONTEXTUAL' },
   { field: 'crew_summary', level: 'fleet', disposition: 'CONTEXTUAL', note: 'Master name, days since crew change' },
@@ -43,7 +47,9 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'fleet_total_daily_spend', level: 'fleet', disposition: 'UNDEFINED', note: "CFO-flavored; may not belong in this role's view — Anthony to call" },
 
   // ----------------------------------------------------- vessel view level --
-  { field: 'mode', level: 'vessel', disposition: 'VISIBLE', note: 'plus 24h mode timeline' },
+  { field: 'mode', level: 'vessel', disposition: 'VISIBLE', note: 'plus 24h mode timeline; reported via §3.4 status feed (v2)' },
+  { field: 'position', level: 'vessel', disposition: 'VISIBLE', note: 'header summary, relative reference (v2 §8, ruling 6)' },
+  { field: 'endurance_hours', level: 'vessel', disposition: 'VISIBLE', note: 'header (§8, ruling 6)' },
   { field: 'efficiency_delta_vs_mode_baseline', level: 'vessel', disposition: 'VISIBLE' },
   { field: 'trend_30d', level: 'vessel', disposition: 'VISIBLE' },
   { field: 'engine.role', level: 'vessel', disposition: 'VISIBLE' },

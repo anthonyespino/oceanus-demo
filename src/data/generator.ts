@@ -323,6 +323,8 @@ export function simulateVessel(v: VesselStatic): VesselRuntime {
       engines: now,
       tanks: now,
       flow: now,
+      status: now, // §3.4 vessel status feed (reported mode), v2
+
       // Scripted satellite drop: weather feed last heard 45 min ago → STALE.
       weather: v.scripted.stale_weather ? now - 45 * MIN_MS : now,
       crew: now,
@@ -348,7 +350,7 @@ export function advanceMinutes(rt: VesselRuntime, n: number): void {
   }
   const now = rt.state.t;
   const ts = rt.history.timestamps;
-  ts.engines = ts.tanks = ts.flow = ts.crew = ts.position = now;
+  ts.engines = ts.tanks = ts.flow = ts.status = ts.crew = ts.position = now;
   ts.weather = rt.v.scripted.stale_weather ? ts.weather : now;
   rt.history.nextPortCalls = nextPortCalls(rt.legs, now);
 }
