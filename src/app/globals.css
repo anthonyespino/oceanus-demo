@@ -8,3 +8,40 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 14px;
 }
+
+/* LAYOUT PROBE motion budget (branch-only). Two toggleable variants, one
+   item max, NO continuous blink. Reduced-motion users get none of it. */
+.probe-ripple {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border: 2px solid #888;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: probe-ripple 900ms ease-out 1 forwards; /* one-time, steady after */
+}
+@keyframes probe-ripple {
+  from { transform: scale(0.4); opacity: 0.9; }
+  to { transform: scale(2.4); opacity: 0; }
+}
+.probe-breathe {
+  animation: probe-breathe 2.5s ease-in-out infinite; /* slow breathe, not blink */
+}
+.probe-breathe:hover,
+.probe-breathe:focus {
+  animation-play-state: paused; /* stops on focus */
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .probe-ripple,
+  .probe-breathe {
+    animation: none !important;
+  }
+}
+@keyframes probe-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}

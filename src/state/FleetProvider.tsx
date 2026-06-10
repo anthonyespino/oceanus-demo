@@ -9,12 +9,18 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { advanceFleet, getFleet } from '../data/fleetState';
+import { vesselStatus } from '../data/alerts';
 import type { VesselState } from '../data/types';
 
 export type TickSpeed = 1 | 60;
-// Layout-probe toggles (branch-only): tile density and status-color treatment.
+// Layout-probe toggles (branch-only): tile density, status-color treatment,
+// motion variant (addendum item 7 — one item max, both testable).
 export type TileDensity = 'minimal' | 'standard';
 export type ColorTreatment = 'automotive' | 'dark-cockpit';
+export type MotionVariant = 'off' | 'ripple' | 'breathe';
+// (a) board-first: trend board top, large chart below; (b) chart-band:
+// shallow full-width chart strip on top, board directly below.
+export type LayoutVariant = 'board-first' | 'chart-band';
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -27,6 +33,12 @@ interface FleetContextValue {
   setDensity: (d: TileDensity) => void;
   treatment: ColorTreatment;
   setTreatment: (t: ColorTreatment) => void;
+  motion: MotionVariant;
+  setMotion: (m: MotionVariant) => void;
+  layoutVariant: LayoutVariant;
+  setLayoutVariant: (l: LayoutVariant) => void;
+  /** vessel id → epoch ms of its last status threshold-cross during live mode */
+  crossings: Record<string, number>;
 }
 
 const FleetContext = createContext<FleetContextValue | null>(null);
@@ -37,6 +49,10 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [speed, setSpeed] = useState<TickSpeed>(60);
   const [density, setDensity] = useState<TileDensity>('standard');
   const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
+  const [motion, setMotion] = useState<MotionVariant>('off');
+  const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
+  const [crossings, setCrossings] = useState<Record<string, number>>({});
+  const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);
 
   useEffect(() => {
@@ -50,7 +66,20 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!live || !fleet) return;
     // 1x: one 1-min tick per real minute; 60x: one tick per second.
-    const interval = setInterval(() => setFleet(advanceFleet(1)), speed === 60 ? 1000 : 60_000);
+    const interval = setInterval(() => {
+      const next = advanceFleet(1);
+      // Threshold-cross detection for the ripple variant: a crossing is a
+      // change in vesselStatus (same constants as alerts/color/tiers).
+      const fired: Record<string, number> = {};
+      for (const v of next) {
+        const s = vesselStatus(v.alerts);
+        const prev = prevStatus.current.get(v.static.id);
+        if (prev !== undefined && prev !== s) fired[v.static.id] = Date.now();
+        prevStatus.current.set(v.static.id, s);
+      }
+      if (Object.keys(fired).length) setCrossings((c) => ({ ...c, ...fired }));
+      setFleet(next);
+    }, speed === 60 ? 1000 : 60_000);
     return () => clearInterval(interval);
   }, [live, speed, fleet !== null]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -58,7 +87,12 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <FleetContext.Provider
-      value={{ fleet, simTime, live, speed, setLive, setSpeed, density, setDensity, treatment, setTreatment }}
+      value={{
+        fleet, simTime, live, speed, setLive, setSpeed,
+        density, setDensity, treatment, setTreatment,
+        motion, setMotion, crossings,
+        layoutVariant, setLayoutVariant,
+      }}
     >
       {children}
     </FleetContext.Provider>

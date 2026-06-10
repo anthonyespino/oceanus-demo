@@ -1,0 +1,98 @@
+'use client';
+// LAYOUT PROBE: shared nautical chart core (hand-rolled SVG, no libraries).
+// Draws the instrument furniture — dark water, approximate Gulf coastline,
+// graticule with frame ticks/labels, compass rose, scale bar — for any
+// lat/lon frame. FleetMap (full Gulf) and InspectorChart (zoomed) compose it;
+// markers come in via the children render prop with the frame's projectors.
+
+export interface ChartFrame {
+  latMin: number;
+  latMax: number;
+  lonMin: number;
+  lonMax: number;
+}
+
+export const GULF_FRAME: ChartFrame = { latMin: 25.5, latMax: 31.2, lonMin: -98.2, lonMax: -86.8 };
+
+export const CHART_INK = '#b8b8b8';
+const GRID = '#5a5a5a';
+
+// Approximate Gulf coastline [lon, lat], SW Texas → Mississippi birdfoot →
+// Florida panhandle; closure corners sit far outside any sensible frame so
+// the land polygon stays valid when zoomed.
+const COAST: [number, number][] = [
+  [-97.55, 25.5], [-97.3, 26.3], [-97.25, 27.0], [-97.3, 27.8], [-96.9, 28.15],
+  [-96.2, 28.6], [-95.3, 28.95], [-94.7, 29.35], [-93.8, 29.7], [-92.8, 29.55],
+  [-91.8, 29.5], [-91.2, 29.25], [-90.4, 29.05], [-89.9, 29.25], [-89.55, 29.3],
+  [-89.2, 29.12], [-88.95, 28.95], [-89.25, 29.35], [-89.45, 29.75], [-89.35, 30.05],
+  [-88.95, 30.35], [-88.5, 30.32], [-88.05, 30.55], [-87.55, 30.28], [-86.8, 30.4],
+];
+const LAND: [number, number][] = [[-100, 24.5], ...COAST, [-85.5, 30.45], [-85.5, 33], [-100, 33]];
+
+function gridStep(span: number): number {
+  return span >= 8 ? 2 : span >= 3 ? 1 : 0.5;
+}
+function ticks(min: number, max: number, step: number): number[] {
+  const out: number[] = [];
+  for (let v = Math.ceil(min / step) * step; v <= max; v += step) out.push(Math.round(v * 100) / 100);
+  return out;
+}
+
+export function NauticalChart({
+  frame,
+  width,
+  height,
+  children,
+}: {
+  frame: ChartFrame;
+  width: number;
+  height: number;
+  children: (px: (lon: number) => number, py: (lat: number) => number) => React.ReactNode;
+}) {
+  const px = (lon: number) => ((lon - frame.lonMin) / (frame.lonMax - frame.lonMin)) * width;
+  const py = (lat: number) => ((frame.latMax - lat) / (frame.latMax - frame.latMin)) * height;
+
+  const landD = `M ${LAND.map(([lon, lat]) => `${px(lon).toFixed(1)} ${py(lat).toFixed(1)}`).join(' L ')} Z`;
+  const lonStep = gridStep(frame.lonMax - frame.lonMin);
+  const latStep = gridStep((frame.latMax - frame.latMin) * 2) / 2;
+  const midLat = (frame.latMin + frame.latMax) / 2;
+  const pxPerNm = width / ((frame.lonMax - frame.lonMin) * 60 * Math.cos((midLat * Math.PI) / 180));
+  const barNm = [200, 100, 50, 20, 10].find((nm) => nm * pxPerNm <= width * 0.3) ?? 10;
+
+  return (
+    <svg width={width} height={height} style={{ display: 'block', background: '#3f3f3f' }}>
+      <path d={landD} fill="#6e6e6e" stroke="#9a9a9a" strokeWidth={1} />
+      {ticks(frame.lonMin, frame.lonMax, lonStep).map((lon) => (
+        <g key={`lon${lon}`}>
+          <line x1={px(lon)} y1={0} x2={px(lon)} y2={height} stroke={GRID} strokeWidth={0.5} />
+          <line x1={px(lon)} y1={0} x2={px(lon)} y2={6} stroke={CHART_INK} strokeWidth={1.5} />
+          <line x1={px(lon)} y1={height - 6} x2={px(lon)} y2={height} stroke={CHART_INK} strokeWidth={1.5} />
+          <text x={px(lon) + 3} y={14} fontSize={9} fill={CHART_INK}>{Math.abs(lon)}°W</text>
+        </g>
+      ))}
+      {ticks(frame.latMin, frame.latMax, latStep).map((lat) => (
+        <g key={`lat${lat}`}>
+          <line x1={0} y1={py(lat)} x2={width} y2={py(lat)} stroke={GRID} strokeWidth={0.5} />
+          <line x1={0} y1={py(lat)} x2={6} y2={py(lat)} stroke={CHART_INK} strokeWidth={1.5} />
+          <line x1={width - 6} y1={py(lat)} x2={width} y2={py(lat)} stroke={CHART_INK} strokeWidth={1.5} />
+          <text x={9} y={py(lat) - 3} fontSize={9} fill={CHART_INK}>{lat}°N</text>
+        </g>
+      ))}
+      <g transform={`translate(${width - 46}, 52)`}>
+        <circle r={16} fill="none" stroke={CHART_INK} strokeWidth={1} />
+        <line x1={0} y1={13} x2={0} y2={-13} stroke={CHART_INK} strokeWidth={1} />
+        <line x1={-13} y1={0} x2={13} y2={0} stroke={CHART_INK} strokeWidth={0.5} />
+        <polygon points="-3.5,-7 0,-16 3.5,-7" fill={CHART_INK} />
+        <text x={0} y={-21} fontSize={10} fill={CHART_INK} textAnchor="middle">N</text>
+      </g>
+      <g transform={`translate(20, ${height - 18})`}>
+        <line x1={0} y1={0} x2={barNm * pxPerNm} y2={0} stroke={CHART_INK} strokeWidth={1.5} />
+        <line x1={0} y1={-4} x2={0} y2={4} stroke={CHART_INK} strokeWidth={1.5} />
+        <line x1={(barNm / 2) * pxPerNm} y1={-3} x2={(barNm / 2) * pxPerNm} y2={3} stroke={CHART_INK} strokeWidth={1} />
+        <line x1={barNm * pxPerNm} y1={-4} x2={barNm * pxPerNm} y2={4} stroke={CHART_INK} strokeWidth={1.5} />
+        <text x={barNm * pxPerNm + 6} y={3} fontSize={9} fill={CHART_INK}>{barNm} nm</text>
+      </g>
+      {children(px, py)}
+    </svg>
+  );
+}

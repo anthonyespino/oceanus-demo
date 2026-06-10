@@ -1,3 +1,44 @@
+# PROGRESS — 2026-06-10 (Session 6: LAYOUT PROBE round 3 — branch `layout-probe`, no merge)
+
+## Done
+
+- **Chart promoted** (item 1; no per-tile maps existed to remove): SVG refactored into a shared `NauticalChart` core (water/coast/graticule/compass/scale, all recomputed from any lat/lon frame) composed by `FleetMap` and the new `InspectorChart`.
+- **Inspector chart** (item 2): zoomed to focus vessel — frame fitted to its 24h trail + next port with floors so PORT vessels aren't absurdly zoomed; dashed route trail, dashed bearing line to next-port marker, other 14 vessels as faint ghost dots (dimmed, never removed).
+- **Discrete tile tiers** (item 3): 1x nominal, 2x watch/degraded, promotion via the SAME `vesselStatus()` as color/badges — no separate thresholds. 2x spans 2×2 grid cells and spends the room on a 30d delta chart with the zero/baseline line. Grid uses default flow (NOT dense) — rank order + tier promotion are the only reflow. One surface, URL state untouched (item 4).
+- **Addendum 5 — fit-to-fleet viewport**: `fitFleetFrame()` = fleet bounding box + padding + minimum spans; graticule steps and scale-bar length recompute from the frame (this overruled round 1's fixed-frame decision — markers may now shift slightly as the frame refits during live mode; flagged below).
+- **Addendum 6 — alignment system**: new `DataRow` primitive (label left-ranged, numeral right-ranged, tabular); applied to tile data clusters, EngineCard state/load/fuel, tank cells. Composition (tiles, chart, page) stays centered. Prose sentences (recon explanation, weather summary line, crew tenure) are not label/value clusters and stay prose — if "no exceptions" includes those, say so and they become rows.
+- **Addendum 7 — motion budget**: header toggle off/ripple/breathe. (a) one-time ripple ping on status threshold-cross during live mode (keyed to the crossing, runs once, steady after); (b) 2.5s opacity breathe on WARNING-only chart markers, paused on hover/focus. `prefers-reduced-motion` disables both. NO continuous blink anywhere.
+- **Addendum 8 — layout variant toggle**: (a) board-first (trend board top, large anchor chart below — default) vs (b) chart-band (shallow 240px full-width fit-to-fleet band on top, board directly below).
+- verify/lint/build green; routes smoke-tested.
+
+## Pass/fail: the 2-second Meridian test
+
+- **By size alone (treatment B, greyscale, no reading): PASSES.** Meridian is the fleet's only watch/degraded vessel, hence the only 2x tile — a 2×2 silhouette in a field of 1x squares is pre-attentive; no reading needed.
+- **Layout variant verdict:** **(a) board-first survives cleanly** — the 2x tile sits top-left directly under the header. **(b) chart-band passes marginally** — the band + alert strip push the board ~400px down a laptop viewport; the 2x tile's top edge and width still read above the fold, and the band's amber marker gives a second cue, but the size cue is partially cropped at standard density. The round-3-as-built intermediate (560px anchor chart on top, before the addendum toggle) FAILED the test — it shoved the entire board below the fold; that failure is why the toggle exists and why (a) is the default.
+
+## Decisions Made (ALL REVERSIBLE — Anthony overrules from Figma)
+
+- REVERSIBLE: tier promotion = status ≠ nominal (watch AND degraded both go 2x) — alternative: 2x for degraded only, 1.5x never (discrete tiers per brief).
+- REVERSIBLE: 2x tiles suppress the 90d micro-sparkline (the 30d baseline chart replaces it) — keeping both double-charts one tile.
+- REVERSIBLE: fit-to-fleet padding (0.45° lat / 0.7° lon, extra east for name labels) and minimum window (2°×4°).
+- REVERSIBLE: inspector chart sits at the top of the context (right) column, 480×300 — could go full-width under the header if spatial context should lead.
+- REVERSIBLE: ripple fires on ANY status change (including improvements, e.g. watch→nominal) — could restrict to escalations only.
+- REVERSIBLE: breathe paused via hover/focus on the marker itself — "stops on focus" could alternatively mean the inspector's focus vessel.
+- NOTE: breathe is dormant in the scripted fleet (verify asserts zero WARNINGs) — mechanism is testable by hover-inspection or a future scripted WARNING; flag if a demo-visible WARNING should be scripted.
+- NOTE: live-mode frame refits (fit-to-fleet) make chart markers drift slightly as the bounding box changes — if that reads as jitter during the demo, the frame can quantize to 0.5° steps.
+
+## Questions / Objections for Anthony
+
+1. Layout variant: confirm (a) board-first as the keeper, or tune the band height in (b) until it passes cleanly.
+2. Does "labels left / numerals right, no exceptions" extend to prose lines (recon sentence, weather summary)? Convertible, but they stop reading as sentences.
+3. Motion: ripple currently undemonstrable without a live-mode threshold cross (none occur in the scripted window) — script a synthetic crossing for testing, or judge from the mechanism?
+
+## Next Session Plan
+
+- Anthony picks variants (layout, motion, green experiment, density) → rulings → reskin session starts from the winning combination.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 5: LAYOUT PROBE round 2 — branch `layout-probe`, no merge)
 
 Direction approved; three revisions applied on the probe branch.

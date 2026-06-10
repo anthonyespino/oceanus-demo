@@ -4,6 +4,7 @@
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
+import { DataRow } from './DataRow';
 import { gb } from './gb';
 
 export function TankSchematic({ vessel }: { vessel: VesselState }) {
@@ -19,10 +20,10 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         </div>
       </Field>
       <Field level="vessel" field="tank.level_pct">
-        <div style={{ fontWeight: 700 }}>{t.level_pct}%</div>
+        <DataRow label="level" value={<strong>{t.level_pct}%</strong>} />
       </Field>
       <Field level="vessel" field="tank.level_gal">
-        <div>{t.level_gal.toLocaleString()} gal</div>
+        <DataRow label="volume" value={`${t.level_gal.toLocaleString()} gal`} />
       </Field>
       <Field level="vessel" field="tank.capacity_gal" label="capacity">
         <span>{t.capacity_gal.toLocaleString()} gal</span>

@@ -7,6 +7,7 @@
 import type { EngineSample } from '../data/types';
 import { getDisposition } from './Field';
 import { Contextual } from './Contextual';
+import { DataRow } from './DataRow';
 import { gb } from './gb';
 
 const SENSOR_ROWS: { field: string; label: string; value: (e: EngineSample) => string }[] = [
@@ -27,9 +28,10 @@ export function EngineCard({ engine, title }: { engine: EngineSample; title: str
       <div style={gb.label}>
         {title} ({engine.role})
       </div>
-      <div>{engine.running ? 'RUNNING' : 'STOPPED'}</div>
-      <div>load {engine.load_pct}%</div>
-      <div>fuel {engine.fuel_rate_gph} gph</div>
+      {/* data cluster: labels left-ranged, numerals right-ranged (probe item 6) */}
+      <DataRow label="state" value={engine.running ? 'RUNNING' : 'STOPPED'} />
+      <DataRow label="load" value={`${engine.load_pct}%`} />
+      <DataRow label="fuel" value={`${engine.fuel_rate_gph} gph`} />
       <div style={{ marginTop: 4 }}>
         <Contextual label="sensors">
           <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>

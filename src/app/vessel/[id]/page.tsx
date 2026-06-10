@@ -26,7 +26,7 @@ export default function VesselPage({ params }: { params: Promise<{ id: string }>
       <AlertRail fleet={fleet} />
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
         <FleetRail fleet={fleet} selectedId={id} treatment={treatment} />
-        <VesselInspector vessel={vessel} />
+        <VesselInspector vessel={vessel} fleet={fleet} treatment={treatment} />
       </div>
     </main>
   );

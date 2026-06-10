@@ -6,6 +6,7 @@
 // is testing.
 
 import type { VesselState } from '../data/types';
+import { vesselStatus } from '../data/alerts';
 import { useFleet } from '../state/FleetProvider';
 import { AlertRail } from './AlertRail';
 import { FleetTrend } from './FleetTrend';
@@ -16,7 +17,10 @@ import { gb } from './gb';
 import { NEUTRAL, RADIUS } from './probeTokens';
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const { density, setDensity, treatment, setTreatment } = useFleet();
+  const {
+    density, setDensity, treatment, setTreatment,
+    motion, setMotion, layoutVariant, setLayoutVariant,
+  } = useFleet();
 
   const ranked = [...fleet].sort(
     (a, b) => Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation),
@@ -51,8 +55,31 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           <button style={toggle(treatment === 'dark-cockpit')} onClick={() => setTreatment('dark-cockpit')}>
             B · dark cockpit
           </button>
+          <span style={{ width: 12 }} />
+          <button style={toggle(motion === 'off')} onClick={() => setMotion('off')}>
+            motion off
+          </button>
+          <button style={toggle(motion === 'ripple')} onClick={() => setMotion('ripple')}>
+            ripple
+          </button>
+          <button style={toggle(motion === 'breathe')} onClick={() => setMotion('breathe')}>
+            breathe
+          </button>
+          <span style={{ width: 12 }} />
+          <button style={toggle(layoutVariant === 'board-first')} onClick={() => setLayoutVariant('board-first')}>
+            a · board first
+          </button>
+          <button style={toggle(layoutVariant === 'chart-band')} onClick={() => setLayoutVariant('chart-band')}>
+            b · chart band
+          </button>
         </span>
       </div>
+
+      {/* layout variant (b): shallow full-width chart band above the board */}
+      {layoutVariant === 'chart-band' && (
+        <FleetMap fleet={fleet} treatment={treatment} width={1240} height={240} />
+      )}
+      <AlertRail fleet={fleet} />
 
       <div
         style={{
@@ -61,16 +88,25 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           gap: 20,
           justifyItems: 'stretch',
           marginBottom: 20,
+          // default flow, NOT dense: rank order + tier promotion are the only
+          // reflow permitted (round 3 brief)
         }}
       >
-        {ranked.map((v) => (
-          <VesselTile key={v.static.id} vessel={v} density={density} treatment={treatment} />
-        ))}
+        {ranked.map((v) => {
+          const promoted = vesselStatus(v.alerts) !== 'nominal'; // same constants as color/badges
+          return (
+            <div key={v.static.id} style={promoted ? { gridColumn: 'span 2', gridRow: 'span 2' } : undefined}>
+              <VesselTile vessel={v} density={density} treatment={treatment} />
+            </div>
+          );
+        })}
       </div>
 
-      <AlertRail fleet={fleet} />
+      {/* layout variant (a): board first, the large anchor chart below */}
+      {layoutVariant === 'board-first' && (
+        <FleetMap fleet={fleet} treatment={treatment} width={1240} height={560} />
+      )}
       <FleetTrend fleet={fleet} />
-      <FleetMap fleet={fleet} treatment={treatment} />
       <Field level="fleet" field="fleet_total_daily_spend" />
     </main>
   );

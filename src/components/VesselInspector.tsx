@@ -5,6 +5,8 @@
 // animation: instant expand/collapse (choreography is a Figma-stage call).
 
 import type { VesselState } from '../data/types';
+import type { ColorTreatment } from '../state/FleetProvider';
+import { InspectorChart } from './InspectorChart';
 import { VesselHeader } from './VesselHeader';
 import { EfficiencyPanel } from './EfficiencyPanel';
 import { EngineTwinPanel } from './EngineTwinPanel';
@@ -16,7 +18,15 @@ import { RoutePanel } from './RoutePanel';
 import { ModeTimeline } from './ModeTimeline';
 import { gb } from './gb';
 
-export function VesselInspector({ vessel }: { vessel: VesselState }) {
+export function VesselInspector({
+  vessel,
+  fleet,
+  treatment,
+}: {
+  vessel: VesselState;
+  fleet: VesselState[];
+  treatment: ColorTreatment;
+}) {
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
       <VesselHeader vessel={vessel} />
@@ -40,6 +50,7 @@ export function VesselInspector({ vessel }: { vessel: VesselState }) {
           <TankSchematic vessel={vessel} />
         </div>
         <div style={{ flex: '1 1 340px', minWidth: 0 }}>
+          <InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} />
           <FlowReconciliation vessel={vessel} />
           <WeatherPanel vessel={vessel} />
           <CrewPanel vessel={vessel} />
