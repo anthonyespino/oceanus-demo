@@ -1,3 +1,49 @@
+# PROGRESS — 2026-06-10 (Session 4: LAYOUT PROBE — branch `layout-probe`, do not merge)
+
+This branch is a disposable probe for Anthony to react to — input to Figma,
+not the design. Main is untouched. Run it, walk it, overrule it.
+
+## Done
+
+- FleetView as a responsive center-aligned grid of `VesselTile`s (new probe-only component), still ranked by sustained_deviation. AlertRail/FleetTrend/FleetMap remain below the grid.
+- Tile hierarchy: name (19px/700, primary) → hero metric (30d trend + sustained deviation, 15px tabular) → mode chip → 8px status dot. 4-step type scale (19/15/12/11), tabular figures on all data.
+- Two densities behind header toggles: **minimal** (name + hero + dot + mode chip) and **standard** (adds endurance, alert badge text, 90d micro-sparkline, grouped "details" reveal).
+- Two status-color treatments behind header toggles: **A automotive** (every tile edge/dot tinted, green included) and **B dark cockpit** (nominal stays grey; color only on watch/degraded).
+- Color plumbing: `vesselStatus()` exported from `src/data/alerts.ts` maps WARNING→degraded, CAUTION→watch, ADVISORY/none→nominal — derived from the alert evaluation itself; the previously inline CAUTION thresholds are now named exports (`EFF_DELTA_CAUTION_PCT`, `EFF_SUSTAINED_7D_PCT`, `EGT_GAP_CAUTION_F`). `probeTokens.ts` only assigns hue. Zero second-set magic numbers.
+- One radius token (`RADIUS = 6`) used on tiles, chips, toggles. No icons, shadows, gradients; system stack; color budget = the three status tokens.
+- verify/lint/build green on the branch.
+
+## Probe findings
+
+**Anomaly check (item 7):** Meridian passes in both treatments. It ranks #1 (top-left tile) AND carries the only non-neutral color on a 15-tile board in dark cockpit — find time is effectively instant. Automotive also passes (amber vs 14 green tiles pops), but the field of green adds chroma noise that competes for the first saccade. Construction-stage observation, not a user test — Anthony judges with his own eyes.
+
+**Alignment probe (item 5) — where center alignment degrades scanning:**
+- *Minimal density:* center alignment holds. Identical tile anatomy (dot/name/metric/chip stack) means the eye lands on the same spot every tile; vertical scan is clean.
+- *Standard density:* degrades visibly. (1) Variable-length meta lines ("endurance 157 h · [CAUTION]" vs "endurance 6150 h") rag symmetrically, so no shared left edge exists for comparing numbers down a column — tabular figures can't help without a common margin. (2) The centered sparkline floats unanchored between text rows. (3) The "details" reveal expands the tile asymmetrically and shoves its neighbors. Recommendation to test in Figma: center-align minimal tiles only; data-dense tiles want a left rail.
+
+## Decisions Made (ALL REVERSIBLE — Anthony overrules from Figma)
+
+- REVERSIBLE: status mapping CAUTION→watch (amber), WARNING→degraded (red), ADVISORY→nominal — advisories colored amber would make dark cockpit noisy; could be argued ADVISORY→watch.
+- REVERSIBLE: status color placement = 3px top edge + dot (+ hero metric text when non-nominal) — edge chosen over full-tile tint to keep the Rams restraint.
+- REVERSIBLE: hero metric format "30d +12.6% · sd +5.8%" — two numbers; could reduce to sd only if one-number tiles scan better in Figma.
+- REVERSIBLE: mode chip kept in minimal density (brief's minimal list omitted it; without mode the trend number lacks its §2 context — flag if it should go).
+- REVERSIBLE: healthy-vessel compression suspended in the grid (15 tiles fit one screen; the probe tests glanceability, not folding).
+- REVERSIBLE: nominal sd values render in ink, not green, in automotive treatment text — only edges/dots carry green to cap chroma.
+- REVERSIBLE: grid minmax 210px / 20px gap; tile padding 16/14 — "generous whitespace" starting point.
+- Probe toggles live in FleetProvider (src/state) per the three-layer rule, defaulting to standard + dark cockpit.
+
+## Questions / Objections for Anthony
+
+1. Pick a treatment (A/B) and density — or specify the hybrid for Figma.
+2. Confirm the ADVISORY→nominal color mapping (Sabine's stale-weather advisory shows no color in dark cockpit — intended?).
+3. Should the tile grid keep AlertRail/FleetTrend/map below it, or does the grid replace more of the page?
+
+## Next Session Plan
+
+- Anthony reacts → rulings land in DECISIONS.md → either the probe dies (expected) or pieces graduate to main via the Figma reskin session.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 3: v2 spec revision — analytical-first)
 
 ## Done

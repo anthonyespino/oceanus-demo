@@ -12,6 +12,9 @@ import { advanceFleet, getFleet } from '../data/fleetState';
 import type { VesselState } from '../data/types';
 
 export type TickSpeed = 1 | 60;
+// Layout-probe toggles (branch-only): tile density and status-color treatment.
+export type TileDensity = 'minimal' | 'standard';
+export type ColorTreatment = 'automotive' | 'dark-cockpit';
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -20,6 +23,10 @@ interface FleetContextValue {
   speed: TickSpeed;
   setLive: (on: boolean) => void;
   setSpeed: (s: TickSpeed) => void;
+  density: TileDensity;
+  setDensity: (d: TileDensity) => void;
+  treatment: ColorTreatment;
+  setTreatment: (t: ColorTreatment) => void;
 }
 
 const FleetContext = createContext<FleetContextValue | null>(null);
@@ -28,6 +35,8 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [fleet, setFleet] = useState<VesselState[] | null>(null);
   const [live, setLive] = useState(false);
   const [speed, setSpeed] = useState<TickSpeed>(60);
+  const [density, setDensity] = useState<TileDensity>('standard');
+  const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
   const generating = useRef(false);
 
   useEffect(() => {
@@ -48,7 +57,9 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const simTime = fleet ? fleet[0].history.minutes[fleet[0].history.minutes.length - 1].t : null;
 
   return (
-    <FleetContext.Provider value={{ fleet, simTime, live, speed, setLive, setSpeed }}>
+    <FleetContext.Provider
+      value={{ fleet, simTime, live, speed, setLive, setSpeed, density, setDensity, treatment, setTreatment }}
+    >
       {children}
     </FleetContext.Provider>
   );

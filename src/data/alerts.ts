@@ -18,8 +18,15 @@ const EFFICIENCY_MODES = new Set(['TRANSIT', 'STATION']);
 // over a typical 2-3 day leg — enough to corrupt bunkering decisions → the
 // engineer must act (CAUTION). Below that it's a sensor-maintenance item
 // (ADVISORY). Above 10% the §7 leak interpretation applies (WARNING).
-const RECON_CAUTION_PCT = 7;
-const RECON_WARNING_PCT = 10;
+export const RECON_CAUTION_PCT = 7;
+export const RECON_WARNING_PCT = 10;
+
+// CAUTION thresholds, exported so UI semantics (e.g. status color tokens)
+// derive from the SAME constants as the alert logic — never a second set of
+// magic numbers.
+export const EFF_DELTA_CAUTION_PCT = 8; // current delta above this…
+export const EFF_SUSTAINED_7D_PCT = 5; // …with 7-day mean above this → CAUTION
+export const EGT_GAP_CAUTION_F = 40; // twin EGT divergence → CAUTION
 
 // Reserve margin on the endurance-to-next-port requirement: weather, holding,
 // and diversion headroom. 50% reserve on remaining steaming time.
@@ -46,12 +53,12 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
 
   // ---- CAUTION ----
   const recent = d.daily_delta_1y.slice(-7).map((x) => x.delta);
-  const sustained = mean(recent) > 5;
-  if (EFFICIENCY_MODES.has(d.mode) && d.efficiency_delta_pct > 8 && sustained) {
+  const sustained = mean(recent) > EFF_SUSTAINED_7D_PCT;
+  if (EFFICIENCY_MODES.has(d.mode) && d.efficiency_delta_pct > EFF_DELTA_CAUTION_PCT && sustained) {
     alerts.push({ level: 'CAUTION', code: 'EFF_DELTA', message: `Efficiency ${fmtPct(d.efficiency_delta_pct)} vs mode baseline, sustained 7d` });
   }
   // Twin divergence: name the engine that is actually hot, don't assume E2.
-  if (Math.abs(d.egt_twin_gap_f) > 40) {
+  if (Math.abs(d.egt_twin_gap_f) > EGT_GAP_CAUTION_F) {
     const mains = now.engines.filter((e) => e.role === 'MAIN');
     const hot = d.egt_twin_gap_f > 0 ? mains[1] : mains[0];
     alerts.push({
@@ -99,6 +106,20 @@ function requiredEnduranceH(v: VesselStatic, history: VesselHistory): { hours: n
   const nm = distanceNm(pos, place(next.port));
   const hours = Math.max(24, (nm / v.cruise_kn) * ENDURANCE_RESERVE);
   return { hours, basis: `${nm.toFixed(0)} nm to ${next.port} + 50% reserve` };
+}
+
+/**
+ * Semantic status for UI color tokens, derived from the alert evaluation
+ * itself (not re-derived thresholds): WARNING → degraded, CAUTION → watch,
+ * ADVISORY/none → nominal (advisories are informational; coloring them would
+ * be noise under the dark-cockpit philosophy).
+ */
+export type StatusLevel = 'nominal' | 'watch' | 'degraded';
+export function vesselStatus(alerts: Alert[]): StatusLevel {
+  const worst = worstLevel(alerts);
+  if (worst === 'WARNING') return 'degraded';
+  if (worst === 'CAUTION') return 'watch';
+  return 'nominal';
 }
 
 /** Worst active level, for the fleet-view badge. */

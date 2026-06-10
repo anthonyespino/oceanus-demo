@@ -5,6 +5,7 @@
 export { FleetView } from './FleetView';
 export { FleetTrend } from './FleetTrend'; // Figma: FleetView/FleetTrend
 export { VesselCard } from './VesselCard';
+export { VesselTile } from './VesselTile'; // LAYOUT PROBE only (branch: layout-probe)
 export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';

@@ -1,65 +1,75 @@
 'use client';
-// Level 1 — fleet view (v2 §8): the trend board. Ranked by sustained_deviation
-// (trend-led, not instantaneous); the AlertRail is a context strip below the
-// ranking header, not the page-top hero (greybox position only — final
-// placement is Anthony's Figma call). Healthy vessels compress.
+// LAYOUT PROBE (branch: layout-probe — disposable, do not merge): FleetView
+// as a responsive grid of vessel tiles. Still ranked by sustained_deviation
+// (v2 trend board); center-aligned grid per the alignment probe. Compression
+// row suspended: 15 tiles fit one glanceable screen, which is what the probe
+// is testing.
 
-import { useState } from 'react';
 import type { VesselState } from '../data/types';
+import { useFleet } from '../state/FleetProvider';
 import { AlertRail } from './AlertRail';
 import { FleetTrend } from './FleetTrend';
-import { VesselCard } from './VesselCard';
+import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
 import { Field } from './Field';
 import { gb } from './gb';
-
-const NOMINAL_DELTA = 3; // |delta| below this…
-const NOMINAL_SD = 2; // …AND |sustained_deviation| below this + no alerts → compress
+import { NEUTRAL, RADIUS } from './probeTokens';
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const [showNominal, setShowNominal] = useState(false);
+  const { density, setDensity, treatment, setTreatment } = useFleet();
 
   const ranked = [...fleet].sort(
     (a, b) => Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation),
   );
-  const nominal = ranked.filter(
-    (v) =>
-      v.alerts.length === 0 &&
-      Math.abs(v.derived.efficiency_delta_pct) < NOMINAL_DELTA &&
-      Math.abs(v.derived.sustained_deviation) < NOMINAL_SD,
-  );
-  const exceptions = ranked.filter((v) => !nominal.includes(v));
+
+  const toggle = (active: boolean): React.CSSProperties => ({
+    border: `1px solid ${NEUTRAL.border}`,
+    borderRadius: RADIUS,
+    background: active ? '#e8e8e8' : NEUTRAL.surface,
+    padding: '2px 10px',
+    fontSize: 12,
+    cursor: 'pointer',
+  });
 
   return (
-    <main style={{ padding: 12 }}>
-      <div style={{ ...gb.label, fontSize: 13, marginBottom: 4 }}>
-        trend board — ranked by sustained deviation (drift outranks spikes)
+    <main style={{ padding: 20, maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
+        <span style={{ ...gb.label, fontSize: 13 }}>
+          trend board — ranked by sustained deviation · layout probe
+        </span>
+        <span style={{ display: 'inline-flex', gap: 6 }}>
+          <button style={toggle(density === 'minimal')} onClick={() => setDensity('minimal')}>
+            minimal
+          </button>
+          <button style={toggle(density === 'standard')} onClick={() => setDensity('standard')}>
+            standard
+          </button>
+          <span style={{ width: 12 }} />
+          <button style={toggle(treatment === 'automotive')} onClick={() => setTreatment('automotive')}>
+            A · automotive
+          </button>
+          <button style={toggle(treatment === 'dark-cockpit')} onClick={() => setTreatment('dark-cockpit')}>
+            B · dark cockpit
+          </button>
+        </span>
       </div>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+          gap: 20,
+          justifyItems: 'stretch',
+          marginBottom: 20,
+        }}
+      >
+        {ranked.map((v) => (
+          <VesselTile key={v.static.id} vessel={v} density={density} treatment={treatment} />
+        ))}
+      </div>
+
       <AlertRail fleet={fleet} />
       <FleetTrend fleet={fleet} />
-      <section style={{ marginBottom: 8 }}>
-        {exceptions.map((v) => (
-          <VesselCard key={v.static.id} vessel={v} />
-        ))}
-        {/* The "42 friends OK" pattern: healthy vessels earn one row, not N. */}
-        {nominal.length > 0 && (
-          <div style={{ ...gb.box, background: '#f7f7f7' }}>
-            <button
-              onClick={() => setShowNominal((s) => !s)}
-              style={{ border: '1px solid #999', background: '#fff', padding: '2px 8px', cursor: 'pointer' }}
-            >
-              {showNominal ? '▾' : '▸'} {nominal.length} vessels nominal (no alerts, stable trend)
-            </button>
-            {showNominal && (
-              <div style={{ marginTop: 6 }}>
-                {nominal.map((v) => (
-                  <VesselCard key={v.static.id} vessel={v} />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </section>
       <FleetMap fleet={fleet} />
       <Field level="fleet" field="fleet_total_daily_spend" />
     </main>
