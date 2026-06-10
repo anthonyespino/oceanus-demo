@@ -2,7 +2,7 @@
 
 Fleet fuel-efficiency monitoring dashboard for shore-side maritime engineers — a live interview demo: Figma design + working React prototype with simulated live telemetry.
 
-**Spec of record: [DATA_MODEL.md](DATA_MODEL.md).** It is authoritative. If something in it looks wrong or unbuildable, log an objection in PROGRESS.md and ask Anthony — never silently deviate. Session briefs live in KICKOFF_PROMPT.md. Also read AGENTS.md: the installed Next.js is newer than training data; check `node_modules/next/dist/docs/` before leaning on memory of its APIs.
+**Spec of record: [DATA_MODEL.md](DATA_MODEL.md).** It is authoritative. **[FIGMA_STANDARD.md](FIGMA_STANDARD.md) is binding for all UI/styling sessions:** Figma and code are the same system described twice — component names match `src/components/index.ts` character for character, variant properties = React props (camelCase), tokens are semantic and mirrored in Tailwind, data-bound text uses `{field}` names from the disposition registry. Renames happen in both places in the same sitting or not at all. At the start of any Figma-connected session, pull current Figma MCP setup from official docs (don't trust memory) and diff the `02 · Components` page against the barrel as the drift check. If something in it looks wrong or unbuildable, log an objection in PROGRESS.md and ask Anthony — never silently deviate. Session briefs live in KICKOFF_PROMPT.md. Also read AGENTS.md: the installed Next.js is newer than training data; check `node_modules/next/dist/docs/` before leaning on memory of its APIs.
 
 ## Component naming rule
 
