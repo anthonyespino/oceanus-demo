@@ -6,6 +6,8 @@
 
 import type { VesselState } from '../data/types';
 import type { ColorTreatment } from '../state/FleetProvider';
+import { EfficiencyCurve } from './EfficiencyCurve';
+import { EventLog } from './EventLog';
 import { InspectorChart } from './InspectorChart';
 import { VesselHeader } from './VesselHeader';
 import { EfficiencyPanel } from './EfficiencyPanel';
@@ -45,6 +47,7 @@ export function VesselInspector({
           single surface: diagnosis chain left, supporting context right */}
       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 460px', minWidth: 0 }}>
+          <EfficiencyCurve vessel={vessel} />
           <EfficiencyPanel vessel={vessel} />
           <EngineTwinPanel vessel={vessel} />
           <TankSchematic vessel={vessel} />
@@ -57,6 +60,7 @@ export function VesselInspector({
           <RoutePanel vessel={vessel} />
         </div>
       </div>
+      <EventLog vessel={vessel} />
     </div>
   );
 }

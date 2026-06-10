@@ -13,68 +13,19 @@ import { FleetTrend } from './FleetTrend';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
 import { gb } from './gb';
-import { NEUTRAL, RADIUS } from './probeTokens';
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const {
-    density, setDensity, treatment, setTreatment,
-    motion, setMotion, layoutVariant, setLayoutVariant,
-  } = useFleet();
+  const { density, treatment, layoutVariant } = useFleet();
 
   const ranked = [...fleet].sort(
     (a, b) => Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation),
   );
 
-  const toggle = (active: boolean): React.CSSProperties => ({
-    border: `1px solid ${NEUTRAL.border}`,
-    borderRadius: RADIUS,
-    background: active ? NEUTRAL.surfaceDim : NEUTRAL.surface,
-    color: NEUTRAL.ink,
-    padding: '2px 10px',
-    fontSize: 12,
-    cursor: 'pointer',
-  });
-
   return (
     <main style={{ padding: 20, maxWidth: 1280, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
-        <span style={{ ...gb.label, fontSize: 13 }}>
-          trend board — ranked by sustained deviation · layout probe
-        </span>
-        <span style={{ display: 'inline-flex', gap: 6 }}>
-          <button style={toggle(density === 'minimal')} onClick={() => setDensity('minimal')}>
-            minimal
-          </button>
-          <button style={toggle(density === 'standard')} onClick={() => setDensity('standard')}>
-            standard
-          </button>
-          <span style={{ width: 12 }} />
-          <button style={toggle(treatment === 'automotive')} onClick={() => setTreatment('automotive')}>
-            A · automotive
-          </button>
-          <button style={toggle(treatment === 'dark-cockpit')} onClick={() => setTreatment('dark-cockpit')}>
-            B · dark cockpit
-          </button>
-          <span style={{ width: 12 }} />
-          <button style={toggle(motion === 'off')} onClick={() => setMotion('off')}>
-            motion off
-          </button>
-          <button style={toggle(motion === 'ripple')} onClick={() => setMotion('ripple')}>
-            ripple
-          </button>
-          <button style={toggle(motion === 'breathe')} onClick={() => setMotion('breathe')}>
-            breathe
-          </button>
-          <span style={{ width: 12 }} />
-          <button style={toggle(layoutVariant === 'board-first')} onClick={() => setLayoutVariant('board-first')}>
-            a · board first
-          </button>
-          <button style={toggle(layoutVariant === 'chart-band')} onClick={() => setLayoutVariant('chart-band')}>
-            b · chart band
-          </button>
-        </span>
+      <div style={{ ...gb.label, fontSize: 13, marginBottom: 12 }}>
+        trend board — ranked by sustained deviation
       </div>
-
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
       <FleetTrend fleet={fleet} />

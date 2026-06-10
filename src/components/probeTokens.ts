@@ -22,6 +22,22 @@ export const MODE_COLOR: Record<Mode, string> = {
   PORT: 'var(--color-mode-port)',
 };
 
+/**
+ * Accent (IKB) — interaction & identity ONLY. Never health/severity: any
+ * visual conflict resolves status-over-accent (see selectionBorder).
+ */
+export const ACCENT = {
+  primary: 'var(--color-accent-primary)',
+  bright: 'var(--color-accent-bright)',
+  wash: 'var(--color-accent-wash)',
+};
+
+/** Status outranks accent: selected-but-degraded keeps its status border. */
+export function selectionBorder(status: StatusLevel, selected: boolean): string {
+  if (status !== 'nominal') return STATUS_COLOR[status];
+  return selected ? ACCENT.bright : 'var(--color-line-strong)';
+}
+
 export const NEUTRAL = {
   ink: 'var(--color-ink-primary)',
   inkSecondary: 'var(--color-ink-secondary)',

@@ -15,6 +15,7 @@
 import { createHash } from 'node:crypto';
 import { getFleet, advanceFleet, resetFleet } from '../src/data/fleetState';
 import { sustainedDeviation } from '../src/data/derived';
+import { envelopeDeltaPct, transitEnvelope, MIN_TRANSIT_HOURS } from '../src/data/curve';
 import { worstLevel } from '../src/data/alerts';
 import { ANOMALY_START } from '../src/data/generator';
 import { DEMO_EPOCH, DAY_MS } from '../src/data/rng';
@@ -116,6 +117,20 @@ check(anomaly.alerts.some((a) => a.code === 'EFF_DELTA'), 'CAUTION EFF_DELTA act
 check(anomaly.alerts.some((a) => a.code === 'EGT_DIVERGENCE'), 'CAUTION EGT_DIVERGENCE active');
 const egtMsg = anomaly.alerts.find((a) => a.code === 'EGT_DIVERGENCE')?.message ?? '';
 check(egtMsg.includes(`${anomaly.static.id}-E2`), `EGT alert names the diverging engine id (PM ruling 3): "${egtMsg}"`);
+
+// EfficiencyCurve (round 5): the live point's vertical displacement above the
+// vessel's own transit envelope must tell the same story as efficiency_delta.
+const envDelta = envelopeDeltaPct(anomaly.history);
+check(
+  envDelta !== null && Math.abs(envDelta - anomaly.derived.efficiency_delta_pct) <= 5,
+  `EfficiencyCurve: Meridian live point ${envDelta === null ? 'missing' : pct(envDelta)} above own envelope ≈ efficiency_delta ${pct(anomaly.derived.efficiency_delta_pct)} (±5pp)`,
+);
+check(envDelta !== null && envDelta > 8, 'EfficiencyCurve: degradation visible as vertical displacement (> +8%)');
+const meridianEnv = transitEnvelope(anomaly.history);
+check(
+  meridianEnv.transitHours >= MIN_TRANSIT_HOURS && meridianEnv.optimal !== null,
+  `EfficiencyCurve: envelope well-formed (${meridianEnv.transitHours} transit h, ${meridianEnv.bins.length} bins, optimal ${meridianEnv.optimal?.lo.toFixed(1)}-${meridianEnv.optimal?.hi.toFixed(1)} kn)`,
+);
 
 // Bucket exclusions (§6): environment, human factors, operations.
 const windowSamples = anomaly.history.hourly.filter((s) => s.t >= ANOMALY_START);

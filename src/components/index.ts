@@ -12,6 +12,11 @@ export { NauticalChart } from './NauticalChart'; // LAYOUT PROBE only (chart cor
 export { InspectorChart } from './InspectorChart'; // LAYOUT PROBE only
 export { DataRow } from './DataRow'; // LAYOUT PROBE only (label-left / numeral-right primitive)
 export { Stat } from './Stat'; // ROUND 4: instrument-stat primitive (label above numeral)
+// ROUND 5 components:
+export { EfficiencyCurve } from './EfficiencyCurve'; // inspector hero: burn-vs-speed envelope
+export { SystemStatusStrip } from './SystemStatusStrip';
+export { EventLog } from './EventLog';
+export { DevPanel } from './DevPanel'; // probe toggles, press D
 export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';

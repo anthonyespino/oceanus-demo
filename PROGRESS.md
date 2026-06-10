@@ -1,3 +1,59 @@
+# PROGRESS — 2026-06-10 (Session 8: ROUND 5 — accent + design-system components)
+
+## Done
+
+- **IKB accent system** (`color/accent/primary #002FA7 · bright #4878FF · wash rgba(0,47,167,.22)`) — tokens only, FIGMA_STANDARD names. Wired to interaction & identity exclusively: global `:focus-visible` rings, chart marker hover rings, pinned-Contextual state, AlertRail links, FleetRail selection (wash background), active toggle states, live-tick pulse dot, route progress fill, EfficiencyCurve live-point ring. `selectionBorder()` codifies status-over-accent: a selected-but-degraded vessel keeps its status border. Accent/bright was tuned UP from #3D6BFF to **#4878FF** to clear 4.5:1 on the raised surface, not just base.
+- **Mode collision fix**: `color/mode/transit` → desaturated steel `#475463`; mode chips no longer read interactive next to accent.
+- **One large IKB moment**: fleet-band stat block (IKB fill, white DM Mono numerals) behind the `ikb band` dev-panel toggle for Anthony's judgment.
+- **EfficiencyCurve** (inspector hero): median + IQR envelope from the vessel's own 1y transit history (0.5 kn bins, ≥6 samples/bin), optimal-speed bracket, live operating point (accent ring; status fill when watch/degraded), dotted drop-line labeled with the displacement. Sparse state renders the band faint + "INSUFFICIENT TRANSIT HISTORY" — no fake curves. **Verify proves the payoff**: Meridian's point sits +12.8% above its own envelope ≈ efficiency_delta +14.1% (±5pp tolerance; the gap is weather-banded baseline vs all-weather median).
+- **SystemStatusStrip** (header): DATALINK FRESH/DEGRADED/STALE (worst-case stale-stream count; affected vessels behind a Contextual hover), LAST SYNC (oldest stream age, live-updating off the sim clock), ALERTS count by level linking to `#alert-strip`. Reports only what the system knows — no invented scores.
+- **RoutePanel voyage strip**: last port ──●── next port, fill = great-circle fraction in accent/primary, following port noted; PORT collapses to "MOORED — {port}"; STATION/STANDBY names the anchor site — no fake progress. Departure port derives from the last PORT-mode sample in the 24h window; beyond that it degrades honestly to "UNDERWAY >24H + N NM TO GO".
+- **EventLog** (inspector, collapsible): DM Mono terminal lines, newest first, 24h default + "load earlier" (8d), filter chips. Sources are existing generator facts only: mode transitions, crew changes, bunkering runs (storage-rise detection with port attribution), alert raises reconstructed from THE SAME exported constants the alert logic uses, staleness starts. Alert lines tint with status color.
+- **Dot-matrix experiment**: TankSchematic 5×10 bottom-filled dot grid behind the `tanks` dev-panel toggle vs the row layout. Loser gets deleted after Anthony's call.
+- **Dev panel**: all probe toggles (density, color treatment, motion, layout, IKB band, tank style) consolidated into one keypress-hidden panel — press **D**. FleetView's inline toggle row removed.
+- verify/lint/build green; screenshots `docs/screens/r5-*.png`.
+
+## Measured contrast ratios (hygiene item, vs dark surfaces)
+
+| token | on surface/base #0e1116 | on surface/raised #151a21 |
+|---|---|---|
+| accent/bright #4878FF | 4.9:1 | 4.5:1 |
+| alert/caution #e3b341 | 9.7:1 | 9.0:1 |
+| alert/warning #f85149 | 5.6:1 | 5.2:1 |
+| alert/advisory #79a8d8 | 7.6:1 | 7.0:1 |
+| data/nominal #3fb950 | 7.4:1 | 6.8:1 |
+| ink/primary #e8eaed | 15.9:1 | 14.7:1 |
+| ink/secondary #a9b1ba | 8.7:1 | 8.1:1 |
+| ink/muted #6e7681 | 4.1:1 | 3.8:1 |
+| white on accent/primary #002FA7 | 10.7:1 | — |
+
+ink/muted sits below 4.5:1 by design (it's the de-emphasis tone, 11px labels); flag if any muted text must be readable at distance during the demo.
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: accent/bright lifted to #4878FF (from the suggested ~#3D6BFF region) to pass 4.5:1 on raised surfaces, not only base.
+- REVERSIBLE: ADVISORY blue now has a real job — it colors the DATALINK item when DEGRADED/STALE (informational, matches §7 advisory semantics). Answers last round's question 3 in the affirmative; undo is one constant.
+- REVERSIBLE: live-point ring is always accent; only its FILL carries status — ring = "this is the live thing" (identity), fill = health.
+- REVERSIBLE: EventLog alert-raise reconstruction uses 3-consecutive-day persistence over the CAUTION threshold to date the raise.
+- DATA-LAYER NOTE (needs PM ruling, not done): the burn-vs-speed envelope spans only ~1.5 kn because the generator sails fixed cruise speed per class — the curve is correct but visually narrow. Widening it means per-leg economic speed variation in the generator AND speed-aware baselines; too much regression risk this close to the onsite without a ruling.
+- New data-layer files `curve.ts` and `events.ts` — analytics/extraction stay out of components per the three-layer rule; both consume only existing history.
+
+## Deck material (roadmap-worthy, NOT built — round 5 item 7)
+
+- Weather-window forecast overlay on the voyage strip (route + forecast = sail/hold call).
+- Per-leg economic-speed recommendation derived from the EfficiencyCurve optimal band ("steaming 1.2 kn over optimal costs ~38 gal/h").
+- Port-queue timeline (carried from round 4).
+- Fleet-wide EfficiencyCurve overlay (sister-vessel envelope comparison — §6 sister-vessel diagnostic).
+
+## Questions / Objections for Anthony
+
+1. IKB band moment: judge with the dev-panel toggle (D → "ikb band").
+2. Dot-matrix vs rows for tanks — loser gets deleted.
+3. ink/muted at 4.1:1 — acceptable for micro labels, or lift it?
+4. Envelope speed-range limitation (see data-layer note) — ruling wanted on generator speed variation post-onsite or never.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 7: ROUND 4 — design foundation, branch `layout-probe`)
 
 Anthony's locked visual identity applied as the BASE LAYER — foundation, not

@@ -16,7 +16,7 @@ export function AlertRail({ fleet }: { fleet: VesselState[] }) {
   active.sort((a, b) => (a.alert.level === b.alert.level ? 0 : a.alert.level === 'WARNING' ? -1 : 1));
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }} aria-label="active alerts">
+    <section id="alert-strip" style={{ ...gb.box, marginBottom: 8 }} aria-label="active alerts">
       <div style={gb.label}>active alerts — context strip (v2: annotates the trend board, does not organize it)</div>
       {active.length === 0 ? (
         <div style={gb.dim}>no active warnings or cautions</div>
@@ -24,7 +24,7 @@ export function AlertRail({ fleet }: { fleet: VesselState[] }) {
         active.map(({ vessel, alert }, i) => (
           <div key={`${vessel.id}-${alert.code}-${i}`}>
             [{alert.level}]{' '}
-            <Link href={`/vessel/${vessel.id}`} style={{ textDecoration: 'underline' }}>
+            <Link href={`/vessel/${vessel.id}`} style={{ textDecoration: 'underline', color: 'var(--color-accent-bright)' }}>
               {vessel.name}
             </Link>{' '}
             — {alert.message}

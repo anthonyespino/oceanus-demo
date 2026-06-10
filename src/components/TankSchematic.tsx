@@ -3,11 +3,32 @@
 // and text arrows. Capacity and transfer state are CONTEXTUAL reveals.
 
 import type { VesselState } from '../data/types';
+import { useFleet } from '../state/FleetProvider';
 import { Field } from './Field';
 import { DataRow } from './DataRow';
+import { FONT, NEUTRAL } from './probeTokens';
 import { gb } from './gb';
 
+// Round 5 dot-matrix experiment: tank fill as a 5×10 dot grid, filled from
+// the bottom, DM Mono. Behind the dev-panel toggle vs the row layout —
+// Anthony judges; the loser gets deleted.
+function DotMatrix({ pct }: { pct: number }) {
+  const filled = Math.round(pct / 2); // 50 dots = 100%
+  const rows = Array.from({ length: 5 }, (_, r) => {
+    const rowFilled = Math.min(10, Math.max(0, filled - (4 - r) * 10));
+    return '●'.repeat(rowFilled).padStart(10, '○').split('').reverse().join('');
+  });
+  return (
+    <div style={{ fontFamily: FONT.data, fontSize: 10, letterSpacing: 3, lineHeight: 1.3, color: NEUTRAL.inkSecondary }}>
+      {rows.map((row, i) => (
+        <div key={i}>{row}</div>
+      ))}
+    </div>
+  );
+}
+
 export function TankSchematic({ vessel }: { vessel: VesselState }) {
+  const { tankStyle } = useFleet();
   const now = vessel.history.minutes.at(-1)!;
   const storage = now.tanks.filter((t) => t.type === 'STORAGE');
   const feeder = now.tanks.filter((t) => t.type === 'FEEDER');
@@ -19,12 +40,23 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
           {t.tank_id} {t.type}
         </div>
       </Field>
-      <Field level="vessel" field="tank.level_pct">
-        <DataRow label="level" value={<strong>{t.level_pct}%</strong>} />
-      </Field>
-      <Field level="vessel" field="tank.level_gal">
-        <DataRow label="volume" value={`${t.level_gal.toLocaleString()} gal`} />
-      </Field>
+      {tankStyle === 'dots' ? (
+        <Field level="vessel" field="tank.level_pct">
+          <DotMatrix pct={t.level_pct} />
+          <div style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 2 }}>
+            {t.level_pct}% · {t.level_gal.toLocaleString()} gal
+          </div>
+        </Field>
+      ) : (
+        <>
+          <Field level="vessel" field="tank.level_pct">
+            <DataRow label="level" value={<strong>{t.level_pct}%</strong>} />
+          </Field>
+          <Field level="vessel" field="tank.level_gal">
+            <DataRow label="volume" value={`${t.level_gal.toLocaleString()} gal`} />
+          </Field>
+        </>
+      )}
       <Field level="vessel" field="tank.capacity_gal" label="capacity">
         <span>{t.capacity_gal.toLocaleString()} gal</span>
       </Field>{' '}

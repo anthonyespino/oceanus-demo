@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { DM_Sans, DM_Mono, Bebas_Neue } from 'next/font/google';
 import './globals.css';
 import { FleetProvider } from '../state/FleetProvider';
-import { AppHeader } from '../components';
+import { AppHeader, DevPanel } from '../components';
 
 // Round 4 type system: DM Sans = UI, DM Mono = all data/numerals (tabular),
 // Bebas Neue = display (vessel names, fleet band numeral).
@@ -21,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <FleetProvider>
           <AppHeader />
+          <DevPanel />
           {children}
         </FleetProvider>
       </body>

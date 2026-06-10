@@ -10,15 +10,24 @@ export function Stat({
   value,
   size = 26,
   face = 'data',
+  onFill = false, // true when sitting on an accent/primary (IKB) fill
 }: {
   label: string;
   value: React.ReactNode;
   size?: number;
   face?: 'data' | 'display';
+  onFill?: boolean;
 }) {
   return (
     <div>
-      <div style={{ fontSize: 10, letterSpacing: 1.4, textTransform: 'uppercase', color: NEUTRAL.inkMuted }}>
+      <div
+        style={{
+          fontSize: 10,
+          letterSpacing: 1.4,
+          textTransform: 'uppercase',
+          color: onFill ? 'rgba(255,255,255,0.72)' : NEUTRAL.inkMuted,
+        }}
+      >
         {label}
       </div>
       <div
@@ -28,7 +37,7 @@ export function Stat({
           fontWeight: face === 'display' ? 400 : 500,
           fontVariantNumeric: 'tabular-nums',
           lineHeight: 1.05,
-          color: NEUTRAL.ink,
+          color: onFill ? '#ffffff' : NEUTRAL.ink,
         }}
       >
         {value}

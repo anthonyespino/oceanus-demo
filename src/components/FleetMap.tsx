@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import type { VesselState } from '../data/types';
 import { vesselStatus, worstLevel } from '../data/alerts';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
-import { NauticalChart, useContentWidth, CHART_INK, type ChartFrame } from './NauticalChart';
+import { NauticalChart, useContentWidth, type ChartFrame } from './NauticalChart';
 import { clusterPoints, placeLabels, labelWidth } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
@@ -119,7 +119,7 @@ export function FleetMap({
                     onClick={() => go(m.id)}
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && go(m.id)}>
                     <rect x={m.x - 14} y={m.y - 14} width={28} height={28} fill="transparent" />
-                    {hoverId === m.id && <circle cx={m.x} cy={m.y} r={9} fill="none" stroke={CHART_INK} strokeWidth={1.5} />}
+                    {hoverId === m.id && <circle cx={m.x} cy={m.y} r={9} fill="none" stroke="var(--color-accent-bright)" strokeWidth={1.5} />}
                     <rect x={m.x - 3.5} y={m.y - 3.5} width={7} height={7} fill={markerFill(v)} stroke="#0b0e13" strokeWidth={0.75} />
                   </g>
                 );

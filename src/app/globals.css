@@ -21,8 +21,15 @@
   --color-alert-warning: #f85149;
   --color-alert-caution: #e3b341;
   --color-alert-advisory: #79a8d8;
-  /* color/mode — muted hues */
-  --color-mode-transit: #3d5a73;
+  /* color/accent — Yves Klein Blue system (round 5). Interaction & identity
+     ONLY; never encodes health/severity — status tokens always win. */
+  --color-accent-primary: #002fa7; /* IKB — fills, washes, large moments */
+  --color-accent-bright: #4878ff; /* lifted IKB, 4.5:1+ on surface/base — strokes, small UI, focus */
+  --color-accent-wash: rgba(0, 47, 167, 0.22); /* selected-surface tint */
+  /* color/mode — muted hues. transit shifted to desaturated steel/slate
+     (round 5): its old muted blue collided with accent; mode chips must
+     never look interactive. */
+  --color-mode-transit: #475463;
   --color-mode-station: #3f6052;
   --color-mode-standby: #55503f;
   --color-mode-port: #3c434d;
@@ -45,6 +52,31 @@ body {
   color: var(--color-ink-primary);
   font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
   font-size: 14px;
+}
+
+/* Accent owns focus (interaction), everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: 1px;
+}
+
+/* Live-tick indicator: slow pulse while live mode is on. */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
 }
 
 /* LAYOUT PROBE motion budget (round 3 addendum). Two toggleable variants,

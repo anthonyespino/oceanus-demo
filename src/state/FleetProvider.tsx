@@ -21,6 +21,7 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // (a) board-first: trend board top, large chart below; (b) chart-band:
 // shallow full-width chart strip on top, board directly below.
 export type LayoutVariant = 'board-first' | 'chart-band';
+export type TankStyle = 'bars' | 'dots'; // round 5 dot-matrix experiment
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -37,6 +38,10 @@ interface FleetContextValue {
   setMotion: (m: MotionVariant) => void;
   layoutVariant: LayoutVariant;
   setLayoutVariant: (l: LayoutVariant) => void;
+  ikbBand: boolean; // round 5: the one large IKB fill moment, behind a toggle
+  setIkbBand: (b: boolean) => void;
+  tankStyle: TankStyle;
+  setTankStyle: (t: TankStyle) => void;
   /** vessel id → epoch ms of its last status threshold-cross during live mode */
   crossings: Record<string, number>;
 }
@@ -51,6 +56,8 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
   const [motion, setMotion] = useState<MotionVariant>('off');
   const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
+  const [ikbBand, setIkbBand] = useState(false);
+  const [tankStyle, setTankStyle] = useState<TankStyle>('bars');
   const [crossings, setCrossings] = useState<Record<string, number>>({});
   const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);
@@ -92,6 +99,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         density, setDensity, treatment, setTreatment,
         motion, setMotion, crossings,
         layoutVariant, setLayoutVariant,
+        ikbBand, setIkbBand, tankStyle, setTankStyle,
       }}
     >
       {children}

@@ -9,11 +9,12 @@
 import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { fleetDailyTrend } from '../data/fleetState';
+import { useFleet } from '../state/FleetProvider';
 import { Field } from './Field';
 import { Stat } from './Stat';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
-import { NEUTRAL, RADIUS } from './probeTokens';
+import { ACCENT, NEUTRAL, RADIUS } from './probeTokens';
 
 type TrendRange = 30 | 90 | 365;
 const H = 124;
@@ -27,6 +28,7 @@ function rollingMean(xs: number[], window = 7): number[] {
 
 export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
   const [range, setRange] = useState<TrendRange>(90); // default 90d
+  const { ikbBand } = useFleet();
   const [wrapRef, w] = useContentWidth(900);
 
   const daily = fleetDailyTrend(fleet).map((d) => d.delta);
@@ -66,9 +68,28 @@ export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
         </span>
       </div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
-        {/* hero numeral, instrument treatment: label above, display face */}
-        <div style={{ width: 190, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Stat label="30d fleet mean" value={fmtPct(mean30)} size={46} face="display" />
+        {/* hero numeral, instrument treatment. Round 5: the ONE large IKB
+            fill moment per view lives here, behind the dev-panel toggle —
+            OCEANIX-style instrument block, white DM Mono numerals on IKB. */}
+        <div
+          style={{
+            width: 200,
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            ...(ikbBand
+              ? { background: ACCENT.primary, borderRadius: RADIUS, padding: '10px 14px' }
+              : {}),
+          }}
+        >
+          <Stat
+            label="30d fleet mean"
+            value={fmtPct(mean30)}
+            size={ikbBand ? 38 : 46}
+            face={ikbBand ? 'data' : 'display'}
+            onFill={ikbBand}
+          />
           {/* reserved slot: if Anthony rules fleet_total_daily_spend in, it lives here */}
           <div style={{ marginTop: 10 }}>
             <Field level="fleet" field="fleet_total_daily_spend" />

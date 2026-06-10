@@ -32,7 +32,7 @@ export function Contextual({
       onClick={() => setPinned((p) => !p)}
       style={{ cursor: 'default' }}
     >
-      <span style={{ borderBottom: '1px dotted var(--color-ink-muted)', color: 'var(--color-ink-secondary)', fontSize: 12 }}>
+      <span style={{ borderBottom: `1px dotted ${pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-muted)'}`, color: pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-secondary)', fontSize: 12 }}>
         {label}
         {open ? '' : ' …'}
       </span>
@@ -40,7 +40,7 @@ export function Contextual({
         <span
           style={{
             display: 'inline-block',
-            border: '1px solid var(--color-line-strong)',
+            border: `1px solid ${pinned ? 'var(--color-accent-bright)' : 'var(--color-line-strong)'}`,
             background: 'var(--color-surface-overlay)',
             padding: '2px 6px',
             marginLeft: 6,

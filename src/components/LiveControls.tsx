@@ -3,13 +3,14 @@
 // just buttons. Demo epoch stays pinned — "live" advances simulated minutes.
 
 import { useFleet } from '../state/FleetProvider';
+import { SystemStatusStrip } from './SystemStatusStrip';
 import { fmtTime } from './gb';
 
 export function LiveControls() {
   const { simTime, live, speed, setLive, setSpeed } = useFleet();
   const btn = (active: boolean): React.CSSProperties => ({
-    border: '1px solid var(--color-line-strong)',
-    background: active ? 'var(--color-surface-overlay)' : 'var(--color-surface-raised)',
+    border: `1px solid ${active ? 'var(--color-accent-bright)' : 'var(--color-line-strong)'}`,
+    background: active ? 'var(--color-accent-wash)' : 'var(--color-surface-raised)',
     color: 'var(--color-ink-primary)',
     padding: '2px 8px',
     fontSize: 12,
@@ -17,7 +18,8 @@ export function LiveControls() {
   });
   return (
     <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
-      <span style={{ fontSize: 12, color: 'var(--color-ink-muted)' }}>
+      {live && <span className="live-dot" title="live ticks running" />}
+      <span style={{ fontSize: 12, color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>
         sim clock {simTime ? fmtTime(simTime) : '—'}
       </span>
       <button style={btn(live)} onClick={() => setLive(!live)}>
@@ -40,15 +42,21 @@ export function AppHeader() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        gap: 16,
         borderBottom: '1px solid var(--color-line-subtle)',
         padding: '6px 12px',
       }}
     >
-      <span>
-        <strong>OCEANUS FLEET</strong>{' '}
-        <span style={{ fontSize: 11, color: 'var(--color-ink-muted)' }}>greybox wireframe — not a design</span>
+      <span style={{ fontFamily: 'var(--font-display)', fontSize: 18, letterSpacing: 2 }}>
+        OCEANUS FLEET{' '}
+        <span style={{ fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--color-ink-muted)', letterSpacing: 0.5 }}>
+          design probe — press D for toggles
+        </span>
       </span>
-      <LiveControls />
+      <span style={{ display: 'inline-flex', gap: 18, alignItems: 'center' }}>
+        <SystemStatusStrip />
+        <LiveControls />
+      </span>
     </header>
   );
 }

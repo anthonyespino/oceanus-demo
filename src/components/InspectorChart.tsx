@@ -90,7 +90,7 @@ export function InspectorChart({
                     onClick={() => router.push(`/vessel/${c.members[0].id}`)}
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && router.push(`/vessel/${c.members[0].id}`)}>
                     <rect x={c.x - 12} y={c.y - 12} width={24} height={24} fill="transparent" />
-                    {hoverId === c.members[0].id && <circle cx={c.x} cy={c.y} r={7} fill="none" stroke={CHART_INK} strokeWidth={1} />}
+                    {hoverId === c.members[0].id && <circle cx={c.x} cy={c.y} r={7} fill="none" stroke="var(--color-accent-bright)" strokeWidth={1} />}
                     <circle cx={c.x} cy={c.y} r={3} fill="#5b646e" opacity={0.7} />
                   </g>
                 ) : (
@@ -111,7 +111,7 @@ export function InspectorChart({
                   <line x1={px(pos.lon)} y1={py(pos.lat)} x2={px(nextPlace.lon)} y2={py(nextPlace.lat)}
                     stroke="#59626c" strokeWidth={0.75} strokeDasharray="6 4" />
                   <rect x={px(nextPlace.lon) - 4} y={py(nextPlace.lat) - 4} width={8} height={8}
-                    fill="none" stroke={CHART_INK} strokeWidth={1.5} />
+                    fill="none" stroke="var(--color-accent-bright)" strokeWidth={1.5} />
                   <text x={px(nextPlace.lon) + 8} y={py(nextPlace.lat) + 4} fontSize={10} fill={CHART_INK}>
                     {next!.port}
                   </text>

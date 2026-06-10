@@ -8,7 +8,7 @@ import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import type { ColorTreatment } from '../state/FleetProvider';
-import { NEUTRAL, RADIUS, STATUS_COLOR, TYPE } from './probeTokens';
+import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, TYPE, selectionBorder } from './probeTokens';
 
 export function FleetRail({
   fleet,
@@ -49,9 +49,9 @@ export function FleetRail({
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              border: `1px solid ${selected ? NEUTRAL.ink : NEUTRAL.border}`,
+              border: `1px solid ${selectionBorder(status, selected)}`, // status outranks accent
               borderRadius: RADIUS,
-              background: selected ? NEUTRAL.surfaceDim : NEUTRAL.surface,
+              background: selected ? ACCENT.wash : NEUTRAL.surface,
               padding: '4px 8px',
               marginBottom: 4,
               textDecoration: 'none',
