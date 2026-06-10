@@ -70,7 +70,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
 
       <AlertRail fleet={fleet} />
       <FleetTrend fleet={fleet} />
-      <FleetMap fleet={fleet} />
+      <FleetMap fleet={fleet} treatment={treatment} />
       <Field level="fleet" field="fleet_total_daily_spend" />
     </main>
   );

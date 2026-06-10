@@ -63,6 +63,12 @@ export function VesselTile({
       {/* hero metric: 30d trend direction + sustained deviation */}
       <div style={{ ...TYPE.hero, marginTop: 4, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
         30d {fmtPct(d.trend_30d)} · sd {fmtPct(d.sustained_deviation)}
+        {/* Green experiment (round 2, Anthony's call on record): treatment A
+            marks nominal with a green ✓ glyph; numerals stay ink so the
+            tabular column doesn't go chromatic. Treatment B unchanged. */}
+        {treatment === 'automotive' && status === 'nominal' && (
+          <span style={{ color: STATUS_COLOR.nominal }}> ✓</span>
+        )}
       </div>
       <div style={{ marginTop: 6 }}>
         <span

@@ -1,3 +1,41 @@
+# PROGRESS — 2026-06-10 (Session 5: LAYOUT PROBE round 2 — branch `layout-probe`, no merge)
+
+Direction approved; three revisions applied on the probe branch.
+
+## Done
+
+- **Nautical chart FleetMap** (hand-rolled SVG, zero libraries): dark water field, simplified single-path Gulf coastline (SW Texas → Mississippi birdfoot delta → Florida panhandle, approximate by design), 1°/2° graticule with frame ticks and °N/°W labels, compass rose and 100 nm scale bar drawn from SVG primitives, vessel markers as 7px squares colored by `vesselStatus()` per the active treatment (dark cockpit: nominal markers neutral light grey), name labels, click-through to the inspector.
+- **Single-surface expand model**: `/vessel/[id]` keeps its URL-driven route state (browser back = minimize, zero state-architecture change) but now renders `VesselInspector` (existing VesselView sections reflowed: diagnosis chain left column — efficiency, engine twins, tanks; context right column — reconciliation, weather, crew, route) beside a persistent `FleetRail` of mini-tiles (status dot + name, 1 click to any vessel). AlertRail context strip persists. No animations — instant expand/collapse.
+- **Green experiment** (Anthony's call, on record): treatment A marks nominal tiles with a green ✓ glyph beside the hero numeral — numerals stay ink so the tabular column doesn't go chromatic; not a tile wash. Treatment B (dark cockpit) untouched for comparison. Toggle unchanged.
+- verify/lint/build green on the branch; both routes smoke-tested.
+
+## Pass/fail checks
+
+- **Meridian < 2 s, both treatments:** holds from round 1 (rank #1 top-left + only/most salient color). The chart markers now also carry status color, giving a second findability path on the map.
+- **NEW — from expanded Meridian, another vessel in 1 click:** passes — every rail mini-tile is a direct link; the rail keeps all 15 vessels visible (selected highlighted) so positions never shift between expansions.
+
+## Decisions Made (ALL REVERSIBLE — Anthony overrules from Figma)
+
+- REVERSIBLE: green experiment implemented as the ✓-glyph variant, not green numerals — green digits on 13 nominal tiles re-introduces the chroma noise the dark-cockpit comparison exists to expose; switching to green numerals is a 2-line change in `VesselTile.tsx`.
+- REVERSIBLE: rail keeps all 15 vessels including the selected one (highlighted) rather than "the other 14" — stable rail positions beat strict minimalism for repeated cross-vessel comparison; dropping the selected tile is trivial.
+- REVERSIBLE: rail ordered by sustained_deviation (same as the board) — alternative is alphabetical for muscle-memory lookup; one comparator swap.
+- REVERSIBLE: inspector reflow = two flex columns (diagnosis chain left, context right) — preserves §8 causal-chain order top-to-bottom within the left column.
+- REVERSIBLE: chart frame fixed at 25.5–31.2°N / 98.2–86.8°W, slightly stretched vs true Mercator aspect (~15%) — keeps the strip wide for the layout; true-aspect is a constant change.
+- REVERSIBLE: coastline is ~25 points, no bays/barrier islands beyond the delta birdfoot — "approximate is fine" per brief; more vertices is data entry, not design.
+- REVERSIBLE: marker labels always on (15 labels fit the chart at this density) — could go hover-only via Contextual if Anthony wants a cleaner field.
+
+## Questions / Objections for Anthony
+
+1. Chart water/land greys are placeholders for your `color/surface/*` tokens — calibrate in Figma, not here.
+2. Rail width (168px) and mini-tile anatomy (dot + name only) — does the rail want the hero metric too?
+3. The ✓ experiment: keep, switch to green numerals, or kill after side-by-side with B?
+
+## Next Session Plan
+
+- Anthony reacts to round 2 → rulings to DECISIONS.md → probe graduates (reskin session) or dies.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 4: LAYOUT PROBE — branch `layout-probe`, do not merge)
 
 This branch is a disposable probe for Anthony to react to — input to Figma,
