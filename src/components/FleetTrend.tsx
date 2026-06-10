@@ -10,9 +10,10 @@ import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { fleetDailyTrend } from '../data/fleetState';
 import { Field } from './Field';
+import { Stat } from './Stat';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
-import { NEUTRAL, RADIUS, TYPE } from './probeTokens';
+import { NEUTRAL, RADIUS } from './probeTokens';
 
 type TrendRange = 30 | 90 | 365;
 const H = 124;
@@ -47,7 +48,8 @@ export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
   const toggle = (active: boolean): React.CSSProperties => ({
     border: `1px solid ${NEUTRAL.border}`,
     borderRadius: RADIUS,
-    background: active ? '#e8e8e8' : NEUTRAL.surface,
+    background: active ? NEUTRAL.surfaceDim : NEUTRAL.surface,
+    color: NEUTRAL.ink,
     padding: '1px 8px',
     fontSize: 11,
     cursor: 'pointer',
@@ -64,24 +66,23 @@ export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
         </span>
       </div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
-        {/* hero numeral, integrated — not floating after the chart */}
+        {/* hero numeral, instrument treatment: label above, display face */}
         <div style={{ width: 190, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontSize: 30, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{fmtPct(mean30)}</div>
-          <div style={TYPE.micro}>30d fleet mean</div>
+          <Stat label="30d fleet mean" value={fmtPct(mean30)} size={46} face="display" />
           {/* reserved slot: if Anthony rules fleet_total_daily_spend in, it lives here */}
           <div style={{ marginTop: 10 }}>
             <Field level="fleet" field="fleet_total_daily_spend" />
           </div>
         </div>
         <div ref={wrapRef} style={{ flex: 1, minWidth: 0 }}>
-          <svg width={w} height={H} style={{ display: 'block', border: '1px solid #ddd' }}>
+          <svg width={w} height={H} style={{ display: 'block', border: '1px solid var(--color-line-subtle)', background: 'var(--color-surface-base)' }}>
             {/* subtle normal-range band (1y p10-p90) */}
-            <rect x={0} y={y(p90)} width={w} height={Math.max(0, y(p10) - y(p90))} fill="#f0f0f0" />
+            <rect x={0} y={y(p90)} width={w} height={Math.max(0, y(p10) - y(p90))} fill="var(--color-surface-overlay)" />
             {/* zero-baseline reference */}
-            <line x1={0} y1={y(0)} x2={w} y2={y(0)} stroke="#bbb" strokeWidth={1} />
+            <line x1={0} y1={y(0)} x2={w} y2={y(0)} stroke="var(--color-line-strong)" strokeWidth={1} />
             <polyline
               points={vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}
-              fill="none" stroke="#666" strokeWidth={1.25}
+              fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.25}
             />
           </svg>
         </div>

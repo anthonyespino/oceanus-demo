@@ -17,8 +17,8 @@ export interface ChartFrame {
 
 export const GULF_FRAME: ChartFrame = { latMin: 25.5, latMax: 31.2, lonMin: -98.2, lonMax: -86.8 };
 
-export const CHART_INK = '#b8b8b8';
-const GRID = '#5a5a5a';
+export const CHART_INK = '#8b949e';
+const GRID = '#222a34'; // graticule: faint on near-black water
 
 // Approximate Gulf coastline [lon, lat], SW Texas → Mississippi birdfoot →
 // Florida panhandle; closure corners sit far outside any sensible frame so
@@ -83,8 +83,22 @@ export function NauticalChart({
   const barNm = [200, 100, 50, 20, 10].find((nm) => nm * pxPerNm <= width * 0.3) ?? 10;
 
   return (
-    <svg width={width} height={height} style={{ display: 'block', background: '#3f3f3f' }}>
-      <path d={landD} fill="#6e6e6e" stroke="#9a9a9a" strokeWidth={1} />
+    <svg width={width} height={height} style={{ display: 'block', background: '#0b0e13' }}>
+      <path d={landD} fill="#1a212b" stroke="#2f3a47" strokeWidth={1} />
+      {/* sea-area label: chart furniture, very low contrast (round 4) */}
+      {frame.lonMax - frame.lonMin > 6 && (
+        <text
+          x={width * 0.52}
+          y={height * 0.72}
+          fontSize={Math.min(22, width / 40)}
+          fill="#273039"
+          letterSpacing="0.35em"
+          textAnchor="middle"
+          fontFamily="var(--font-ui)"
+        >
+          GULF OF MEXICO
+        </text>
+      )}
       {ticks(frame.lonMin, frame.lonMax, lonStep).map((lon) => (
         <g key={`lon${lon}`}>
           <line x1={px(lon)} y1={0} x2={px(lon)} y2={height} stroke={GRID} strokeWidth={0.5} />

@@ -45,9 +45,9 @@ export function UndefinedField({ field, note }: { field: string; note?: string }
       title={note}
       style={{
         display: 'inline-block',
-        background: '#e0e0e0',
-        border: '1px dashed #999',
-        color: '#555',
+        background: 'var(--color-surface-overlay)',
+        border: '1px dashed var(--color-line-strong)',
+        color: 'var(--color-ink-secondary)',
         padding: '2px 6px',
         fontSize: 11,
       }}

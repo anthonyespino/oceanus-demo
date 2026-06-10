@@ -1,36 +1,46 @@
-// LAYOUT PROBE tokens (branch: layout-probe — disposable, do not merge).
-// Kept separate from gb.ts so main's greybox tokens are untouched and the
-// whole probe vocabulary is one file.
-//
-// Color budget: exactly three semantic status tokens. Mapping to status
-// levels comes from src/data/alerts.ts (vesselStatus) — the thresholds ARE
-// the alert constants; this file only assigns hue.
+// ROUND 4: this file is now the TS mirror of the FIGMA_STANDARD §5 token
+// vocabulary populated in globals.css — components reference tokens, never
+// raw values, so Anthony's Figma pass swaps CSS variable values, not code.
 
+import type { Mode } from '../data/types';
 import type { StatusLevel } from '../data/alerts';
 
 /** The one radius token. Used everywhere a corner is rounded. */
 export const RADIUS = 6;
 
-/** status/nominal · status/watch · status/degraded — the only color allowed. */
+/** Status hues map onto the standard vocabulary: data/nominal + alert/*. */
 export const STATUS_COLOR: Record<StatusLevel, string> = {
-  nominal: '#1e7a3c', // status/nominal (green)
-  watch: '#b07800', // status/watch (amber)
-  degraded: '#b3261e', // status/degraded (red)
+  nominal: 'var(--color-data-nominal)',
+  watch: 'var(--color-alert-caution)',
+  degraded: 'var(--color-alert-warning)',
+};
+
+export const MODE_COLOR: Record<Mode, string> = {
+  TRANSIT: 'var(--color-mode-transit)',
+  STATION: 'var(--color-mode-station)',
+  STANDBY: 'var(--color-mode-standby)',
+  PORT: 'var(--color-mode-port)',
 };
 
 export const NEUTRAL = {
-  ink: '#000000',
-  inkSecondary: '#555555',
-  inkMuted: '#888888',
-  border: '#cccccc',
-  surface: '#ffffff',
-  surfaceDim: '#f4f4f4',
+  ink: 'var(--color-ink-primary)',
+  inkSecondary: 'var(--color-ink-secondary)',
+  inkMuted: 'var(--color-ink-muted)',
+  border: 'var(--color-line-strong)',
+  surface: 'var(--color-surface-raised)',
+  surfaceDim: 'var(--color-surface-overlay)',
 };
 
-/** 4-step type scale; data uses tabular figures so columns don't jitter. */
+export const FONT = {
+  ui: 'var(--font-ui)',
+  data: 'var(--font-data)', // tabular numerals, always
+  display: 'var(--font-display)',
+};
+
+/** type/display · type/label · type/data · type/micro — 4 steps, no more. */
 export const TYPE = {
-  name: { fontSize: 19, fontWeight: 700 } as React.CSSProperties, // primary element
-  hero: { fontSize: 15, fontWeight: 600, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
-  meta: { fontSize: 12, fontWeight: 400, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
+  name: { fontFamily: FONT.display, fontSize: 22, fontWeight: 400, letterSpacing: 1 } as React.CSSProperties,
+  hero: { fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
+  meta: { fontFamily: FONT.data, fontSize: 12, fontWeight: 400, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
   micro: { fontSize: 11, fontWeight: 400, color: NEUTRAL.inkMuted } as React.CSSProperties,
 };

@@ -63,7 +63,7 @@ export function InspectorChart({
   const next = vessel.history.nextPortCalls[0];
   const nextPlace = next ? place(next.port) : null;
   const status = vesselStatus(vessel.alerts);
-  const focusFill = treatment === 'automotive' || status !== 'nominal' ? STATUS_COLOR[status] : '#e3e3e3';
+  const focusFill = treatment === 'automotive' || status !== 'nominal' ? STATUS_COLOR[status] : '#c8d0d9';
 
   const ghosts = fleet
     .filter((v) => v.static.id !== vessel.static.id)
@@ -91,25 +91,25 @@ export function InspectorChart({
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && router.push(`/vessel/${c.members[0].id}`)}>
                     <rect x={c.x - 12} y={c.y - 12} width={24} height={24} fill="transparent" />
                     {hoverId === c.members[0].id && <circle cx={c.x} cy={c.y} r={7} fill="none" stroke={CHART_INK} strokeWidth={1} />}
-                    <circle cx={c.x} cy={c.y} r={3} fill="#909090" opacity={0.55} />
+                    <circle cx={c.x} cy={c.y} r={3} fill="#5b646e" opacity={0.7} />
                   </g>
                 ) : (
                   <g key={`gc-${i}`} tabIndex={0} style={{ cursor: 'pointer', outline: 'none' }}
                     onMouseEnter={() => setSplay(i)} onFocus={() => setSplay(i)}
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSplay(splay === i ? null : i)}>
                     <rect x={c.x - 12} y={c.y - 12} width={24} height={24} fill="transparent" />
-                    <circle cx={c.x} cy={c.y} r={4.5} fill="#909090" opacity={0.7} />
-                    <text x={c.x + 7} y={c.y + 3} fontSize={9} fill="#c8c8c8">{c.members.length} ▾</text>
+                    <circle cx={c.x} cy={c.y} r={4.5} fill="#5b646e" opacity={0.85} />
+                    <text x={c.x + 7} y={c.y + 3} fontSize={9} fill="#727b86">{c.members.length} ▾</text>
                   </g>
                 ),
               )}
               <polyline
                 points={trail.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')}
-                fill="none" stroke="#cfcfcf" strokeWidth={1} strokeDasharray="3 3" />
+                fill="none" stroke="#727b86" strokeWidth={1} strokeDasharray="3 3" />
               {nextPlace && (
                 <g>
                   <line x1={px(pos.lon)} y1={py(pos.lat)} x2={px(nextPlace.lon)} y2={py(nextPlace.lat)}
-                    stroke="#9a9a9a" strokeWidth={0.75} strokeDasharray="6 4" />
+                    stroke="#59626c" strokeWidth={0.75} strokeDasharray="6 4" />
                   <rect x={px(nextPlace.lon) - 4} y={py(nextPlace.lat) - 4} width={8} height={8}
                     fill="none" stroke={CHART_INK} strokeWidth={1.5} />
                   <text x={px(nextPlace.lon) + 8} y={py(nextPlace.lat) + 4} fontSize={10} fill={CHART_INK}>
@@ -119,7 +119,7 @@ export function InspectorChart({
               )}
               <rect x={px(pos.lon) - 4.5} y={py(pos.lat) - 4.5} width={9} height={9}
                 fill={focusFill} stroke="#1c1c1c" strokeWidth={1} />
-              <text x={px(pos.lon) + 9} y={py(pos.lat) + 4} fontSize={11} fontWeight={700} fill="#e8e8e8">
+              <text x={px(pos.lon) + 9} y={py(pos.lat) + 4} fontSize={11} fontWeight={700} fill="var(--color-ink-primary)">
                 {vessel.static.name}
               </text>
             </>
@@ -132,7 +132,7 @@ export function InspectorChart({
         )}
         {splay !== null && ghostClusters[splay] && (
           <ClusterSplay x={ghostClusters[splay].x} y={ghostClusters[splay].y} onClose={() => setSplay(null)}
-            members={ghostClusters[splay].members.map((m) => ({ id: m.id, name: m.name, dotColor: '#909090' }))} />
+            members={ghostClusters[splay].members.map((m) => ({ id: m.id, name: m.name, dotColor: '#5b646e' }))} />
         )}
       </div>
     </section>

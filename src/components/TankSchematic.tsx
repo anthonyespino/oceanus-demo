@@ -42,7 +42,7 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         <div style={{ fontSize: 20 }}>→</div>
         <div>{feeder.map(tankBox)}</div>
         <div style={{ fontSize: 20 }}>→</div>
-        <div style={{ ...gb.box, background: '#f0f0f0' }}>
+        <div style={{ ...gb.box, background: 'var(--color-surface-overlay)' }}>
           <div style={gb.label}>flow meter</div>
           <Field level="vessel" field="flow_gps">
             <div style={{ fontWeight: 700 }}>{now.flow_gps} gps</div>

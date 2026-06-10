@@ -8,15 +8,16 @@ import { fmtTime } from './gb';
 export function LiveControls() {
   const { simTime, live, speed, setLive, setSpeed } = useFleet();
   const btn = (active: boolean): React.CSSProperties => ({
-    border: '1px solid #999',
-    background: active ? '#ddd' : '#fff',
+    border: '1px solid var(--color-line-strong)',
+    background: active ? 'var(--color-surface-overlay)' : 'var(--color-surface-raised)',
+    color: 'var(--color-ink-primary)',
     padding: '2px 8px',
     fontSize: 12,
     cursor: 'pointer',
   });
   return (
     <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
-      <span style={{ fontSize: 12, color: '#777' }}>
+      <span style={{ fontSize: 12, color: 'var(--color-ink-muted)' }}>
         sim clock {simTime ? fmtTime(simTime) : '—'}
       </span>
       <button style={btn(live)} onClick={() => setLive(!live)}>
@@ -39,13 +40,13 @@ export function AppHeader() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottom: '1px solid #999',
+        borderBottom: '1px solid var(--color-line-subtle)',
         padding: '6px 12px',
       }}
     >
       <span>
         <strong>OCEANUS FLEET</strong>{' '}
-        <span style={{ fontSize: 11, color: '#777' }}>greybox wireframe — not a design</span>
+        <span style={{ fontSize: 11, color: 'var(--color-ink-muted)' }}>greybox wireframe — not a design</span>
       </span>
       <LiveControls />
     </header>

@@ -28,7 +28,8 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const toggle = (active: boolean): React.CSSProperties => ({
     border: `1px solid ${NEUTRAL.border}`,
     borderRadius: RADIUS,
-    background: active ? '#e8e8e8' : NEUTRAL.surface,
+    background: active ? NEUTRAL.surfaceDim : NEUTRAL.surface,
+    color: NEUTRAL.ink,
     padding: '2px 10px',
     fontSize: 12,
     cursor: 'pointer',

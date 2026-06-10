@@ -21,7 +21,7 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
       <div style={{ display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' }}>
         <EngineCard engine={m1} title="Engine 1" />
         <Field level="vessel" field="twin_comparison_delta">
-          <div style={{ ...gb.box, background: '#f0f0f0', textAlign: 'center', alignSelf: 'center' }}>
+          <div style={{ ...gb.box, background: 'var(--color-surface-overlay)', textAlign: 'center', alignSelf: 'center' }}>
             <div style={gb.label}>E2 vs E1</div>
             <div style={gb.big}>{egtGapNow > 0 ? '+' : ''}{egtGapNow} °F EGT</div>
             <div>fuel {fmtPct(fuelGapPct)} at matched load</div>

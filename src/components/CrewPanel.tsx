@@ -24,7 +24,7 @@ export function CrewPanel({ vessel }: { vessel: VesselState }) {
                 <td style={{ ...gb.boxTight, border: 'none' }}>{c.name}</td>
               </Field>
               <Field level="vessel" field="crew.onboard_since">
-                <td style={{ ...gb.boxTight, border: 'none', color: '#777' }}>
+                <td style={{ ...gb.boxTight, border: 'none', color: 'var(--color-ink-muted)' }}>
                   onboard since {fmtDay(c.onboard_since)} ({Math.floor((now - c.onboard_since) / 86_400_000)}d)
                 </td>
               </Field>

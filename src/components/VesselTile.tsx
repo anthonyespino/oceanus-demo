@@ -11,6 +11,7 @@ import { vesselStatus, worstLevel } from '../data/alerts';
 import { Field } from './Field';
 import { Sparkline } from './Sparkline';
 import { DataRow } from './DataRow';
+import { Stat } from './Stat';
 import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE } from './probeTokens';
 import { useFleet, type ColorTreatment, type TileDensity } from '../state/FleetProvider';
@@ -108,11 +109,18 @@ export function VesselTile({
           <div style={TYPE.micro}>30d efficiency delta vs mode baseline (zero line)</div>
         </div>
       )}
+      {density === 'standard' && tier === 2 && (
+        // 2x tiles: instrument treatment for the key values (round 4 item 3)
+        <div style={{ marginTop: 12, display: 'flex', gap: 24, justifyContent: 'center', textAlign: 'left' }}>
+          <Stat label="endurance" value={`${d.endurance_hours} h`} />
+          <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
+        </div>
+      )}
       {density === 'standard' && (
         <div style={{ marginTop: 10, textAlign: 'left' }}>
           {/* data cluster: labels left-ranged, numerals right-ranged (item 6) */}
-          <DataRow label="endurance" value={`${d.endurance_hours} h`} />
-          <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />
+          {tier === 1 && <DataRow label="endurance" value={`${d.endurance_hours} h`} />}
+          {tier === 1 && <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />}
           {badge && <DataRow label="alert" value={`[${badge}]`} />}
           {tier === 1 && (
             <div style={{ marginTop: 6, textAlign: 'center' }}>

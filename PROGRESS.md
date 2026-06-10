@@ -1,3 +1,37 @@
+# PROGRESS — 2026-06-10 (Session 7: ROUND 4 — design foundation, branch `layout-probe`)
+
+Anthony's locked visual identity applied as the BASE LAYER — foundation, not
+final design. Everything routes through tokens; the Figma pass swaps values.
+
+## Done
+
+- **Token population** (first real 01·Foundations): full FIGMA_STANDARD §5 vocabulary as CSS variables in a Tailwind `@theme` block — `color/surface/base·raised·overlay` (near-black scale), `color/ink/primary·secondary·muted` (light scale), `color/alert/*` retuned for dark-background contrast (caution `#e3b341`, warning `#f85149` — both clear WCAG AA large-text on the surface scale), `color/mode/*` muted hues, `color/data/nominal·stale`, `space/1..8` on the 4px grid. `probeTokens.ts` is now the TS mirror — components reference tokens, never raw values.
+- **VOCABULARY ADDITION pending Anthony's blessing**: `color/line/subtle·strong` (borders/strokes) — the §5 list has no border token and a dark theme needs one. Bless it into FIGMA_STANDARD or fold borders into `surface/overlay`.
+- **Type system via next/font**: DM Sans (UI), DM Mono (all data/numerals, tabular — `type/data`), Bebas Neue (display: vessel names on tiles, fleet band numeral). Four type steps total (display/label/data/micro), per the probe hierarchy.
+- **Fleet band instrument treatment**: new `Stat` primitive (letterspaced micro-label ABOVE oversized numeral); band hero is Bebas 46px; 2x tile endurance/now-vs-baseline use the same treatment in DM Mono.
+- **Chart upgrades**: water near-black (`#0b0e13`), land slightly lighter, graticule faint; "GULF OF MEXICO" sea-area label (letterspaced, very low contrast, only on wide frames so it doesn't appear inside zoomed inspector views); 24h route trails on all fleet-chart markers — 0.75px neutral grey polylines in four opacity segments (0.07→0.30) for the fading tail. Status color remains on markers only; trails and labels stay neutral.
+- **Chips/cards restyled** to dark surfaces with the existing radius token; geometry untouched. No glows, no gradients, no orange route lines.
+- **Out of scope, logged**: port-queue timeline → roadmap/stretch candidate; icons still Anthony's; no new animation beyond the round-3 motion budget.
+- verify/lint/build green; screenshots: `docs/screens/` (fleet board + Meridian inspector) — see below.
+
+## Decisions Made (ALL REVERSIBLE — values are Anthony's)
+
+- REVERSIBLE: every hex in this round lives in `globals.css @theme` — Anthony retunes by editing one block (or Figma Variables export replaces it).
+- REVERSIBLE: band hero numeral uses Bebas per the brief's display assignment; Bebas digits are uniform-width but not formally tabular — if the numeral jitters in live mode, swapping to DM Mono is a one-prop change (`face="data"`), noted as the type-system tension between items 2 and 3.
+- REVERSIBLE: nominal markers/dots in dark-cockpit treatment use neutral `#9aa3ad` (chart) / ink-muted (tiles) — light enough to read on near-black water without becoming a fourth status color.
+- REVERSIBLE: trail sampling every 20 min, 4 segments — denser sampling or true gradient strokes are a Figma-stage call.
+- REVERSIBLE: sea label sits at 52%/72% of the frame (open water, SE of the delta) — position is two constants.
+- REVERSIBLE: mode hues: transit steel-blue, station green-grey, standby khaki, port neutral — all desaturated; pure placeholder values for Anthony's palette.
+
+## Questions / Objections for Anthony
+
+1. Bless or rename `color/line/subtle·strong` in FIGMA_STANDARD §5.
+2. Bebas vs DM Mono for the band hero numeral (display impact vs tabular stability) — see the reversible note.
+3. Advisory blue (`#79a8d8`) is populated but currently unused in the probe UI (advisories render as text) — wire it to ADVISORY badges or drop it from v1?
+4. Port-queue timeline logged as roadmap — in or out for the onsite build?
+
+---
+
 # PROGRESS — 2026-06-10 (Session 6.2: LAYOUT PROBE round 3.2 — FleetTrend band)
 
 ## Done

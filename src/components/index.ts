@@ -11,6 +11,7 @@ export { VesselInspector } from './VesselInspector'; // LAYOUT PROBE only
 export { NauticalChart } from './NauticalChart'; // LAYOUT PROBE only (chart core)
 export { InspectorChart } from './InspectorChart'; // LAYOUT PROBE only
 export { DataRow } from './DataRow'; // LAYOUT PROBE only (label-left / numeral-right primitive)
+export { Stat } from './Stat'; // ROUND 4: instrument-stat primitive (label above numeral)
 export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';

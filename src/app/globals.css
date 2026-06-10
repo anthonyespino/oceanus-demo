@@ -1,16 +1,54 @@
 @import "tailwindcss";
 
-/* Greybox: white background, black text, grey borders, system font stack.
-   No colors, no transitions, no shadows, no radius — design happens in Figma. */
+/* ROUND 4 — design foundation (branch layout-probe).
+   First real population of FIGMA_STANDARD §5 token vocabulary, dark/cockpit
+   theme. Values are Anthony's to swap from 01·Foundations; names are the
+   contract. color/line/* is a vocabulary ADDITION (borders/strokes) pending
+   Anthony's blessing — flagged in PROGRESS.md. */
+@theme {
+  /* color/surface — near-black scale */
+  --color-surface-base: #0e1116;
+  --color-surface-raised: #151a21;
+  --color-surface-overlay: #1f2630;
+  /* color/ink — light scale */
+  --color-ink-primary: #e8eaed;
+  --color-ink-secondary: #a9b1ba;
+  --color-ink-muted: #6e7681;
+  /* color/line — vocabulary addition, pending ruling */
+  --color-line-subtle: #262d36;
+  --color-line-strong: #3d4651;
+  /* color/alert — retuned for dark background contrast */
+  --color-alert-warning: #f85149;
+  --color-alert-caution: #e3b341;
+  --color-alert-advisory: #79a8d8;
+  /* color/mode — muted hues */
+  --color-mode-transit: #3d5a73;
+  --color-mode-station: #3f6052;
+  --color-mode-standby: #55503f;
+  --color-mode-port: #3c434d;
+  /* color/data */
+  --color-data-nominal: #3fb950;
+  --color-data-stale: #59626c;
+  /* space — 4px base grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+}
+
 body {
-  background: #ffffff;
-  color: #000000;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--color-surface-base);
+  color: var(--color-ink-primary);
+  font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
   font-size: 14px;
 }
 
-/* LAYOUT PROBE motion budget (branch-only). Two toggleable variants, one
-   item max, NO continuous blink. Reduced-motion users get none of it. */
+/* LAYOUT PROBE motion budget (round 3 addendum). Two toggleable variants,
+   one item max, NO continuous blink. Reduced-motion users get none of it. */
 .probe-ripple {
   position: absolute;
   left: 50%;
@@ -18,7 +56,7 @@ body {
   width: 24px;
   height: 24px;
   margin-left: -12px;
-  border: 2px solid #888;
+  border: 2px solid var(--color-ink-muted);
   border-radius: 50%;
   pointer-events: none;
   animation: probe-ripple 900ms ease-out 1 forwards; /* one-time, steady after */
