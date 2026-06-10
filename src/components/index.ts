@@ -17,6 +17,7 @@ export { EfficiencyCurve } from './EfficiencyCurve'; // inspector hero: burn-vs-
 export { SystemStatusStrip } from './SystemStatusStrip';
 export { EventLog } from './EventLog';
 export { DevPanel } from './DevPanel'; // probe toggles, press D
+export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrivals board (final probe component)
 export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';

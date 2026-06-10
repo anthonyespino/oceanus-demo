@@ -12,6 +12,7 @@ import { AlertRail } from './AlertRail';
 import { FleetTrend } from './FleetTrend';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
+import { PortCallsTimeline } from './PortCallsTimeline';
 import { gb } from './gb';
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
@@ -55,6 +56,8 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
       {/* chart below the board; the layout toggle now selects its depth only
           (a: large anchor, b: shallow band). spend slot moved into FleetTrend. */}
       <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
+      {/* round 6 — final probe component: 72h arrivals board */}
+      <PortCallsTimeline fleet={fleet} treatment={treatment} />
     </main>
   );
 }

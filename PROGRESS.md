@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-10 (Session 9: ROUND 6 — PortCallsTimeline, FINAL probe component)
+
+Last new component on the probe. Nothing after this but Anthony's verdicts
+and the Figma reskin.
+
+## Done
+
+- **PortCallsTimeline**, full-width below the fleet chart: rows are ports with arrivals inside 72h (plus moored vessels), sorted by soonest; NOW → +72h axis with 12h gridlines, NOW rule in accent/bright, +12H/+24H… DM Mono micro labels. Blocks = vessel name + ETA chip, left edge tinted by status color (treatment-aware, same logic as markers/tiles), body surface/raised; moored vessels pin as "IN PORT" at NOW. Click → that vessel's inspector via the same URL state. Empty state renders "NO PORT CALLS SCHEDULED — 72H".
+- **BUNKER flag**: shown when `endurance_hours < hours-to-port × ENDURANCE_RESERVE` — the constant is now exported from `alerts.ts` and shared; zero second magic numbers. Tagged in advisory blue (it parallels the BUNKER_SOON advisory, not a fault).
+- Scope held (item 2): no berth rows, no delay statuses, no congestion — ports and ETAs only, because that's all the generator knows.
+- Registry: `port_calls_timeline` added as fleet-level VISIBLE with a note — it promotes next-port data to persistent at fleet level while `next_port_eta` remains CONTEXTUAL on tiles; Anthony to confirm or re-rule.
+- verify/lint/build green; screenshot `docs/screens/r6-fleet-board.png`.
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: BUNKER math uses schedule time-to-port (ETA − now) where the ENDURANCE alert uses distance/cruise-speed — same reserve constant, slightly different basis; unifying on distance is a 3-line change if the PM prefers strict parity.
+- REVERSIBLE: multiple arrivals at one port stack as lanes inside the row (deterministic ETA order) rather than overlapping chips.
+- REVERSIBLE: moored vessels show no BUNKER flag (they're at the dock — bunkering is an action available now, not a planning risk).
+- REVERSIBLE: ETA chips clamp to 97% of the axis so late-window arrivals stay readable instead of bleeding off-frame.
+
+## Questions / Objections for Anthony
+
+1. Confirm `port_calls_timeline` VISIBLE at fleet level (registry note above).
+2. Probe verdicts now due across all rounds: density, color treatment A/B, motion variant, layout a/b, IKB band, tanks bars/dots, green ✓ experiment — the dev panel (press D) flips everything in one place.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 8: ROUND 5 — accent + design-system components)
 
 ## Done

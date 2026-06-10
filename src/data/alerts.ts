@@ -29,8 +29,9 @@ export const EFF_SUSTAINED_7D_PCT = 5; // …with 7-day mean above this → CAUT
 export const EGT_GAP_CAUTION_F = 40; // twin EGT divergence → CAUTION
 
 // Reserve margin on the endurance-to-next-port requirement: weather, holding,
-// and diversion headroom. 50% reserve on remaining steaming time.
-const ENDURANCE_RESERVE = 1.5;
+// and diversion headroom. 50% reserve on remaining steaming time. Exported:
+// the PortCallsTimeline BUNKER flag reuses it — no second magic number.
+export const ENDURANCE_RESERVE = 1.5;
 
 export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: DerivedVesselMetrics): Alert[] {
   const alerts: Alert[] = [];

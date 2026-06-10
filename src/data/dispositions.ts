@@ -36,6 +36,7 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'efficiency_sparkline_24h', level: 'fleet', disposition: 'CONTEXTUAL', note: 'demoted from primary graphic (v2, ruling 12) — pending Anthony registry ruling' },
   { field: 'position', level: 'fleet', disposition: 'VISIBLE', note: 'as map marker, not numerals' },
   { field: 'next_port_eta', level: 'fleet', disposition: 'CONTEXTUAL' },
+  { field: 'port_calls_timeline', level: 'fleet', disposition: 'VISIBLE', note: 'round 6: 72h arrivals board — promotes next-port data to persistent at fleet level for the window; Anthony to confirm vs next_port_eta CONTEXTUAL' },
   { field: 'crew_summary', level: 'fleet', disposition: 'CONTEXTUAL', note: 'Master name, days since crew change' },
   { field: 'weather_summary', level: 'fleet', disposition: 'CONTEXTUAL' },
   { field: 'burn_rate_gph', level: 'fleet', disposition: 'CONTEXTUAL' },
