@@ -1,0 +1,45 @@
+'use client';
+// THE single shared reveal primitive. Every CONTEXTUAL field in the app goes
+// through this component, so when Anthony decides how reveals should feel
+// (hover vs click vs expand, timing, affordance), it changes here — one file.
+//
+// Greybox interaction decision (Anthony may overrule):
+//   - hover reveals immediately, mouse-out hides
+//   - click pins the reveal open (trackpad/demo safety); click again unpins
+//   - affordance: dotted underline on the label, "…" suffix
+
+import { useState } from 'react';
+
+export function Contextual({ label, children }: { label: string; children: React.ReactNode }) {
+  const [hover, setHover] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const open = hover || pinned;
+
+  return (
+    <span
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={() => setPinned((p) => !p)}
+      style={{ cursor: 'default' }}
+    >
+      <span style={{ borderBottom: '1px dotted #777', color: '#555', fontSize: 12 }}>
+        {label}
+        {open ? '' : ' …'}
+      </span>
+      {open && (
+        <span
+          style={{
+            display: 'inline-block',
+            border: '1px solid #bbb',
+            background: '#fafafa',
+            padding: '2px 6px',
+            marginLeft: 6,
+            fontSize: 12,
+          }}
+        >
+          {children}
+        </span>
+      )}
+    </span>
+  );
+}

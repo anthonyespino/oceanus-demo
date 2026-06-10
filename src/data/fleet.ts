@@ -119,7 +119,7 @@ export const LAST_NAMES = [
   'Calloway', 'Hebert', 'Dardar',
 ];
 
-export function distanceNm(a: Place, b: Place): number {
+export function distanceNm(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
   const R = 3440.065; // earth radius, nm
   const dLat = ((b.lat - a.lat) * Math.PI) / 180;
   const dLon = ((b.lon - a.lon) * Math.PI) / 180;

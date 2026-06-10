@@ -88,6 +88,8 @@ check(weekly[1].egtGap < weekly[2].egtGap && weekly[2].egtGap < weekly[3].egtGap
 check(weekly[3].fuelGap > 15, `Engine 2 fuel rate diverged from twin (${pct(weekly[3].fuelGap)} at matched load)`);
 check(anomaly.alerts.some((a) => a.code === 'EFF_DELTA'), 'CAUTION EFF_DELTA active');
 check(anomaly.alerts.some((a) => a.code === 'EGT_DIVERGENCE'), 'CAUTION EGT_DIVERGENCE active');
+const egtMsg = anomaly.alerts.find((a) => a.code === 'EGT_DIVERGENCE')?.message ?? '';
+check(egtMsg.includes(`${anomaly.static.id}-E2`), `EGT alert names the diverging engine id (PM ruling 3): "${egtMsg}"`);
 
 // Bucket exclusions (§6): environment, human factors, operations.
 const windowSamples = anomaly.history.hourly.filter((s) => s.t >= ANOMALY_START);

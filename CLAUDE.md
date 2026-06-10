@@ -36,8 +36,20 @@ src/data/
   alerts.ts              §7 WARNING / CAUTION / ADVISORY evaluation
   dispositions.ts        data disposition registry (see above)
   fleetState.ts          single entry point: getFleet() / advanceFleet(n) / resetFleet()
+src/state/
+  FleetProvider.tsx      interaction state ONLY: fleet snapshot, live tick, speed, sim clock
+src/components/          presentation ONLY: props in, events out; no generator imports
+  index.ts               barrel — locked §8 names live here; rename passes start here
+  Field.tsx              registry router: VISIBLE/CONTEXTUAL/HIDDEN/UNDEFINED per field
+  Contextual.tsx         THE single shared reveal primitive (all hover/expand behavior)
+  FleetView/VesselCard/FleetMap/AlertRail            Level 1 (fleet view, route /)
+  VesselView/VesselHeader/EfficiencyPanel/...        Level 2 (vessel view, /vessel/[id])
 src/app/inspect/page.tsx unstyled data inspection tables (NOT the dashboard)
 ```
+
+## Greybox rules (until Anthony's Figma reskin)
+
+Greyscale only; alert levels are bracketed text labels, never colors; no animations/shadows/radius/icons; system font stack. Three-layer separation is enforced by directory: data ← state ← components, never sideways. All reveals go through `Contextual`; all field rendering goes through `Field` (the disposition registry decides). Components stay ≤ ~150 lines.
 
 ## Verification harness
 
