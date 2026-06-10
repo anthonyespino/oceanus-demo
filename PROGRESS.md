@@ -1,3 +1,22 @@
+# PROGRESS — 2026-06-10 (Session 6.2: LAYOUT PROBE round 3.2 — FleetTrend band)
+
+## Done
+
+- **FleetTrend promoted** to the full-width band at the top of the page; trend board directly below; chart below the board. This supersedes round 3's chart-on-top placement — the layout toggle now selects only the below-board chart's depth (a: 560px anchor / b: 240px band).
+- **Band chart rebuilt**, tile-sparkline treatment: 7-day rolling mean over the fleet daily-mean series, zero-baseline reference line, subtle normal-range band (p10–p90 of the full smoothed year — a constant envelope independent of zoom), 30d/90d/1y range toggle (default 90d). Chart measures the band's content box and fills it — no orphaned space.
+- **Hero numeral integrated**: 30px tabular "30d fleet mean +x.x%" sits left of the chart inside the band, not floating after it.
+- **fleet_total_daily_spend slot reserved** under the hero numeral (placeholder unchanged — still UNDEFINED, ruling 4); removed from the page bottom. If Anthony rules it in, this is where it lives.
+- verify/lint/build green.
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: normal-range band = p10–p90 of the full year rather than of the visible window — a reference envelope shouldn't change meaning when you zoom; window-relative is one line.
+- REVERSIBLE: 7-day rolling mean for smoothing (trailing window) — matches the 7d sustained gate in the alert logic.
+- REVERSIBLE: range toggle is band-local state, not a FleetProvider toggle — it's a chart zoom, not a probe variant under comparison.
+- REVERSIBLE: hero numeral reports the RAW 30d mean (not smoothed) — the number should match what derived metrics report elsewhere; smoothing is visual only.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 6.1: LAYOUT PROBE round 3.1 fixes — branch `layout-probe`)
 
 ## Done

@@ -12,7 +12,6 @@ import { AlertRail } from './AlertRail';
 import { FleetTrend } from './FleetTrend';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
-import { Field } from './Field';
 import { gb } from './gb';
 import { NEUTRAL, RADIUS } from './probeTokens';
 
@@ -75,10 +74,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         </span>
       </div>
 
-      {/* layout variant (b): shallow full-width chart band above the board */}
-      {layoutVariant === 'chart-band' && (
-        <FleetMap fleet={fleet} treatment={treatment} width={1240} height={240} />
-      )}
+      {/* round 3.2: FleetTrend band owns the top of the page; board directly
+          below; chart below the board (supersedes round 3's chart-on-top) */}
+      <FleetTrend fleet={fleet} />
       <AlertRail fleet={fleet} />
 
       <div
@@ -102,12 +100,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         })}
       </div>
 
-      {/* layout variant (a): board first, the large anchor chart below */}
-      {layoutVariant === 'board-first' && (
-        <FleetMap fleet={fleet} treatment={treatment} width={1240} height={560} />
-      )}
-      <FleetTrend fleet={fleet} />
-      <Field level="fleet" field="fleet_total_daily_spend" />
+      {/* chart below the board; the layout toggle now selects its depth only
+          (a: large anchor, b: shallow band). spend slot moved into FleetTrend. */}
+      <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
     </main>
   );
 }

@@ -1,29 +1,91 @@
 'use client';
-// Figma name: FleetView/FleetTrend (slash-namespaced sub-component).
-// Whole-fleet efficiency trajectory over the year — the v2 analytical-first
-// posture in one strip. Crude polyline; also context for the UNDEFINED
-// fleet_total_daily_spend decision.
+// LAYOUT PROBE round 3.2: FleetTrend promoted to the full-width band at the
+// top of the page (Figma name: FleetView/FleetTrend). Hero numeral lives IN
+// the band (left), chart fills the rest — no orphaned space. Same treatment
+// as the tile sparklines: single grey stroke, zero-baseline reference, plus
+// 7-day smoothing and a subtle 1y normal-range band. The (still UNDEFINED)
+// fleet_total_daily_spend has its reserved slot here under the hero numeral.
 
+import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { fleetDailyTrend } from '../data/fleetState';
 import { Field } from './Field';
-import { Sparkline } from './Sparkline';
+import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
+import { NEUTRAL, RADIUS, TYPE } from './probeTokens';
+
+type TrendRange = 30 | 90 | 365;
+const H = 124;
+
+function rollingMean(xs: number[], window = 7): number[] {
+  return xs.map((_, i) => {
+    const slice = xs.slice(Math.max(0, i - window + 1), i + 1);
+    return slice.reduce((a, b) => a + b, 0) / slice.length;
+  });
+}
 
 export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
-  const trend = fleetDailyTrend(fleet);
-  const recent = trend.slice(-30).map((d) => d.delta);
-  const recentMean = recent.reduce((a, b) => a + b, 0) / (recent.length || 1);
+  const [range, setRange] = useState<TrendRange>(90); // default 90d
+  const [wrapRef, w] = useContentWidth(900);
+
+  const daily = fleetDailyTrend(fleet).map((d) => d.delta);
+  const smoothed = rollingMean(daily); // daily-mean series, 7d smoothing
+  const vals = smoothed.slice(-range);
+  const mean30 = daily.slice(-30).reduce((a, b) => a + b, 0) / Math.min(30, daily.length);
+
+  // Normal range: p10-p90 of the FULL year of smoothed values — a constant
+  // reference envelope, independent of the selected zoom range.
+  const sorted = [...smoothed].sort((a, b) => a - b);
+  const p10 = sorted[Math.floor(sorted.length * 0.1)];
+  const p90 = sorted[Math.floor(sorted.length * 0.9)];
+
+  const lo = Math.min(...vals, p10, 0) - 0.3;
+  const hi = Math.max(...vals, p90, 0) + 0.3;
+  const y = (v: number) => H - ((v - lo) / (hi - lo)) * H;
+  const x = (i: number) => (i / Math.max(1, vals.length - 1)) * w;
+
+  const toggle = (active: boolean): React.CSSProperties => ({
+    border: `1px solid ${NEUTRAL.border}`,
+    borderRadius: RADIUS,
+    background: active ? '#e8e8e8' : NEUTRAL.surface,
+    padding: '1px 8px',
+    fontSize: 11,
+    cursor: 'pointer',
+  });
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>fleet trend — whole-fleet efficiency vs baselines, 1 y</div>
-      <Field level="fleet" field="fleet_trend_1y">
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <Sparkline values={trend.map((d) => d.delta)} width={620} height={40} />
-          <span style={gb.dim}>30d fleet mean {fmtPct(recentMean)}</span>
+    <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+        <span style={gb.label}>fleet trend — whole-fleet efficiency vs baselines (7d smoothed)</span>
+        <span style={{ display: 'inline-flex', gap: 4 }}>
+          <button style={toggle(range === 30)} onClick={() => setRange(30)}>30d</button>
+          <button style={toggle(range === 90)} onClick={() => setRange(90)}>90d</button>
+          <button style={toggle(range === 365)} onClick={() => setRange(365)}>1y</button>
+        </span>
+      </div>
+      <div style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
+        {/* hero numeral, integrated — not floating after the chart */}
+        <div style={{ width: 190, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ fontSize: 30, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{fmtPct(mean30)}</div>
+          <div style={TYPE.micro}>30d fleet mean</div>
+          {/* reserved slot: if Anthony rules fleet_total_daily_spend in, it lives here */}
+          <div style={{ marginTop: 10 }}>
+            <Field level="fleet" field="fleet_total_daily_spend" />
+          </div>
         </div>
-      </Field>
+        <div ref={wrapRef} style={{ flex: 1, minWidth: 0 }}>
+          <svg width={w} height={H} style={{ display: 'block', border: '1px solid #ddd' }}>
+            {/* subtle normal-range band (1y p10-p90) */}
+            <rect x={0} y={y(p90)} width={w} height={Math.max(0, y(p10) - y(p90))} fill="#f0f0f0" />
+            {/* zero-baseline reference */}
+            <line x1={0} y1={y(0)} x2={w} y2={y(0)} stroke="#bbb" strokeWidth={1} />
+            <polyline
+              points={vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}
+              fill="none" stroke="#666" strokeWidth={1.25}
+            />
+          </svg>
+        </div>
+      </div>
     </section>
   );
 }
