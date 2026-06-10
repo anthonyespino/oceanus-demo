@@ -1,3 +1,22 @@
+# PROGRESS — 2026-06-10 (Session 6.1: LAYOUT PROBE round 3.1 fixes — branch `layout-probe`)
+
+## Done
+
+- **Overflow bug fixed**: both charts now measure their container's content box (`useContentWidth`: clientWidth + ResizeObserver, padding respected) and render inside a clipped wrapper — the SVG can no longer paint past the card stroke; fit-to-fleet refits re-derive from the measured width.
+- **Label collision system** (`chartLayout.ts` — a systems decision, on record): (1) markers within 14px agglomerate into a cluster marker with a count chip ("2 ▾") that splays into a clickable member list on hover/focus; (2) remaining labels place greedily through 8 candidate anchors (E, W, N, S, then diagonals with leader lines), colliding against marker boxes, placed labels, chip boxes, and chart bounds; (3) an unplaceable label is dropped rather than overprinted — the tooltip still names the vessel. Placement order = rank order → fully deterministic. The same `clusterPoints` serves InspectorChart ghosts.
+- **Marker affordances**: 28px invisible hit areas (24px on ghosts) — dots stay small, targets got big; hover/focus draws a marker ring and a tooltip (name, mode, sustained deviation, worst alert) rendered through the Contextual primitive (it gained a controlled `open` prop so SVG hover sources drive the same reveal — policy still one file); click/Enter/Space expands that vessel's inspector via the same URL state as a tile click; markers and cluster chips are tab-focusable.
+- verify/lint/build green; routes smoke-tested.
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: cluster radius 14px fleet / 10px ghosts; label font 9px with 0.58em width estimate — tune visually in Figma.
+- REVERSIBLE: candidate order E → W → N → S → diagonals (leader lines only on diagonals) — biases labels to the right of markers, matching the chart's eastward-padded frame.
+- REVERSIBLE: dropped-label fallback (vs. always-leader or font-shrink) — overprinting is the only banned outcome.
+- REVERSIBLE: Contextual controlled mode (`open` prop) rather than a separate tooltip component — keeps all reveal policy in one file at the cost of one optional prop.
+- REVERSIBLE: cluster splay panel overlaps its marker so the cursor crosses into it without a gap; closes on mouse-leave.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 6: LAYOUT PROBE round 3 — branch `layout-probe`, no merge)
 
 ## Done

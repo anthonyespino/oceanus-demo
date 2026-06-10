@@ -10,10 +10,20 @@
 
 import { useState } from 'react';
 
-export function Contextual({ label, children }: { label: string; children: React.ReactNode }) {
+// `open` (controlled) lets non-HTML hover sources — SVG chart markers — drive
+// the same reveal: the policy still lives in this one file.
+export function Contextual({
+  label,
+  children,
+  open: controlledOpen,
+}: {
+  label: string;
+  children: React.ReactNode;
+  open?: boolean;
+}) {
   const [hover, setHover] = useState(false);
   const [pinned, setPinned] = useState(false);
-  const open = hover || pinned;
+  const open = controlledOpen ?? (hover || pinned);
 
   return (
     <span

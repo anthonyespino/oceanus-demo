@@ -1,4 +1,7 @@
 'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
 // LAYOUT PROBE: shared nautical chart core (hand-rolled SVG, no libraries).
 // Draws the instrument furniture — dark water, approximate Gulf coastline,
 // graticule with frame ticks/labels, compass rose, scale bar — for any
@@ -36,6 +39,26 @@ function ticks(min: number, max: number, step: number): number[] {
   const out: number[] = [];
   for (let v = Math.ceil(min / step) * step; v <= max; v += step) out.push(Math.round(v * 100) / 100);
   return out;
+}
+
+/**
+ * Round 3.1 item 1: charts size themselves to the container's CONTENT box
+ * (padding respected) so the SVG never paints past the card stroke. The
+ * wrapper also clips as belt-and-braces; refits re-derive from this width.
+ */
+export function useContentWidth(fallback: number): [React.RefObject<HTMLDivElement | null>, number] {
+  const ref = useRef<HTMLDivElement>(null);
+  const [w, setW] = useState(fallback);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setW(el.clientWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, w];
 }
 
 export function NauticalChart({
