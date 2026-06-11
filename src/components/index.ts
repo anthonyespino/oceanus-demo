@@ -3,7 +3,7 @@
 // rename pass should only touch this file plus mechanical references.
 
 export { FleetView } from './FleetView';
-export { FleetTrend } from './FleetTrend'; // Figma: FleetView/FleetTrend
+export { FleetHealthBand } from './FleetHealthBand'; // ROUND 12: FleetTrend evolved + renamed (recorded for Figma library)
 export { VesselCard } from './VesselCard';
 export { VesselTile } from './VesselTile'; // LAYOUT PROBE only (branch: layout-probe)
 export { FleetRail } from './FleetRail'; // LAYOUT PROBE only

@@ -9,7 +9,7 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { useFleet } from '../state/FleetProvider';
 import { AlertRail } from './AlertRail';
-import { FleetTrend } from './FleetTrend';
+import { FleetHealthBand } from './FleetHealthBand';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
 import { PortCallsTimeline } from './PortCallsTimeline';
@@ -17,7 +17,7 @@ import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const { density, treatment, layoutVariant } = useFleet();
+  const { density, treatment, layoutVariant, censusFilter } = useFleet();
 
   // Scale safety (round 11): status class first, then |sustained_deviation| —
   // degraded vessels group at the top regardless of tile size.
@@ -42,7 +42,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
       </div>
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
-      <Annotated name="FleetTrend"><FleetTrend fleet={fleet} /></Annotated>
+      <Annotated name="FleetHealthBand"><FleetHealthBand fleet={fleet} /></Annotated>
       <Annotated name="AlertRail"><AlertRail fleet={fleet} /></Annotated>
 
       <div
@@ -59,7 +59,15 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         {ranked.map((v) => {
           const promoted = promotedIds.has(v.static.id);
           return (
-            <div key={v.static.id} style={promoted ? { gridColumn: 'span 2', gridRow: 'span 2' } : undefined}>
+            <div
+              key={v.static.id}
+              id={`tile-${v.static.id}`}
+              style={{
+                ...(promoted ? { gridColumn: 'span 2', gridRow: 'span 2' } : {}),
+                // census filter (round 12): matching tiles stay full, rest dim
+                opacity: censusFilter && vesselStatus(v.alerts) !== censusFilter ? 0.3 : 1,
+              }}
+            >
               <Annotated name="VesselCard">
                 <VesselTile vessel={v} density={density} treatment={treatment} promoted={promoted} />
               </Annotated>

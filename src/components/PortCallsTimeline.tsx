@@ -19,14 +19,14 @@ const WINDOW_H = 72;
 const LABEL_W = 150;
 const LANE_H = 24;
 
-interface Block {
+export interface Block {
   vessel: VesselState;
   port: string;
   etaMs: number | null; // null = moored now
   bunker: boolean;
 }
 
-function collectBlocks(fleet: VesselState[], now: number): Block[] {
+export function collectBlocks(fleet: VesselState[], now: number, windowH = WINDOW_H): Block[] {
   const blocks: Block[] = [];
   for (const v of fleet) {
     if (v.derived.mode === 'PORT') {
@@ -37,7 +37,7 @@ function collectBlocks(fleet: VesselState[], now: number): Block[] {
     }
     for (const call of v.history.nextPortCalls) {
       const hoursOut = (call.eta - now) / HOUR_MS;
-      if (hoursOut < 0 || hoursOut > WINDOW_H) continue;
+      if (hoursOut < 0 || hoursOut > windowH) continue;
       // BUNKER flag: same reserve constant as the ENDURANCE alert.
       const bunker = v.derived.endurance_hours < hoursOut * ENDURANCE_RESERVE;
       blocks.push({ vessel: v, port: call.port, etaMs: call.eta, bunker });
@@ -71,7 +71,7 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
   const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
+    <section id="port-calls" style={{ ...gb.box, marginBottom: 8 }}>
       <div style={gb.label}>port calls — next 72 h</div>
       <Field level="fleet" field="port_calls_timeline">
         <div ref={wrapRef} style={{ position: 'relative' }}>

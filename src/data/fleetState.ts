@@ -49,6 +49,28 @@ export function fleetDailyTrend(states: VesselState[]): { day: number; delta: nu
     .map(([day, arr]) => ({ day, delta: Math.round((arr.reduce((x, y) => x + y, 0) / arr.length) * 100) / 100 }));
 }
 
+/** Fleet-total burn right now, gph (sum of per-vessel burn_rate). */
+export function fleetBurnNow(states: VesselState[]): number {
+  return Math.round(states.reduce((a, v) => a + v.derived.burn_rate_gph, 0));
+}
+
+/** Hourly fleet-total burn over the last 24h, gph (round 12 band sparkline). */
+export function fleetBurnSeries24h(states: VesselState[]): number[] {
+  const out: number[] = [];
+  for (let h = 0; h < 24; h++) {
+    let total = 0;
+    for (const v of states) {
+      const slice = v.history.minutes.slice(h * 60, h * 60 + 60);
+      if (slice.length === 0) continue;
+      const mean =
+        slice.reduce((a, s) => a + s.engines.reduce((x, e) => x + e.fuel_rate_gph, 0), 0) / slice.length;
+      total += mean;
+    }
+    out.push(Math.round(total));
+  }
+  return out;
+}
+
 function toState(rt: VesselRuntime): VesselState {
   const derived = computeDerived(rt.history);
   return {

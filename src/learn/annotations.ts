@@ -11,6 +11,10 @@ export interface Annotation {
 export const ANNOTATIONS: Record<string, Annotation> = {
   SystemStatusStrip: { mark: '●', desc: "Reports the system's own data health: link state, worst staleness, alert counts", answers: 'can I trust what I’m seeing?' },
   FleetTrend: { mark: '●', desc: 'Whole-fleet efficiency trajectory vs baselines, smoothed', answers: 'which direction is the fleet drifting?' },
+  // Round 12 alias: the band evolved (census/burn/arrivals cells added);
+  // docent copy update is Anthony's (use-as-written rule) — until then the
+  // band carries the trend copy.
+  FleetHealthBand: { mark: '●', desc: 'Whole-fleet efficiency trajectory vs baselines, smoothed', answers: 'which direction is the fleet drifting?' },
   AlertRail: { mark: '●', desc: 'Active warnings/cautions fleet-wide, one line each, linked to vessels', answers: 'what formally wants attention?' },
   VesselCard: { mark: '●', desc: "One vessel's glanceable state: name, status, mode, trend, deviation, endurance", answers: 'is this ship fine, watched, or a problem?' },
   NominalRow: { mark: '●', desc: 'Healthy vessels compressed into one expandable line', answers: 'is everyone else okay?' },

@@ -1,3 +1,24 @@
+# PROGRESS — 2026-06-11 (Session 15: ROUND 12 — FleetHealthBand)
+
+## Done
+
+- **FleetHealthBand** replaces the FleetTrend band (rename recorded in the barrel and flagged for the Figma library): one card, four cells — [STATUS CENSUS] [30D MEAN + trend curve] [FLEET BURN NOW] [NEXT 24H]. Existing type tokens only; hairline cell dividers; card grammar throughout.
+- **Census**: counts by status class, numerals tinted per active treatment (dark-cockpit keeps nominal neutral). Clickable filters: tapping a class highlights matching tiles (non-matching dim to 30%), scrolls the first match into view, tap again to clear. Filter state lives in FleetProvider (interaction state).
+- **Coupling rule encoded and commented in the component**: census and mean ALWAYS render together — an average without its exception counts beside it is how a fleet hides a failing ship; both cells are unconditional by construction.
+- **Fleet burn**: live sum of burn_rate across vessels + 24h hourly fleet-burn sparkline (auto-ranged). Series computed in the data layer (`fleetBurnSeries24h`/`fleetBurnNow`).
+- **Next 24h**: arrival count + BUNKER flag count, reusing the timeline's own `collectBlocks` (same ENDURANCE_RESERVE constant — still no second magic number); the cell links to the arrivals board anchor.
+- **Spend slot (⚖ #4)** reserved in the mean cell: renders only if/when Anthony rules it in (Field returns null while UNDEFINED).
+- 30/90d/1y range toggle and the IKB-fill experiment carry over into the mean cell.
+- Learn Mode: the band carries the sanctioned FleetTrend docent copy as an alias — copy update is Anthony's (use-as-written rule).
+
+## Decisions Made (DEV DECISIONS pending Anthony / reversible)
+
+- DEV DECISION: census click = filter+scroll (dim non-matching to 30%) rather than a hard filter that removes tiles — the fleet never leaves the screen, consistent with the rail principle.
+- REVERSIBLE: census shows all three classes including zeros — a visible "0 degraded" is information, not clutter.
+- REVERSIBLE: arrivals cell counts scheduled ETAs only (moored vessels excluded from the 24h count).
+
+---
+
 # PROGRESS — 2026-06-11 (Session 14: ROUND 11 — inspector density + scale safety)
 
 ## Done
