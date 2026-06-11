@@ -15,6 +15,7 @@ import { RevealZone } from './Contextual';
 import { Field } from './Field';
 import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
+import { Label } from './Glyph';
 
 // ---------------------------------------------------------------- geometry --
 // ViewBox 720×300, bow LEFT. Replace HULL_PATH + GEOM with Figma export later.
@@ -77,7 +78,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
-        <div style={{ ...gb.label, marginBottom: 0 }}>fuel system</div>
+        <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
         <ReconChip vessel={vessel} />
       </div>
       <div style={{ height: 'var(--pad-section)' }} />

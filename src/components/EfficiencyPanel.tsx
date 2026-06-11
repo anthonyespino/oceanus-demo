@@ -11,6 +11,7 @@ import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
 import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
+import { Label } from './Glyph';
 
 export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   const d = vessel.derived;
@@ -31,7 +32,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           </span>
         }
       >
-      <div style={gb.label}>efficiency — trend vs {d.mode} baseline</div>
+      <Label g="chart">efficiency · {d.mode}</Label>
       {/* fixed stats row */}
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">

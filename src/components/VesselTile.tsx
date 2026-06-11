@@ -19,6 +19,9 @@ import { Stat } from './Stat';
 import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT } from './probeTokens';
 import { useFleet, type ColorTreatment, type TileDensity } from '../state/FleetProvider';
+import { Glyph, type GlyphName } from './Glyph';
+
+const MODE_GLYPH: Record<string, GlyphName> = { TRANSIT: 'route', STATION: 'vessel', STANDBY: 'clock', PORT: 'anchor' };
 
 const LEVEL_COLOR: Record<string, string> = {
   WARNING: 'var(--color-alert-warning)',
@@ -97,8 +100,8 @@ export function VesselTile({
           } size={density === 'minimal' ? 24 : 'var(--type-hero-size)'} />
         </div>
         <div style={{ marginTop: 6 }}>
-          <span style={{ ...TYPE.micro, border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '1px 8px', color: NEUTRAL.inkSecondary }}>
-            {d.mode}
+          <span style={{ ...TYPE.micro, border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '1px 8px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Glyph name={MODE_GLYPH[d.mode]} size={11} />{d.mode}
           </span>
         </div>
       </div>

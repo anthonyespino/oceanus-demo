@@ -21,6 +21,7 @@ import { Stat } from './Stat';
 import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
+import { Label } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 
 type TrendRange = 30 | 90 | 365;
@@ -85,7 +86,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'var(--pad-section)' }}>
-        <span style={{ ...gb.label, marginBottom: 0 }}>fleet</span>
+        <Label g="vessel" style={{ marginBottom: 0 }}>fleet</Label>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           <button style={toggleStyle(range === 30)} onClick={() => setRange(30)}>30d</button>
           <button style={toggleStyle(range === 90)} onClick={() => setRange(90)}>90d</button>

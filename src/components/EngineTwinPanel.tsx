@@ -10,6 +10,7 @@ import { Stat } from './Stat';
 import { InstrumentCluster, EnginesSummary } from './InstrumentCluster';
 import { useFleet } from '../state/FleetProvider';
 import { gb, fmtPct } from './gb';
+import { Label } from './Glyph';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 /** Daily mean EGT per engine over the trailing 30 days (running samples). */
@@ -40,7 +41,7 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>machine — engine twin comparison</div>
+      <Label g="engine">engine twins</Label>
       <div style={{ display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' }}>
         <Annotated name="EngineCard"><EngineCard engine={m1} title="Engine 1" egtTrend30d={egtTrend(vessel, 0)} /></Annotated>
         <Field level="vessel" field="twin_comparison_delta">

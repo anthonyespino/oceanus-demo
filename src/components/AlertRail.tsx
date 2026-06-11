@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { gb } from './gb';
+import { Glyph, Label } from './Glyph';
 
 export function AlertRail({ fleet }: { fleet: VesselState[] }) {
   const active = fleet.flatMap((v) =>
@@ -17,13 +18,13 @@ export function AlertRail({ fleet }: { fleet: VesselState[] }) {
 
   return (
     <section id="alert-strip" style={{ ...gb.box, marginBottom: 8 }} aria-label="active alerts">
-      <div style={gb.label}>active alerts</div>
+      <Label g="alert-triangle">alerts</Label>
       {active.length === 0 ? (
         <div style={gb.dim}>no active warnings or cautions</div>
       ) : (
         active.map(({ vessel, alert }, i) => (
           <div key={`${vessel.id}-${alert.code}-${i}`}>
-            [{alert.level}]{' '}
+            <Glyph name="alert-triangle" size={12} /> [{alert.level}]{' '}
             <Link href={`/vessel/${vessel.id}`} style={{ textDecoration: 'underline', color: 'var(--color-accent-bright)' }}>
               {vessel.name}
             </Link>{' '}

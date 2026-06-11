@@ -6,6 +6,7 @@
 import type { Mode, VesselState } from '../data/types';
 import { MODE_COLOR } from './probeTokens';
 import { gb } from './gb';
+import { Label } from './Glyph';
 
 export function ModeTimeline({ vessel }: { vessel: VesselState }) {
   const ms = vessel.history.minutes;
@@ -18,7 +19,7 @@ export function ModeTimeline({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>mode — last 24 h</div>
+      <Label g="clock">mode 24h</Label>
       <div style={{ display: 'flex', width: '100%', border: '1px solid var(--color-line-subtle)', height: 28 }}>
         {segments.map((seg, i) => (
           <div

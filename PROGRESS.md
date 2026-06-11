@@ -1,3 +1,28 @@
+# PROGRESS — 2026-06-11 (Session 19: ROUND 16 — containment, instruments up, glyphs)
+
+Before/after: r15-inspector.png → r16-inspector.png, r15 → r16-fleet-board.png.
+
+## Done
+
+1. **Ambient canvas RETIRED** (experiment concluded: containment wins): the chart is a normal framed card at the top of the inspector stack — round 15 height cap kept (30vh/360px), fit-to-content framing kept, scrim token no longer used by any component, `ambient` prop deleted from InspectorChart. Nothing on the page overlaps anything.
+2. **VesselInstrumentBand** (full width, under header/alerts): four dials from the shared Gauge — SPEED (0 to cruise×1.35) · BURN (scaled to the vessel's max observed burn from its own 1y history) · EFF Δ (−20..+20; the caution band starts at `EFF_DELTA_CAUTION_PCT` — alert-backed, color earned; Meridian's needle sits in it) · ENDURANCE (log scale 12–2400 h via Gauge's new `display` override; minimum band at the newly exported `BUNKER_SOON_H = 72`, replacing the inline literal). Speed/burn carry no bands — no operating limit exists in the alert logic. New stack order: chart → header/sitrep slot → alerts → instrument band → efficiency → machine → fuel → environment/route/crew → timeline/log.
+3. **Glyph system** — placeholder contract, one file (`Glyph.tsx`): 14 schematic pictograms on a 24px grid, uniform 1.5px stroke, currentColor, no fills, no libraries. Names match the future Figma icon library 1:1 (Glyph/engine ↔ icon/engine) for a mechanical swap. Deployed: every section header (via the new `Label` helper), SystemStatusStrip items (datalink/clock/alert-triangle), mode chips on tiles and the vessel header (TRANSIT→route, STATION→vessel, STANDBY→clock, PORT→anchor — DEV DECISION, Anthony's icon language overrules), PortCallsTimeline port rows (anchor), AlertRail lines (triangle).
+4. **Text density pass** — every cut logged:
+   - Headers shortened: "machine — engine twin comparison" → ⚙ ENGINE TWINS; "efficiency — trend vs {mode} baseline" → 📈 EFFICIENCY · {mode}; "burn vs speed — 12mo transit envelope · N h" → 📈 BURN VS SPEED; "fuel system — storage → feeder → flow meter → engines" → ⛽ FUEL; "route & ports — voyage progress" → ROUTE; "mode — last 24 h" → MODE 24H; "active alerts" → ALERTS; "port calls — next 72 h" → PORT CALLS — 72H; "position — 24h trail · next port" → POSITION; "fleet" → FLEET (glyphs shown here as emoji shorthand; actual glyphs are the line pictograms).
+   - DataRow labels dropped one ink step (secondary → muted) — values carry the hierarchy.
+   - CUT "state" label on engine cards — "RUNNING/STOPPED" states itself.
+   - CUT "level" and "volume" labels on tank cells — "72%" and "9,888 gal" self-describe.
+5. The per-engine InstrumentCluster stays in the machine section (cell 3), unchanged.
+
+## Decisions Made (DEV DECISIONS pending Anthony / reversible)
+
+- DEV DECISION: mode→glyph mapping (route/vessel/clock/anchor) — placeholder semantics; Anthony's icon language overrules.
+- DEV DECISION: STATION uses the vessel glyph (a DP vessel holding station is "being a vessel hard") — weakest mapping of the four, flagged.
+- REVERSIBLE: dial set and scales on the band (speed ×1.35 ceiling, endurance log 12–2400 h); burn dial scales per-vessel by design (a 78 gph coastal and 300 gph OSV both read mid-dial at normal cruise).
+- NOTE: the scrim token remains in the foundation block, now unused — Anthony may want it for Figma anyway; flag for removal at strip-week if not.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 18: ROUND 15 — inspector voids killed)
 
 Before/after: docs/screens/r14-inspector.png → r15-inspector.png,

@@ -16,6 +16,7 @@ import { clusterPoints } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
 import { gb } from './gb';
+import { Label } from './Glyph';
 
 // Round 15: frame to content — focus vessel + 24h trail + the nearest few
 // ghosts at a sensible radius (~60-90 nm). The next port deliberately does
@@ -59,14 +60,12 @@ export function InspectorChart({
   treatment,
   width = 480,
   height = 300,
-  ambient = false, // round 7: render frameless as the inspector's backdrop
 }: {
   vessel: VesselState;
   fleet: VesselState[];
   treatment: ColorTreatment;
   width?: number;
   height?: number;
-  ambient?: boolean;
 }) {
   const router = useRouter();
   const [wrapRef, w] = useContentWidth(width);
@@ -95,7 +94,7 @@ export function InspectorChart({
   const hoveredGhost = hoverId ? ghosts.find((g) => g.id === hoverId) : null;
 
   const body = (
-      <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden', height: ambient ? height : undefined }}>
+      <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <NauticalChart frame={frame} width={w} height={height}>
           {() => (
             <>
@@ -153,10 +152,9 @@ export function InspectorChart({
         )}
       </div>
   );
-  if (ambient) return body;
   return (
     <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
-      <div style={gb.label}>position — 24h trail · next port</div>
+      <Label g="route">position</Label>
       {body}
     </section>
   );

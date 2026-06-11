@@ -33,6 +33,10 @@ export const EGT_GAP_CAUTION_F = 40; // twin EGT divergence → CAUTION
 // the PortCallsTimeline BUNKER flag reuses it — no second magic number.
 export const ENDURANCE_RESERVE = 1.5;
 
+// Bunkering advisory horizon — exported: the endurance dial's minimum band
+// is backed by this same constant.
+export const BUNKER_SOON_H = 72;
+
 export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: DerivedVesselMetrics): Alert[] {
   const alerts: Alert[] = [];
   const now = history.minutes[history.minutes.length - 1];
@@ -94,8 +98,8 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
   if (lastChange && now.t - lastChange < 3 * DAY_MS) {
     alerts.push({ level: 'ADVISORY', code: 'CREW_CHANGE', message: 'Crew change within last 72 h' });
   }
-  if (now.mode !== 'PORT' && d.endurance_hours < 72 && !alerts.some((a) => a.code === 'ENDURANCE')) {
-    alerts.push({ level: 'ADVISORY', code: 'BUNKER_SOON', message: `Bunkering recommended within 72 h (endurance ${d.endurance_hours} h)` });
+  if (now.mode !== 'PORT' && d.endurance_hours < BUNKER_SOON_H && !alerts.some((a) => a.code === 'ENDURANCE')) {
+    alerts.push({ level: 'ADVISORY', code: 'BUNKER_SOON', message: `Bunkering recommended within ${BUNKER_SOON_H} h (endurance ${d.endurance_hours} h)` });
   }
   return alerts;
 }

@@ -35,6 +35,7 @@ export function Gauge({
   limit,
   off = false,
   size = 86,
+  display,
 }: {
   label: string;
   value: number;
@@ -44,6 +45,7 @@ export function Gauge({
   limit?: GaugeLimit;
   off?: boolean;
   size?: number; // round 15: mini-gauges in per-engine reveals
+  display?: string; // round 16: center-text override (log-scale dials)
 }) {
   const angle = (v: number) => A0 + (A1 - A0) * Math.min(1, Math.max(0, (v - min) / (max - min)));
 
@@ -71,7 +73,7 @@ export function Gauge({
         <text x={cx} y={cy + 22 * k} textAnchor="middle"
           style={{ fontFamily: FONT.data, fontSize: Math.max(9, 11 * k), fontVariantNumeric: 'tabular-nums' }}
           fill={off ? NEUTRAL.inkMuted : NEUTRAL.ink}>
-          {off ? 'OFF' : `${Math.round(value)}${unit}`}
+          {off ? 'OFF' : display ?? `${Math.round(value)}${unit}`}
         </text>
       </svg>
       <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted }}>

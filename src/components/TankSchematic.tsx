@@ -7,10 +7,10 @@ import { useFleet } from '../state/FleetProvider';
 import { Field } from './Field';
 import { ReconChip } from './FlowReconciliation';
 import { RevealZone } from './Contextual';
-import { DataRow } from './DataRow';
 import { Stat } from './Stat';
 import { FONT, NEUTRAL } from './probeTokens';
 import { gb } from './gb';
+import { Label } from './Glyph';
 
 // Round 5 dot-matrix experiment: tank fill as a 5×10 dot grid, filled from
 // the bottom, DM Mono. Behind the dev-panel toggle vs the row layout —
@@ -52,11 +52,12 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         </Field>
       ) : (
         <>
+          {/* round 16 cuts: "level"/"volume" labels — % and gal self-describe */}
           <Field level="vessel" field="tank.level_pct">
-            <DataRow label="level" value={<strong>{t.level_pct}%</strong>} />
+            <div style={{ fontFamily: 'var(--font-data)', fontSize: 15, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{t.level_pct}%</div>
           </Field>
           <Field level="vessel" field="tank.level_gal">
-            <DataRow label="volume" value={`${t.level_gal.toLocaleString()} gal`} />
+            <div style={{ fontFamily: 'var(--font-data)', fontSize: 12, color: 'var(--color-ink-secondary)', fontVariantNumeric: 'tabular-nums' }}>{t.level_gal.toLocaleString()} gal</div>
           </Field>
         </>
       )}
@@ -66,7 +67,7 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
-        <div style={{ ...gb.label, marginBottom: 0 }}>fuel system — storage → feeder → flow meter → engines</div>
+        <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
         <ReconChip vessel={vessel} />
       </div>
       <div style={{ height: 'var(--pad-section)' }} />

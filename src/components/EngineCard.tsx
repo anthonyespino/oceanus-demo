@@ -67,7 +67,10 @@ export function EngineCard({
         {title} ({engine.role})
       </div>
       {/* data cluster: labels left-ranged, numerals right-ranged (probe item 6) */}
-      <DataRow label="state" value={engine.running ? 'RUNNING' : 'STOPPED'} />
+      {/* round 16 cut: "state" label was redundant — the value states itself */}
+      <div style={{ fontFamily: 'var(--font-data)', fontSize: 12, color: engine.running ? 'var(--color-ink-primary)' : 'var(--color-ink-muted)' }}>
+        {engine.running ? 'RUNNING' : 'STOPPED'}
+      </div>
       <DataRow label="load" value={`${engine.load_pct}%`} />
       <DataRow label="fuel" value={`${engine.fuel_rate_gph} gph`} />
       </RevealZone>

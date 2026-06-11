@@ -11,6 +11,7 @@ import { transitEnvelope, liveOperatingPoint, envelopeMedianAt, MIN_TRANSIT_HOUR
 import { useContentWidth } from './NauticalChart';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb, fmtPct } from './gb';
+import { Label } from './Glyph';
 
 const H = 250;
 // Round 11 axis hygiene: titles get reserved gutters (y rotated far-left,
@@ -37,7 +38,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   if (env.bins.length < 3) {
     return (
       <section style={{ ...gb.box, marginBottom: 8 }}>
-        <div style={gb.label}>burn vs speed — 12mo transit envelope</div>
+        <Label g="chart">burn vs speed</Label>
         <div style={{ fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkMuted, padding: 24, textAlign: 'center' }}>
           INSUFFICIENT TRANSIT HISTORY
         </div>
@@ -74,7 +75,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>burn vs speed — 12mo transit envelope · {env.transitHours} h</div>
+      <Label g="chart">burn vs speed</Label>
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <svg width={w} height={H} style={{ display: 'block', background: 'var(--color-surface-base)', borderRadius: RADIUS }}>
           <g opacity={sparse ? 0.4 : 1}>

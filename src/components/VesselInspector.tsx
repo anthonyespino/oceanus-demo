@@ -1,10 +1,9 @@
 'use client';
-// ROUND 7: the inspector is "the room you step into" — the ONE place the
-// single-vessel cinematic composition is sanctioned. The zoomed chart is the
-// ambient canvas (focus vessel + trail hero'd, ghosts faint); panels float
-// over its lower half as fully opaque framed cards, with a scrim token
-// dimming the chart beneath the card zone. No glassmorphism. Same sections,
-// same URL state — render mode only.
+// ROUND 16: ambient-canvas experiment RETIRED — containment won. The chart
+// is a normal framed card at the top of the stack (height-capped, fit-to-
+// content framing), nothing on this page overlaps anything. Stack order:
+// chart → header/sitrep slot → alerts → instrument band → efficiency →
+// machine → fuel → environment/route/crew → timeline/log.
 
 import { useEffect, useState } from 'react';
 import type { VesselState } from '../data/types';
@@ -21,11 +20,12 @@ import { WeatherPanel } from './WeatherPanel';
 import { CrewPanel } from './CrewPanel';
 import { RoutePanel } from './RoutePanel';
 import { VesselHeader } from './VesselHeader';
+import { VesselInstrumentBand } from './VesselInstrumentBand';
+import { Label } from './Glyph';
 import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
-// Round 15: the ambient band is a ceiling, not half the room — capped at
-// ~30% of viewport height (360px max). Cards below are the room.
+// Round 15 cap retained: the chart card tops out at ~30% viewport / 360px.
 
 export function VesselInspector({
   vessel,
@@ -44,33 +44,20 @@ export function VesselInspector({
     window.addEventListener('resize', fit);
     return () => window.removeEventListener('resize', fit);
   }, []);
-  const clearH = Math.round(canvasH * 0.45);
+
   return (
     <div style={{ flex: 1, minWidth: 0, position: 'relative', '--pad-card': 'var(--pad-card-dense)' } as React.CSSProperties}>
       {/* round 15: inspector cards drop one padding step via scoped token
           override — every gb.box inside resolves pad/card to pad/card-dense */}
-      {/* ambient canvas: the spatial backdrop of the room */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: canvasH, borderRadius: 6, overflow: 'hidden' }}>
-        <InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} ambient />
-        {/* scrim: dims the chart beneath the card zone (legibility guardrail) */}
-        <div
-          style={{
-            position: 'absolute',
-            left: 0, right: 0, bottom: 0,
-            top: clearH - 50,
-            background: `linear-gradient(to bottom, transparent, var(--color-scrim) 30%, var(--color-scrim))`,
-            pointerEvents: 'none',
-          }}
-        />
-      </div>
-      {/* floating card grid — fully opaque cards, deliberate row order */}
-      <div style={{ position: 'relative', paddingTop: clearH }}>
+      <div style={{ position: 'relative' }}>
+        {/* contained chart card — height-capped, zero bleed */}
+        <Annotated name="NauticalChart"><InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} /></Annotated>
         {/* VesselSitrep slot: component lands here once designed; the dashed
             placeholder was scaffolding and no longer renders (round 9) */}
         <Annotated name="VesselHeader"><VesselHeader vessel={vessel} /></Annotated>
         {vessel.alerts.length > 0 && (
           <section style={{ ...gb.box, marginBottom: 8 }}>
-            <div style={gb.label}>active alerts — this vessel</div>
+            <Label g="alert-triangle">alerts</Label>
             {vessel.alerts.map((a, i) => (
               <div key={i}>
                 [{a.level}] {a.message}
@@ -78,6 +65,8 @@ export function VesselInspector({
             ))}
           </section>
         )}
+        {/* round 16: the marine-console moment, promoted */}
+        <VesselInstrumentBand vessel={vessel} />
         <div className="cardrow">
           <div style={{ flex: '1 1 480px', minWidth: 0 }}>
             <Annotated name="EfficiencyCurve"><EfficiencyCurve vessel={vessel} /></Annotated>

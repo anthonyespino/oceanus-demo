@@ -5,6 +5,7 @@
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
 import { gb, fmtDay } from './gb';
+import { Label } from './Glyph';
 
 export function CrewPanel({ vessel }: { vessel: VesselState }) {
   const now = vessel.history.minutes.at(-1)!.t;
@@ -12,7 +13,7 @@ export function CrewPanel({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>crew</div>
+      <Label g="crew">crew</Label>
       <table style={{ borderCollapse: 'collapse' }}>
         <tbody>
           {vessel.history.crew.map((c) => (

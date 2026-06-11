@@ -9,6 +9,9 @@ import type { VesselState } from '../data/types';
 import { PORTS, distanceNm } from '../data/fleet';
 import { Field } from './Field';
 import { gb, fmtDay } from './gb';
+import { Glyph, type GlyphName } from './Glyph';
+
+const MODE_GLYPH: Record<string, GlyphName> = { TRANSIT: 'route', STATION: 'vessel', STANDBY: 'clock', PORT: 'anchor' };
 
 export function VesselHeader({ vessel }: { vessel: VesselState }) {
   const master = vessel.history.crew.find((c) => c.role === 'Master');
@@ -27,7 +30,9 @@ export function VesselHeader({ vessel }: { vessel: VesselState }) {
         {vessel.static.length_ft} ft {vessel.static.class}
       </span>
       <Field level="vessel" field="mode">
-        <span style={gb.boxTight}>{vessel.derived.mode}</span>
+        <span style={{ ...gb.boxTight, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <Glyph name={MODE_GLYPH[vessel.derived.mode]} size={12} />{vessel.derived.mode}
+        </span>
       </Field>
       <Field level="vessel" field="position">
         <span>

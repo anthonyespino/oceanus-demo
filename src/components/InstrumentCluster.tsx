@@ -10,6 +10,7 @@ import { toggleStyle } from './probeTokens';
 import { Gauge } from './Gauge';
 import { DataRow } from './DataRow';
 import { gb } from './gb';
+import { Label } from './Glyph';
 
 const WATCH = 'var(--color-alert-caution)';
 const DANGER = 'var(--color-alert-warning)';
@@ -32,7 +33,7 @@ export function EnginesSummary({ vessel }: { vessel: VesselState }) {
   const now = vessel.history.minutes.at(-1)!;
   return (
     <section style={{ ...gb.box, marginBottom: 8, height: '100%', boxSizing: 'border-box' }}>
-      <div style={gb.label}>engines</div>
+      <Label g="engine">engines</Label>
       {now.engines.map((e, i) => (
         <DataRow
           key={e.engine_id}
@@ -54,7 +55,7 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
   return (
     <section style={{ ...gb.box, marginBottom: 8, height: '100%', boxSizing: 'border-box' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-        <div style={{ ...gb.label, marginBottom: 0 }}>instruments</div>
+        <Label g="gauge" style={{ marginBottom: 0 }}>instruments</Label>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           {now.engines.map((eng, i) => (
             <button key={eng.engine_id} style={toggleStyle(i === idx)} onClick={() => setIdx(i)}>

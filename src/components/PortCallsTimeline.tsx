@@ -14,6 +14,7 @@ import { useContentWidth } from './NauticalChart';
 import { Field } from './Field';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
+import { Glyph, Label } from './Glyph';
 
 const WINDOW_H = 72;
 const LABEL_W = 150;
@@ -72,7 +73,7 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
 
   return (
     <section id="port-calls" style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>port calls — next 72 h</div>
+      <Label g="anchor">port calls — 72h</Label>
       <Field level="fleet" field="port_calls_timeline">
         <div ref={wrapRef} style={{ position: 'relative' }}>
           {/* axis header */}
@@ -90,8 +91,9 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
           )}
           {rows.map(({ port, bs }) => (
             <div key={port} style={{ display: 'flex', borderTop: `1px solid var(--color-line-subtle)` }}>
-              <div style={{ ...mono, width: LABEL_W, flexShrink: 0, padding: '6px 8px 0 0', color: NEUTRAL.inkSecondary }}>
-                {port}
+              <div style={{ ...mono, width: LABEL_W, flexShrink: 0, padding: '6px 8px 0 0', color: NEUTRAL.inkSecondary, display: 'flex', alignItems: 'baseline', gap: 5, overflow: 'hidden' }}>
+                <Glyph name="anchor" size={11} />
+                <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{port}</span>
               </div>
               <div style={{ position: 'relative', flex: 1, height: bs.length * LANE_H + 6 }}>
                 {/* gridlines every 12h + NOW rule (accent) */}

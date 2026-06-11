@@ -10,6 +10,7 @@ import { PORTS, SITES, distanceNm, place } from '../data/fleet';
 import { Field } from './Field';
 import { ACCENT, FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, fmtTime } from './gb';
+import { Label } from './Glyph';
 
 function nearestName(s: VesselSample, places: { name: string; lat: number; lon: number }[]): string {
   const p = places.reduce((a, b) => (distanceNm(s.position, a) < distanceNm(s.position, b) ? a : b));
@@ -103,7 +104,7 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>route & ports — voyage progress</div>
+      <Label g="route">route</Label>
       <Field level="vessel" field="next_port_calls">{body}</Field>
       <div style={{ marginTop: 6 }}>
         <Field level="vessel" field="heading_deg" />

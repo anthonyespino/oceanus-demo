@@ -22,6 +22,9 @@ export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — des
 export { VesselSynoptic } from './VesselSynoptic'; // ROUND 7 addendum: top-down fuel synoptic (verdict 11)
 export { Gauge } from './Gauge'; // ROUND 11: shared radial gauge primitive
 export { TrendChartFill } from './TrendChartFill'; // ROUND 13: fill-parent tile trend chart
+export { Glyph, Label } from './Glyph'; // ROUND 16: glyph contract (Figma icon library 1:1)
+export { VesselInstrumentBand } from './VesselInstrumentBand'; // ROUND 16: marine-console band
+export { EnginesSummary } from './InstrumentCluster'; // ROUND 15: cell-3 fallback
 export { InstrumentCluster } from './InstrumentCluster'; // ROUND 11: DP-console dials (verdict 13)
 export { ReconChip } from './FlowReconciliation'; // ROUND 11: recon dissolved into fuel card header
 export { FleetMap } from './FleetMap';

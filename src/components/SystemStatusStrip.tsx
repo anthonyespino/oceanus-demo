@@ -6,6 +6,7 @@ import type { VesselState } from '../data/types';
 import { useFleet } from '../state/FleetProvider';
 import { Contextual } from './Contextual';
 import { ACCENT, FONT, NEUTRAL } from './probeTokens';
+import { Glyph } from './Glyph';
 
 function fmtAge(ms: number): string {
   const m = Math.floor(ms / 60000);
@@ -41,15 +42,16 @@ export function SystemStatusStrip() {
   return (
     <span style={{ display: 'inline-flex', gap: 14, alignItems: 'baseline' }}>
       <span style={{ ...item, color: datalinkColor }}>
+        <Glyph name="datalink" size={12} />{' '}
         <Contextual label={`DATALINK ${datalink}`}>
           {staleByVessel.length === 0
             ? 'all streams fresh'
             : staleByVessel.map((x) => `${x.name}: ${x.stale.join(', ')}`).join(' · ')}
         </Contextual>
       </span>
-      <span style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
+      <span style={{ ...item, color: NEUTRAL.inkSecondary }}><Glyph name="clock" size={12} /> LAST SYNC {fmtAge(simTime - oldestTs)}</span>
       <a href="#alert-strip" style={{ ...item, color: counts.CAUTION + counts.WARNING > 0 ? ACCENT.bright : NEUTRAL.inkSecondary, textDecoration: 'none' }}>
-        {alertText}
+        <Glyph name="alert-triangle" size={12} /> {alertText}
       </a>
     </span>
   );
