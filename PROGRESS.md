@@ -1,3 +1,29 @@
+# PROGRESS — 2026-06-11 (Session 16: ROUND 13 — expanded tile, void killed)
+
+## Regression archaeology (as asked)
+
+The round 3.3 rule ("the chart takes whatever has nothing else to say") was
+regressed by **round 7**: the card-grammar pass grew the grid cell (roomier
+pad tokens, larger hero type made 1x rows taller, and the 2x cell spans two
+of them) while the chart stayed a fixed 320×72 Sparkline — the growth went
+to whitespace instead of plot. **Round 11** compounded it with equal-height
+row stretching. Fixed structurally, not by nudging.
+
+## Done
+
+1. **Expanded tile = true vertical flex column** filling its grid cell: fixed header (dot, name, hero trend, mode chip) → **TrendChartFill** at flex-grow 1 (minHeight 96; the plot itself measures its flex box via ResizeObserver and scales — never a fixed pixel height; the void has nowhere to live) → alerts → footer stats → details link.
+2. **Chart earned real axes at hero size**: labeled zero baseline (heavier rule), y ticks under the min-gap rule (22px), DM Mono labels in a reserved gutter. The 3-week ramp reads as the hero graphic.
+3. **Alerts in full text on 2x**: the same WARNING/CAUTION lines as the strip, level-colored — replacing the "alert · [CAUTION]" label/value pair that wasted the story. 1x keeps the compact badge row (full text is the 2x privilege).
+4. **Details link pinned bottom-left across sizes** via margin-top auto in the flex column — consistent on 1x, 2x, and stretched cells.
+5. **Sanity checks**: 1x tiles content-define height inside stretched cells with the details link pinned (screenshot r13-fleet-board); stress scenario captured (r13-stress-board) — Gulf Harrier (WARNING) + Meridian fill their 2x cells identically, charts scaled to matching heights, while Albatross/Sandpiper hold 1x with full amber border + badge under the promotion cap.
+
+## Decisions Made (reversible)
+
+- REVERSIBLE: chart minHeight 96px; y-tick min-gap 22px.
+- REVERSIBLE: 2x alert text small mono (11px) — could go data-size if Anthony wants the story louder.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 15: ROUND 12 — FleetHealthBand)
 
 ## Done

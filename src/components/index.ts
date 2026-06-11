@@ -21,6 +21,7 @@ export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrival
 export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — designed in Figma, templated after
 export { VesselSynoptic } from './VesselSynoptic'; // ROUND 7 addendum: top-down fuel synoptic (verdict 11)
 export { Gauge } from './Gauge'; // ROUND 11: shared radial gauge primitive
+export { TrendChartFill } from './TrendChartFill'; // ROUND 13: fill-parent tile trend chart
 export { InstrumentCluster } from './InstrumentCluster'; // ROUND 11: DP-console dials (verdict 13)
 export { ReconChip } from './FlowReconciliation'; // ROUND 11: recon dissolved into fuel card header
 export { FleetMap } from './FleetMap';
