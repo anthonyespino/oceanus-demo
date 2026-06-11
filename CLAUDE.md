@@ -24,6 +24,8 @@ UI sessions consume this registry. Dispositions live in data, not scattered in c
 ```
 DATA_MODEL.md            spec of record, v2 (§ references in code point here)
 DECISIONS.md             ruling ledger — PM/customer rulings binding on implementation
+PM brief                 maintained out-of-band by Anthony, provided to the PM directly.
+                         Reference only, not a spec — DATA_MODEL.md and DECISIONS.md outrank it.
 KICKOFF_PROMPT.md        session briefs from Anthony
 PROGRESS.md              session log: done / decisions / questions (PM-reviewed)
 scripts/verify.ts        CLI verification harness (npm run verify)
