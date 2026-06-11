@@ -42,6 +42,7 @@
   --type-data-size: 13px;
   --type-micro-size: 11px;
   --pad-card: 16px; /* generous air — err roomy */
+  --pad-card-dense: 12px; /* round 15: inspector density step */
   --pad-section: 12px;
   --color-line-hairline: rgba(232, 234, 237, 0.12); /* card frames: ink at low alpha */
   --color-scrim: rgba(11, 14, 19, 0.62); /* dims the chart beneath floating cards */

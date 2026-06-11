@@ -6,6 +6,7 @@
 // dimming the chart beneath the card zone. No glassmorphism. Same sections,
 // same URL state — render mode only.
 
+import { useEffect, useState } from 'react';
 import type { VesselState } from '../data/types';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
 import { EfficiencyCurve } from './EfficiencyCurve';
@@ -23,8 +24,8 @@ import { VesselHeader } from './VesselHeader';
 import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
-const CANVAS_H = 480; // ambient chart height
-const CLEAR_H = 170; // chart zone left fully clear above the floating cards
+// Round 15: the ambient band is a ceiling, not half the room — capped at
+// ~30% of viewport height (360px max). Cards below are the room.
 
 export function VesselInspector({
   vessel,
@@ -36,24 +37,34 @@ export function VesselInspector({
   treatment: ColorTreatment;
 }) {
   const { tankStyle } = useFleet();
+  const [canvasH, setCanvasH] = useState(300);
+  useEffect(() => {
+    const fit = () => setCanvasH(Math.min(360, Math.round(window.innerHeight * 0.3)));
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
+  const clearH = Math.round(canvasH * 0.45);
   return (
-    <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
+    <div style={{ flex: 1, minWidth: 0, position: 'relative', '--pad-card': 'var(--pad-card-dense)' } as React.CSSProperties}>
+      {/* round 15: inspector cards drop one padding step via scoped token
+          override — every gb.box inside resolves pad/card to pad/card-dense */}
       {/* ambient canvas: the spatial backdrop of the room */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: CANVAS_H, borderRadius: 6, overflow: 'hidden' }}>
-        <InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={CANVAS_H} ambient />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: canvasH, borderRadius: 6, overflow: 'hidden' }}>
+        <InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} ambient />
         {/* scrim: dims the chart beneath the card zone (legibility guardrail) */}
         <div
           style={{
             position: 'absolute',
             left: 0, right: 0, bottom: 0,
-            top: CLEAR_H - 60,
+            top: clearH - 50,
             background: `linear-gradient(to bottom, transparent, var(--color-scrim) 30%, var(--color-scrim))`,
             pointerEvents: 'none',
           }}
         />
       </div>
       {/* floating card grid — fully opaque cards, deliberate row order */}
-      <div style={{ position: 'relative', paddingTop: CLEAR_H }}>
+      <div style={{ position: 'relative', paddingTop: clearH }}>
         {/* VesselSitrep slot: component lands here once designed; the dashed
             placeholder was scaffolding and no longer renders (round 9) */}
         <Annotated name="VesselHeader"><VesselHeader vessel={vessel} /></Annotated>

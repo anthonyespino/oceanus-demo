@@ -8,6 +8,7 @@ import type { VesselState } from '../data/types';
 import { Field } from './Field';
 import { RevealZone } from './Contextual';
 import { Sparkline } from './Sparkline';
+import { TrendChartFill } from './TrendChartFill';
 import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
 
@@ -31,22 +32,26 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
         }
       >
       <div style={gb.label}>efficiency — trend vs {d.mode} baseline</div>
-      <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+      {/* fixed stats row */}
+      <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
           <Stat label="30d trend" value={fmtPct(d.trend_30d)} />
-          <span style={{ marginLeft: 8 }}>
-            <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={240} height={32} />
-          </span>
         </Field>
         <Field level="vessel" field="efficiency_delta_vs_mode_baseline">
           <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
-          <span style={{ ...gb.dim, marginLeft: 8 }}>
-            now, vs baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'} · burn {d.burn_rate_gph} gph
-          </span>
-          <span style={{ marginLeft: 12 }}>
-            24h <Sparkline values={d.sparkline_24h} />
-          </span>
         </Field>
+      </div>
+      {/* the ONE elastic element: 30d chart grows to match the row-mate */}
+      <div style={{ flex: 1, minHeight: 90, marginTop: 10 }}>
+        <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
+      </div>
+      {/* footer: 24h strip + baseline context */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>24h</span>
+        <Sparkline values={d.sparkline_24h} width={140} height={20} />
+        <span style={{ ...gb.dim, fontSize: 12 }}>
+          baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'} · burn {d.burn_rate_gph} gph
+        </span>
       </div>
       </RevealZone>
     </section>

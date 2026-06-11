@@ -52,9 +52,11 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   const xLo = Math.min(...speeds) - Math.max(0.25, spanX * 0.18);
   const xHi = Math.max(...speeds) + Math.max(0.25, spanX * 0.18);
   const yVals = [...env.bins.flatMap((b) => [b.p25, b.p75]), ...(pt ? [pt.galNm] : [])].filter((v) => v > 0);
+  // Round 15: band + point own the vertical middle two-thirds, not a
+  // stripe in empty air.
   const spanY = Math.max(0.05, Math.max(...yVals) - Math.min(...yVals));
-  const yLo = Math.min(...yVals) - spanY * 0.15;
-  const yHi = Math.max(...yVals) + spanY * 0.18;
+  const yLo = Math.min(...yVals) - spanY * 0.08;
+  const yHi = Math.max(...yVals) + spanY * 0.1;
   const x = (s: number) => M.l + ((s - xLo) / (xHi - xLo)) * (w - M.l - M.r);
   const y = (v: number) => M.t + (1 - (v - yLo) / (yHi - yLo)) * (H - M.t - M.b);
 

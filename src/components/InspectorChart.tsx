@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
-import { place } from '../data/fleet';
+import { place, distanceNm } from '../data/fleet';
 import type { ColorTreatment } from '../state/FleetProvider';
 import { NauticalChart, useContentWidth, CHART_INK, type ChartFrame } from './NauticalChart';
 import { clusterPoints } from './chartLayout';
@@ -17,22 +17,39 @@ import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
 import { gb } from './gb';
 
-function focusFrame(vessel: VesselState): ChartFrame {
+// Round 15: frame to content — focus vessel + 24h trail + the nearest few
+// ghosts at a sensible radius (~60-90 nm). The next port deliberately does
+// NOT drive the frame (it could be 200 nm out and buy half a screen of
+// empty water); the bearing line still exits toward it.
+function focusFrame(vessel: VesselState, fleet: VesselState[]): ChartFrame {
   const pts = vessel.history.minutes
     .filter((_, i) => i % 15 === 0)
     .map((s) => ({ lat: s.position.lat, lon: s.position.lon }));
-  const next = vessel.history.nextPortCalls[0];
-  if (next) pts.push(place(next.port));
+  const here = vessel.history.minutes.at(-1)!.position;
+  const ghosts = fleet
+    .filter((v) => v.static.id !== vessel.static.id)
+    .map((v) => v.history.minutes.at(-1)!.position)
+    .map((p) => ({ p, d: distanceNm(here, p) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, 3)
+    .filter((g) => g.d < 120)
+    .map((g) => g.p);
+  pts.push(...ghosts);
   let latMin = Math.min(...pts.map((p) => p.lat));
   let latMax = Math.max(...pts.map((p) => p.lat));
   let lonMin = Math.min(...pts.map((p) => p.lon));
   let lonMax = Math.max(...pts.map((p) => p.lon));
-  const padLat = Math.max(0.25, (latMax - latMin) * 0.2);
-  const padLon = Math.max(0.4, (lonMax - lonMin) * 0.2);
+  const padLat = Math.max(0.2, (latMax - latMin) * 0.15);
+  const padLon = Math.max(0.3, (lonMax - lonMin) * 0.15);
   latMin -= padLat; latMax += padLat; lonMin -= padLon; lonMax += padLon;
-  const minLat = 1.3; const minLon = 2.6;
-  if (latMax - latMin < minLat) { const c = (latMax + latMin) / 2; latMin = c - minLat / 2; latMax = c + minLat / 2; }
-  if (lonMax - lonMin < minLon) { const c = (lonMax + lonMin) / 2; lonMin = c - minLon / 2; lonMax = c + minLon / 2; }
+  // clamp spans: ~60 nm radius floor, ~90 nm ceiling (1° lat = 60 nm)
+  const clamp = (min: number, max: number, lo: number, hi: number): [number, number] => {
+    const span = Math.min(hi, Math.max(lo, max - min));
+    const c = (max + min) / 2;
+    return [c - span / 2, c + span / 2];
+  };
+  [latMin, latMax] = clamp(latMin, latMax, 1.6, 3.0);
+  [lonMin, lonMax] = clamp(lonMin, lonMax, 2.2, 3.8);
   return { latMin, latMax, lonMin, lonMax };
 }
 
@@ -56,7 +73,7 @@ export function InspectorChart({
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [splay, setSplay] = useState<number | null>(null);
 
-  const frame = focusFrame(vessel);
+  const frame = focusFrame(vessel, fleet);
   const px = (lon: number) => ((lon - frame.lonMin) / (frame.lonMax - frame.lonMin)) * w;
   const py = (lat: number) => ((frame.latMax - lat) / (frame.latMax - frame.latMin)) * height;
 

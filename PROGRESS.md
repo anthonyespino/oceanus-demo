@@ -1,3 +1,24 @@
+# PROGRESS — 2026-06-11 (Session 18: ROUND 15 — inspector voids killed)
+
+Before/after: docs/screens/r14-inspector.png → r15-inspector.png,
+r13-fleet-board.png → r15-fleet-board.png.
+
+## Done
+
+1. **Engine grid cell 3 never empty** (the bug): InstrumentCluster renders there by default; the sensors toggle now only switches what the per-engine reveal shows — text rows vs mini-gauges (Gauge gained a `size` param; 62px EGT/oil/RPM dials in reveal duty). When the gauges move per-engine, the cell holds a compact engines summary (4 running-state DataRows).
+2. **Efficiency card, one-elastic-element rule**: fixed stats row (30d trend + now-vs-baseline) → TrendChartFill of the 30d series at flex-grow 1, matching the burn-vs-speed card's height → footer with the 24h strip + baseline/burn context. 90d/1y/band stay behind the whole-card reveal (round 14 affordance, no words).
+3. **Burn-vs-speed y-domain** tightened (8%/10% pads, was 15%/18%) — the envelope + live point own the vertical middle two-thirds.
+4. **Ambient chart**: (a) frame-to-content — viewport auto-frames focus vessel + 24h trail + up to 3 nearest ghosts (<120 nm), span clamped to a ~60-90 nm radius; the next port deliberately no longer drives the frame (it could buy half a screen of empty water — the bearing line still exits toward it); graticule recomputes. (b) height capped at min(30vh, 360px), resize-aware — the band is a ceiling, not half the room.
+5. **pad/card-dense token** (12px): the inspector root overrides `--pad-card` via a scoped CSS-variable, so every card inside drops one padding step with zero per-component edits; fleet board keeps the roomy scale. Header/alerts cards size to content; only cardrow row-mates stretch.
+
+## Decisions Made (reversible)
+
+- REVERSIBLE: ambient span clamps lat [1.6, 3.0] / lon [2.2, 3.8]; canvas cap 360px / 30vh; clear zone 45% of canvas.
+- REVERSIBLE: per-engine mini-gauge set is EGT/oil/RPM (3 of 5 — the diagnostic trio); coolant/oil-temp remain in the cluster.
+- REVERSIBLE: efficiency elastic uses the 30d series (matches its hero stat); the 90d view stays in the reveal.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 17: ROUND 14 — "details" killed)
 
 ## Done

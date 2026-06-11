@@ -8,6 +8,7 @@ import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { toggleStyle } from './probeTokens';
 import { Gauge } from './Gauge';
+import { DataRow } from './DataRow';
 import { gb } from './gb';
 
 const WATCH = 'var(--color-alert-caution)';
@@ -21,6 +22,26 @@ function flaggedEngineIdx(vessel: VesselState): number {
     if (idx >= 0) return idx;
   }
   return 0;
+}
+
+/**
+ * Round 15: when the gauges move into per-engine reveal duty, the engine-grid
+ * cell falls back to this compact summary — the cell is never empty.
+ */
+export function EnginesSummary({ vessel }: { vessel: VesselState }) {
+  const now = vessel.history.minutes.at(-1)!;
+  return (
+    <section style={{ ...gb.box, marginBottom: 8, height: '100%', boxSizing: 'border-box' }}>
+      <div style={gb.label}>engines</div>
+      {now.engines.map((e, i) => (
+        <DataRow
+          key={e.engine_id}
+          label={`${['E1', 'E2', 'G1', 'G2'][i]} ${e.role}`}
+          value={e.running ? `RUNNING · ${Math.round(e.load_pct)}%` : 'OFF'}
+        />
+      ))}
+    </section>
+  );
 }
 
 export function InstrumentCluster({ vessel }: { vessel: VesselState }) {

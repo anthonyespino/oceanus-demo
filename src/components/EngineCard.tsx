@@ -7,6 +7,8 @@
 import type { EngineSample } from '../data/types';
 import { getDisposition } from './Field';
 import { RevealZone } from './Contextual';
+import { Gauge } from './Gauge';
+import { useFleet } from '../state/FleetProvider';
 import { DataRow } from './DataRow';
 import { Sparkline } from './Sparkline';
 import { gb } from './gb';
@@ -33,12 +35,25 @@ export function EngineCard({
   const contextualRows = SENSOR_ROWS.filter(
     (r) => getDisposition('vessel', r.field)?.disposition === 'CONTEXTUAL',
   );
+  const { sensorStyle } = useFleet();
+  const off = !engine.running;
+  const WATCH = 'var(--color-alert-caution)';
+  const DANGER = 'var(--color-alert-warning)';
   return (
     <div style={{ ...gb.box, minWidth: 190, display: 'flex', flexDirection: 'column' }}>
       <RevealZone
         reveal={
           <>
-            <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>
+            {sensorStyle === 'gauges' ? (
+              /* round 15: mini-gauges take per-engine reveal duty */
+              <span style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                <Gauge size={62} label="EGT" value={engine.exhaust_gas_temp_f} min={400} max={1000} unit="°" off={off} limit={{ from: 920, to: 1000, color: WATCH }} />
+                <Gauge size={62} label="oil" value={engine.oil_pressure_psi} min={0} max={90} off={off} limit={{ from: 0, to: 30, color: DANGER }} />
+                <Gauge size={62} label="rpm" value={engine.rpm} min={0} max={2000} off={off} />
+              </span>
+            ) : (
+              <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>
+            )}
             {egtTrend30d && egtTrend30d.length > 2 && (
               <span style={{ display: 'block', marginTop: 4 }}>
                 <Sparkline values={egtTrend30d} width={150} height={26} zeroBaseline={false} />
