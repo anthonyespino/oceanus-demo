@@ -57,7 +57,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [motion, setMotion] = useState<MotionVariant>('off');
   const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
   const [ikbBand, setIkbBand] = useState(false);
-  const [tankStyle, setTankStyle] = useState<TankStyle>('bars');
+  const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel;
   const [crossings, setCrossings] = useState<Record<string, number>>({});
   const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);

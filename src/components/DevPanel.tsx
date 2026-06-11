@@ -61,7 +61,22 @@ export function DevPanel() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  if (!open) return null;
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="probe toggles"
+        style={{
+          position: 'fixed', top: 8, right: 8, zIndex: 50,
+          width: 30, height: 30, borderRadius: RADIUS,
+          border: `1px solid ${NEUTRAL.border}`, background: NEUTRAL.surfaceDim,
+          color: NEUTRAL.inkSecondary, fontSize: 14, cursor: 'pointer',
+        }}
+      >
+        ⚙
+      </button>
+    );
+  }
   return (
     <div
       style={{
@@ -75,8 +90,9 @@ export function DevPanel() {
         padding: 10,
       }}
     >
-      <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 8 }}>
-        probe toggles — press D to hide
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 8 }}>
+        <span>probe toggles (D or ⚙)</span>
+        <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: NEUTRAL.inkSecondary, cursor: 'pointer', fontSize: 12 }}>✕</button>
       </div>
       <Row label="density" value={f.density} onPick={f.setDensity}
         options={[{ v: 'minimal' as const, text: 'minimal' }, { v: 'standard' as const, text: 'standard' }]} />
