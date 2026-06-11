@@ -88,8 +88,8 @@ export function DevPanel() {
         options={[{ v: 'board-first' as const, text: 'a board first' }, { v: 'chart-band' as const, text: 'b chart band' }]} />
       <Row label="ikb band" value={f.ikbBand} onPick={f.setIkbBand}
         options={[{ v: false, text: 'off' }, { v: true, text: 'IKB fill' }]} />
-      <Row label="tanks" value={f.tankStyle} onPick={f.setTankStyle}
-        options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }]} />
+      <Row label="fuel view" value={f.tankStyle} onPick={f.setTankStyle}
+        options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic ⚖️11' }]} />
     </div>
   );
 }

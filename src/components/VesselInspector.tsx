@@ -7,7 +7,7 @@
 // same URL state — render mode only.
 
 import type { VesselState } from '../data/types';
-import type { ColorTreatment } from '../state/FleetProvider';
+import { useFleet, type ColorTreatment } from '../state/FleetProvider';
 import { EfficiencyCurve } from './EfficiencyCurve';
 import { EfficiencyPanel } from './EfficiencyPanel';
 import { EngineTwinPanel } from './EngineTwinPanel';
@@ -15,6 +15,7 @@ import { EventLog } from './EventLog';
 import { InspectorChart } from './InspectorChart';
 import { ModeTimeline } from './ModeTimeline';
 import { TankSchematic } from './TankSchematic';
+import { VesselSynoptic } from './VesselSynoptic';
 import { FlowReconciliation } from './FlowReconciliation';
 import { WeatherPanel } from './WeatherPanel';
 import { CrewPanel } from './CrewPanel';
@@ -35,6 +36,7 @@ export function VesselInspector({
   fleet: VesselState[];
   treatment: ColorTreatment;
 }) {
+  const { tankStyle } = useFleet();
   const row: React.CSSProperties = { display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' };
   return (
     <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
@@ -77,7 +79,8 @@ export function VesselInspector({
         <EngineTwinPanel vessel={vessel} />
         <div style={row}>
           <div style={{ flex: '2 1 520px', minWidth: 0 }}>
-            <TankSchematic vessel={vessel} />
+            {/* ⚖️ verdict 11: synoptic vs boxes — dev panel "fuel view" */}
+            {tankStyle === 'synoptic' ? <VesselSynoptic vessel={vessel} /> : <TankSchematic vessel={vessel} />}
           </div>
           <div style={{ flex: '1 1 280px', minWidth: 0 }}>
             <FlowReconciliation vessel={vessel} />

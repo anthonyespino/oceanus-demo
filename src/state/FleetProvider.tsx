@@ -21,7 +21,7 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // (a) board-first: trend board top, large chart below; (b) chart-band:
 // shallow full-width chart strip on top, board directly below.
 export type LayoutVariant = 'board-first' | 'chart-band';
-export type TankStyle = 'bars' | 'dots'; // round 5 dot-matrix experiment
+export type TankStyle = 'bars' | 'dots' | 'synoptic'; // round 5 dots + round 7 synoptic experiments
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating

@@ -1,3 +1,20 @@
+# PROGRESS — 2026-06-10 (Session 10b: ROUND 7 addendum — VesselSynoptic)
+
+## Done
+
+- **VesselSynoptic** (⚖️ **verdict #11** vs the TankSchematic boxes view, dev-panel "fuel view": rows / dot matrix / synoptic): top-down generic OSV — superstructure forward, working deck aft, schematic not illustrative. 2 storage + 2 feeder tanks with fill ratio + DM Mono percentages, 4 engine nodes (2 MAIN aft, 2 GEN) showing running/load (filled = running, outline = OFF), flow paths storage→feeder→meter→engines, flow rate at the meter, reconciliation badge anchored to the meter point, XFER tag when a transfer is active, ST1/ST2/FD1/FD2/E1–E4 leader-line callouts.
+- **Status discipline**: hull and plumbing are neutral ink lines; status color appears ONLY where status exists — an engine node tints amber/red only when an active alert names that engine_id (Meridian's E2 tints watch-amber); the recon badge tints by its alert band (OK neutral / DISAGREE advisory / >7% caution).
+- **Replaceable geometry**: `HULL_PATH`, `SUPER_PATH`, and the full `GEOM` block live at the top of one file — Anthony's Figma hull swaps in 1:1.
+- verify/lint/build green; tunnel re-verified on the new build; screenshot `docs/screens/r7b-synoptic-meridian.png` (captured with the toggle flipped; default remains "rows" pending the verdict).
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: engine-status attribution parses engine_id from active alert messages — if alerts ever stop carrying ids, this needs a structured field instead (1-line data change).
+- REVERSIBLE: tanks fill bow→stern (horizontal) in the top-down view; could fill athwartships.
+- REVERSIBLE: GEN nodes sit forward of the mains; swap positions in GEOM if the engine-room layout should read differently.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 10: ROUND 7 — card grammar + inspector room)
 
 High-fidelity reference for tomorrow's Figma session. Everything token-driven
