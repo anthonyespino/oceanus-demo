@@ -52,7 +52,7 @@ export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
   return (
     <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
-        <span style={gb.label}>fleet trend — whole-fleet efficiency vs baselines (7d smoothed)</span>
+        <span style={gb.label}>fleet trend — efficiency vs baseline · 7d smoothed</span>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           <button style={toggle(range === 30)} onClick={() => setRange(30)}>30d</button>
           <button style={toggle(range === 90)} onClick={() => setRange(90)}>90d</button>

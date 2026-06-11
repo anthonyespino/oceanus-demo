@@ -7,6 +7,6 @@ import { useFleet } from '../state/FleetProvider';
 
 export default function FleetPage() {
   const { fleet } = useFleet();
-  if (!fleet) return <main style={{ padding: 12 }}>Generating deterministic fleet (seeded, ~2s)…</main>;
+  if (!fleet) return <main style={{ padding: 12 }}>Loading fleet telemetry…</main>;
   return <FleetView fleet={fleet} />;
 }

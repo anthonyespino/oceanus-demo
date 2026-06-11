@@ -1,3 +1,40 @@
+# PROGRESS — 2026-06-11 (Session 12: ROUND 9 — strip the scaffolding)
+
+All meta/process language is out of the rendered UI. Learn Mode (L) is the
+only meta layer; the dev panel (D/⚙) stays as a deliberate hidden tool.
+
+## Done — every rendered-string change, listed
+
+1. Field router: UNDEFINED and unregistered fields render NOTHING (were grey "UNDEFINED: …" / "NOT IN REGISTRY" boxes). `UndefinedField` component deleted. Affected slots now silent: fleet_total_daily_spend (band), wind_direction_visualization, heading_deg, crew_efficiency_comparison.
+2. "fleet plot — gulf of mexico (fit-to-fleet viewport, probe)" → "fleet plot — gulf of mexico"
+3. "active alerts — context strip (v2: annotates the trend board, does not organize it)" → "active alerts"
+4. "position — 24 h trail, next port (probe)" → "position — 24h trail · next port"
+5. "fuel system — synoptic (⚖️ verdict 11 vs boxes view)" → "fuel system"
+6. "fleet trend — whole-fleet efficiency vs baselines (7d smoothed)" → "fleet trend — efficiency vs baseline · 7d smoothed"
+7. "efficiency — trend history first (v2), then current vs mode baseline ({mode})" → "efficiency — trend vs {mode} baseline"
+8. "expected range around {value} — band visualization pending design" → "expected range around {value}"
+9. "efficiency curve — burn vs speed, 1y transit history ({n} h)" → "burn vs speed — 12mo transit envelope · {n} h"
+10. Tile micro "30d efficiency delta vs mode baseline (zero line)" → "30d delta vs baseline"
+11. AppHeader subtitle "design probe — press D for toggles" → removed (gear button remains, moved bottom-right clear of the header)
+12. Dev panel: "probe toggles" → "toggles"; "synoptic ⚖️11" → "synoptic" (verdict bookkeeping lives here, not on screen)
+13. Loading text "Generating deterministic fleet (seeded, ~2s)…" → "Loading fleet telemetry…" (both routes)
+14. Page metadata description → "Fleet fuel-efficiency monitoring for shore-side engineers"
+15. VesselSitrep placeholder no longer renders (dashed "designed in Figma tomorrow" box was scaffolding); slot documented in code; component copy neutralized to "SITREP / situation report — pending" for whenever it returns
+16. Swept and confirmed clean in rendered strings: PROBE, UNDEFINED, registry, NOT IN REGISTRY, Figma, TODO, wireframe, greybox, v2, disposition, Anthony
+
+## Judgment calls (logged)
+
+- `/inspect` (the session-1 raw-data tables, including the registry dump) kept as-is — it is a deliberate engineering tool like the dev panel, not product surface. Say the word and it gets the same sweep or a route guard.
+- Learn Mode badge and docent cards keep their sanctioned meta copy — that is the one meta layer by design.
+- Code comments untouched per the brief (UI text only).
+
+## Consequences
+
+- Learn Mode annotations for VesselSitrep and NominalRow are both unanchored now (neither renders); both bind again the moment their components return.
+- verify/lint/build green; tunnel current (fingerprint-matched after restart).
+
+---
+
 # PROGRESS — 2026-06-11 (Session 11: ROUND 8 — LEARN MODE + tidy pass)
 
 ## Done

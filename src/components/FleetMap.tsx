@@ -70,7 +70,7 @@ export function FleetMap({
 
   return (
     <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
-      <div style={gb.label}>fleet plot — gulf of mexico (fit-to-fleet viewport, probe)</div>
+      <div style={gb.label}>fleet plot — gulf of mexico</div>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <NauticalChart frame={frame} width={w} height={height}>

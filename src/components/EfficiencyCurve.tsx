@@ -26,7 +26,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   if (env.bins.length < 3) {
     return (
       <section style={{ ...gb.box, marginBottom: 8 }}>
-        <div style={gb.label}>efficiency curve — burn vs speed, 1y transit history</div>
+        <div style={gb.label}>burn vs speed — 12mo transit envelope</div>
         <div style={{ fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkMuted, padding: 24, textAlign: 'center' }}>
           INSUFFICIENT TRANSIT HISTORY
         </div>
@@ -54,7 +54,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>efficiency curve — burn vs speed, 1y transit history ({env.transitHours} h)</div>
+      <div style={gb.label}>burn vs speed — 12mo transit envelope · {env.transitHours} h</div>
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <svg width={w} height={H} style={{ display: 'block', background: 'var(--color-surface-base)', borderRadius: RADIUS }}>
           <g opacity={sparse ? 0.4 : 1}>

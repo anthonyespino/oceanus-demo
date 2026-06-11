@@ -14,7 +14,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   const d = vessel.derived;
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>efficiency — trend history first (v2), then current vs mode baseline ({d.mode})</div>
+      <div style={gb.label}>efficiency — trend vs {d.mode} baseline</div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
           <Stat label="30d trend" value={fmtPct(d.trend_30d)} />
@@ -39,8 +39,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
         </Field>
         <Field level="vessel" field="baseline_band_visualization" label="baseline band">
           <span>
-            expected range around {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'} — band
-            visualization pending design
+            expected range around {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
           </span>
         </Field>
       </div>

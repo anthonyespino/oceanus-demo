@@ -35,6 +35,6 @@ export { RoutePanel } from './RoutePanel';
 export { ModeTimeline } from './ModeTimeline';
 export { Contextual } from './Contextual';
 // Primitives not in the locked list (logged in PROGRESS.md):
-export { Field, UndefinedField, getDisposition } from './Field';
+export { Field, getDisposition } from './Field';
 export { Sparkline } from './Sparkline';
 export { LiveControls, AppHeader } from './LiveControls';

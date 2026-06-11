@@ -43,10 +43,7 @@ export function AppHeader() {
       }}
     >
       <span style={{ fontFamily: 'var(--font-display)', fontSize: 18, letterSpacing: 2 }}>
-        OCEANUS FLEET{' '}
-        <span style={{ fontFamily: 'var(--font-ui)', fontSize: 10, color: 'var(--color-ink-muted)', letterSpacing: 0.5 }}>
-          design probe — press D for toggles
-        </span>
+        OCEANUS FLEET
       </span>
       <span style={{ display: 'inline-flex', gap: 18, alignItems: 'center' }}>
         <Annotated name="SystemStatusStrip" inline><SystemStatusStrip /></Annotated>

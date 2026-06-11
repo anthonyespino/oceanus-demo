@@ -118,7 +118,7 @@ export function VesselTile({
       {tier === 2 && (
         <div style={{ marginTop: 12 }}>
           <Sparkline values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} width={320} height={72} />
-          <div style={TYPE.micro}>30d efficiency delta vs mode baseline (zero line)</div>
+          <div style={TYPE.micro}>30d delta vs baseline</div>
         </div>
       )}
       {density === 'standard' && tier === 2 && (

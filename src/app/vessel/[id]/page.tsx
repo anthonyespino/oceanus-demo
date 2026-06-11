@@ -12,7 +12,7 @@ import { useFleet } from '../../../state/FleetProvider';
 export default function VesselPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { fleet, treatment } = useFleet();
-  if (!fleet) return <main style={{ padding: 12 }}>Generating deterministic fleet (seeded, ~2s)…</main>;
+  if (!fleet) return <main style={{ padding: 12 }}>Loading fleet telemetry…</main>;
   const vessel = fleet.find((v) => v.static.id === id);
   if (!vessel) {
     return (

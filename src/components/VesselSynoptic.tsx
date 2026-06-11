@@ -73,7 +73,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>fuel system — synoptic (⚖️ verdict 11 vs boxes view)</div>
+      <div style={gb.label}>fuel system</div>
       <div ref={wrapRef}>
         <svg width={w} height={h} viewBox={`0 0 ${VB.w} ${VB.h}`} style={{ display: 'block' }}>
           {/* hull + superstructure: neutral ink lines, schematic */}

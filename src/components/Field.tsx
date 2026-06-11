@@ -25,34 +25,17 @@ export function Field({
   children?: React.ReactNode;
 }) {
   const d = getDisposition(level, field);
-  // Unregistered = unclassified: surface loudly rather than guessing.
-  if (!d) return <UndefinedField field={`${field} (NOT IN REGISTRY)`} />;
+  // Round 9: unresolved/unregistered fields simply don't render — they are
+  // tracked in the registry and PROGRESS.md, not in the interface.
+  if (!d) return null;
   switch (d.disposition) {
     case 'HIDDEN':
       return null;
     case 'UNDEFINED':
-      return <UndefinedField field={d.field} note={d.note} />;
+      return null;
     case 'CONTEXTUAL':
       return <Contextual label={label ?? d.field}>{children}</Contextual>;
     case 'VISIBLE':
       return <>{children}</>;
   }
-}
-
-export function UndefinedField({ field, note }: { field: string; note?: string }) {
-  return (
-    <span
-      title={note}
-      style={{
-        display: 'inline-block',
-        background: 'var(--color-surface-overlay)',
-        border: '1px dashed var(--color-line-strong)',
-        color: 'var(--color-ink-secondary)',
-        padding: '2px 6px',
-        fontSize: 11,
-      }}
-    >
-      UNDEFINED: {field}
-    </span>
-  );
 }

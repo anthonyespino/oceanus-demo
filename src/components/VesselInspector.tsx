@@ -21,7 +21,6 @@ import { WeatherPanel } from './WeatherPanel';
 import { CrewPanel } from './CrewPanel';
 import { RoutePanel } from './RoutePanel';
 import { VesselHeader } from './VesselHeader';
-import { VesselSitrep } from './VesselSitrep';
 import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
@@ -57,7 +56,8 @@ export function VesselInspector({
       </div>
       {/* floating card grid — fully opaque cards, deliberate row order */}
       <div style={{ position: 'relative', paddingTop: CLEAR_H }}>
-        <Annotated name="VesselSitrep"><VesselSitrep /></Annotated>
+        {/* VesselSitrep slot: component lands here once designed; the dashed
+            placeholder was scaffolding and no longer renders (round 9) */}
         <Annotated name="VesselHeader"><VesselHeader vessel={vessel} /></Annotated>
         {vessel.alerts.length > 0 && (
           <section style={{ ...gb.box, marginBottom: 8 }}>

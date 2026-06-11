@@ -19,8 +19,8 @@ export function VesselSitrep() {
         color: NEUTRAL.inkMuted,
       }}
     >
-      <div>VESSELSITREP — reserved slot</div>
-      <div>two-line situation report · designed in Figma tomorrow, templated in code after</div>
+      <div>SITREP</div>
+      <div>situation report — pending</div>
     </section>
   );
 }

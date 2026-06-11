@@ -59,9 +59,9 @@ export function DevPanel() {
     return (
       <button
         onClick={() => setOpen(true)}
-        aria-label="probe toggles"
+        aria-label="toggles"
         style={{
-          position: 'fixed', top: 8, right: 8, zIndex: 50,
+          position: 'fixed', bottom: 12, right: 12, zIndex: 50,
           width: 30, height: 30, borderRadius: RADIUS,
           border: `1px solid ${NEUTRAL.border}`, background: NEUTRAL.surfaceDim,
           color: NEUTRAL.inkSecondary, fontSize: 14, cursor: 'pointer',
@@ -85,7 +85,7 @@ export function DevPanel() {
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 8 }}>
-        <span>probe toggles (D or ⚙)</span>
+        <span>toggles (D or ⚙)</span>
         <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: NEUTRAL.inkSecondary, cursor: 'pointer', fontSize: 12 }}>✕</button>
       </div>
       <Row label="density" value={f.density} onPick={f.setDensity}
@@ -101,7 +101,7 @@ export function DevPanel() {
       <Row label="learn" value={learnOn} onPick={setLearnOn}
         options={[{ v: false, text: 'off' }, { v: true, text: 'LEARN MODE (L)' }]} />
       <Row label="fuel view" value={f.tankStyle} onPick={f.setTankStyle}
-        options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic ⚖️11' }]} />
+        options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic' }]} />
     </div>
   );
 }

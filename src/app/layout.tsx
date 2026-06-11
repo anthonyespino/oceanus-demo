@@ -13,7 +13,7 @@ const bebas = Bebas_Neue({ subsets: ['latin'], weight: '400', variable: '--font-
 
 export const metadata: Metadata = {
   title: 'Oceanus Fleet',
-  description: 'Fleet fuel-efficiency monitoring — design foundation probe',
+  description: 'Fleet fuel-efficiency monitoring for shore-side engineers',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

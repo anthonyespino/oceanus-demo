@@ -139,7 +139,7 @@ export function InspectorChart({
   if (ambient) return body;
   return (
     <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
-      <div style={gb.label}>position — 24 h trail, next port (probe)</div>
+      <div style={gb.label}>position — 24h trail · next port</div>
       {body}
     </section>
   );
