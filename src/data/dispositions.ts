@@ -80,7 +80,7 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'weather.precip', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'tank.capacity_gal', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'tank.transfer_active', level: 'vessel', disposition: 'CONTEXTUAL' },
-  { field: 'reconciliation_error_magnitude', level: 'vessel', disposition: 'CONTEXTUAL' },
+  { field: 'reconciliation_error_magnitude', level: 'vessel', disposition: 'VISIBLE', note: 'rides the RECON chip in the fuel-card header (round 11 density pass; was CONTEXTUAL)' },
   { field: 'trend_90d', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'history_1y', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'baseline_band_visualization', level: 'vessel', disposition: 'CONTEXTUAL' },

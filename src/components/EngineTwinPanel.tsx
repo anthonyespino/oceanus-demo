@@ -7,6 +7,8 @@ import type { VesselState } from '../data/types';
 import { EngineCard } from './EngineCard';
 import { Field } from './Field';
 import { Stat } from './Stat';
+import { InstrumentCluster } from './InstrumentCluster';
+import { useFleet } from '../state/FleetProvider';
 import { gb, fmtPct } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
@@ -29,6 +31,7 @@ function egtTrend(vessel: VesselState, engineIdx: number): number[] {
 }
 
 export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
+  const { sensorStyle } = useFleet();
   const now = vessel.history.minutes.at(-1)!;
   const [m1, m2] = now.engines.filter((e) => e.role === 'MAIN');
   const gens = now.engines.filter((e) => e.role === 'GEN');
@@ -49,10 +52,17 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
         </Field>
         <Annotated name="EngineCard"><EngineCard engine={m2} title="Engine 2" egtTrend30d={egtTrend(vessel, 1)} /></Annotated>
       </div>
-      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+      {/* row 2: GEN1 | GEN2 | instrument cluster (gauges experiment) — no
+          dead cells: the cluster cell only exists while the toggle is on */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'stretch', flexWrap: 'wrap' }}>
         {gens.map((g, i) => (
           <Annotated key={g.engine_id} name="EngineCard"><EngineCard engine={g} title={`Gen ${i + 1}`} egtTrend30d={egtTrend(vessel, i + 2)} /></Annotated>
         ))}
+        {sensorStyle === 'gauges' && (
+          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+            <InstrumentCluster vessel={vessel} />
+          </div>
+        )}
       </div>
     </section>
   );

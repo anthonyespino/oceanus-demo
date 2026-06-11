@@ -5,6 +5,7 @@
 import type { VesselState } from '../data/types';
 import { useFleet } from '../state/FleetProvider';
 import { Field } from './Field';
+import { ReconChip } from './FlowReconciliation';
 import { DataRow } from './DataRow';
 import { Stat } from './Stat';
 import { FONT, NEUTRAL } from './probeTokens';
@@ -69,7 +70,11 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>fuel system — storage → feeder → flow meter → engines</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+        <div style={{ ...gb.label, marginBottom: 0 }}>fuel system — storage → feeder → flow meter → engines</div>
+        <ReconChip vessel={vessel} />
+      </div>
+      <div style={{ height: 'var(--pad-section)' }} />
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
         <div>{storage.map(tankBox)}</div>
         <div style={{ fontSize: 20 }}>→</div>

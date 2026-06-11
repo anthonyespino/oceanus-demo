@@ -1,3 +1,25 @@
+# PROGRESS — 2026-06-11 (Session 14: ROUND 11 — inspector density + scale safety)
+
+## Done
+
+1. **Chart axis hygiene** (burn-vs-speed): axis titles in reserved gutters (GAL/NM rotated far-left, KN in its own row under the ticks) — no more title/tick fusing; tick spacing computed with a min-gap rule (44px x / 26px y — steps drop ticks before overlapping); plot domain pads to content (~15-18%), so envelope + live point + annotation fill ~70-80% of the plot; the delta annotation flips to anchor-end near the right edge. FleetTrend and the nautical charts audited: no titled axes to collide.
+2. **RoutePanel restructure**: distance-to-go in a real right-aligned DM Mono micro slot above the strip (out of the 6px track); label/bar/label grid with min-width-0 — port names ellipsize before the bar compresses; ETA zero-shrink; following port on its own line.
+3. **Density pass**: FlowReconciliation card dissolved into the fuel-system card as a header chip (`ReconChip`: status + magnitude, alert-band colored) — one fuel truth, one card; the synoptic's in-diagram meter badge stays the only in-diagram instance. Registry bookkeeping: `reconciliation_error_magnitude` CONTEXTUAL → VISIBLE (rides the chip; round 11 item 3). Alert dedup: inspector shows only this-vessel alerts; the global AlertRail renders on the fleet board exclusively. Sparse cards tighten (Environment vertical padding reduced).
+4. **InstrumentCluster (⚖ verdict #13)**: one shared `Gauge` primitive (SVG arc, needle, DM Mono center value, micro label) × five dials — EGT, coolant, oil pressure, oil temp, RPM. Neutral ink arcs; status-colored band ONLY at operating limits (oil-pressure minimum in warning red, EGT/coolant/oil-temp ceilings in caution amber; RPM has no limit band). Lives as engine-grid row 2 cell 3 (GEN1 | GEN2 | cluster), defaulting to the alert-flagged engine with E1/E2/G1/G2 selector; ships behind the dev-panel "sensors" toggle vs the text rows.
+5. **Scale safety**: board sort is now explicitly status-class-first (degraded > watch > nominal), then |sd|; promotion cap = at most 2 auto-promoted 2x tiles (worst by |sd|) — further degraded vessels stay 1x with full status border + badge. **Stress scenario** in the dev panel: synthetic overrides on 3 vessels (1 WARNING + 2 CAUTION, mixed severity → 4 degraded with Meridian) for designing the crowded board against real pixels. Loudly badged "STRESS SCENARIO — synthetic, not the demo path"; demo seed and generated data untouched (overrides clone alert/derived fields only).
+6. **Equal-height rows**: `.cardrow` class (row-mates stretch, margins collapse into row gap) across the inspector grid.
+
+## Decisions Made (ALL REVERSIBLE / DEV DECISION pending Anthony)
+
+- DEV DECISION (pending Anthony): gauge operating limits are display constants (EGT 920°F+, coolant 203°F+, oil-temp 226°F+, oil pressure <30 psi) — the oil-pressure 30 matches the WARNING threshold in alerts.ts; the others have no alert-logic counterpart yet and exist only as gauge bands. If any band should alert, that becomes a PM ruling.
+- DEV DECISION (pending Anthony): stress overrides are hand-picked (v02 WARNING feeder, v05 CAUTION efficiency, v08 CAUTION EGT) rather than a true alternate seed — a parametric seed means refactoring the global hash; not worth it for a design-only scenario.
+- REVERSIBLE: promotion cap = 2 (constant); tick min-gaps 44/26px; domain padding 15-18%.
+- REVERSIBLE: cluster defaults to the alert-flagged engine; selector remembers per mount, not per vessel.
+
+## Open verdicts recap: ⚖ 11 fuel view (rows/dots/synoptic) · ⚖ 12 sd numeral on tiles · ⚖ 13 sensors (text rows vs gauges) — all in the dev panel.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 13: ROUND 10 — fitting & resilience)
 
 ## Done

@@ -13,7 +13,7 @@ export function WeatherPanel({ vessel }: { vessel: VesselState }) {
   const stale = vessel.derived.staleness.weather === 'STALE';
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8, ...(stale ? gb.stale : {}) }}>
+    <section style={{ ...gb.box, padding: 'var(--pad-section) var(--pad-card)', marginBottom: 8, ...(stale ? gb.stale : {}) }}>
       <div style={gb.label}>
         environment{stale && ` — [STALE] last received ${fmtTime(vessel.history.timestamps.weather)}`}
       </div>

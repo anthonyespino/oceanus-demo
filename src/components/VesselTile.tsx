@@ -20,18 +20,21 @@ export function VesselTile({
   vessel,
   density,
   treatment,
+  promoted,
 }: {
   vessel: VesselState;
   density: TileDensity;
   treatment: ColorTreatment;
+  /** board-controlled 2x promotion (round 11 cap); defaults to status */
+  promoted?: boolean;
 }) {
   const d = vessel.derived;
   const { motion, crossings } = useFleet();
   const status = vesselStatus(vessel.alerts);
   const badge = worstLevel(vessel.alerts);
-  // Discrete tiers (round 3): 1x nominal, 2x watch/degraded — promotion uses
-  // the SAME vesselStatus() as color and badges; no separate thresholds.
-  const tier = status === 'nominal' ? 1 : 2;
+  // Discrete tiers (round 3) + promotion cap (round 11): the board passes
+  // `promoted`; status alone decides only when uncontrolled.
+  const tier = (promoted ?? status !== 'nominal') ? 2 : 1;
 
   // Dark cockpit: nominal stays neutral; color only on watch/degraded.
   // Automotive: every tile carries its status color, including green.

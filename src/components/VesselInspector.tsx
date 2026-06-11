@@ -16,7 +16,6 @@ import { InspectorChart } from './InspectorChart';
 import { ModeTimeline } from './ModeTimeline';
 import { TankSchematic } from './TankSchematic';
 import { VesselSynoptic } from './VesselSynoptic';
-import { FlowReconciliation } from './FlowReconciliation';
 import { WeatherPanel } from './WeatherPanel';
 import { CrewPanel } from './CrewPanel';
 import { RoutePanel } from './RoutePanel';
@@ -37,7 +36,6 @@ export function VesselInspector({
   treatment: ColorTreatment;
 }) {
   const { tankStyle } = useFleet();
-  const row: React.CSSProperties = { display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' };
   return (
     <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
       {/* ambient canvas: the spatial backdrop of the room */}
@@ -69,7 +67,7 @@ export function VesselInspector({
             ))}
           </section>
         )}
-        <div style={row}>
+        <div className="cardrow">
           <div style={{ flex: '1 1 480px', minWidth: 0 }}>
             <Annotated name="EfficiencyCurve"><EfficiencyCurve vessel={vessel} /></Annotated>
           </div>
@@ -78,20 +76,15 @@ export function VesselInspector({
           </div>
         </div>
         <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
-        <div style={row}>
-          <div style={{ flex: '2 1 520px', minWidth: 0 }}>
-            {/* ⚖️ verdict 11: synoptic vs boxes — dev panel "fuel view" */}
-            {tankStyle === 'synoptic' ? (
-              <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>
-            ) : (
-              <Annotated name="TankSchematic"><TankSchematic vessel={vessel} /></Annotated>
-            )}
-          </div>
-          <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <Annotated name="FlowReconciliation"><FlowReconciliation vessel={vessel} /></Annotated>
-          </div>
-        </div>
-        <div style={row}>
+        {/* one fuel truth, one card (round 11): reconciliation rides the
+            fuel-card header chip; the synoptic's in-diagram RECON badge is
+            the only in-diagram instance */}
+        {tankStyle === 'synoptic' ? (
+          <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>
+        ) : (
+          <Annotated name="TankSchematic"><TankSchematic vessel={vessel} /></Annotated>
+        )}
+        <div className="cardrow">
           <div style={{ flex: '1 1 280px', minWidth: 0 }}>
             <Annotated name="WeatherPanel"><WeatherPanel vessel={vessel} /></Annotated>
           </div>
@@ -102,7 +95,7 @@ export function VesselInspector({
             <Annotated name="CrewPanel"><CrewPanel vessel={vessel} /></Annotated>
           </div>
         </div>
-        <div style={row}>
+        <div className="cardrow">
           <div style={{ flex: '1 1 380px', minWidth: 0 }}>
             <Annotated name="ModeTimeline"><ModeTimeline vessel={vessel} /></Annotated>
           </div>

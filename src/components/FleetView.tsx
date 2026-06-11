@@ -19,8 +19,20 @@ import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before d
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const { density, treatment, layoutVariant } = useFleet();
 
-  const ranked = [...fleet].sort(
-    (a, b) => Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation),
+  // Scale safety (round 11): status class first, then |sustained_deviation| —
+  // degraded vessels group at the top regardless of tile size.
+  const statusRank = { degraded: 0, watch: 1, nominal: 2 } as const;
+  const ranked = [...fleet].sort((a, b) => {
+    const sa = statusRank[vesselStatus(a.alerts)];
+    const sb = statusRank[vesselStatus(b.alerts)];
+    if (sa !== sb) return sa - sb;
+    return Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation);
+  });
+  // Promotion cap: at most 2 auto-promoted 2x tiles (worst by |sd|); further
+  // degraded vessels keep full status border + badge at 1x — severity never
+  // hidden, size budget never blown.
+  const promotedIds = new Set(
+    ranked.filter((v) => vesselStatus(v.alerts) !== 'nominal').slice(0, 2).map((v) => v.static.id),
   );
 
   return (
@@ -45,11 +57,11 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         }}
       >
         {ranked.map((v) => {
-          const promoted = vesselStatus(v.alerts) !== 'nominal'; // same constants as color/badges
+          const promoted = promotedIds.has(v.static.id);
           return (
             <div key={v.static.id} style={promoted ? { gridColumn: 'span 2', gridRow: 'span 2' } : undefined}>
               <Annotated name="VesselCard">
-                <VesselTile vessel={v} density={density} treatment={treatment} />
+                <VesselTile vessel={v} density={density} treatment={treatment} promoted={promoted} />
               </Annotated>
             </div>
           );

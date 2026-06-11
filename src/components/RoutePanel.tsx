@@ -51,46 +51,51 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
     );
   } else {
     const from = lastPort(vessel);
+    const toGoNm = next ? distanceNm(now.position, place(next.port)) : null;
     const frac =
       from && next
         ? Math.min(1, Math.max(0, distanceNm(place(from), now.position) /
             Math.max(1, distanceNm(place(from), place(next.port)))))
         : null;
+    const nameStyle: React.CSSProperties = {
+      ...mono, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+    };
     body = (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={node} />
-        <span style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {from ?? 'UNDERWAY >24H'}
-        </span>
-        <div style={{ flex: 1, height: 6, background: NEUTRAL.surfaceDim, borderRadius: RADIUS, position: 'relative' }}>
-          {frac !== null && (
-            <div style={{ position: 'absolute', inset: 0, width: `${(frac * 100).toFixed(1)}%`, background: ACCENT.primary, borderRadius: RADIUS }} />
-          )}
-          {frac !== null && (
-            <div style={{ position: 'absolute', top: -2, left: `calc(${(frac * 100).toFixed(1)}% - 5px)`, width: 10, height: 10, background: NEUTRAL.ink }} />
-          )}
-          {frac === null && next && (
-            <div style={{ ...mono, position: 'absolute', inset: 0, textAlign: 'center', color: NEUTRAL.inkMuted, lineHeight: '6px' }}>
-              {distanceNm(now.position, place(next.port)).toFixed(0)} NM TO GO
-            </div>
-          )}
-        </div>
-        {next && (
-          <>
-            <span style={node} />
-            <span style={{ ...mono, minWidth: 0, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {next.port}
-            </span>
-            {/* ETA never clips: zero shrink */}
-            <span style={{ ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap', flexShrink: 0 }}>
-              ETA {fmtTime(next.eta)}
-            </span>
-          </>
+      <div>
+        {/* distance-to-go: a real text slot, right-aligned above the strip */}
+        {toGoNm !== null && (
+          <div style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginBottom: 4 }}>
+            {toGoNm.toFixed(0)} NM TO GO
+          </div>
         )}
+        {/* label / bar / label grid: names ellipsize before the bar compresses */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(56px, auto) 1fr minmax(56px, auto)', gap: 8, alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+            <span style={node} />
+            <span style={{ ...nameStyle, color: NEUTRAL.inkSecondary }}>{from ?? 'UNDERWAY >24H'}</span>
+          </div>
+          <div style={{ height: 6, background: NEUTRAL.surfaceDim, borderRadius: RADIUS, position: 'relative', minWidth: 60 }}>
+            {frac !== null && (
+              <div style={{ position: 'absolute', inset: 0, width: `${(frac * 100).toFixed(1)}%`, background: ACCENT.primary, borderRadius: RADIUS }} />
+            )}
+            {frac !== null && (
+              <div style={{ position: 'absolute', top: -2, left: `calc(${(frac * 100).toFixed(1)}% - 5px)`, width: 10, height: 10, background: NEUTRAL.ink }} />
+            )}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, justifyContent: 'flex-end' }}>
+            <span style={node} />
+            <span style={nameStyle}>{next?.port ?? '—'}</span>
+            {next && (
+              <span style={{ ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                ETA {fmtTime(next.eta)}
+              </span>
+            )}
+          </div>
+        </div>
         {calls[1] && (
-          <span style={{ ...mono, color: NEUTRAL.inkMuted, minWidth: 0, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            → {calls[1].port}
-          </span>
+          <div style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            then {calls[1].port}
+          </div>
         )}
       </div>
     );

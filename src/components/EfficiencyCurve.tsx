@@ -12,8 +12,19 @@ import { useContentWidth } from './NauticalChart';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb, fmtPct } from './gb';
 
-const H = 240;
-const M = { l: 46, r: 14, t: 12, b: 26 };
+const H = 250;
+// Round 11 axis hygiene: titles get reserved gutters (y rotated far-left,
+// x in its own row below the ticks); ticks never overprint.
+const M = { l: 58, r: 16, t: 14, b: 38 };
+
+function tickStep(span: number, pxPerUnit: number, minGapPx: number, steps: number[]): number {
+  return steps.find((st) => st * pxPerUnit >= minGapPx) ?? steps[steps.length - 1];
+}
+function ticksFor(lo: number, hi: number, step: number): number[] {
+  const out: number[] = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(Math.round(v * 100) / 100);
+  return out;
+}
 
 export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   const [wrapRef, w] = useContentWidth(560);
@@ -34,12 +45,16 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
     );
   }
 
-  const speeds = env.bins.map((b) => b.speed);
-  const xLo = Math.min(...speeds) - 0.5;
-  const xHi = Math.max(...speeds, pt?.speed ?? 0) + 0.5;
-  const yVals = [...env.bins.flatMap((b) => [b.p25, b.p75]), pt?.galNm ?? 0].filter((v) => v > 0);
-  const yLo = Math.min(...yVals) * 0.88;
-  const yHi = Math.max(...yVals) * 1.08;
+  // Domain fits the content (envelope + live point), padded ~15-18% — the
+  // data occupies ~70-80% of the plot, never a corner.
+  const speeds = [...env.bins.map((b) => b.speed), ...(pt ? [pt.speed] : [])];
+  const spanX = Math.max(0.5, Math.max(...speeds) - Math.min(...speeds));
+  const xLo = Math.min(...speeds) - Math.max(0.25, spanX * 0.18);
+  const xHi = Math.max(...speeds) + Math.max(0.25, spanX * 0.18);
+  const yVals = [...env.bins.flatMap((b) => [b.p25, b.p75]), ...(pt ? [pt.galNm] : [])].filter((v) => v > 0);
+  const spanY = Math.max(0.05, Math.max(...yVals) - Math.min(...yVals));
+  const yLo = Math.min(...yVals) - spanY * 0.15;
+  const yHi = Math.max(...yVals) + spanY * 0.18;
   const x = (s: number) => M.l + ((s - xLo) / (xHi - xLo)) * (w - M.l - M.r);
   const y = (v: number) => M.t + (1 - (v - yLo) / (yHi - yLo)) * (H - M.t - M.b);
 
@@ -49,8 +64,11 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   const medianPts = env.bins.map((b) => `${x(b.speed).toFixed(1)},${y(b.median).toFixed(1)}`).join(' ');
   const medianAtPt = pt ? envelopeMedianAt(env, pt.speed) : null;
   const deltaPct = pt && medianAtPt ? (pt.galNm / medianAtPt - 1) * 100 : null;
-  const xTicks = [];
-  for (let s = Math.ceil(xLo); s <= xHi; s += 2) xTicks.push(s);
+  // Min-gap tick rule: drop ticks before overlapping them.
+  const xStep = tickStep(xHi - xLo, (w - M.l - M.r) / (xHi - xLo), 44, [0.25, 0.5, 1, 2, 5]);
+  const xTicks = ticksFor(xLo, xHi, xStep);
+  const yStep = tickStep(yHi - yLo, (H - M.t - M.b) / (yHi - yLo), 26, [0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2]);
+  const yTicks = ticksFor(yLo, yHi, yStep);
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
@@ -61,18 +79,22 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
             <path d={bandD} fill="var(--color-surface-overlay)" />
             <polyline points={medianPts} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.25} />
           </g>
-          {/* axes */}
+          {/* axes: ticks in their row, titles in their own gutters */}
           {xTicks.map((s) => (
             <g key={s}>
               <line x1={x(s)} y1={H - M.b} x2={x(s)} y2={H - M.b + 4} stroke="#3d4651" />
-              <text x={x(s)} y={H - M.b + 14} textAnchor="middle" {...mono}>{s}</text>
+              <text x={x(s)} y={H - M.b + 15} textAnchor="middle" {...mono}>{s}</text>
             </g>
           ))}
-          <text x={w - M.r} y={H - M.b + 14} textAnchor="end" {...mono}>KN</text>
-          {[yLo, (yLo + yHi) / 2, yHi].map((v, i) => (
-            <text key={i} x={M.l - 6} y={y(v) + 3} textAnchor="end" {...mono}>{v.toFixed(1)}</text>
+          <text x={M.l + (w - M.l - M.r) / 2} y={H - 6} textAnchor="middle" {...mono} letterSpacing="0.2em">KN</text>
+          {yTicks.map((v) => (
+            <g key={v}>
+              <line x1={M.l - 4} y1={y(v)} x2={M.l} y2={y(v)} stroke="#3d4651" />
+              <text x={M.l - 8} y={y(v) + 3} textAnchor="end" {...mono}>{v}</text>
+            </g>
           ))}
-          <text x={M.l - 6} y={M.t + 2} textAnchor="end" {...mono}>GAL/NM</text>
+          <text x={14} y={M.t + (H - M.t - M.b) / 2} textAnchor="middle" {...mono} letterSpacing="0.2em"
+            transform={`rotate(-90 14 ${M.t + (H - M.t - M.b) / 2})`}>GAL/NM</text>
           {/* optimal-speed bracket */}
           {env.optimal && !sparse && (
             <g stroke="#4a535e" fill="none">
@@ -97,7 +119,9 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
                 stroke={ACCENT.bright} strokeWidth={2}
               />
               <text
-                x={x(pt.speed) + 11} y={(y(pt.galNm) + y(medianAtPt)) / 2 + 3}
+                x={x(pt.speed) + 130 > w - M.r ? x(pt.speed) - 11 : x(pt.speed) + 11}
+                y={(y(pt.galNm) + y(medianAtPt)) / 2 + 3}
+                textAnchor={x(pt.speed) + 130 > w - M.r ? 'end' : 'start'}
                 {...mono} fontSize={10}
                 fill={status !== 'nominal' ? STATUS_COLOR[status] : '#a9b1ba'}
               >

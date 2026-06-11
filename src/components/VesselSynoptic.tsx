@@ -10,6 +10,7 @@
 import type { VesselState } from '../data/types';
 import { RECON_CAUTION_PCT } from '../data/alerts';
 import { useContentWidth } from './NauticalChart';
+import { ReconChip } from './FlowReconciliation';
 import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 
@@ -73,7 +74,11 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>fuel system</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+        <div style={{ ...gb.label, marginBottom: 0 }}>fuel system</div>
+        <ReconChip vessel={vessel} />
+      </div>
+      <div style={{ height: 'var(--pad-section)' }} />
       <div ref={wrapRef}>
         <svg width={w} height={h} viewBox={`0 0 ${VB.w} ${VB.h}`} style={{ display: 'block' }}>
           {/* hull + superstructure: neutral ink lines, schematic */}

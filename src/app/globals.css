@@ -63,6 +63,26 @@ body {
   font-size: 14px;
 }
 
+/* Round 11: equal-height card rows — row-mates stretch, no orphan
+   whitespace below short cards. */
+.cardrow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.cardrow > * {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.cardrow section {
+  flex: 1;
+  margin-bottom: 0 !important;
+  box-sizing: border-box;
+}
+
 /* Accent owns focus (interaction), everywhere. */
 :focus-visible {
   outline: 2px solid var(--color-accent-bright);
