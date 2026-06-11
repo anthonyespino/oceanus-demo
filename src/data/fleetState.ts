@@ -3,6 +3,7 @@
 // this — there is exactly one path into the data.
 
 import { VESSELS } from './fleet';
+import { vesselStatus } from './alerts';
 import { advanceMinutes, simulateVessel, type VesselRuntime } from './generator';
 import { computeDerived } from './derived';
 import { evaluateAlerts } from './alerts';
@@ -47,6 +48,24 @@ export function fleetDailyTrend(states: VesselState[]): { day: number; delta: nu
   return [...byDay.entries()]
     .sort((a, b) => a[0] - b[0])
     .map(([day, arr]) => ({ day, delta: Math.round((arr.reduce((x, y) => x + y, 0) / arr.length) * 100) / 100 }));
+}
+
+/**
+ * Round 21 A1 — the ONE comparator for board + rail: status class first
+ * (an active alert ALWAYS outranks mode — a CAUTION in port still rises),
+ * then activity (TRANSIT/STATION above STANDBY/PORT), then |sd|. Idle
+ * nominal vessels settle to the bottom in every context.
+ */
+const STATUS_RANK = { degraded: 0, watch: 1, nominal: 2 } as const;
+const ACTIVE_MODES = new Set(['TRANSIT', 'STATION']);
+export function compareVessels(a: VesselState, b: VesselState): number {
+  const sa = STATUS_RANK[vesselStatus(a.alerts)];
+  const sb = STATUS_RANK[vesselStatus(b.alerts)];
+  if (sa !== sb) return sa - sb;
+  const aa = ACTIVE_MODES.has(a.derived.mode) ? 0 : 1;
+  const ab = ACTIVE_MODES.has(b.derived.mode) ? 0 : 1;
+  if (aa !== ab) return aa - ab;
+  return Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation);
 }
 
 /** Fleet-total burn right now, gph (sum of per-vessel burn_rate). */

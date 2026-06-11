@@ -7,13 +7,15 @@ import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { vesselEvents, EVENT_WINDOW_24H, EVENT_WINDOW_EARLIER, type EventType } from '../data/events';
 import { ACCENT, FONT, NEUTRAL, RADIUS } from './probeTokens';
+import { Glyph } from './Glyph';
 import { gb } from './gb';
 
 const TYPES: EventType[] = ['MODE', 'CREW', 'BUNKER', 'ALERT', 'DATALINK'];
+// round 21 A6: ADVISORY drops to muted ink — earned color is amber/red only
 const LEVEL_COLOR: Record<string, string> = {
   WARNING: 'var(--color-alert-warning)',
   CAUTION: 'var(--color-alert-caution)',
-  ADVISORY: 'var(--color-alert-advisory)',
+  ADVISORY: 'var(--color-ink-muted)',
 };
 
 function stamp(t: number, now: number): string {
@@ -48,10 +50,10 @@ export function EventLog({ vessel }: { vessel: VesselState }) {
           onClick={() => setOpen((o) => !o)}
           style={{ ...gb.label, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
-          {open ? '▾' : '▸'} event log — {earlier ? 'last 8 days' : 'last 24 h'} ({events.length})
+          {open ? '▾' : '▸'} <Glyph name="clock" size={11} /> event log — {earlier ? 'last 8 days' : 'last 24 h'} ({events.length})
         </button>
         {open && (
-          <span style={{ display: 'inline-flex', gap: 4 }}>
+          <span style={{ display: 'inline-flex', gap: 4, marginRight: 26 }}>
             {TYPES.map((t) => (
               <button key={t} style={chip(!hidden.has(t))}
                 onClick={() => setHidden((h) => { const n = new Set(h); if (n.has(t)) n.delete(t); else n.add(t); return n; })}>

@@ -7,6 +7,7 @@
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
+import { compareVessels } from '../data/fleetState';
 import type { ColorTreatment } from '../state/FleetProvider';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, TYPE, selectionBorder } from './probeTokens';
 
@@ -19,9 +20,7 @@ export function FleetRail({
   selectedId: string;
   treatment: ColorTreatment;
 }) {
-  const ranked = [...fleet].sort(
-    (a, b) => Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation),
-  );
+  const ranked = [...fleet].sort(compareVessels); // round 21 A1: shared comparator
   return (
     <nav style={{ width: 168, flexShrink: 0 }} aria-label="fleet rail">
       <Link

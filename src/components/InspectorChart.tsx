@@ -11,7 +11,7 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { place, distanceNm } from '../data/fleet';
 import type { ColorTreatment } from '../state/FleetProvider';
-import { NauticalChart, useContentWidth, CHART_INK, type ChartFrame } from './NauticalChart';
+import { NauticalChart, useContentWidth, usePanZoom, FollowChip, CHART_INK, type ChartFrame } from './NauticalChart';
 import { clusterPoints } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
@@ -83,7 +83,8 @@ export function InspectorChart({
   };
   const [splay, setSplay] = useState<number | null>(null);
 
-  const frame = focusFrame(vessel, fleet);
+  // round 21 B2: follow (auto-recenter on the focus vessel) + pan + zoom
+  const { frame, following, follow, handlers, wheelRef } = usePanZoom(focusFrame(vessel, fleet), w, height);
   const px = (lon: number) => ((lon - frame.lonMin) / (frame.lonMax - frame.lonMin)) * w;
   const py = (lat: number) => ((frame.latMax - lat) / (frame.latMax - frame.latMin)) * height;
 
@@ -106,6 +107,7 @@ export function InspectorChart({
 
   const body = (
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
+        <div ref={wheelRef} {...handlers} style={{ cursor: following ? 'default' : 'grab' }}>
         <NauticalChart frame={frame} width={w} height={height}>
           {() => (
             <>
@@ -161,6 +163,8 @@ export function InspectorChart({
           <ClusterSplay x={ghostClusters[splay].x} y={ghostClusters[splay].y} onClose={() => setSplay(null)}
             members={ghostClusters[splay].members.map((m) => ({ id: m.id, name: m.name, dotColor: '#5b646e' }))} />
         )}
+        </div>
+        {!following && <FollowChip onClick={follow} />}
       </div>
   );
   return (

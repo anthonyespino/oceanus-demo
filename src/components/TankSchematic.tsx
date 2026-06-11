@@ -82,7 +82,7 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26 }}>
         <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
         <ReconChip vessel={vessel} />
       </div>

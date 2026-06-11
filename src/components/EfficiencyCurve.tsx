@@ -16,7 +16,7 @@ import { Label } from './Glyph';
 const H = 250;
 // Round 11 axis hygiene: titles get reserved gutters (y rotated far-left,
 // x in its own row below the ticks); ticks never overprint.
-const M = { l: 58, r: 16, t: 14, b: 38 };
+const M = { l: 58, r: 16, t: 14, b: 52 }; // round 21 B1: bottom gains a bracket lane
 
 function tickStep(span: number, pxPerUnit: number, minGapPx: number, steps: number[]): number {
   return steps.find((st) => st * pxPerUnit >= minGapPx) ?? steps[steps.length - 1];
@@ -89,7 +89,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
               <text x={x(s)} y={H - M.b + 15} textAnchor="middle" {...mono}>{s}</text>
             </g>
           ))}
-          <text x={M.l + (w - M.l - M.r) / 2} y={H - 6} textAnchor="middle" {...mono} letterSpacing="0.2em">KN</text>
+          <text x={w - M.r} y={H - 6} textAnchor="end" {...mono} letterSpacing="0.2em">KN</text>
           {yTicks.map((v) => (
             <g key={v}>
               <line x1={M.l - 4} y1={y(v)} x2={M.l} y2={y(v)} stroke="#3d4651" />
@@ -98,16 +98,23 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
           ))}
           <text x={14} y={M.t + (H - M.t - M.b) / 2} textAnchor="middle" {...mono} letterSpacing="0.2em"
             transform={`rotate(-90 14 ${M.t + (H - M.t - M.b) / 2})`}>GAL/NM</text>
-          {/* optimal-speed bracket */}
+          {/* optimal-speed bracket: its own lane BELOW the axis (round 21 B1 —
+              never over plot content) */}
           {env.optimal && !sparse && (
             <g stroke="#4a535e" fill="none">
-              <line x1={x(env.optimal.lo)} y1={H - M.b - 8} x2={x(env.optimal.lo)} y2={H - M.b} />
-              <line x1={x(env.optimal.hi)} y1={H - M.b - 8} x2={x(env.optimal.hi)} y2={H - M.b} />
-              <line x1={x(env.optimal.lo)} y1={H - M.b - 8} x2={x(env.optimal.hi)} y2={H - M.b - 8} />
-              <text x={(x(env.optimal.lo) + x(env.optimal.hi)) / 2} y={H - M.b - 13} textAnchor="middle" {...mono} stroke="none">
+              <line x1={x(env.optimal.lo)} y1={H - 30} x2={x(env.optimal.lo)} y2={H - 25} />
+              <line x1={x(env.optimal.hi)} y1={H - 30} x2={x(env.optimal.hi)} y2={H - 25} />
+              <line x1={x(env.optimal.lo)} y1={H - 25} x2={x(env.optimal.hi)} y2={H - 25} />
+              <text x={(x(env.optimal.lo) + x(env.optimal.hi)) / 2} y={H - 15} textAnchor="middle" {...mono} stroke="none">
                 OPTIMAL {env.optimal.lo.toFixed(1)}–{env.optimal.hi.toFixed(1)} KN
               </text>
             </g>
+          )}
+          {/* on-chart micro labels (round 21 B1) */}
+          {!sparse && env.bins.length > 0 && (
+            <text x={x(env.bins[0].speed) + 4} y={y(env.bins[0].p75) - 5} {...mono} fontSize={8.5}>
+              12-MO NORMAL
+            </text>
           )}
           {/* live operating point + drop-line to its own envelope */}
           {pt && medianAtPt && (
@@ -121,6 +128,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
                 fill={status !== 'nominal' ? STATUS_COLOR[status] : 'none'}
                 stroke={ACCENT.bright} strokeWidth={2}
               />
+              <text x={x(pt.speed)} y={y(pt.galNm) - 10} textAnchor="middle" {...mono} fontSize={8.5}>NOW</text>
               <text
                 x={x(pt.speed) + 130 > w - M.r ? x(pt.speed) - 11 : x(pt.speed) + 11}
                 y={(y(pt.galNm) + y(medianAtPt)) / 2 + 3}

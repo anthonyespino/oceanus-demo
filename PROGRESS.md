@@ -1,3 +1,29 @@
+# PROGRESS — 2026-06-11 (Session 25: ROUND 21 — sort, structure, consolidation)
+
+## A-items
+
+- **A1 activity-aware sort**: one shared comparator (`compareVessels`, data layer) for board + rail — status class, then activity (TRANSIT/STATION above STANDBY/PORT), then |sd|. An alert always outranks mode; idle nominals settle to the bottom everywhere.
+- **A2 chart-top trial**: dev toggle `chart pos` re-orders the fleet view (band → alerts → chart → board → timeline) so the 2s Meridian glance test can be re-run honestly against the round-6 verdict — the band may have changed the equation.
+- **A3 inspector restack**: chart → header → alerts → instruments → engine twins → efficiency row → fuel → voyage → crew → log.
+- **A4 twins consolidation — ⚖ #13 RESOLVED: gauges win** (ledger updated). One panel: E1 | twin-gap hero | E2 (cards carry state/load/fuel only — per-engine text sensor rows DELETED), gens compressed to one slim two-column row, the gauge cluster embedded below bound to the E1/E2/G1/G2 chips. The EGT-30d trend moved into the cluster (selected engine) so demo step 3 survives the deletion. EnginesSummary and the sensors toggle removed.
+- **A5 VOYAGE card**: Environment + Route + ModeTimeline merged — route strip + distance/ETA/"then", wind/wave glyph-stats (reveal holds current/vis/precip; stale state preserved), 24h mode strip. The three cards died; their docent annotations are unanchored pending Anthony's copy.
+- **A6 alert text color everywhere**: shared `ALERT_TEXT_COLOR` — CAUTION amber, WARNING red, ADVISORY muted ink (EventLog's advisory-blue lines corrected to muted; the DATALINK strip keeps advisory blue as its own informational voice, logged).
+
+## B-items
+
+- **B1 burn-vs-speed legibility**: "12-MO NORMAL" micro-label on the band edge, "NOW" at the live point; OPTIMAL bracket moved to its own lane below the x-axis (KN title shifted right) — nothing renders over plot content.
+- **B2 follow + pan + zoom** (`usePanZoom`, shared): both charts track their subject by default (inspector = focus vessel — Meridian can no longer walk out of its own chart; fleet = fit-to-fleet); click-drag pans and disengages follow (accent "⌖ FOLLOW" chip re-engages); wheel zoom clamped to sane spans; drags >5px suppress the marker click underneath; wheel uses a non-passive native listener.
+- **B3 collapsible panels**: every inspector panel minimizes to header + ONE summary stat (instruments → kn+gph, twins → gap+fuelΔ, efficiency → now%, curve → vs-envelope%, fuel → recon+gal, voyage → ETA+wind, crew → "N aboard · Nd", log → last event, position → "N nm from port"). Collapsed state persists per vessel for the session. The alerts card is deliberately uncollapsible — severity never folds.
+- **B4 glyph audit**: EventLog gained its clock glyph (Environment/Crew were already carried/are now inside voyage). **State silhouettes** (TX/LA) ship behind the `state marks` dev toggle beside port names in header + voyage. Honest flag stands: at 12px they may read as smudges — judge on pixels, cut without ceremony.
+- **B5 spacing**: `gap/card` token (8px) drives card gaps; rows align-start; the A5 merge removed the double boundaries it asked about.
+
+## Notes
+
+- The retired RoutePanel/WeatherPanel/ModeTimeline files remain (greybox record, locked §8 names) but no longer render — same precedent as VesselView.
+- verify/lint/build green (offline fonts); screenshots r21-*.png.
+
+---
+
 # PROGRESS — 2026-06-11 (Sessions 23-24: ROUNDS 19+20 — gauge redesign, click-only system, tank fill)
 
 ## Round 19 — gauge geometry + card density

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import type { VesselState } from '../data/types';
 import { vesselStatus, worstLevel } from '../data/alerts';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
-import { NauticalChart, useContentWidth, type ChartFrame } from './NauticalChart';
+import { NauticalChart, useContentWidth, usePanZoom, FollowChip, type ChartFrame } from './NauticalChart';
 import { clusterPoints, placeLabels, labelWidth } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
@@ -57,7 +57,8 @@ export function FleetMap({
   };
   const [splay, setSplay] = useState<number | null>(null);
 
-  const frame = fitFleetFrame(fleet);
+  // round 21 B2: follow here = fit-to-fleet; pan/zoom disengage it
+  const { frame, following, follow, handlers, wheelRef } = usePanZoom(fitFleetFrame(fleet), w, height);
   const px = (lon: number) => ((lon - frame.lonMin) / (frame.lonMax - frame.lonMin)) * w;
   const py = (lat: number) => ((frame.latMax - lat) / (frame.latMax - frame.latMin)) * height;
 
@@ -85,6 +86,7 @@ export function FleetMap({
       <Label g="vessel">fleet plot — gulf of mexico</Label>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
+        <div ref={wheelRef} {...handlers} style={{ cursor: following ? 'default' : 'grab' }}>
         <NauticalChart frame={frame} width={w} height={height}>
           {() => (
             <>
@@ -163,6 +165,8 @@ export function FleetMap({
               id: m.id, name: m.name, dotColor: markerFill(byId.get(m.id)!),
             }))} />
         )}
+        </div>
+        {!following && <FollowChip onClick={follow} />}
       </div>
       </Annotated>
     </section>

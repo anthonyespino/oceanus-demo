@@ -102,8 +102,10 @@ export function DevPanel() {
         options={[{ v: false, text: 'off' }, { v: true, text: 'LEARN MODE (L)' }]} />
       <Row label="fuel view" value={f.tankStyle} onPick={f.setTankStyle}
         options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic' }]} />
-      <Row label="sensors" value={f.sensorStyle} onPick={f.setSensorStyle}
-        options={[{ v: 'rows' as const, text: 'text rows' }, { v: 'gauges' as const, text: 'gauges' }]} />
+      <Row label="chart pos" value={f.chartTop} onPick={f.setChartTop}
+        options={[{ v: false, text: 'below board' }, { v: true, text: 'top (trial)' }]} />
+      <Row label="state marks" value={f.stateMarks} onPick={f.setStateMarks}
+        options={[{ v: false, text: 'off' }, { v: true, text: 'on' }]} />
       <Row label="reveal" value={f.revealStyle} onPick={f.setRevealStyle}
         options={[{ v: 'chevron' as const, text: 'chevron' }, { v: 'meter' as const, text: 'meter strip' }]} />
       <Row label="stress" value={f.stress} onPick={f.setStress}

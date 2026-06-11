@@ -16,7 +16,7 @@ import { TrendChartFill } from './TrendChartFill';
 import { DataRow } from './DataRow';
 import { Stat } from './Stat';
 import { fmtPct } from './gb';
-import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT } from './probeTokens';
+import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT, ALERT_TEXT_COLOR } from './probeTokens';
 import { useState } from 'react';
 import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
 import { Glyph, type GlyphName } from './Glyph';
@@ -25,10 +25,7 @@ const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
 
 const MODE_GLYPH: Record<string, GlyphName> = { TRANSIT: 'route', STATION: 'vessel', STANDBY: 'clock', PORT: 'anchor' };
 
-const LEVEL_COLOR: Record<string, string> = {
-  WARNING: 'var(--color-alert-warning)',
-  CAUTION: 'var(--color-alert-caution)',
-};
+
 
 export function VesselTile({
   vessel,
@@ -138,7 +135,7 @@ export function VesselTile({
       </div>
       {/* mini keeps severity visible: badge never hides at any size */}
       {mini && badge && (
-        <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: LEVEL_COLOR[badge] ?? NEUTRAL.inkSecondary }}>
+        <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: ALERT_TEXT_COLOR[badge] ?? NEUTRAL.inkSecondary }}>
           [{badge}]
         </div>
       )}
@@ -152,7 +149,7 @@ export function VesselTile({
       {tier === 2 && fullAlerts.length > 0 && (
         <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 11, lineHeight: 1.6 }}>
           {fullAlerts.map((a, i) => (
-            <div key={i} style={{ color: LEVEL_COLOR[a.level] ?? NEUTRAL.inkSecondary }}>
+            <div key={i} style={{ color: ALERT_TEXT_COLOR[a.level] ?? NEUTRAL.inkSecondary }}>
               [{a.level}] {a.message}
             </div>
           ))}

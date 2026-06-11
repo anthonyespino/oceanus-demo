@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { gb } from './gb';
+import { ALERT_TEXT_COLOR } from './probeTokens';
 import { Glyph, Label } from './Glyph';
 
 export function AlertRail({ fleet }: { fleet: VesselState[] }) {
@@ -23,7 +24,7 @@ export function AlertRail({ fleet }: { fleet: VesselState[] }) {
         <div style={gb.dim}>no active warnings or cautions</div>
       ) : (
         active.map(({ vessel, alert }, i) => (
-          <div key={`${vessel.id}-${alert.code}-${i}`}>
+          <div key={`${vessel.id}-${alert.code}-${i}`} style={{ color: ALERT_TEXT_COLOR[alert.level] }}>
             <Glyph name="alert-triangle" size={12} /> [{alert.level}]{' '}
             <Link href={`/vessel/${vessel.id}`} style={{ textDecoration: 'underline', color: 'var(--color-accent-bright)' }}>
               {vessel.name}

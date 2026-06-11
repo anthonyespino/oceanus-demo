@@ -43,6 +43,7 @@
   --type-micro-size: 11px;
   --pad-card: 16px; /* generous air — err roomy */
   --pad-card-dense: 12px; /* round 15: inspector density step */
+  --gap-card: 8px; /* round 21 B5: the one gap between cards */
   --pad-section: 12px;
   --color-line-hairline: rgba(232, 234, 237, 0.12); /* card frames: ink at low alpha */
   --color-fill-level: rgba(232, 234, 237, 0.1); /* round 20: tank level fill — white at low alpha */
@@ -69,7 +70,7 @@ body {
    whitespace below short cards. */
 .cardrow {
   display: flex;
-  gap: 8px;
+  gap: var(--gap-card);
   align-items: stretch;
   flex-wrap: wrap;
   margin-bottom: 8px;

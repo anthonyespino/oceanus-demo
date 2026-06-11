@@ -7,6 +7,7 @@
 
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
+import { compareVessels } from '../data/fleetState';
 import { useFleet } from '../state/FleetProvider';
 import { AlertRail } from './AlertRail';
 import { FleetHealthBand } from './FleetHealthBand';
@@ -17,17 +18,10 @@ import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize } = useFleet();
+  const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize, chartTop } = useFleet();
 
-  // Scale safety (round 11): status class first, then |sustained_deviation| —
-  // degraded vessels group at the top regardless of tile size.
-  const statusRank = { degraded: 0, watch: 1, nominal: 2 } as const;
-  const ranked = [...fleet].sort((a, b) => {
-    const sa = statusRank[vesselStatus(a.alerts)];
-    const sb = statusRank[vesselStatus(b.alerts)];
-    if (sa !== sb) return sa - sb;
-    return Math.abs(b.derived.sustained_deviation) - Math.abs(a.derived.sustained_deviation);
-  });
+  // Round 21 A1: shared activity-aware comparator (board + rail)
+  const ranked = [...fleet].sort(compareVessels);
   // Promotion cap: at most 2 auto-promoted 2x tiles (worst by |sd|); further
   // degraded vessels keep full status border + badge at 1x — severity never
   // hidden, size budget never blown.
@@ -44,6 +38,13 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           below; chart below the board (supersedes round 3's chart-on-top) */}
       <Annotated name="FleetHealthBand"><FleetHealthBand fleet={fleet} /></Annotated>
       <Annotated name="AlertRail"><AlertRail fleet={fleet} /></Annotated>
+      {/* round 21 A2 trial: chart above the board, behind the dev toggle so
+          the 2s Meridian glance test can be re-run honestly */}
+      {chartTop && (
+        <Annotated name="NauticalChart">
+          <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 480 : 240} />
+        </Annotated>
+      )}
 
       <div
         style={{
@@ -80,11 +81,11 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         })}
       </div>
 
-      {/* chart below the board; the layout toggle now selects its depth only
-          (a: large anchor, b: shallow band). spend slot moved into FleetTrend. */}
-      <Annotated name="NauticalChart">
-        <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
-      </Annotated>
+      {!chartTop && (
+        <Annotated name="NauticalChart">
+          <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
+        </Annotated>
+      )}
       {/* round 6 — final probe component: 72h arrivals board */}
       <Annotated name="PortCallsTimeline"><PortCallsTimeline fleet={fleet} treatment={treatment} /></Annotated>
     </main>

@@ -7,32 +7,12 @@ import type { VesselState } from '../data/types';
 import { EngineCard } from './EngineCard';
 import { Field } from './Field';
 import { Stat } from './Stat';
-import { InstrumentCluster, EnginesSummary } from './InstrumentCluster';
-import { useFleet } from '../state/FleetProvider';
+import { InstrumentCluster } from './InstrumentCluster';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
-/** Daily mean EGT per engine over the trailing 30 days (running samples). */
-function egtTrend(vessel: VesselState, engineIdx: number): number[] {
-  const byDay = new Map<number, number[]>();
-  const cutoff = vessel.history.minutes.at(-1)!.t - 30 * 86_400_000;
-  for (const s of vessel.history.hourly) {
-    if (s.t < cutoff) continue;
-    const e = s.engines[engineIdx];
-    if (!e.running) continue;
-    const day = Math.floor(s.t / 86_400_000);
-    let arr = byDay.get(day);
-    if (!arr) byDay.set(day, (arr = []));
-    arr.push(e.exhaust_gas_temp_f);
-  }
-  return [...byDay.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map(([, arr]) => arr.reduce((x, y) => x + y, 0) / arr.length);
-}
-
 export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
-  const { sensorStyle } = useFleet();
   const now = vessel.history.minutes.at(-1)!;
   const [m1, m2] = now.engines.filter((e) => e.role === 'MAIN');
   const gens = now.engines.filter((e) => e.role === 'GEN');
@@ -43,7 +23,7 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <Label g="engine">engine twins</Label>
       <div style={{ display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' }}>
-        <Annotated name="EngineCard"><EngineCard engine={m1} title="Engine 1" egtTrend30d={egtTrend(vessel, 0)} /></Annotated>
+        <Annotated name="EngineCard"><EngineCard engine={m1} title="Engine 1" /></Annotated>
         <Field level="vessel" field="twin_comparison_delta">
           <div style={{ ...gb.box, background: 'var(--color-surface-overlay)', textAlign: 'center', alignSelf: 'center' }}>
             <Stat label="E2 vs E1 EGT" value={`${egtGapNow > 0 ? '+' : ''}${egtGapNow} °F`} />
@@ -51,19 +31,22 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
             <div style={gb.dim}>24h avg gap {vessel.derived.egt_twin_gap_f} °F</div>
           </div>
         </Field>
-        <Annotated name="EngineCard"><EngineCard engine={m2} title="Engine 2" egtTrend30d={egtTrend(vessel, 1)} /></Annotated>
+        <Annotated name="EngineCard"><EngineCard engine={m2} title="Engine 2" /></Annotated>
       </div>
-      {/* row 2: GEN1 | GEN2 | cell 3 — NEVER empty (round 15): the cluster
-          lives here by default; when the sensors toggle sends the gauges
-          into per-engine reveal duty, a compact engines summary holds the
-          cell instead */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'stretch', flexWrap: 'wrap' }}>
+      {/* gens: one slim two-column row (round 21 A4) */}
+      <div style={{ display: 'flex', gap: 'var(--pad-card)', marginTop: 8, flexWrap: 'wrap', fontFamily: 'var(--font-data)', fontSize: 12 }}>
         {gens.map((g, i) => (
-          <Annotated key={g.engine_id} name="EngineCard"><EngineCard engine={g} title={`Gen ${i + 1}`} egtTrend30d={egtTrend(vessel, i + 2)} /></Annotated>
+          <span key={g.engine_id} style={{ flex: '1 1 200px', display: 'flex', justifyContent: 'space-between', gap: 8, borderTop: '1px solid var(--color-line-hairline)', paddingTop: 6 }}>
+            <span style={{ color: 'var(--color-ink-muted)' }}>G{i + 1} GEN</span>
+            <span style={{ color: g.running ? 'var(--color-ink-primary)' : 'var(--color-ink-muted)' }}>
+              {g.running ? `RUNNING · ${Math.round(g.load_pct)}% · ${g.fuel_rate_gph} gph` : 'OFF'}
+            </span>
+          </span>
         ))}
-        <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-          {sensorStyle === 'rows' ? <InstrumentCluster vessel={vessel} /> : <EnginesSummary vessel={vessel} />}
-        </div>
+      </div>
+      {/* gauge cluster, bound to the E1/E2/G1/G2 selector (verdict 13: gauges won) */}
+      <div style={{ marginTop: 'var(--pad-section)', borderTop: '1px solid var(--color-line-hairline)', paddingTop: 'var(--pad-section)' }}>
+        <InstrumentCluster vessel={vessel} />
       </div>
     </section>
   );

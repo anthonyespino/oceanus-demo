@@ -10,6 +10,7 @@ import { PORTS, distanceNm } from '../data/fleet';
 import { Field } from './Field';
 import { gb, fmtDay } from './gb';
 import { Glyph, type GlyphName } from './Glyph';
+import { StateMark } from './StateMark';
 
 const MODE_GLYPH: Record<string, GlyphName> = { TRANSIT: 'route', STATION: 'vessel', STANDBY: 'clock', PORT: 'anchor' };
 
@@ -45,7 +46,7 @@ export function VesselHeader({ vessel }: { vessel: VesselState }) {
         <span>endurance {vessel.derived.endurance_hours} h</span>
       </Field>
       <Field level="vessel" field="next_port_calls">
-        <span>next: {next ? `${next.port} ETA ${fmtDay(next.eta)}` : '—'}</span>
+        <span>next: {next ? <>{next.port} <StateMark port={next.port} /> ETA {fmtDay(next.eta)}</> : '—'}</span>
       </Field>
       <span>master: {master?.name ?? '—'} (since {master ? fmtDay(master.onboard_since) : '—'})</span>
     </section>

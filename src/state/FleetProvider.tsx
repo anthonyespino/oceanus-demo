@@ -23,7 +23,6 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // shallow full-width chart strip on top, board directly below.
 export type LayoutVariant = 'board-first' | 'chart-band';
 export type TankStyle = 'bars' | 'dots' | 'synoptic'; // round 5 dots + round 7 synoptic experiments
-export type SensorStyle = 'rows' | 'gauges'; // round 11 instrument cluster experiment
 export type RevealStyle = 'chevron' | 'meter'; // round 14 affordance experiment
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
 
@@ -46,8 +45,13 @@ interface FleetContextValue {
   setIkbBand: (b: boolean) => void;
   tankStyle: TankStyle;
   setTankStyle: (t: TankStyle) => void;
-  sensorStyle: SensorStyle;
-  setSensorStyle: (s: SensorStyle) => void;
+  chartTop: boolean; // round 21 A2: fleet plot above the board (trial)
+  setChartTop: (b: boolean) => void;
+  stateMarks: boolean; // round 21 B4: state silhouettes beside port names
+  setStateMarks: (b: boolean) => void;
+  /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
+  collapsedPanels: Record<string, boolean>;
+  togglePanel: (key: string) => void;
   stress: boolean; // round 11: synthetic crowded-board scenario (badged STRESS)
   setStress: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
@@ -74,7 +78,10 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
   const [ikbBand, setIkbBand] = useState(false);
   const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel
-  const [sensorStyle, setSensorStyle] = useState<SensorStyle>('rows');
+  const [chartTop, setChartTop] = useState(false);
+  const [stateMarks, setStateMarks] = useState(false);
+  const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
+  const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [stress, setStress] = useState(false);
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [revealStyle, setRevealStyle] = useState<RevealStyle>('chevron');
@@ -126,7 +133,8 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         motion, setMotion, crossings,
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
-        sensorStyle, setSensorStyle, stress, setStress,
+        chartTop, setChartTop, stateMarks, setStateMarks,
+        collapsedPanels, togglePanel, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,
       }}

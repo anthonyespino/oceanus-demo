@@ -1,31 +1,33 @@
 'use client';
-// ROUND 16: ambient-canvas experiment RETIRED — containment won. The chart
-// is a normal framed card at the top of the stack (height-capped, fit-to-
-// content framing), nothing on this page overlaps anything. Stack order:
-// chart → header/sitrep slot → alerts → instrument band → efficiency →
-// machine → fuel → environment/route/crew → timeline/log.
+// ROUND 21: stack = chart → header → alerts → instrument band → engine twins
+// → efficiency (trend + burn-vs-speed) → fuel → voyage → crew → event log.
+// Every panel collapses to header + one summary stat (state persists per
+// vessel for the session). Alerts card stays uncollapsible — severity never
+// folds. Voyage merges Environment + Route + ModeTimeline (the three cards
+// died); their docent annotations are unanchored pending Anthony's copy.
 
 import { useEffect, useState } from 'react';
 import type { VesselState } from '../data/types';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
+import { envelopeDeltaPct } from '../data/curve';
+import { vesselEvents, EVENT_WINDOW_24H } from '../data/events';
+import { PORTS, distanceNm } from '../data/fleet';
+import { Collapse } from './Collapse';
 import { EfficiencyCurve } from './EfficiencyCurve';
 import { EfficiencyPanel } from './EfficiencyPanel';
 import { EngineTwinPanel } from './EngineTwinPanel';
 import { EventLog } from './EventLog';
 import { InspectorChart } from './InspectorChart';
-import { ModeTimeline } from './ModeTimeline';
 import { TankSchematic } from './TankSchematic';
 import { VesselSynoptic } from './VesselSynoptic';
-import { WeatherPanel } from './WeatherPanel';
-import { CrewPanel } from './CrewPanel';
-import { RoutePanel } from './RoutePanel';
 import { VesselHeader } from './VesselHeader';
+import { VoyagePanel } from './VoyagePanel';
+import { CrewPanel } from './CrewPanel';
 import { VesselInstrumentBand } from './VesselInstrumentBand';
 import { Label } from './Glyph';
-import { gb } from './gb';
+import { ALERT_TEXT_COLOR, NEUTRAL } from './probeTokens';
+import { gb, fmtPct, fmtTime } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
-
-// Round 15 cap retained: the chart card tops out at ~30% viewport / 360px.
 
 export function VesselInspector({
   vessel,
@@ -45,65 +47,78 @@ export function VesselInspector({
     return () => window.removeEventListener('resize', fit);
   }, []);
 
+  const id = vessel.static.id;
+  const d = vessel.derived;
+  const now = vessel.history.minutes.at(-1)!;
+  const [m1, m2] = now.engines.filter((e) => e.role === 'MAIN');
+  const fuelGapPct = m1.fuel_rate_gph > 0 ? (m2.fuel_rate_gph / m1.fuel_rate_gph - 1) * 100 : 0;
+  const totalGal = now.tanks.reduce((a, t) => a + t.level_gal, 0);
+  const nearest = PORTS.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b));
+  const next = vessel.history.nextPortCalls[0];
+  const crewDays = Math.floor((now.t - vessel.history.crew[0].onboard_since) / 86_400_000);
+  const lastEvent = vesselEvents(vessel, now.t - EVENT_WINDOW_24H)[0];
+  const envDelta = envelopeDeltaPct(vessel.history);
+
   return (
     <div style={{ flex: 1, minWidth: 0, position: 'relative', '--pad-card': 'var(--pad-card-dense)' } as React.CSSProperties}>
-      {/* round 15: inspector cards drop one padding step via scoped token
-          override — every gb.box inside resolves pad/card to pad/card-dense */}
       <div style={{ position: 'relative' }}>
-        {/* contained chart card — height-capped, zero bleed */}
-        <Annotated name="NauticalChart"><InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} /></Annotated>
-        {/* VesselSitrep slot: component lands here once designed; the dashed
-            placeholder was scaffolding and no longer renders (round 9) */}
+        <Collapse k={`${id}:position`} glyph="route" title="position"
+          summary={`${distanceNm(now.position, nearest).toFixed(0)} nm from ${nearest.name}`}>
+          <Annotated name="NauticalChart"><InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} /></Annotated>
+        </Collapse>
         <Annotated name="VesselHeader"><VesselHeader vessel={vessel} /></Annotated>
         {vessel.alerts.length > 0 && (
           <section style={{ ...gb.box, marginBottom: 8 }}>
             <Label g="alert-triangle">alerts</Label>
             {vessel.alerts.map((a, i) => (
-              <div key={i}>
+              <div key={i} style={{ color: ALERT_TEXT_COLOR[a.level] ?? NEUTRAL.inkSecondary }}>
                 [{a.level}] {a.message}
               </div>
             ))}
           </section>
         )}
-        {/* round 16: the marine-console moment, promoted */}
-        <VesselInstrumentBand vessel={vessel} />
+        <Collapse k={`${id}:instruments`} glyph="gauge" title="instruments"
+          summary={`${now.position.speed_over_ground_kn.toFixed(1)} kn · ${Math.round(d.burn_rate_gph)} gph`}>
+          <VesselInstrumentBand vessel={vessel} />
+        </Collapse>
+        <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
+          summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
+          <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
+        </Collapse>
         <div className="cardrow">
           <div style={{ flex: '1 1 480px', minWidth: 0 }}>
-            <Annotated name="EfficiencyCurve"><EfficiencyCurve vessel={vessel} /></Annotated>
+            <Collapse k={`${id}:curve`} glyph="chart" title="burn vs speed"
+              summary={envDelta === null ? 'not in transit' : `${fmtPct(envDelta)} vs envelope`}>
+              <Annotated name="EfficiencyCurve"><EfficiencyCurve vessel={vessel} /></Annotated>
+            </Collapse>
           </div>
           <div style={{ flex: '1 1 380px', minWidth: 0 }}>
-            <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
+            <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
+              summary={`now ${fmtPct(d.efficiency_delta_pct)}`}>
+              <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
+            </Collapse>
           </div>
         </div>
-        <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
-        {/* one fuel truth, one card (round 11): reconciliation rides the
-            fuel-card header chip; the synoptic's in-diagram RECON badge is
-            the only in-diagram instance */}
-        {tankStyle === 'synoptic' ? (
-          <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>
-        ) : (
-          <Annotated name="TankSchematic"><TankSchematic vessel={vessel} /></Annotated>
-        )}
-        {/* round 19: this row sizes to content — align-start, no stretch voids */}
-        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-          <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <Annotated name="WeatherPanel"><WeatherPanel vessel={vessel} /></Annotated>
-          </div>
-          <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <Annotated name="RoutePanel"><RoutePanel vessel={vessel} /></Annotated>
-          </div>
-          <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <Annotated name="CrewPanel"><CrewPanel vessel={vessel} /></Annotated>
-          </div>
-        </div>
-        <div className="cardrow">
-          <div style={{ flex: '1 1 380px', minWidth: 0 }}>
-            <Annotated name="ModeTimeline"><ModeTimeline vessel={vessel} /></Annotated>
-          </div>
-          <div style={{ flex: '2 1 520px', minWidth: 0 }}>
-            <Annotated name="EventLog"><EventLog vessel={vessel} /></Annotated>
-          </div>
-        </div>
+        <Collapse k={`${id}:fuel`} glyph="tank" title="fuel"
+          summary={`RECON ${d.reconciliation.status} · ${totalGal.toLocaleString()} gal`}>
+          {tankStyle === 'synoptic' ? (
+            <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>
+          ) : (
+            <Annotated name="TankSchematic"><TankSchematic vessel={vessel} /></Annotated>
+          )}
+        </Collapse>
+        <Collapse k={`${id}:voyage`} glyph="route" title="voyage"
+          summary={`${next ? `ETA ${fmtTime(next.eta)}` : vessel.derived.mode} · wind ${now.weather.wind_speed_kn} kn`}>
+          <VoyagePanel vessel={vessel} />
+        </Collapse>
+        <Collapse k={`${id}:crew`} glyph="crew" title="crew"
+          summary={`${vessel.history.crew.length} aboard · ${crewDays}d`}>
+          <Annotated name="CrewPanel"><CrewPanel vessel={vessel} /></Annotated>
+        </Collapse>
+        <Collapse k={`${id}:log`} glyph="clock" title="event log"
+          summary={lastEvent ? `${lastEvent.type} — ${lastEvent.text}` : 'no events 24h'}>
+          <Annotated name="EventLog"><EventLog vessel={vessel} /></Annotated>
+        </Collapse>
       </div>
     </div>
   );

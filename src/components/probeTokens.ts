@@ -47,6 +47,13 @@ export const NEUTRAL = {
   surfaceDim: 'var(--color-surface-overlay)',
 };
 
+/** Round 21 A6: alert lines render in their severity color everywhere. */
+export const ALERT_TEXT_COLOR: Record<string, string> = {
+  WARNING: 'var(--color-alert-warning)',
+  CAUTION: 'var(--color-alert-caution)',
+  ADVISORY: 'var(--color-ink-muted)',
+};
+
 export const FONT = {
   ui: 'var(--font-ui)',
   data: 'var(--font-data)', // tabular numerals, always

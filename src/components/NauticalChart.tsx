@@ -61,6 +61,95 @@ export function useContentWidth(fallback: number): [React.RefObject<HTMLDivEleme
   return [ref, w];
 }
 
+/**
+ * Round 21 B2: follow + pan + zoom. Follow mode (default) re-derives the
+ * frame every render from `followFrame` — the subject can never leave view.
+ * Click-drag pans (disengages follow); wheel zooms within sane bounds; the
+ * caller shows a FOLLOW chip via `following`/`follow()`. A drag >5px
+ * suppresses the click that would otherwise fire on a marker underneath.
+ */
+export function usePanZoom(followFrame: ChartFrame, w: number, h: number) {
+  const [view, setView] = useState<ChartFrame | null>(null);
+  const drag = useRef<{ x: number; y: number; frame: ChartFrame; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
+  const frame = view ?? followFrame;
+
+  const handlers = {
+    onMouseDown: (e: React.MouseEvent) => {
+      drag.current = { x: e.clientX, y: e.clientY, frame, moved: false };
+    },
+    onMouseMove: (e: React.MouseEvent) => {
+      const d = drag.current;
+      if (!d || e.buttons === 0) return;
+      const dx = e.clientX - d.x;
+      const dy = e.clientY - d.y;
+      if (Math.abs(dx) + Math.abs(dy) > 5) d.moved = true;
+      if (!d.moved) return;
+      const lonSpan = d.frame.lonMax - d.frame.lonMin;
+      const latSpan = d.frame.latMax - d.frame.latMin;
+      setView({
+        lonMin: d.frame.lonMin - (dx / w) * lonSpan,
+        lonMax: d.frame.lonMax - (dx / w) * lonSpan,
+        latMin: d.frame.latMin + (dy / h) * latSpan,
+        latMax: d.frame.latMax + (dy / h) * latSpan,
+      });
+    },
+    onMouseUp: () => {
+      if (drag.current?.moved) suppressClick.current = true;
+      drag.current = null;
+    },
+    onClickCapture: (e: React.MouseEvent) => {
+      if (suppressClick.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        suppressClick.current = false;
+      }
+    },
+  };
+
+  // wheel zoom needs a non-passive native listener
+  const wheelRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef(frame);
+  useEffect(() => {
+    frameRef.current = frame;
+  });
+  useEffect(() => {
+    const el = wheelRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const f = frameRef.current;
+      const factor = e.deltaY > 0 ? 1.18 : 1 / 1.18;
+      const cLat = (f.latMin + f.latMax) / 2;
+      const cLon = (f.lonMin + f.lonMax) / 2;
+      const latSpan = Math.min(8, Math.max(0.5, (f.latMax - f.latMin) * factor));
+      const lonSpan = Math.min(14, Math.max(0.8, (f.lonMax - f.lonMin) * factor));
+      setView({ latMin: cLat - latSpan / 2, latMax: cLat + latSpan / 2, lonMin: cLon - lonSpan / 2, lonMax: cLon + lonSpan / 2 });
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  return { frame, following: view === null, follow: () => setView(null), handlers, wheelRef };
+}
+
+/** FOLLOW chip — accent: interaction/identity, never status. */
+export function FollowChip({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        position: 'absolute', top: 8, right: 8, zIndex: 4,
+        fontFamily: 'var(--font-data)', fontSize: 10, letterSpacing: 1,
+        color: 'var(--color-accent-bright)', border: '1px solid var(--color-accent-bright)',
+        background: 'var(--color-surface-raised)', borderRadius: 6, padding: '2px 8px', cursor: 'pointer',
+      }}
+    >
+      ⌖ FOLLOW
+    </button>
+  );
+}
+
 export function NauticalChart({
   frame,
   width,

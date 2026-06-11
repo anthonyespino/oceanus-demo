@@ -8,9 +8,8 @@ import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { toggleStyle } from './probeTokens';
 import { Gauge, type Vital } from './Gauge';
-import { DataRow } from './DataRow';
+import { Sparkline } from './Sparkline';
 import { gb } from './gb';
-import { Label } from './Glyph';
 
 const DANGER = 'var(--color-alert-warning)';
 
@@ -22,26 +21,6 @@ function flaggedEngineIdx(vessel: VesselState): number {
     if (idx >= 0) return idx;
   }
   return 0;
-}
-
-/**
- * Round 15: when the gauges move into per-engine reveal duty, the engine-grid
- * cell falls back to this compact summary — the cell is never empty.
- */
-export function EnginesSummary({ vessel }: { vessel: VesselState }) {
-  const now = vessel.history.minutes.at(-1)!;
-  return (
-    <section style={{ ...gb.box, marginBottom: 8, height: '100%', boxSizing: 'border-box' }}>
-      <Label g="engine">engines</Label>
-      {now.engines.map((e, i) => (
-        <DataRow
-          key={e.engine_id}
-          label={`${['E1', 'E2', 'G1', 'G2'][i]} ${e.role}`}
-          value={e.running ? `RUNNING · ${Math.round(e.load_pct)}%` : 'OFF'}
-        />
-      ))}
-    </section>
-  );
 }
 
 /** Vital for an engine dial: OFF→still; alert naming the engine inherits its
@@ -67,10 +46,22 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
   const main = e.role === 'MAIN';
   const off = !e.running;
 
+  // EGT 30d daily mean for the selected engine (kept from the old reveals)
+  const byDay = new Map<number, number[]>();
+  const cutoff = now.t - 30 * 86_400_000;
+  for (const h of vessel.history.hourly) {
+    if (h.t < cutoff || !h.engines[idx].running) continue;
+    const day = Math.floor(h.t / 86_400_000);
+    let arr = byDay.get(day);
+    if (!arr) byDay.set(day, (arr = []));
+    arr.push(h.engines[idx].exhaust_gas_temp_f);
+  }
+  const egt30 = [...byDay.entries()].sort((a, b) => a[0] - b[0]).map(([, a]) => a.reduce((x, y) => x + y, 0) / a.length);
+
   return (
-    <section style={{ ...gb.box, marginBottom: 8, height: '100%', boxSizing: 'border-box' }}>
+    <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-        <Label g="gauge" style={{ marginBottom: 0 }}>instruments</Label>
+        <span style={{ ...gb.label, marginBottom: 0 }}>sensors — {['E1', 'E2', 'G1', 'G2'][idx]}</span>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           {now.engines.map((eng, i) => (
             <button key={eng.engine_id} style={toggleStyle(i === idx)} onClick={() => setIdx(i)}>
@@ -98,6 +89,12 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
         <Gauge label="rpm" value={e.rpm} min={0} max={main ? 2000 : 2000} off={off}
           vital={engineVital(vessel, e.engine_id, e.running, false)} />
       </div>
-    </section>
+      {egt30.length > 2 && (
+        <div style={{ marginTop: 6, textAlign: 'center' }}>
+          <Sparkline values={egt30} width={180} height={24} zeroBaseline={false} />
+          <span style={{ fontSize: 10, color: 'var(--color-ink-muted)', marginLeft: 6, fontFamily: 'var(--font-data)' }}>EGT 30D</span>
+        </div>
+      )}
+    </div>
   );
 }
