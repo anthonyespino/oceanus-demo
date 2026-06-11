@@ -37,7 +37,6 @@ export function EngineCard({
   );
   const { sensorStyle } = useFleet();
   const off = !engine.running;
-  const WATCH = 'var(--color-alert-caution)';
   const DANGER = 'var(--color-alert-warning)';
   return (
     <div style={{ ...gb.box, minWidth: 190, display: 'flex', flexDirection: 'column' }}>
@@ -48,13 +47,11 @@ export function EngineCard({
               /* round 15: mini-gauges take per-engine reveal duty */
               <span style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                 <Gauge size={62} label="EGT" value={engine.exhaust_gas_temp_f} min={400} max={1000} unit="°" off={off}
-                  vital={off ? 'still' : engine.exhaust_gas_temp_f >= 920 ? 'watch' : 'nominal'}
-                  limit={{ from: 920, to: 1000, color: WATCH }} />
+                  displayLimits={[920]} />
                 <Gauge size={62} label="oil" value={engine.oil_pressure_psi} min={0} max={90} off={off}
-                  vital={off ? 'still' : engine.oil_pressure_psi < 30 ? 'degraded' : 'nominal'}
-                  limit={{ from: 0, to: 30, color: DANGER }} />
-                <Gauge size={62} label="rpm" value={engine.rpm} min={0} max={2000} off={off}
-                  vital={off ? 'still' : 'nominal'} />
+                  vital={!off && engine.oil_pressure_psi < 30 ? 'degraded' : 'nominal'}
+                  band={{ from: 0, to: 30, color: DANGER }} />
+                <Gauge size={62} label="rpm" value={engine.rpm} min={0} max={2000} off={off} />
               </span>
             ) : (
               <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>
@@ -77,7 +74,8 @@ export function EngineCard({
         {engine.running ? 'RUNNING' : 'STOPPED'}
       </div>
       <DataRow label="load" value={`${engine.load_pct}%`} />
-      <DataRow label="fuel" value={`${engine.fuel_rate_gph} gph`} />
+      {/* round 19 cut: "fuel" label — gph on an engine card self-describes */}
+      <DataRow label="" value={`${engine.fuel_rate_gph} gph`} />
       </RevealZone>
     </div>
   );

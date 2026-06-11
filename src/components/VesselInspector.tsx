@@ -84,7 +84,8 @@ export function VesselInspector({
         ) : (
           <Annotated name="TankSchematic"><TankSchematic vessel={vessel} /></Annotated>
         )}
-        <div className="cardrow">
+        {/* round 19: this row sizes to content — align-start, no stretch voids */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
           <div style={{ flex: '1 1 280px', minWidth: 0 }}>
             <Annotated name="WeatherPanel"><WeatherPanel vessel={vessel} /></Annotated>
           </div>

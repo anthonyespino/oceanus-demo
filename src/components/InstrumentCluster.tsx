@@ -12,7 +12,6 @@ import { DataRow } from './DataRow';
 import { gb } from './gb';
 import { Label } from './Glyph';
 
-const WATCH = 'var(--color-alert-caution)';
 const DANGER = 'var(--color-alert-warning)';
 
 /** Index of the engine named in an active alert, else the first main. */
@@ -80,19 +79,22 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
           ))}
         </span>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center', marginTop: 'var(--pad-section)' }}>
+      {/* round 19: fixed-cell grid — equal cells, consistent gutters, panel
+          height = content. Display ceilings are NEUTRAL ticks (ruling 11
+          enforced); only the oil minimum is alert-backed and colored. */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', justifyItems: 'center', gap: 'var(--pad-section)', marginTop: 'var(--pad-section)' }}>
         <Gauge label="EGT" value={e.exhaust_gas_temp_f} min={400} max={1000} unit="°F" off={off}
-          vital={engineVital(vessel, e.engine_id, e.running, e.exhaust_gas_temp_f >= 920)}
-          limit={{ from: 920, to: 1000, color: WATCH }} />
+          vital={engineVital(vessel, e.engine_id, e.running, false)}
+          displayLimits={[920]} />
         <Gauge label="coolant" value={e.coolant_temp_f} min={120} max={220} unit="°F" off={off}
-          vital={engineVital(vessel, e.engine_id, e.running, e.coolant_temp_f >= 203)}
-          limit={{ from: 203, to: 220, color: WATCH }} />
+          vital={engineVital(vessel, e.engine_id, e.running, false)}
+          displayLimits={[203]} />
         <Gauge label="oil" value={e.oil_pressure_psi} min={0} max={90} unit=" psi" off={off}
           vital={engineVital(vessel, e.engine_id, e.running, e.oil_pressure_psi < 30, 'degraded')}
-          limit={{ from: 0, to: 30, color: DANGER }} />
+          band={{ from: 0, to: 30, color: DANGER }} />
         <Gauge label="oil temp" value={e.oil_temp_f} min={120} max={240} unit="°F" off={off}
-          vital={engineVital(vessel, e.engine_id, e.running, e.oil_temp_f >= 226)}
-          limit={{ from: 226, to: 240, color: WATCH }} />
+          vital={engineVital(vessel, e.engine_id, e.running, false)}
+          displayLimits={[226]} />
         <Gauge label="rpm" value={e.rpm} min={0} max={main ? 2000 : 2000} off={off}
           vital={engineVital(vessel, e.engine_id, e.running, false)} />
       </div>

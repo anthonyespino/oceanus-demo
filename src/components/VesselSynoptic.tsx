@@ -51,6 +51,16 @@ const GEOM = {
 const LINE = 'var(--color-line-strong)'; // neutral plumbing
 const INK2 = NEUTRAL.inkSecondary;
 
+/** Tank tint ONLY from its own active TANK_LOW alert (round 20). */
+function tankTint(v: VesselState, tankLabel: string): string | null {
+  for (const a of v.alerts) {
+    if (a.code === 'TANK_LOW' && a.message.startsWith(tankLabel)) {
+      return a.level === 'CAUTION' ? STATUS_COLOR.watch : 'var(--color-alert-advisory)';
+    }
+  }
+  return null;
+}
+
 /** Engines named in active CAUTION/WARNING alert messages get their tint. */
 function engineTint(v: VesselState, engineId: string): string | null {
   for (const a of v.alerts) {
@@ -119,15 +129,19 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             <text x={388} y={150} textAnchor="middle" style={mono(9)} fill={INK2}>XFER</text>
           )}
 
-          {/* tanks: fill ratio as inner bar (top-down, fills bow→stern) */}
+          {/* tanks (round 20): level as VERTICAL fill, bottom-up, fill/level
+              token (white @ low alpha). Neutral always — tint ONLY when this
+              tank's own TANK_LOW alert is active. */}
           {tankGeo.map((g, i) => {
             const t = tanks[i];
+            const tint = tankTint(vessel, g.id);
+            const fillH = (g.h - 4) * (t.level_pct / 100);
             return (
               <g key={g.id}>
-                <rect x={g.x} y={g.y} width={g.w} height={g.h} fill="var(--color-surface-base)" stroke={LINE} strokeWidth={1} rx={3} />
-                <rect x={g.x + 2} y={g.y + 2} width={(g.w - 4) * (t.level_pct / 100)} height={g.h - 4}
-                  fill="var(--color-surface-overlay)" rx={2} />
-                <text x={g.x + g.w / 2} y={g.y + g.h / 2 + 4} textAnchor="middle" style={mono(11)} fill={NEUTRAL.ink}>
+                <rect x={g.x} y={g.y} width={g.w} height={g.h} fill="var(--color-surface-base)" stroke={tint ?? LINE} strokeWidth={tint ? 1.5 : 1} rx={3} />
+                <rect x={g.x + 2} y={g.y + 2 + (g.h - 4 - fillH)} width={g.w - 4} height={fillH}
+                  fill={tint ?? 'var(--color-fill-level)'} opacity={tint ? 0.35 : 1} rx={2} />
+                <text x={g.x + g.w / 2} y={g.y + g.h / 2 + 4} textAnchor="middle" style={mono(11)} fill={tint ?? NEUTRAL.ink}>
                   {t.level_pct.toFixed(0)}%
                 </text>
               </g>

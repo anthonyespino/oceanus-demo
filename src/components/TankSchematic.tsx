@@ -36,8 +36,23 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
   const storage = now.tanks.filter((t) => t.type === 'STORAGE');
   const feeder = now.tanks.filter((t) => t.type === 'FEEDER');
 
-  const tankBox = (t: (typeof now.tanks)[number]) => (
-    <div key={t.tank_id} style={{ ...gb.box, minWidth: 150 }}>
+  const TANK_LABELS = ['ST1', 'ST2', 'FD1', 'FD2'];
+  const tankTint = (label: string): string | null => {
+    for (const a of vessel.alerts) {
+      if (a.code === 'TANK_LOW' && a.message.startsWith(label)) {
+        return a.level === 'CAUTION' ? 'var(--color-alert-caution)' : 'var(--color-alert-advisory)';
+      }
+    }
+    return null;
+  };
+  const tankBox = (t: (typeof now.tanks)[number]) => {
+    const label = TANK_LABELS[now.tanks.indexOf(t)];
+    const tint = tankTint(label);
+    return (
+    <div key={t.tank_id} style={{ ...gb.box, minWidth: 150, position: 'relative', overflow: 'hidden', ...(tint ? { borderColor: tint } : {}) }}>
+      {/* round 20: level as vertical bottom-up fill (fill/level token);
+          tinted only by this tank's own TANK_LOW alert */}
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${t.level_pct}%`, background: tint ?? 'var(--color-fill-level)', opacity: tint ? 0.25 : 1, pointerEvents: 'none' }} />
       <Field level="vessel" field="tank.type">
         <div style={gb.label}>
           {t.tank_id} {t.type}
@@ -62,7 +77,8 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         </>
       )}
     </div>
-  );
+    );
+  };
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>

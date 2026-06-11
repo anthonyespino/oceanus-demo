@@ -12,8 +12,9 @@ import { useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
-// `open` (controlled) lets non-HTML hover sources — SVG chart markers — drive
-// the same reveal: the policy still lives in this one file.
+// ROUND 20 — system rule: "hover points, click asks." All reveals are
+// click-only; hover does nothing anywhere except chart-marker tooltips
+// (which use the controlled `open` prop, debounced by their charts).
 export function Contextual({
   label,
   children,
@@ -23,17 +24,14 @@ export function Contextual({
   children: React.ReactNode;
   open?: boolean;
 }) {
-  const [hover, setHover] = useState(false);
   const [pinned, setPinned] = useState(false);
-  const open = controlledOpen ?? (hover || pinned);
+  const open = controlledOpen ?? pinned;
 
   return (
     <Annotated name="Contextual" inline>
     <span
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       onClick={() => setPinned((p) => !p)}
-      style={{ cursor: 'default' }}
+      style={{ cursor: 'pointer' }}
     >
       <span style={{ borderBottom: `1px dotted ${pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-muted)'}`, color: pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-secondary)', fontSize: 12 }}>
         {label}
@@ -84,21 +82,22 @@ export function RevealZone({
   meter?: { frac: number; color?: string };
 }) {
   const { revealStyle } = useFleet();
-  const [hover, setHover] = useState(false);
   const [pinned, setPinned] = useState(false);
-  const open = hover || pinned;
+  const open = pinned;
   const useMeter = revealStyle === 'meter' && meter;
 
   return (
     <div
       tabIndex={0}
-      style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, outline: 'none' }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) { setHover(false); setPinned(false); } }}
+      style={{ position: 'relative', display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, outline: 'none', cursor: 'pointer' }}
+      onClick={(e) => {
+        // click asks — but interactive children keep their own clicks
+        if ((e.target as HTMLElement).closest('a, button')) return;
+        setPinned((p) => !p);
+      }}
+      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPinned(false); }}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' && !(e.target as HTMLElement).closest('a')) {
+        if (e.key === 'Enter' && !(e.target as HTMLElement).closest('a, button')) {
           e.preventDefault();
           setPinned((p) => !p);
         }

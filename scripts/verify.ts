@@ -16,7 +16,7 @@ import { createHash } from 'node:crypto';
 import { getFleet, advanceFleet, resetFleet } from '../src/data/fleetState';
 import { sustainedDeviation } from '../src/data/derived';
 import { envelopeDeltaPct, transitEnvelope, MIN_TRANSIT_HOURS } from '../src/data/curve';
-import { worstLevel } from '../src/data/alerts';
+import { worstLevel, evaluateAlerts, FEEDER_LOW_PCT, TANK_CRITICAL_PCT } from '../src/data/alerts';
 import { ANOMALY_START } from '../src/data/generator';
 import { DEMO_EPOCH, DAY_MS } from '../src/data/rng';
 import { undefinedDispositions } from '../src/data/dispositions';
@@ -160,6 +160,34 @@ const biased = fleet.find((v) => v.static.scripted.flow_meter_bias)!;
 console.log('\n== Checks: reconciliation ==');
 check(disagree.length === 1 && disagree[0] === biased, `exactly one DISAGREE vessel, and it is the scripted one (${biased.static.name})`);
 check(others.filter((v) => !v.static.scripted.flow_meter_bias).every((v) => Math.abs(v.derived.reconciliation.error_pct) < 2), 'all unscripted vessels reconcile within ±2%');
+
+// ----------------------------------------- 3b. TANK_LOW scenario fixture
+// Round 20: drain a feeder synthetically and assert the new alert tiers.
+console.log('\n== Checks: TANK_LOW (scenario fixture, ruling-backed tank color) ==');
+{
+  const base = anomaly; // transit vessel, mains running
+  const last = base.history.minutes[base.history.minutes.length - 1];
+  const drain = (pct: number) => {
+    const tanks = last.tanks.map((t, i) => (i === 2 ? { ...t, level_pct: pct, level_gal: Math.round((t.capacity_gal * pct) / 100) } : t));
+    const sample = { ...last, tanks };
+    const history = { ...base.history, minutes: [...base.history.minutes.slice(0, -1), sample] };
+    return evaluateAlerts(base.static, history, base.derived);
+  };
+  const advisory = drain(FEEDER_LOW_PCT - 5);
+  check(
+    advisory.some((a) => a.code === 'TANK_LOW' && a.level === 'ADVISORY' && a.message.startsWith('FD1')),
+    `feeder at ${FEEDER_LOW_PCT - 5}% with mains running → ADVISORY TANK_LOW names FD1`,
+  );
+  const critical = drain(TANK_CRITICAL_PCT - 1);
+  check(
+    critical.some((a) => a.code === 'TANK_LOW' && a.level === 'CAUTION' && a.message.startsWith('FD1')),
+    `tank at ${TANK_CRITICAL_PCT - 1}% → CAUTION TANK_LOW`,
+  );
+  check(
+    !anomaly.alerts.some((a) => a.code === 'TANK_LOW'),
+    'demo seed unaffected: Meridian carries no TANK_LOW (story stays E2 injector, not fuel starvation)',
+  );
+}
 
 // ------------------------------------------------------ 4. staleness state
 const stale = fleet.find((v) => v.static.scripted.stale_weather)!;

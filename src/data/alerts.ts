@@ -37,6 +37,12 @@ export const ENDURANCE_RESERVE = 1.5;
 // is backed by this same constant.
 export const BUNKER_SOON_H = 72;
 
+// Tank-level thresholds (round 20; documented in DATA_MODEL alongside the
+// reconciliation thresholds). These back the tank fill/outline tint in the
+// fuel views — the ONLY thing that may color a tank.
+export const FEEDER_LOW_PCT = 20; // ADVISORY: feeder low while a main runs
+export const TANK_CRITICAL_PCT = 5; // CAUTION: any tank critically low
+
 export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: DerivedVesselMetrics): Alert[] {
   const alerts: Alert[] = [];
   const now = history.minutes[history.minutes.length - 1];
@@ -84,6 +90,18 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
   if (reconErr > RECON_CAUTION_PCT && reconErr <= RECON_WARNING_PCT) {
     alerts.push({ level: 'CAUTION', code: 'RECONCILIATION', message: `Fuel reconciliation off ${d.reconciliation.error_pct}% — endurance estimate unreliable` });
   }
+
+  // Tank levels (round 20): CAUTION when any tank is critical; ADVISORY when
+  // a feeder runs low while a main is burning. One alert per tank, worst wins.
+  const mainsRunning = now.engines.some((e) => e.role === 'MAIN' && e.running);
+  const TANK_LABELS = ['ST1', 'ST2', 'FD1', 'FD2'];
+  now.tanks.forEach((t, i) => {
+    if (t.level_pct < TANK_CRITICAL_PCT) {
+      alerts.push({ level: 'CAUTION', code: 'TANK_LOW', message: `${TANK_LABELS[i]} critically low (${t.level_pct.toFixed(0)}%)` });
+    } else if (t.type === 'FEEDER' && t.level_pct < FEEDER_LOW_PCT && mainsRunning) {
+      alerts.push({ level: 'ADVISORY', code: 'TANK_LOW', message: `${TANK_LABELS[i]} low — verify transfer from storage.` });
+    }
+  });
 
   // ---- ADVISORY ----
   if (d.reconciliation.status === 'DISAGREE' && reconErr <= RECON_CAUTION_PCT) {

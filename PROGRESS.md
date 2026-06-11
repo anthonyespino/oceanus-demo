@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-11 (Sessions 23-24: ROUNDS 19+20 — gauge redesign, click-only system, tank fill)
+
+## Round 19 — gauge geometry + card density
+
+1. **Gauge redesigned**: 270° C-arc opening at bottom (−135°→+135°), min/max scale labels + 3 intermediate ticks (the arc reads as a scale; log dials print their own labels, e.g. endurance 12–2.4k). Needle is ink/primary ALWAYS. Center value takes status color ONLY when an alert-backed threshold is crossed. DORMANT: stopped engine → arc dimmed 30%, no needle, no bands, OFF muted — a dead gauge looks dead.
+2. **Ruling 11 regression noted and corrected**: the regression was round 11's own DEV DECISION (EGT/coolant/oil-temp display ceilings drawn as colored bands with no alert backing — flagged then, corrected now). Display-only limits are neutral ink ticks (`displayLimits`); colored bands (`band`) exist only where alert logic backs them: oil minimum red, band eff-Δ amber (`EFF_DELTA_CAUTION_PCT`), endurance amber (`BUNKER_SOON_H` — backing alert is ADVISORY; painted caution-amber per the brief's "amber/red", noted).
+3. **Ledger amendment**: ruling 14's green-alive needle is superseded (needle always ink; value colors only on alert-backed crossings; white stillness retained for moored dials).
+4. **Instruments panels**: fixed-cell grids (band: 4 equal columns; cluster: auto-fit 90px cells), consistent gutters, panel height = content — float-in-void killed.
+5. **Environment/route/crew row sizes to content** (align-start, no stretch voids). Environment = wind/wave glyph-stat pair + reveal, nothing else. Route card ends at the strip. **Crew dedup**: when all hands share one onboard date (the normal case), the repeated column collapses to "all aboard since {date} · {n}d"; per-person dates return automatically if dates differ. The old "last crew change" line cut (the footer states it).
+6. Text sweep cuts: engine-card "fuel" label (gph on an engine card self-describes); "load" kept deliberately (a bare % is ambiguous).
+
+## Round 20 — click-only system + tank fill
+
+1. **"Hover points, click asks" is now a SYSTEM RULE** — round 18's open question RESOLVED. All Contextual reveals and RevealZones are click-only (Enter on keyboard; links/buttons inside zones keep their own clicks; blur closes). The only hover behavior anywhere: chart-marker tooltips, debounced.
+2. **Tank level as fill**: new token `fill/level` (white @ 10% alpha); both fuel views render level as vertical bottom-up fill; % numeral stays. Neutral always — tint exists ONLY via the new alert.
+3. **TANK_LOW alert earns the color** (data layer): ADVISORY when a feeder < `FEEDER_LOW_PCT` (20%) while a main runs ("FD{n} low — verify transfer from storage."); CAUTION when any tank < `TANK_CRITICAL_PCT` (5%). Constants exported; thresholds documented in **DATA_MODEL Appendix A** (new — mirrors the alerts.ts exports, added per this brief). Verify drains a feeder in a fixture and asserts both tiers + that the demo seed carries no TANK_LOW (Meridian's story stays E2's injector).
+4. **Stress synoptic confirmed in pixels** (`r20-stress-synoptic.png`): vertical fills, flow paths, RECON badge all read correctly; bonus — Gulf Harrier is moored there, so the band demonstrates white-stillness dials.
+
+## Ops note
+
+The quick tunnel died again mid-session (cloudflared exit 1). Fresh tunnel + watchdog re-armed; URL rotates on every restart — flagged again that demo day runs localhost, never a tunnel.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 22: gauge vitality — Anthony ruling 14)
 
 ## Done

@@ -45,6 +45,7 @@
   --pad-card-dense: 12px; /* round 15: inspector density step */
   --pad-section: 12px;
   --color-line-hairline: rgba(232, 234, 237, 0.12); /* card frames: ink at low alpha */
+  --color-fill-level: rgba(232, 234, 237, 0.1); /* round 20: tank level fill — white at low alpha */
   --color-scrim: rgba(11, 14, 19, 0.62); /* dims the chart beneath floating cards */
   /* space — 4px base grid */
   --space-1: 4px;

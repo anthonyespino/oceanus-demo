@@ -106,9 +106,6 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <Label g="route">route</Label>
       <Field level="vessel" field="next_port_calls">{body}</Field>
-      <div style={{ marginTop: 6 }}>
-        <Field level="vessel" field="heading_deg" />
-      </div>
     </section>
   );
 }

@@ -9,7 +9,11 @@ import { Label } from './Glyph';
 
 export function CrewPanel({ vessel }: { vessel: VesselState }) {
   const now = vessel.history.minutes.at(-1)!.t;
-  const lastChange = vessel.history.crewChanges.at(-1);
+  // round 19 dedup: whole crews rotate together — when every onboard date
+  // matches, the repeated column collapses to one footer line. Per-person
+  // dates return automatically the moment dates differ.
+  const dates = new Set(vessel.history.crew.map((c) => c.onboard_since));
+  const shared = dates.size === 1 ? vessel.history.crew[0].onboard_since : null;
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
@@ -24,18 +28,24 @@ export function CrewPanel({ vessel }: { vessel: VesselState }) {
               <Field level="vessel" field="crew.names">
                 <td style={{ ...gb.boxTight, border: 'none' }}>{c.name}</td>
               </Field>
-              <Field level="vessel" field="crew.onboard_since">
-                <td style={{ ...gb.boxTight, border: 'none', color: 'var(--color-ink-muted)' }}>
-                  onboard since {fmtDay(c.onboard_since)} ({Math.floor((now - c.onboard_since) / 86_400_000)}d)
-                </td>
-              </Field>
+              {shared === null && (
+                <Field level="vessel" field="crew.onboard_since">
+                  <td style={{ ...gb.boxTight, border: 'none', color: 'var(--color-ink-muted)' }}>
+                    onboard since {fmtDay(c.onboard_since)} ({Math.floor((now - c.onboard_since) / 86_400_000)}d)
+                  </td>
+                </Field>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
-      <div style={{ marginTop: 4, ...gb.dim }}>
-        last crew change: {lastChange ? `${fmtDay(lastChange)} (${Math.floor((now - lastChange) / 86_400_000)}d ago)` : 'none in history'}
-      </div>
+      {shared !== null && (
+        <Field level="vessel" field="crew.onboard_since">
+          <div style={{ marginTop: 6, fontFamily: 'var(--font-data)', fontSize: 12, color: 'var(--color-ink-muted)' }}>
+            all aboard since {fmtDay(shared)} · {Math.floor((now - shared) / 86_400_000)}d
+          </div>
+        </Field>
+      )}
       <Field level="vessel" field="crew_efficiency_comparison" />
     </section>
   );

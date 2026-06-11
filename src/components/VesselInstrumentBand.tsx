@@ -46,16 +46,17 @@ export function VesselInstrumentBand({ vessel }: { vessel: VesselState }) {
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <Label g="gauge">instruments</Label>
-      <div style={{ display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap', gap: 8 }}>
+      {/* round 19: fixed-cell grid — equal cells, no float-in-void */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', justifyItems: 'center', gap: 'var(--pad-section)' }}>
         <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
         <Gauge size={96} label="burn" value={burnGph(vessel)} min={0} max={maxObservedBurn(vessel)}
           display={`${Math.round(burnGph(vessel))} gph`} vital={aliveVital} />
         <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
-          display={fmtPct(d.efficiency_delta_pct)} vital={effVital}
-          limit={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
+          display={fmtPct(d.efficiency_delta_pct)} vital={effVital} minMaxLabels={['-20', '+20']}
+          band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
         <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
-          display={`${d.endurance_hours} h`} vital={endVital}
-          limit={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-advisory)' }} />
+          display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
+          band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
       </div>
     </section>
   );
