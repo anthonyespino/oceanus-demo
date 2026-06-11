@@ -1,3 +1,13 @@
+# PROGRESS — 2026-06-11 (Session 22: gauge vitality — Anthony ruling 14)
+
+## Done
+
+- **Gauges are vital-colored** (DECISIONS #14, per Anthony direct): needle + center value carry the state — `data/nominal` green when active and nominal, `alert/caution` amber when sub-nominal, `alert/warning` red at warning-backed breaches, **pure white when off or at port and not moving** (white = static stillness; color = alive). Arcs stay neutral ink; limit bands unchanged.
+- States derive from EXISTING constants only: band eff-Δ goes amber past `EFF_DELTA_CAUTION_PCT`; endurance past `BUNKER_SOON_H`; oil pressure goes red below the same 30 psi the WARNING fires on; EGT/coolant/oil-temp go amber inside their display ceilings; speed/burn are green-alive / white-still (no thresholds exist). Cluster dials for an engine NAMED in an active alert inherit that alert's level (Meridian: E2's dials read amber across the cluster, E1's read green).
+- Interpretation flagged in the ledger: "red when cautionary" implemented as red-for-WARNING / amber-for-CAUTION so gauges speak the same severity ladder as badges and borders — one constant to change if literal caution-red was intended.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 21: ROUND 18 — calm the board)
 
 ## Done

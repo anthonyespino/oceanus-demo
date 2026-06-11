@@ -47,9 +47,14 @@ export function EngineCard({
             {sensorStyle === 'gauges' ? (
               /* round 15: mini-gauges take per-engine reveal duty */
               <span style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                <Gauge size={62} label="EGT" value={engine.exhaust_gas_temp_f} min={400} max={1000} unit="°" off={off} limit={{ from: 920, to: 1000, color: WATCH }} />
-                <Gauge size={62} label="oil" value={engine.oil_pressure_psi} min={0} max={90} off={off} limit={{ from: 0, to: 30, color: DANGER }} />
-                <Gauge size={62} label="rpm" value={engine.rpm} min={0} max={2000} off={off} />
+                <Gauge size={62} label="EGT" value={engine.exhaust_gas_temp_f} min={400} max={1000} unit="°" off={off}
+                  vital={off ? 'still' : engine.exhaust_gas_temp_f >= 920 ? 'watch' : 'nominal'}
+                  limit={{ from: 920, to: 1000, color: WATCH }} />
+                <Gauge size={62} label="oil" value={engine.oil_pressure_psi} min={0} max={90} off={off}
+                  vital={off ? 'still' : engine.oil_pressure_psi < 30 ? 'degraded' : 'nominal'}
+                  limit={{ from: 0, to: 30, color: DANGER }} />
+                <Gauge size={62} label="rpm" value={engine.rpm} min={0} max={2000} off={off}
+                  vital={off ? 'still' : 'nominal'} />
               </span>
             ) : (
               <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>

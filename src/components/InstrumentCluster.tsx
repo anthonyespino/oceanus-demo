@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { toggleStyle } from './probeTokens';
-import { Gauge } from './Gauge';
+import { Gauge, type Vital } from './Gauge';
 import { DataRow } from './DataRow';
 import { gb } from './gb';
 import { Label } from './Glyph';
@@ -45,6 +45,22 @@ export function EnginesSummary({ vessel }: { vessel: VesselState }) {
   );
 }
 
+/** Vital for an engine dial: OFF→still; alert naming the engine inherits its
+    level; else per-dial limit check; else nominal (Anthony ruling 14). */
+export function engineVital(
+  vessel: VesselState,
+  engineId: string,
+  running: boolean,
+  overLimit: boolean,
+  limitLevel: Vital = 'watch',
+): Vital {
+  if (!running) return 'still';
+  for (const a of vessel.alerts) {
+    if (a.message.includes(engineId)) return a.level === 'WARNING' ? 'degraded' : 'watch';
+  }
+  return overLimit ? limitLevel : 'nominal';
+}
+
 export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
   const now = vessel.history.minutes.at(-1)!;
   const [idx, setIdx] = useState(() => flaggedEngineIdx(vessel));
@@ -66,14 +82,19 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center', marginTop: 'var(--pad-section)' }}>
         <Gauge label="EGT" value={e.exhaust_gas_temp_f} min={400} max={1000} unit="°F" off={off}
+          vital={engineVital(vessel, e.engine_id, e.running, e.exhaust_gas_temp_f >= 920)}
           limit={{ from: 920, to: 1000, color: WATCH }} />
         <Gauge label="coolant" value={e.coolant_temp_f} min={120} max={220} unit="°F" off={off}
+          vital={engineVital(vessel, e.engine_id, e.running, e.coolant_temp_f >= 203)}
           limit={{ from: 203, to: 220, color: WATCH }} />
         <Gauge label="oil" value={e.oil_pressure_psi} min={0} max={90} unit=" psi" off={off}
+          vital={engineVital(vessel, e.engine_id, e.running, e.oil_pressure_psi < 30, 'degraded')}
           limit={{ from: 0, to: 30, color: DANGER }} />
         <Gauge label="oil temp" value={e.oil_temp_f} min={120} max={240} unit="°F" off={off}
+          vital={engineVital(vessel, e.engine_id, e.running, e.oil_temp_f >= 226)}
           limit={{ from: 226, to: 240, color: WATCH }} />
-        <Gauge label="rpm" value={e.rpm} min={0} max={main ? 2000 : 2000} off={off} />
+        <Gauge label="rpm" value={e.rpm} min={0} max={main ? 2000 : 2000} off={off}
+          vital={engineVital(vessel, e.engine_id, e.running, false)} />
       </div>
     </section>
   );
