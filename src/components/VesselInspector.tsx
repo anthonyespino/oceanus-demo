@@ -23,6 +23,7 @@ import { RoutePanel } from './RoutePanel';
 import { VesselHeader } from './VesselHeader';
 import { VesselSitrep } from './VesselSitrep';
 import { gb } from './gb';
+import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 const CANVAS_H = 480; // ambient chart height
 const CLEAR_H = 170; // chart zone left fully clear above the floating cards
@@ -56,8 +57,8 @@ export function VesselInspector({
       </div>
       {/* floating card grid — fully opaque cards, deliberate row order */}
       <div style={{ position: 'relative', paddingTop: CLEAR_H }}>
-        <VesselSitrep />
-        <VesselHeader vessel={vessel} />
+        <Annotated name="VesselSitrep"><VesselSitrep /></Annotated>
+        <Annotated name="VesselHeader"><VesselHeader vessel={vessel} /></Annotated>
         {vessel.alerts.length > 0 && (
           <section style={{ ...gb.box, marginBottom: 8 }}>
             <div style={gb.label}>active alerts — this vessel</div>
@@ -70,39 +71,43 @@ export function VesselInspector({
         )}
         <div style={row}>
           <div style={{ flex: '1 1 480px', minWidth: 0 }}>
-            <EfficiencyCurve vessel={vessel} />
+            <Annotated name="EfficiencyCurve"><EfficiencyCurve vessel={vessel} /></Annotated>
           </div>
           <div style={{ flex: '1 1 380px', minWidth: 0 }}>
-            <EfficiencyPanel vessel={vessel} />
+            <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
           </div>
         </div>
-        <EngineTwinPanel vessel={vessel} />
+        <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
         <div style={row}>
           <div style={{ flex: '2 1 520px', minWidth: 0 }}>
             {/* ⚖️ verdict 11: synoptic vs boxes — dev panel "fuel view" */}
-            {tankStyle === 'synoptic' ? <VesselSynoptic vessel={vessel} /> : <TankSchematic vessel={vessel} />}
+            {tankStyle === 'synoptic' ? (
+              <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>
+            ) : (
+              <Annotated name="TankSchematic"><TankSchematic vessel={vessel} /></Annotated>
+            )}
           </div>
           <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <FlowReconciliation vessel={vessel} />
+            <Annotated name="FlowReconciliation"><FlowReconciliation vessel={vessel} /></Annotated>
           </div>
         </div>
         <div style={row}>
           <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <WeatherPanel vessel={vessel} />
+            <Annotated name="WeatherPanel"><WeatherPanel vessel={vessel} /></Annotated>
           </div>
           <div style={{ flex: '1 1 320px', minWidth: 0 }}>
-            <RoutePanel vessel={vessel} />
+            <Annotated name="RoutePanel"><RoutePanel vessel={vessel} /></Annotated>
           </div>
           <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-            <CrewPanel vessel={vessel} />
+            <Annotated name="CrewPanel"><CrewPanel vessel={vessel} /></Annotated>
           </div>
         </div>
         <div style={row}>
           <div style={{ flex: '1 1 380px', minWidth: 0 }}>
-            <ModeTimeline vessel={vessel} />
+            <Annotated name="ModeTimeline"><ModeTimeline vessel={vessel} /></Annotated>
           </div>
           <div style={{ flex: '2 1 520px', minWidth: 0 }}>
-            <EventLog vessel={vessel} />
+            <Annotated name="EventLog"><EventLog vessel={vessel} /></Annotated>
           </div>
         </div>
       </div>

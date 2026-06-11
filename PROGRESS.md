@@ -1,3 +1,22 @@
+# PROGRESS — 2026-06-11 (Session 11: ROUND 8 — LEARN MODE + tidy pass)
+
+## Done
+
+- **LEARN MODE** (docent overlay for Anthony's onboarding, strip-before-demo by design): toggle via **L** key or dev panel; loud fixed badge ("LEARN MODE — interactions suppressed") whenever active so it cannot sneak into a demo. Hovering any registered component draws a 1px accent outline and a docent card: exact barrel name, disposition mark, description, "answers:" line. Cards position fixed with viewport clamping (never clip at edges). Innermost annotated component wins on hover; clicks are suppressed in capture phase while learn is on. Works on both views.
+- **Removability**: everything lives in `src/learn/` (provider, `<Annotated>` wrapper, annotations.ts). Strip = delete the directory + remove the marked `// LEARN MODE — strip before demo week` imports. NOTE: the brief said `src/data/annotations.ts`, but that conflicts with one-directory removal — annotations.ts went to `src/learn/` to honor the stronger constraint.
+- **Annotation copy**: used as written, all 23 entries. One has no anchor: **NominalRow** is not rendered on the probe (compression row suspended round 4: 15 tiles fit one screen) — the entry stays registered and binds if the fold returns.
+- **Tidy pass** (lint-level, no behavior changes): dead `GULF_FRAME` export removed (fit-to-fleet superseded it); three duplicate toggle-button style definitions (DevPanel, FleetTrend, LiveControls) consolidated into one `toggleStyle()` in the token file.
+- **Tidy proposals (logged, NOT done)**: `VesselCard.tsx` and `VesselView.tsx` are greybox-era components unused on the probe (superseded by VesselTile/VesselInspector) — they stay, as main's record; delete only if the probe ever becomes the product. `LayoutVariant`'s chart-band option survives but may be a dead verdict after round 3.2 — Anthony can kill it with verdict housekeeping.
+- **Seatbelt**: `SYSTEM_NODES*.md` gitignored — Anthony's grounding document stays out of the repo; annotations.ts is its only public derivative.
+- verify/lint/build green. Overnight the Cloudflare quick tunnel's hostname died (edge connection dropped, retries failed) — restarted with a fresh URL, build fingerprint re-verified matching local.
+
+## Known limitations (logged, accepted)
+
+- Learn-mode wrappers add a plain div around components, so flex/grid layouts can shift slightly while learn is ON — it is a docent overlay, not the demo surface.
+- Hover-driven reveals (Contextual) can still open underneath a docent card; clicks are dead but hover effects are not — full hover suppression would break nested annotation targeting.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 10b: ROUND 7 addendum — VesselSynoptic)
 
 ## Done

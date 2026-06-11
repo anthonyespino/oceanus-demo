@@ -9,6 +9,7 @@
 //   - affordance: dotted underline on the label, "…" suffix
 
 import { useState } from 'react';
+import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 // `open` (controlled) lets non-HTML hover sources — SVG chart markers — drive
 // the same reveal: the policy still lives in this one file.
@@ -26,6 +27,7 @@ export function Contextual({
   const open = controlledOpen ?? (hover || pinned);
 
   return (
+    <Annotated name="Contextual" inline>
     <span
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -51,5 +53,6 @@ export function Contextual({
         </span>
       )}
     </span>
+    </Annotated>
   );
 }

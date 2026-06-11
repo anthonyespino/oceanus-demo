@@ -4,18 +4,13 @@
 
 import { useFleet } from '../state/FleetProvider';
 import { SystemStatusStrip } from './SystemStatusStrip';
+import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
+import { toggleStyle } from './probeTokens';
 import { fmtTime } from './gb';
 
 export function LiveControls() {
   const { simTime, live, speed, setLive, setSpeed } = useFleet();
-  const btn = (active: boolean): React.CSSProperties => ({
-    border: `1px solid ${active ? 'var(--color-accent-bright)' : 'var(--color-line-strong)'}`,
-    background: active ? 'var(--color-accent-wash)' : 'var(--color-surface-raised)',
-    color: 'var(--color-ink-primary)',
-    padding: '2px 8px',
-    fontSize: 12,
-    cursor: 'pointer',
-  });
+  const btn = toggleStyle; // tidy round 8: one shared toggle style
   return (
     <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
       {live && <span className="live-dot" title="live ticks running" />}
@@ -54,7 +49,7 @@ export function AppHeader() {
         </span>
       </span>
       <span style={{ display: 'inline-flex', gap: 18, alignItems: 'center' }}>
-        <SystemStatusStrip />
+        <Annotated name="SystemStatusStrip" inline><SystemStatusStrip /></Annotated>
         <LiveControls />
       </span>
     </header>

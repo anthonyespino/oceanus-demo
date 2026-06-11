@@ -53,6 +53,19 @@ export const FONT = {
   display: 'var(--font-display)',
 };
 
+/** Shared probe toggle-button style (tidy, round 8): active = accent. */
+export function toggleStyle(active: boolean): React.CSSProperties {
+  return {
+    border: `1px solid ${active ? ACCENT.bright : NEUTRAL.border}`,
+    background: active ? ACCENT.wash : NEUTRAL.surface,
+    color: NEUTRAL.ink,
+    borderRadius: RADIUS,
+    padding: '1px 8px',
+    fontSize: 11,
+    cursor: 'pointer',
+  };
+}
+
 /** type/display · type/label · type/data · type/micro — 4 steps, no more. */
 export const TYPE = {
   name: { fontFamily: FONT.display, fontSize: 22, fontWeight: 400, letterSpacing: 1 } as React.CSSProperties,

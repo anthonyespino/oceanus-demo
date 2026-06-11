@@ -14,6 +14,7 @@ import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
 import { PortCallsTimeline } from './PortCallsTimeline';
 import { gb } from './gb';
+import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const { density, treatment, layoutVariant } = useFleet();
@@ -29,8 +30,8 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
       </div>
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
-      <FleetTrend fleet={fleet} />
-      <AlertRail fleet={fleet} />
+      <Annotated name="FleetTrend"><FleetTrend fleet={fleet} /></Annotated>
+      <Annotated name="AlertRail"><AlertRail fleet={fleet} /></Annotated>
 
       <div
         style={{
@@ -47,7 +48,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           const promoted = vesselStatus(v.alerts) !== 'nominal'; // same constants as color/badges
           return (
             <div key={v.static.id} style={promoted ? { gridColumn: 'span 2', gridRow: 'span 2' } : undefined}>
-              <VesselTile vessel={v} density={density} treatment={treatment} />
+              <Annotated name="VesselCard">
+                <VesselTile vessel={v} density={density} treatment={treatment} />
+              </Annotated>
             </div>
           );
         })}
@@ -55,9 +58,11 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
 
       {/* chart below the board; the layout toggle now selects its depth only
           (a: large anchor, b: shallow band). spend slot moved into FleetTrend. */}
-      <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
+      <Annotated name="NauticalChart">
+        <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
+      </Annotated>
       {/* round 6 — final probe component: 72h arrivals board */}
-      <PortCallsTimeline fleet={fleet} treatment={treatment} />
+      <Annotated name="PortCallsTimeline"><PortCallsTimeline fleet={fleet} treatment={treatment} /></Annotated>
     </main>
   );
 }

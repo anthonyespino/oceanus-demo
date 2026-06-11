@@ -15,7 +15,7 @@ export interface ChartFrame {
   lonMax: number;
 }
 
-export const GULF_FRAME: ChartFrame = { latMin: 25.5, latMax: 31.2, lonMin: -98.2, lonMax: -86.8 };
+// (tidy, round 8) GULF_FRAME export removed — fit-to-fleet superseded it in round 3 addendum
 
 export const CHART_INK = '#8b949e';
 const GRID = '#222a34'; // graticule: faint on near-black water

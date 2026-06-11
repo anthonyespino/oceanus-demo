@@ -14,7 +14,7 @@ import { Field } from './Field';
 import { Stat } from './Stat';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
-import { ACCENT, NEUTRAL, RADIUS } from './probeTokens';
+import { ACCENT, RADIUS, toggleStyle } from './probeTokens';
 
 type TrendRange = 30 | 90 | 365;
 const H = 124;
@@ -47,15 +47,7 @@ export function FleetTrend({ fleet }: { fleet: VesselState[] }) {
   const y = (v: number) => H - ((v - lo) / (hi - lo)) * H;
   const x = (i: number) => (i / Math.max(1, vals.length - 1)) * w;
 
-  const toggle = (active: boolean): React.CSSProperties => ({
-    border: `1px solid ${NEUTRAL.border}`,
-    borderRadius: RADIUS,
-    background: active ? NEUTRAL.surfaceDim : NEUTRAL.surface,
-    color: NEUTRAL.ink,
-    padding: '1px 8px',
-    fontSize: 11,
-    cursor: 'pointer',
-  });
+  const toggle = toggleStyle;
 
   return (
     <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>

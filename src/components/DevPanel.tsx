@@ -5,7 +5,8 @@
 
 import { useEffect, useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
-import { ACCENT, NEUTRAL, RADIUS } from './probeTokens';
+import { useLearn } from '../learn/LearnProvider'; // LEARN MODE — strip before demo week
+import { NEUTRAL, RADIUS, toggleStyle } from './probeTokens';
 
 function Row<T extends string | boolean>({
   label,
@@ -29,15 +30,7 @@ function Row<T extends string | boolean>({
           <button
             key={o.text}
             onClick={() => onPick(o.v)}
-            style={{
-              border: `1px solid ${active ? ACCENT.bright : NEUTRAL.border}`,
-              background: active ? ACCENT.wash : NEUTRAL.surface,
-              color: NEUTRAL.ink,
-              borderRadius: RADIUS,
-              padding: '1px 8px',
-              fontSize: 11,
-              cursor: 'pointer',
-            }}
+            style={toggleStyle(active)}
           >
             {o.text}
           </button>
@@ -50,6 +43,7 @@ function Row<T extends string | boolean>({
 export function DevPanel() {
   const [open, setOpen] = useState(false);
   const f = useFleet();
+  const { learnOn, setLearnOn } = useLearn();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -104,6 +98,8 @@ export function DevPanel() {
         options={[{ v: 'board-first' as const, text: 'a board first' }, { v: 'chart-band' as const, text: 'b chart band' }]} />
       <Row label="ikb band" value={f.ikbBand} onPick={f.setIkbBand}
         options={[{ v: false, text: 'off' }, { v: true, text: 'IKB fill' }]} />
+      <Row label="learn" value={learnOn} onPick={setLearnOn}
+        options={[{ v: false, text: 'off' }, { v: true, text: 'LEARN MODE (L)' }]} />
       <Row label="fuel view" value={f.tankStyle} onPick={f.setTankStyle}
         options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic ⚖️11' }]} />
     </div>
