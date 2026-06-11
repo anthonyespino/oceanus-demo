@@ -9,7 +9,8 @@ import { gb } from './gb';
 
 export type GlyphName =
   | 'vessel' | 'engine' | 'tank' | 'fuel-drop' | 'wind' | 'wave' | 'anchor'
-  | 'route' | 'crew' | 'clock' | 'alert-triangle' | 'datalink' | 'gauge' | 'chart';
+  | 'route' | 'crew' | 'clock' | 'alert-triangle' | 'datalink' | 'gauge' | 'chart'
+  | 'expand' | 'collapse'; // round 17 control glyphs — same Figma 1:1 contract
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -26,6 +27,8 @@ const PATHS: Record<GlyphName, string[]> = {
   datalink: ['M12 19 V11', 'M8.5 8.5 A5 5 0 0 1 15.5 8.5', 'M5.8 5.8 A9 9 0 0 1 18.2 5.8', 'M12 11 A0.8 0.8 0 1 0 12 9.4 A0.8 0.8 0 0 0 12 11'],
   gauge: ['M4 16 A8 8 0 0 1 20 16', 'M12 16 L16.5 10.5', 'M12 17 A1 1 0 1 0 12 15 A1 1 0 0 0 12 17'],
   chart: ['M4 4 V20 H20', 'M7 15 L11 9.5 L14 12.5 L19 6.5'],
+  expand: ['M14 4 H20 V10', 'M20 4 L13 11', 'M10 20 H4 V14', 'M4 20 L11 13'],
+  collapse: ['M10 4 V10 H4', 'M11 9 L4 2.5 M11 9 L11 9.01', 'M14 20 V14 H20', 'M13 15 L20 21.5'],
 };
 
 export function Glyph({ name, size = 14, color = 'currentColor' }: { name: GlyphName; size?: number; color?: string }) {

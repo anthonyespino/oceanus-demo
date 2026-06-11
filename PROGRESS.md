@@ -1,3 +1,21 @@
+# PROGRESS — 2026-06-11 (Session 20: ROUND 17 — manual tile sizing)
+
+## Done
+
+1. **Size control**: corner control appears on tile hover/focus — collapse/expand glyphs (added to the Glyph contract: `expand`/`collapse`, same Figma 1:1 rule) stepping mini ↔ standard ↔ expanded. One click, instant, no navigation (controls preventDefault inside the tile Link). Keyboard: +/− on the focused tile.
+2. **Manual overrides auto, both directions**: per-tile size persists in FleetProvider; the resolved size = manual ?? (auto-promoted → expanded; else density default). Expand-in-place works for any vessel — a nominal tile expanded manually gets the full 2x layout, the elastic chart fills, and the alert section collapses cleanly when empty (chart takes the space).
+3. **Cap interplay**: the promotion cap (2) gates only automatic promotion — manual expansions are unlimited; the engineer outranks the layout. Manually minimized degraded vessels keep status border + badge: mini tiles now render the [LEVEL] badge line explicitly so severity never hides at any size (verified in the scenario screenshot — Meridian minimized to 1x, amber border + [CAUTION] intact).
+4. **Scenario polish**: badge renamed "SCENARIO: MULTI-VESSEL — synthetic". Full loop verified in pixels (`r17-scenario-mixed.png`): Gulf Harrier + (cap slot) auto-2x, Albatross manually expanded as a third CAUTION, Meridian manually minimized, grid reflowing dense with no orphan gaps.
+5. **Dense grid flow enabled** — SUPERSEDES the round 3 "no dense packing" rule, per this brief's item 4 ("grid reflows dense without orphan gaps"): with mixed manual sizes, rank order alone cannot avoid holes. Rank remains the dominant order; dense fills the gaps manual sizing creates.
+6. Size transitions instant, no animation (Figma choreography decision unchanged).
+
+## Decisions Made (reversible)
+
+- REVERSIBLE: manual sizes are session state (reset on reload) — persistence to storage is one line if the engineer's arrangement should survive.
+- REVERSIBLE: mini layout = dot/name/hero/chip + badge; standard-tile extras start at `standard`.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 19: ROUND 16 — containment, instruments up, glyphs)
 
 Before/after: r15-inspector.png → r16-inspector.png, r15 → r16-fleet-board.png.

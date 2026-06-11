@@ -25,6 +25,7 @@ export type LayoutVariant = 'board-first' | 'chart-band';
 export type TankStyle = 'bars' | 'dots' | 'synoptic'; // round 5 dots + round 7 synoptic experiments
 export type SensorStyle = 'rows' | 'gauges'; // round 11 instrument cluster experiment
 export type RevealStyle = 'chevron' | 'meter'; // round 14 affordance experiment
+export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -53,6 +54,10 @@ interface FleetContextValue {
   setCensusFilter: (s: StatusLevel | null) => void;
   revealStyle: RevealStyle;
   setRevealStyle: (r: RevealStyle) => void;
+  /** round 17: manual per-tile size — persists and overrides auto-promotion
+      in BOTH directions; the engineer outranks the layout */
+  tileSizes: Record<string, TileSize>;
+  setTileSize: (id: string, size: TileSize) => void;
   /** vessel id → epoch ms of its last status threshold-cross during live mode */
   crossings: Record<string, number>;
 }
@@ -72,7 +77,9 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [sensorStyle, setSensorStyle] = useState<SensorStyle>('rows');
   const [stress, setStress] = useState(false);
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
-  const [revealStyle, setRevealStyle] = useState<RevealStyle>('chevron');;
+  const [revealStyle, setRevealStyle] = useState<RevealStyle>('chevron');
+  const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
+  const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
   const [crossings, setCrossings] = useState<Record<string, number>>({});
   const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);
@@ -121,6 +128,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         ikbBand, setIkbBand, tankStyle, setTankStyle,
         sensorStyle, setSensorStyle, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
+        tileSizes, setTileSize,
       }}
     >
       {children}
@@ -131,7 +139,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
           color: 'var(--color-alert-caution)', border: '1px solid var(--color-alert-caution)',
           background: 'var(--color-surface-raised)', borderRadius: 6, padding: '4px 10px',
         }}>
-          STRESS SCENARIO — synthetic, not the demo path
+          SCENARIO: MULTI-VESSEL — synthetic
         </div>
       )}
     </FleetContext.Provider>

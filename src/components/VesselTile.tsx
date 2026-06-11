@@ -18,8 +18,11 @@ import { DataRow } from './DataRow';
 import { Stat } from './Stat';
 import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT } from './probeTokens';
-import { useFleet, type ColorTreatment, type TileDensity } from '../state/FleetProvider';
+import { useState } from 'react';
+import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
 import { Glyph, type GlyphName } from './Glyph';
+
+const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
 
 const MODE_GLYPH: Record<string, GlyphName> = { TRANSIT: 'route', STATION: 'vessel', STANDBY: 'clock', PORT: 'anchor' };
 
@@ -30,21 +33,27 @@ const LEVEL_COLOR: Record<string, string> = {
 
 export function VesselTile({
   vessel,
-  density,
+  size,
   treatment,
-  promoted,
+  onSize,
 }: {
   vessel: VesselState;
-  density: TileDensity;
+  /** round 17: resolved size (manual override or auto) — board computes it */
+  size: TileSize;
   treatment: ColorTreatment;
-  /** board-controlled 2x promotion (round 11 cap); defaults to status */
-  promoted?: boolean;
+  onSize: (s: TileSize) => void;
 }) {
   const d = vessel.derived;
   const { motion, crossings } = useFleet();
+  const [hot, setHot] = useState(false); // hover/focus-within → show controls
   const status = vesselStatus(vessel.alerts);
   const badge = worstLevel(vessel.alerts);
-  const tier = (promoted ?? status !== 'nominal') ? 2 : 1;
+  const mini = size === 'mini';
+  const tier = size === 'expanded' ? 2 : 1;
+  const step = (dir: 1 | -1) => {
+    const next = SIZE_ORDER[SIZE_ORDER.indexOf(size) + dir];
+    if (next) onSize(next);
+  };
   const colored = treatment === 'automotive' || status !== 'nominal';
   const statusColor = colored ? STATUS_COLOR[status] : NEUTRAL.border;
   const dotColor = colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
@@ -59,6 +68,14 @@ export function VesselTile({
   return (
     <Link
       href={`/vessel/${vessel.static.id}`}
+      onMouseEnter={() => setHot(true)}
+      onMouseLeave={() => setHot(false)}
+      onFocus={() => setHot(true)}
+      onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setHot(false); }}
+      onKeyDown={(e) => {
+        if (e.key === '+' || e.key === '=') { e.preventDefault(); step(1); }
+        if (e.key === '-') { e.preventDefault(); step(-1); }
+      }}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -76,6 +93,29 @@ export function VesselTile({
     >
       {motion === 'ripple' && crossings[vessel.static.id] && (
         <span key={crossings[vessel.static.id]} className="probe-ripple" style={{ borderColor: STATUS_COLOR[status] }} />
+      )}
+      {/* round 17: size control — one click, instant, no navigation */}
+      {hot && (
+        <span style={{ position: 'absolute', top: 4, right: 4, display: 'inline-flex', gap: 2, zIndex: 2 }}>
+          {size !== 'mini' && (
+            <button
+              aria-label="collapse tile"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); step(-1); }}
+              style={{ background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)', borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0 }}
+            >
+              <Glyph name="collapse" size={12} />
+            </button>
+          )}
+          {size !== 'expanded' && (
+            <button
+              aria-label="expand tile"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); step(1); }}
+              style={{ background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)', borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0 }}
+            >
+              <Glyph name="expand" size={12} />
+            </button>
+          )}
+        </span>
       )}
       <RevealZone
         meter={{ frac: fuelFrac, color: meterColor }}
@@ -97,7 +137,7 @@ export function VesselTile({
                 <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>
               )}
             </>
-          } size={density === 'minimal' ? 24 : 'var(--type-hero-size)'} />
+          } size={mini ? 24 : 'var(--type-hero-size)'} />
         </div>
         <div style={{ marginTop: 6 }}>
           <span style={{ ...TYPE.micro, border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '1px 8px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
@@ -105,7 +145,13 @@ export function VesselTile({
           </span>
         </div>
       </div>
-      {/* 2x: the chart absorbs the void — flex-grow, plot scales to its box */}
+      {/* mini keeps severity visible: badge never hides at any size */}
+      {mini && badge && (
+        <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: LEVEL_COLOR[badge] ?? NEUTRAL.inkSecondary }}>
+          [{badge}]
+        </div>
+      )}
+      {/* expanded: the chart absorbs the void — flex-grow, plot scales */}
       {tier === 2 && (
         <div style={{ flex: 1, minHeight: 96, marginTop: 10 }}>
           <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
@@ -121,13 +167,13 @@ export function VesselTile({
           ))}
         </div>
       )}
-      {tier === 2 && density === 'standard' && (
+      {tier === 2 && (
         <div style={{ marginTop: 10, display: 'flex', gap: 24, justifyContent: 'center', textAlign: 'left' }}>
           <Stat label="endurance" value={`${d.endurance_hours} h`} />
           <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
         </div>
       )}
-      {tier === 1 && density === 'standard' && (
+      {tier === 1 && !mini && (
         <div style={{ marginTop: 10, textAlign: 'left' }}>
           <DataRow label="endurance" value={`${d.endurance_hours} h`} />
           <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />

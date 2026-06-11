@@ -17,7 +17,7 @@ import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const { density, treatment, layoutVariant, censusFilter } = useFleet();
+  const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize } = useFleet();
 
   // Scale safety (round 11): status class first, then |sustained_deviation| —
   // degraded vessels group at the top regardless of tile size.
@@ -51,25 +51,29 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
           gap: 20,
           justifyItems: 'stretch',
+          gridAutoFlow: 'row dense', // round 17: mixed manual sizes reflow without orphan gaps (supersedes round 3 no-dense rule)
           marginBottom: 20,
           // default flow, NOT dense: rank order + tier promotion are the only
           // reflow permitted (round 3 brief)
         }}
       >
         {ranked.map((v) => {
-          const promoted = promotedIds.has(v.static.id);
+          // round 17: manual size overrides auto in BOTH directions; the
+          // cap applies only to automatic promotion
+          const auto = promotedIds.has(v.static.id) ? 'expanded' : density === 'minimal' ? 'mini' : 'standard';
+          const size = tileSizes[v.static.id] ?? auto;
           return (
             <div
               key={v.static.id}
               id={`tile-${v.static.id}`}
               style={{
-                ...(promoted ? { gridColumn: 'span 2', gridRow: 'span 2' } : {}),
+                ...(size === 'expanded' ? { gridColumn: 'span 2', gridRow: 'span 2' } : {}),
                 // census filter (round 12): matching tiles stay full, rest dim
                 opacity: censusFilter && vesselStatus(v.alerts) !== censusFilter ? 0.3 : 1,
               }}
             >
               <Annotated name="VesselCard">
-                <VesselTile vessel={v} density={density} treatment={treatment} promoted={promoted} />
+                <VesselTile vessel={v} size={size} treatment={treatment} onSize={(next) => setTileSize(v.static.id, next)} />
               </Annotated>
             </div>
           );
