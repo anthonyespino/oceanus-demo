@@ -23,7 +23,7 @@ import { VesselSynoptic } from './VesselSynoptic';
 import { VesselHeader } from './VesselHeader';
 import { VoyagePanel } from './VoyagePanel';
 import { CrewPanel } from './CrewPanel';
-import { VesselInstrumentBand } from './VesselInstrumentBand';
+import { TelemetryBand } from './TelemetryBand';
 import { Label } from './Glyph';
 import { ALERT_TEXT_COLOR, NEUTRAL } from './probeTokens';
 import { gb, fmtPct, fmtTime } from './gb';
@@ -38,7 +38,7 @@ export function VesselInspector({
   fleet: VesselState[];
   treatment: ColorTreatment;
 }) {
-  const { tankStyle } = useFleet();
+  const { tankStyle, stickyBand } = useFleet();
   const [canvasH, setCanvasH] = useState(300);
   useEffect(() => {
     const fit = () => setCanvasH(Math.min(360, Math.round(window.innerHeight * 0.3)));
@@ -77,10 +77,12 @@ export function VesselInspector({
             ))}
           </section>
         )}
-        <Collapse k={`${id}:instruments`} glyph="gauge" title="instruments"
-          summary={`${now.position.speed_over_ground_kn.toFixed(1)} kn · ${Math.round(d.burn_rate_gph)} gph`}>
-          <VesselInstrumentBand vessel={vessel} />
-        </Collapse>
+        <div style={stickyBand ? { position: 'sticky', top: 8, zIndex: 5 } : undefined}>
+          <Collapse k={`${id}:telemetry`} glyph="gauge" title="telemetry"
+            summary={`${now.position.speed_over_ground_kn.toFixed(1)} kn · ${Math.round(d.burn_rate_gph)} gph`}>
+            <TelemetryBand vessel={vessel} />
+          </Collapse>
+        </div>
         <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
           summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
           <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>

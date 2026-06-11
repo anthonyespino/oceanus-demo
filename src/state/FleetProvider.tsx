@@ -47,6 +47,8 @@ interface FleetContextValue {
   setTankStyle: (t: TankStyle) => void;
   chartTop: boolean; // round 21 A2: fleet plot above the board (trial)
   setChartTop: (b: boolean) => void;
+  stickyBand: boolean; // round 22: telemetry band pins on inspector scroll
+  setStickyBand: (b: boolean) => void;
   stateMarks: boolean; // round 21 B4: state silhouettes beside port names
   setStateMarks: (b: boolean) => void;
   /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
@@ -79,6 +81,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [ikbBand, setIkbBand] = useState(false);
   const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel
   const [chartTop, setChartTop] = useState(false);
+  const [stickyBand, setStickyBand] = useState(false);
   const [stateMarks, setStateMarks] = useState(false);
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
@@ -133,7 +136,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         motion, setMotion, crossings,
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
-        chartTop, setChartTop, stateMarks, setStateMarks,
+        chartTop, setChartTop, stateMarks, setStateMarks, stickyBand, setStickyBand,
         collapsedPanels, togglePanel, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,

@@ -1,3 +1,24 @@
+# PROGRESS — 2026-06-11 (Session 26: ROUND 22 — telemetry strip + type swap)
+
+## Done
+
+1. **TelemetryBand** (renamed from VesselInstrumentBand — barrel updated, Figma rename recorded): broadcast composition [SPEED] [BURN] ··· [MISSION CLOCK] ··· [EFF Δ] [ENDURANCE]. Mission clock is mode-aware at DM Mono hero scale: TRANSIT → "T−HH:MM · GALVESTON TX" counting down to the live ETA with a 1px accent route-progress hairline beneath; STATION/PORT/STANDBY → elapsed clocks ("ON STATION 14:54"), elapsed computed across the minute window and extended through hourly history when a mode spans >24h. Gauges keep round 19 geometry and earned color. Sticky variant (band pins on inspector scroll) behind the `sticky band` dev toggle for Anthony's pixel judgment.
+2. **Display face: Bebas Neue → D-DIN**: self-hosted regular + bold woff2 (converted from the foundry WOFFs via fonttools), OFL license committed (`src/fonts/OFL-D-DIN.txt`), token-level swap at `font/display` — vessel names, hero headers, wordmark. DM Mono stays data, DM Sans stays UI. Bebas removed from the repo entirely.
+3. **All-caps fitting pass**: D-DIN isn't caps-only like Bebas — caps now enforced at the token (`TYPE.name` textTransform) and on the header name; weight bumped to 700 for the display role. Overflow guards verified in pixels against the longest names ("Osprey Point", "Frigate Bird" both render un-clipped on tiles and rail — r22 screenshots).
+4. Offline build re-verified with proxies blackholed (new fonts included).
+
+## Screenshots
+
+- `r22-band-transit.png`: Meridian, T−06:53 · GALVESTON TX, hairline at ~⅔, EFF Δ amber.
+- `r22-band-station.png`: Cormorant, ON STATION 14:54, no hairline, advisory line in muted ink (A6 holding).
+
+## Decisions (reversible)
+
+- REVERSIBLE: transit clock shows port inline at 15px secondary after the hero countdown; could drop to a micro line below if the row gets tight on small laptops.
+- REVERSIBLE: mission-clock cell min-width 200px; hairline accent/bright.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 25: ROUND 21 — sort, structure, consolidation)
 
 ## A-items

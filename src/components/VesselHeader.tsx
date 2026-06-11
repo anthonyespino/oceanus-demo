@@ -26,7 +26,7 @@ export function VesselHeader({ vessel }: { vessel: VesselState }) {
       <Link href="/" style={{ textDecoration: 'underline', fontSize: 12 }}>
         ← fleet
       </Link>
-      <span style={gb.big}>{vessel.static.name}</span>
+      <span style={{ ...gb.big, fontFamily: 'var(--font-display)', textTransform: 'uppercase', letterSpacing: 1 }}>{vessel.static.name}</span>
       <span style={gb.dim}>
         {vessel.static.length_ft} ft {vessel.static.class}
       </span>

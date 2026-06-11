@@ -57,7 +57,7 @@ export const ALERT_TEXT_COLOR: Record<string, string> = {
 export const FONT = {
   ui: 'var(--font-ui)',
   data: 'var(--font-data)', // tabular numerals, always
-  display: 'var(--font-display)',
+  display: 'var(--font-display)', // D-DIN (round 22; was Bebas — removed)
 };
 
 /** Shared probe toggle-button style (tidy, round 8): active = accent. */
@@ -75,7 +75,7 @@ export function toggleStyle(active: boolean): React.CSSProperties {
 
 /** type/display · type/label · type/data · type/micro — 4 steps, no more. */
 export const TYPE = {
-  name: { fontFamily: FONT.display, fontSize: 22, fontWeight: 400, letterSpacing: 1 } as React.CSSProperties,
+  name: { fontFamily: FONT.display, fontSize: 21, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase' } as React.CSSProperties, // round 22: D-DIN isn't caps-only — caps enforced
   hero: { fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
   meta: { fontFamily: FONT.data, fontSize: 12, fontWeight: 400, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
   micro: { fontSize: 11, fontWeight: 400, color: NEUTRAL.inkMuted } as React.CSSProperties,
