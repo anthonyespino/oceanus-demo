@@ -18,6 +18,7 @@ export { SystemStatusStrip } from './SystemStatusStrip';
 export { EventLog } from './EventLog';
 export { DevPanel } from './DevPanel'; // probe toggles, press D
 export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrivals board (final probe component)
+export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — designed in Figma, templated after
 export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';

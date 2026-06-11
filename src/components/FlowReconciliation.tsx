@@ -4,6 +4,7 @@
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
+import { Stat } from './Stat';
 import { gb } from './gb';
 
 export function FlowReconciliation({ vessel }: { vessel: VesselState }) {
@@ -12,7 +13,7 @@ export function FlowReconciliation({ vessel }: { vessel: VesselState }) {
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={gb.label}>reconciliation — tank drawdown vs flow meter</div>
       <Field level="vessel" field="reconciliation_status">
-        <span style={{ fontWeight: 700 }}>{r.status}</span>
+        <Stat label="tank vs meter" value={r.status} size={22} />
         {r.status === 'DISAGREE' && <span> — streams disagree; trust neither until resolved</span>}
       </Field>{' '}
       <Field level="vessel" field="reconciliation_error_magnitude" label="error magnitude">

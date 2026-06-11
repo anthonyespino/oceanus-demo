@@ -36,6 +36,15 @@
   /* color/data */
   --color-data-nominal: #3fb950;
   --color-data-stale: #59626c;
+  /* round 7 — card grammar tokens. Anthony retunes the scale here. */
+  --type-label-size: 11px; /* labels whisper */
+  --type-hero-size: 30px; /* values shout — ≈2.7x label */
+  --type-data-size: 13px;
+  --type-micro-size: 11px;
+  --pad-card: 16px; /* generous air — err roomy */
+  --pad-section: 12px;
+  --color-line-hairline: rgba(232, 234, 237, 0.12); /* card frames: ink at low alpha */
+  --color-scrim: rgba(11, 14, 19, 0.62); /* dims the chart beneath floating cards */
   /* space — 4px base grid */
   --space-1: 4px;
   --space-2: 8px;

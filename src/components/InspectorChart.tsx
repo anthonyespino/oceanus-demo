@@ -42,12 +42,14 @@ export function InspectorChart({
   treatment,
   width = 480,
   height = 300,
+  ambient = false, // round 7: render frameless as the inspector's backdrop
 }: {
   vessel: VesselState;
   fleet: VesselState[];
   treatment: ColorTreatment;
   width?: number;
   height?: number;
+  ambient?: boolean;
 }) {
   const router = useRouter();
   const [wrapRef, w] = useContentWidth(width);
@@ -75,10 +77,8 @@ export function InspectorChart({
   const ghostClusters = clusterPoints(ghosts, 10);
   const hoveredGhost = hoverId ? ghosts.find((g) => g.id === hoverId) : null;
 
-  return (
-    <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
-      <div style={gb.label}>position — 24 h trail, next port (probe)</div>
-      <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
+  const body = (
+      <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden', height: ambient ? height : undefined }}>
         <NauticalChart frame={frame} width={w} height={height}>
           {() => (
             <>
@@ -135,6 +135,12 @@ export function InspectorChart({
             members={ghostClusters[splay].members.map((m) => ({ id: m.id, name: m.name, dotColor: '#5b646e' }))} />
         )}
       </div>
+  );
+  if (ambient) return body;
+  return (
+    <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
+      <div style={gb.label}>position — 24 h trail, next port (probe)</div>
+      {body}
     </section>
   );
 }

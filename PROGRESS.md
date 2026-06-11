@@ -1,3 +1,40 @@
+# PROGRESS — 2026-06-10 (Session 10: ROUND 7 — card grammar + inspector room)
+
+High-fidelity reference for tomorrow's Figma session. Everything token-driven
+and reversible; Figma remains the design of record.
+
+## Done
+
+- **Card grammar tokens** (`globals.css @theme`): `type/label 11px · type/hero 30px (≈2.7x) · type/data · type/micro`, `pad/card 16px · pad/section 12px`, `color/line/hairline` (ink @ 12% alpha), `color/scrim`. Anthony retunes the whole scale in one block.
+- **Grammar applied globally** via the shared sources: `gb.box` = surface/raised + hairline + radius + pad/card; `gb.label` = DM Mono micro-caps letterspaced +11%, ink/muted (labels whisper). `Stat` hero numerals are token-sized (values shout) and now anchor: VesselTile (30d trend), EfficiencyPanel (30d trend + now-vs-baseline), EngineTwinPanel (E2 vs E1 EGT), FlowReconciliation (status), WeatherPanel (wind/waves), TankSchematic flow meter (gph), FleetTrend band (unchanged hero). Supporting data stays in DataRow rhythm.
+- **Registry violation fixed**: tiles had displayed the sustained_deviation numeral since round 4 — the registry rules it HIDDEN (ruling 11, rank order expresses it). Hero is now the 30d trend numeral alone.
+- **FleetView composition LOCKED**, dressing only: status strip → FleetTrend band → alert strip → trend board → chart → timeline, exactly as tested.
+- **Inspector room**: InspectorChart promoted to ambient canvas (480px backdrop, frameless `ambient` mode, focus vessel + trail hero'd in the clear top zone); opaque cards float over its lower half in the brief's row order (sitrep slot → header → alerts → curve+efficiency → engine twins → tanks+reconciliation → weather/route/crew → mode timeline + event log); scrim gradient dims the chart beneath the card zone; mini-tile rail persists.
+- **VesselSitrep slot reserved**: two-line dashed placeholder at the top of the room — designed in Figma tomorrow, templated in code after.
+- Rules held: no orange, no glow, no icon libraries, status = only severity voice, one IKB moment max (still the band, still behind its toggle), motion budget unchanged, all six dev-panel toggles verified working.
+- verify/lint/build green; screenshots `docs/screens/r7-*.png`; production build restarted; tunnel re-verified serving the new build.
+
+## Legibility / contrast (guardrail re-measure)
+
+- Cards are FULLY OPAQUE (surface/raised) — every text-on-card ratio from the round 5 table is unchanged; nothing sits on translucency.
+- Scrim = rgba(11,14,19,0.62) over the chart's card zone only; chart furniture beneath it drops below readability BY DESIGN (it is backdrop there; the clear top zone keeps full chart legibility).
+- Hairline (ink @ 12%) is a decorative border, not text — no WCAG minimum applies; the 3px status edge still does the separating where it matters.
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: hero ratio set at 2.7x label (30px/11px) — one token to retune.
+- REVERSIBLE: tile hero = 30d trend (the v2 primary signal); could be endurance or delta per Figma.
+- REVERSIBLE: ambient canvas 480px with 170px clear zone; scrim gradient starts 60px above the card zone.
+- REVERSIBLE: inspector grid spans: curve 480/efficiency 380, tanks 2:1 recon, weather/route/crew thirds, timeline 1:2 log.
+- REVERSIBLE: minimal-density tile hero drops to 24px so 1x tiles stay compact.
+
+## Questions / Objections for Anthony
+
+1. The hero-per-card rule leaves CrewPanel and AlertRail without a numeral anchor (names and sentences) — intentional, or do they get one in Figma?
+2. Clear-zone height (170px) vs chart drama — tune on the phone tonight.
+
+---
+
 # PROGRESS — 2026-06-10 (Session 9: ROUND 6 — PortCallsTimeline, FINAL probe component)
 
 Last new component on the probe. Nothing after this but Anthony's verdicts

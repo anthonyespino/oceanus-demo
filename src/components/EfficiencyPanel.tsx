@@ -7,6 +7,7 @@
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
 import { Sparkline } from './Sparkline';
+import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
 
 export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
@@ -16,7 +17,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
       <div style={gb.label}>efficiency — trend history first (v2), then current vs mode baseline ({d.mode})</div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
-          <span style={{ fontWeight: 700 }}>30d trend {fmtPct(d.trend_30d)}</span>
+          <Stat label="30d trend" value={fmtPct(d.trend_30d)} />
           <span style={{ marginLeft: 8 }}>
             <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={240} height={32} />
           </span>
@@ -28,7 +29,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           <Sparkline values={d.daily_delta_1y.map((x) => x.delta)} width={360} height={36} />
         </Field>
         <Field level="vessel" field="efficiency_delta_vs_mode_baseline">
-          <span style={gb.big}>{fmtPct(d.efficiency_delta_pct)}</span>
+          <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
           <span style={{ ...gb.dim, marginLeft: 8 }}>
             now, vs baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'} · burn {d.burn_rate_gph} gph
           </span>

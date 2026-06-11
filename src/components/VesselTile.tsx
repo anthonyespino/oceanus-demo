@@ -46,11 +46,11 @@ export function VesselTile({
         display: 'block',
         textDecoration: 'none',
         color: NEUTRAL.ink,
-        border: `1px solid ${statusColor}`,
+        border: `1px solid ${colored ? statusColor : 'var(--color-line-hairline)'}`,
         borderTop: `3px solid ${statusColor}`,
         borderRadius: RADIUS,
         background: NEUTRAL.surface,
-        padding: '16px 14px',
+        padding: 'var(--pad-card)',
         textAlign: 'center', // alignment probe: see PROGRESS.md findings
         height: '100%',
         boxSizing: 'border-box',
@@ -78,15 +78,27 @@ export function VesselTile({
         }}
       />
       <div style={TYPE.name}>{vessel.static.name}</div>
-      {/* hero metric: 30d trend direction + sustained deviation */}
-      <div style={{ ...TYPE.hero, marginTop: 4, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
-        30d {fmtPct(d.trend_30d)} · sd {fmtPct(d.sustained_deviation)}
-        {/* Green experiment (round 2, Anthony's call on record): treatment A
-            marks nominal with a green ✓ glyph; numerals stay ink so the
-            tabular column doesn't go chromatic. Treatment B unchanged. */}
-        {treatment === 'automotive' && status === 'nominal' && (
-          <span style={{ color: STATUS_COLOR.nominal }}> ✓</span>
-        )}
+      {/* hero: ONE oversized tabular numeral anchors the card (round 7).
+          sustained_deviation numeral REMOVED — registry rules it HIDDEN
+          (ruling 11: rank order expresses it); showing it was a violation. */}
+      <div
+        style={{
+          marginTop: 6,
+          display: 'inline-block',
+          textAlign: 'center',
+          color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink,
+        }}
+      >
+        <Stat label="30d trend" value={
+          <>
+            {fmtPct(d.trend_30d)}
+            {/* Green experiment (round 2): treatment A marks nominal with a
+                green ✓; numerals stay ink. Treatment B unchanged. */}
+            {treatment === 'automotive' && status === 'nominal' && (
+              <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>
+            )}
+          </>
+        } size={density === 'minimal' ? 24 : 'var(--type-hero-size)'} />
       </div>
       <div style={{ marginTop: 6 }}>
         <span

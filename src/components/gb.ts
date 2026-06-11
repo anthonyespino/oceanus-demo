@@ -1,22 +1,36 @@
-// Shared card/label styles — ROUND 4: re-pointed at the dark token system.
-// Geometry unchanged from the greybox; only values moved to tokens.
+// Shared card/label styles — ROUND 7: instrument-card grammar. Every framed
+// component inherits this: surface/raised + 1px hairline (ink at low alpha)
+// + the radius token + tokenized padding. Labels whisper (DM Mono micro-caps,
+// letterspaced); values shout (see Stat); supporting data keeps DataRow rhythm.
 
 export const gb = {
   box: {
-    border: '1px solid var(--color-line-subtle)',
+    border: '1px solid var(--color-line-hairline)',
     background: 'var(--color-surface-raised)',
-    padding: 8,
+    padding: 'var(--pad-card)',
     borderRadius: 6,
   } as React.CSSProperties,
-  boxTight: { border: '1px solid var(--color-line-strong)', padding: '2px 6px', borderRadius: 6 } as React.CSSProperties,
+  boxTight: {
+    border: '1px solid var(--color-line-strong)',
+    padding: '2px 8px',
+    borderRadius: 6,
+  } as React.CSSProperties,
   dim: { color: 'var(--color-ink-secondary)' } as React.CSSProperties,
   label: {
-    fontSize: 11,
+    fontFamily: 'var(--font-data)',
+    fontSize: 'var(--type-label-size)',
     color: 'var(--color-ink-muted)',
     textTransform: 'uppercase' as const,
-    letterSpacing: 0.8,
-  },
-  big: { fontSize: 22, fontWeight: 700, fontFamily: 'var(--font-data)', fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
+    letterSpacing: 1.2, // ≈ +11% at 11px — labels whisper
+    marginBottom: 'var(--pad-section)',
+    display: 'block',
+  } as React.CSSProperties,
+  big: {
+    fontSize: 'var(--type-hero-size)',
+    fontWeight: 500,
+    fontFamily: 'var(--font-data)',
+    fontVariantNumeric: 'tabular-nums',
+  } as React.CSSProperties,
   row: { display: 'flex', gap: 8, alignItems: 'stretch', flexWrap: 'wrap' as const },
   stale: { color: 'var(--color-data-stale)', background: 'var(--color-surface-overlay)' } as React.CSSProperties,
 };

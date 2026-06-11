@@ -6,6 +6,7 @@ import type { VesselState } from '../data/types';
 import { useFleet } from '../state/FleetProvider';
 import { Field } from './Field';
 import { DataRow } from './DataRow';
+import { Stat } from './Stat';
 import { FONT, NEUTRAL } from './probeTokens';
 import { gb } from './gb';
 
@@ -77,8 +78,8 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         <div style={{ ...gb.box, background: 'var(--color-surface-overlay)' }}>
           <div style={gb.label}>flow meter</div>
           <Field level="vessel" field="flow_gps">
-            <div style={{ fontWeight: 700 }}>{now.flow_gps} gps</div>
-            <div style={gb.dim}>{Math.round(now.flow_gps * 3600)} gph</div>
+            <Stat label="flow" value={`${Math.round(now.flow_gps * 3600)} gph`} size={22} />
+            <div style={gb.dim}>{now.flow_gps} gps</div>
           </Field>
         </div>
         <div style={{ fontSize: 20 }}>→</div>

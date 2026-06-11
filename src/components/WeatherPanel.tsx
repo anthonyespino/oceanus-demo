@@ -5,6 +5,7 @@
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
+import { Stat } from './Stat';
 import { gb, fmtTime } from './gb';
 
 export function WeatherPanel({ vessel }: { vessel: VesselState }) {
@@ -18,10 +19,10 @@ export function WeatherPanel({ vessel }: { vessel: VesselState }) {
       </div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="weather.wind">
-          <span>wind {wx.wind_speed_kn} kn</span>
+          <Stat label="wind" value={`${wx.wind_speed_kn} kn`} size={22} />
         </Field>
         <Field level="vessel" field="weather.waves">
-          <span>waves {wx.wave_height_ft} ft</span>
+          <Stat label="waves" value={`${wx.wave_height_ft} ft`} size={22} />
         </Field>
         <Field level="vessel" field="weather.current" label="current / vis / precip">
           <span>

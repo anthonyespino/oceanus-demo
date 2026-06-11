@@ -6,6 +6,7 @@
 import type { VesselState } from '../data/types';
 import { EngineCard } from './EngineCard';
 import { Field } from './Field';
+import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
 
 export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
@@ -22,9 +23,8 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
         <EngineCard engine={m1} title="Engine 1" />
         <Field level="vessel" field="twin_comparison_delta">
           <div style={{ ...gb.box, background: 'var(--color-surface-overlay)', textAlign: 'center', alignSelf: 'center' }}>
-            <div style={gb.label}>E2 vs E1</div>
-            <div style={gb.big}>{egtGapNow > 0 ? '+' : ''}{egtGapNow} °F EGT</div>
-            <div>fuel {fmtPct(fuelGapPct)} at matched load</div>
+            <Stat label="E2 vs E1 EGT" value={`${egtGapNow > 0 ? '+' : ''}${egtGapNow} °F`} />
+            <div style={{ marginTop: 6 }}>fuel {fmtPct(fuelGapPct)} at matched load</div>
             <div style={gb.dim}>24h avg gap {vessel.derived.egt_twin_gap_f} °F</div>
           </div>
         </Field>

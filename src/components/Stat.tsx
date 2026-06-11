@@ -8,13 +8,13 @@ import { FONT, NEUTRAL } from './probeTokens';
 export function Stat({
   label,
   value,
-  size = 26,
+  size = 'var(--type-hero-size)' as number | string, // round 7: hero scale is a token
   face = 'data',
   onFill = false, // true when sitting on an accent/primary (IKB) fill
 }: {
   label: string;
   value: React.ReactNode;
-  size?: number;
+  size?: number | string;
   face?: 'data' | 'display';
   onFill?: boolean;
 }) {
@@ -22,8 +22,9 @@ export function Stat({
     <div>
       <div
         style={{
-          fontSize: 10,
-          letterSpacing: 1.4,
+          fontFamily: FONT.data,
+          fontSize: 'var(--type-label-size)',
+          letterSpacing: 1.2,
           textTransform: 'uppercase',
           color: onFill ? 'rgba(255,255,255,0.72)' : NEUTRAL.inkMuted,
         }}
@@ -37,7 +38,7 @@ export function Stat({
           fontWeight: face === 'display' ? 400 : 500,
           fontVariantNumeric: 'tabular-nums',
           lineHeight: 1.05,
-          color: onFill ? '#ffffff' : NEUTRAL.ink,
+          color: onFill ? '#ffffff' : 'inherit', // inherits card tint (e.g. status-colored tile hero)
         }}
       >
         {value}
