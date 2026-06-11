@@ -24,6 +24,7 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 export type LayoutVariant = 'board-first' | 'chart-band';
 export type TankStyle = 'bars' | 'dots' | 'synoptic'; // round 5 dots + round 7 synoptic experiments
 export type SensorStyle = 'rows' | 'gauges'; // round 11 instrument cluster experiment
+export type RevealStyle = 'chevron' | 'meter'; // round 14 affordance experiment
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -50,6 +51,8 @@ interface FleetContextValue {
   setStress: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
+  revealStyle: RevealStyle;
+  setRevealStyle: (r: RevealStyle) => void;
   /** vessel id → epoch ms of its last status threshold-cross during live mode */
   crossings: Record<string, number>;
 }
@@ -68,7 +71,8 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel
   const [sensorStyle, setSensorStyle] = useState<SensorStyle>('rows');
   const [stress, setStress] = useState(false);
-  const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);;
+  const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
+  const [revealStyle, setRevealStyle] = useState<RevealStyle>('chevron');;
   const [crossings, setCrossings] = useState<Record<string, number>>({});
   const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);
@@ -116,7 +120,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
         sensorStyle, setSensorStyle, stress, setStress,
-        censusFilter, setCensusFilter,
+        censusFilter, setCensusFilter, revealStyle, setRevealStyle,
       }}
     >
       {children}

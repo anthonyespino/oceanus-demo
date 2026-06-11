@@ -11,6 +11,7 @@ import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { vesselStatus, worstLevel } from '../data/alerts';
 import { Field } from './Field';
+import { RevealZone } from './Contextual';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
 import { DataRow } from './DataRow';
@@ -45,6 +46,12 @@ export function VesselTile({
   const statusColor = colored ? STATUS_COLOR[status] : NEUTRAL.border;
   const dotColor = colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
   const fullAlerts = vessel.alerts.filter((a) => a.level !== 'ADVISORY');
+  const now = vessel.history.minutes.at(-1)!;
+  const fuelFrac = now.tanks.reduce((a, t) => a + t.level_gal, 0) / now.tanks.reduce((a, t) => a + t.capacity_gal, 0);
+  const enduranceAlert = vessel.alerts.find((a) => a.code === 'ENDURANCE' || a.code === 'BUNKER_SOON');
+  const meterColor = enduranceAlert
+    ? enduranceAlert.level === 'CAUTION' ? 'var(--color-alert-caution)' : 'var(--color-alert-advisory)'
+    : undefined;
 
   return (
     <Link
@@ -67,6 +74,14 @@ export function VesselTile({
       {motion === 'ripple' && crossings[vessel.static.id] && (
         <span key={crossings[vessel.static.id]} className="probe-ripple" style={{ borderColor: STATUS_COLOR[status] }} />
       )}
+      <RevealZone
+        meter={{ frac: fuelFrac, color: meterColor }}
+        reveal={
+          <Field level="fleet" field="burn_rate_gph" revealed>
+            <span>burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}</span>
+          </Field>
+        }
+      >
       {/* header block: fixed */}
       <div style={{ textAlign: 'center' }}>
         <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: dotColor, marginBottom: 8 }} />
@@ -119,16 +134,7 @@ export function VesselTile({
           </div>
         </div>
       )}
-      {/* details link: pinned bottom-left, consistent across sizes */}
-      {density === 'standard' && (
-        <div style={{ ...TYPE.micro, marginTop: 'auto', paddingTop: 8, textAlign: 'left' }} onClick={(e) => e.preventDefault()}>
-          <Field level="fleet" field="burn_rate_gph" label="details">
-            <span>
-              burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}
-            </span>
-          </Field>
-        </div>
-      )}
+      </RevealZone>
     </Link>
   );
 }

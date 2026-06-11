@@ -18,11 +18,15 @@ export function Field({
   field,
   label,
   children,
+  revealed = false,
 }: {
   level: UiLevel;
   field: string;
   label?: string; // Contextual reveal label; defaults to the field name
   children?: React.ReactNode;
+  /** true when already inside a RevealZone's reveal block (round 14) —
+      CONTEXTUAL renders plain; the zone provides the one interaction */
+  revealed?: boolean;
 }) {
   const d = getDisposition(level, field);
   // Round 9: unresolved/unregistered fields simply don't render — they are
@@ -34,6 +38,7 @@ export function Field({
     case 'UNDEFINED':
       return null;
     case 'CONTEXTUAL':
+      if (revealed) return <>{children}</>;
       return <Contextual label={label ?? d.field}>{children}</Contextual>;
     case 'VISIBLE':
       return <>{children}</>;

@@ -5,6 +5,7 @@
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
+import { RevealZone } from './Contextual';
 import { Stat } from './Stat';
 import { gb, fmtTime } from './gb';
 
@@ -14,6 +15,13 @@ export function WeatherPanel({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, padding: 'var(--pad-section) var(--pad-card)', marginBottom: 8, ...(stale ? gb.stale : {}) }}>
+      <RevealZone
+        reveal={
+          <Field level="vessel" field="weather.current" revealed>
+            <span>current {wx.current_kn} kn · visibility {wx.visibility_nm} nm · {wx.precip}</span>
+          </Field>
+        }
+      >
       <div style={gb.label}>
         environment{stale && ` — [STALE] last received ${fmtTime(vessel.history.timestamps.weather)}`}
       </div>
@@ -24,13 +32,9 @@ export function WeatherPanel({ vessel }: { vessel: VesselState }) {
         <Field level="vessel" field="weather.waves">
           <Stat label="waves" value={`${wx.wave_height_ft} ft`} size={22} />
         </Field>
-        <Field level="vessel" field="weather.current" label="current / vis / precip">
-          <span>
-            current {wx.current_kn} kn · visibility {wx.visibility_nm} nm · {wx.precip}
-          </span>
-        </Field>
         <Field level="vessel" field="wind_direction_visualization" />
       </div>
+      </RevealZone>
     </section>
   );
 }

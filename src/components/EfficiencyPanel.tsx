@@ -6,6 +6,7 @@
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
+import { RevealZone } from './Contextual';
 import { Sparkline } from './Sparkline';
 import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
@@ -13,7 +14,22 @@ import { gb, fmtPct } from './gb';
 export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   const d = vessel.derived;
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
+    <section style={{ ...gb.box, marginBottom: 8, display: 'flex', flexDirection: 'column' }}>
+      <RevealZone
+        reveal={
+          <span style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+            <Field level="vessel" field="trend_90d" revealed>
+              <span>{fmtPct(d.trend_90d)} per 90d</span>
+            </Field>
+            <Field level="vessel" field="history_1y" revealed>
+              <Sparkline values={d.daily_delta_1y.map((x) => x.delta)} width={360} height={36} />
+            </Field>
+            <Field level="vessel" field="baseline_band_visualization" revealed>
+              <span>expected range around {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}</span>
+            </Field>
+          </span>
+        }
+      >
       <div style={gb.label}>efficiency — trend vs {d.mode} baseline</div>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
@@ -21,12 +37,6 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           <span style={{ marginLeft: 8 }}>
             <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={240} height={32} />
           </span>
-        </Field>
-        <Field level="vessel" field="trend_90d" label="90d trend">
-          <span>{fmtPct(d.trend_90d)} per 90d</span>
-        </Field>
-        <Field level="vessel" field="history_1y" label="1y history">
-          <Sparkline values={d.daily_delta_1y.map((x) => x.delta)} width={360} height={36} />
         </Field>
         <Field level="vessel" field="efficiency_delta_vs_mode_baseline">
           <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
@@ -37,12 +47,8 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
             24h <Sparkline values={d.sparkline_24h} />
           </span>
         </Field>
-        <Field level="vessel" field="baseline_band_visualization" label="baseline band">
-          <span>
-            expected range around {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
-          </span>
-        </Field>
       </div>
+      </RevealZone>
     </section>
   );
 }

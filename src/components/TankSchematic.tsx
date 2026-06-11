@@ -6,6 +6,7 @@ import type { VesselState } from '../data/types';
 import { useFleet } from '../state/FleetProvider';
 import { Field } from './Field';
 import { ReconChip } from './FlowReconciliation';
+import { RevealZone } from './Contextual';
 import { DataRow } from './DataRow';
 import { Stat } from './Stat';
 import { FONT, NEUTRAL } from './probeTokens';
@@ -59,12 +60,6 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
           </Field>
         </>
       )}
-      <Field level="vessel" field="tank.capacity_gal" label="capacity">
-        <span>{t.capacity_gal.toLocaleString()} gal</span>
-      </Field>{' '}
-      <Field level="vessel" field="tank.transfer_active" label="transfer">
-        <span>{t.transfer_active ? 'TRANSFER ACTIVE' : 'no transfer'}</span>
-      </Field>
     </div>
   );
 
@@ -75,6 +70,21 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         <ReconChip vessel={vessel} />
       </div>
       <div style={{ height: 'var(--pad-section)' }} />
+      <RevealZone
+        reveal={
+          <span>
+            <Field level="vessel" field="tank.capacity_gal" revealed>
+              <span>
+                capacity {now.tanks.map((t) => `${t.tank_id.split('-')[1]} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal
+              </span>
+            </Field>
+            {' — '}
+            <Field level="vessel" field="tank.transfer_active" revealed>
+              <span>{now.tanks.some((t) => t.transfer_active) ? 'TRANSFER ACTIVE' : 'no transfer in progress'}</span>
+            </Field>
+          </span>
+        }
+      >
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
         <div>{storage.map(tankBox)}</div>
         <div style={{ fontSize: 20 }}>→</div>
@@ -90,6 +100,7 @@ export function TankSchematic({ vessel }: { vessel: VesselState }) {
         <div style={{ fontSize: 20 }}>→</div>
         <div style={gb.boxTight}>engines</div>
       </div>
+      </RevealZone>
     </section>
   );
 }

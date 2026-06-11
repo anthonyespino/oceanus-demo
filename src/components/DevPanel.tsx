@@ -104,6 +104,8 @@ export function DevPanel() {
         options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic' }]} />
       <Row label="sensors" value={f.sensorStyle} onPick={f.setSensorStyle}
         options={[{ v: 'rows' as const, text: 'text rows' }, { v: 'gauges' as const, text: 'gauges' }]} />
+      <Row label="reveal" value={f.revealStyle} onPick={f.setRevealStyle}
+        options={[{ v: 'chevron' as const, text: 'chevron' }, { v: 'meter' as const, text: 'meter strip' }]} />
       <Row label="stress" value={f.stress} onPick={f.setStress}
         options={[{ v: false, text: 'off' }, { v: true, text: 'stress scenario' }]} />
     </div>

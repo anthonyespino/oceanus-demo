@@ -6,7 +6,7 @@
 
 import type { EngineSample } from '../data/types';
 import { getDisposition } from './Field';
-import { Contextual } from './Contextual';
+import { RevealZone } from './Contextual';
 import { DataRow } from './DataRow';
 import { Sparkline } from './Sparkline';
 import { gb } from './gb';
@@ -34,7 +34,20 @@ export function EngineCard({
     (r) => getDisposition('vessel', r.field)?.disposition === 'CONTEXTUAL',
   );
   return (
-    <div style={{ ...gb.box, minWidth: 190 }}>
+    <div style={{ ...gb.box, minWidth: 190, display: 'flex', flexDirection: 'column' }}>
+      <RevealZone
+        reveal={
+          <>
+            <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>
+            {egtTrend30d && egtTrend30d.length > 2 && (
+              <span style={{ display: 'block', marginTop: 4 }}>
+                <Sparkline values={egtTrend30d} width={150} height={26} zeroBaseline={false} />
+                <span style={{ fontSize: 10, color: 'var(--color-ink-muted)', marginLeft: 6 }}>EGT 30d</span>
+              </span>
+            )}
+          </>
+        }
+      >
       <div style={gb.label}>
         {title} ({engine.role})
       </div>
@@ -42,17 +55,7 @@ export function EngineCard({
       <DataRow label="state" value={engine.running ? 'RUNNING' : 'STOPPED'} />
       <DataRow label="load" value={`${engine.load_pct}%`} />
       <DataRow label="fuel" value={`${engine.fuel_rate_gph} gph`} />
-      <div style={{ marginTop: 4 }}>
-        <Contextual label="sensors">
-          <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>
-          {egtTrend30d && egtTrend30d.length > 2 && (
-            <span style={{ display: 'block', marginTop: 4 }}>
-              <Sparkline values={egtTrend30d} width={150} height={26} zeroBaseline={false} />
-              <span style={{ fontSize: 10, color: 'var(--color-ink-muted)', marginLeft: 6 }}>EGT 30d</span>
-            </span>
-          )}
-        </Contextual>
-      </div>
+      </RevealZone>
     </div>
   );
 }

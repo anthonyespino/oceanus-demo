@@ -11,6 +11,8 @@ import type { VesselState } from '../data/types';
 import { RECON_CAUTION_PCT } from '../data/alerts';
 import { useContentWidth } from './NauticalChart';
 import { ReconChip } from './FlowReconciliation';
+import { RevealZone } from './Contextual';
+import { Field } from './Field';
 import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 
@@ -79,6 +81,17 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
         <ReconChip vessel={vessel} />
       </div>
       <div style={{ height: 'var(--pad-section)' }} />
+      <RevealZone
+        reveal={
+          <span>
+            <Field level="vessel" field="tank.capacity_gal" revealed>
+              <span>
+                capacity {tanks.map((t) => `${t.tank_id.split('-')[1]} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal
+              </span>
+            </Field>
+          </span>
+        }
+      >
       <div ref={wrapRef}>
         <svg width={w} height={h} viewBox={`0 0 ${VB.w} ${VB.h}`} style={{ display: 'block' }}>
           {/* hull + superstructure: neutral ink lines, schematic */}
@@ -168,6 +181,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
           })}
         </svg>
       </div>
+      </RevealZone>
     </section>
   );
 }

@@ -1,3 +1,20 @@
+# PROGRESS — 2026-06-11 (Session 17: ROUND 14 — "details" killed)
+
+## Done
+
+1. **Every reveal text label removed from rendered UI**: "details …" (tiles, both sizes), "sensors …" (engine cards), "90d trend / 1y history / baseline band …" (efficiency panel), "current / vis / precip …" (environment), "capacity / transfer …" (both fuel views). The only `label=` remnants live in the two unrendered greybox-era components (VesselCard, FlowReconciliation card), which never paint on the probe.
+2. **RevealZone** added to Contextual.tsx — the reveal policy stays one file. Whole card/section is the hover + keyboard-focus target; Enter pins on non-link cards (inside tiles, Link keeps Enter for navigation and focus alone reveals). Reveal content renders as a hairline-topped block at the card bottom. CONTEXTUAL registry fields render inside zones via the new `Field revealed` path — still exactly one interaction away.
+3. **Two affordances behind the dev panel (⚖ verdict #14)**: (a) SILENT — hand-drawn chevron path bottom-right, rotates 90° when open, no icon lib; (b) METER — 3px full-width strip, fill = fuel fraction of usable range, neutral ink, status-colored only when an ENDURANCE/BUNKER alert is live; strip and card both trigger. Cards without meter data (inspector sections) fall back to the chevron even in meter mode — DEV DECISION pending Anthony.
+4. **Learn-mode discoverability**: the affordance glyph/strip itself carries the Contextual docent copy (wrapped in its own Annotated), so the teaching registers on the new trigger without shadowing each card's own docent copy. The DATALINK strip keeps its labeled Contextual — there the label IS the value, not filler; logged as the one intentional survivor.
+
+## Decisions Made (DEV DECISIONS pending Anthony / reversible)
+
+- DEV DECISION: meter fallback to chevron on cards with no endurance meaning — a fuel strip on a weather card would lie.
+- REVERSIBLE: reveal block opens downward inside the card (grows card height) rather than overlaying — honest about space, consistent with no-overlay-on-chart guardrails.
+- REVERSIBLE: chevron 10px, meter 3px — geometry constants.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 16: ROUND 13 — expanded tile, void killed)
 
 ## Regression archaeology (as asked)
