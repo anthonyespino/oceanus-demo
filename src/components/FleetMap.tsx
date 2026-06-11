@@ -5,7 +5,7 @@
 // marker affordances: ≥24px invisible hit areas, hover/focus ring + tooltip
 // through the Contextual primitive, click/Enter expands the inspector.
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { VesselState } from '../data/types';
 import { vesselStatus, worstLevel } from '../data/alerts';
@@ -44,6 +44,17 @@ export function FleetMap({
   const { motion } = useFleet();
   const [wrapRef, w] = useContentWidth(width);
   const [hoverId, setHoverId] = useState<string | null>(null);
+  // round 18: tooltips are the legitimate hover use, but debounced so a
+  // cursor sweep doesn't strobe them
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverSoon = (id: string) => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setHoverId(id), 150);
+  };
+  const hoverEnd = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    setHoverId(null);
+  };
   const [splay, setSplay] = useState<number | null>(null);
 
   const frame = fitFleetFrame(fleet);
@@ -117,7 +128,7 @@ export function FleetMap({
                 return (
                   <g key={m.id} className={breathe ? 'probe-breathe' : undefined} tabIndex={0}
                     style={{ cursor: 'pointer', outline: 'none' }}
-                    onMouseEnter={() => setHoverId(m.id)} onMouseLeave={() => setHoverId(null)}
+                    onMouseEnter={() => hoverSoon(m.id)} onMouseLeave={hoverEnd}
                     onFocus={() => setHoverId(m.id)} onBlur={() => setHoverId(null)}
                     onClick={() => go(m.id)}
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && go(m.id)}>

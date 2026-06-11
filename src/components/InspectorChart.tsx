@@ -5,7 +5,7 @@
 // deterministic cluster logic as the fleet chart; every ghost has a ≥24px hit
 // area, hover tooltip, and click-through to its inspector.
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
@@ -70,6 +70,17 @@ export function InspectorChart({
   const router = useRouter();
   const [wrapRef, w] = useContentWidth(width);
   const [hoverId, setHoverId] = useState<string | null>(null);
+  // round 18: tooltips are the legitimate hover use, but debounced so a
+  // cursor sweep doesn't strobe them
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverSoon = (id: string) => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setHoverId(id), 150);
+  };
+  const hoverEnd = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    setHoverId(null);
+  };
   const [splay, setSplay] = useState<number | null>(null);
 
   const frame = focusFrame(vessel, fleet);
@@ -101,7 +112,7 @@ export function InspectorChart({
               {ghostClusters.map((c, i) =>
                 c.members.length === 1 ? (
                   <g key={c.members[0].id} tabIndex={0} style={{ cursor: 'pointer', outline: 'none' }}
-                    onMouseEnter={() => setHoverId(c.members[0].id)} onMouseLeave={() => setHoverId(null)}
+                    onMouseEnter={() => hoverSoon(c.members[0].id)} onMouseLeave={hoverEnd}
                     onFocus={() => setHoverId(c.members[0].id)} onBlur={() => setHoverId(null)}
                     onClick={() => router.push(`/vessel/${c.members[0].id}`)}
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && router.push(`/vessel/${c.members[0].id}`)}>

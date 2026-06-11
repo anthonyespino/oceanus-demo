@@ -1,17 +1,16 @@
 'use client';
-// Grid tile. ROUND 13 restructure: a true vertical flex column filling its
-// grid cell — header fixed, the 30d chart flex-grows into whatever space has
-// nothing else to say (round 3.3 rule; the round 7 grammar pass regressed
-// this by growing the cell around a fixed-px chart), alerts in FULL TEXT on
-// 2x (they are the tile's reason for being big), footer stats, details link
-// pinned bottom-left across sizes. Status thresholds all come from
+// Grid tile. ROUND 18: the board is CALM — tiles are inert to hover except
+// the size control appearing (round 17). No hover reveals; detail access is
+// click-only via mini → standard → expanded stepping. CONTEXTUAL fields
+// (burn, next port) render inside the EXPANDED layout — the expand click IS
+// the registry's one interaction. The round 14 meter affordance survives as
+// a passive endurance strip (no trigger). Status thresholds come from
 // vesselStatus() in the data layer; this file only paints.
 
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { vesselStatus, worstLevel } from '../data/alerts';
 import { Field } from './Field';
-import { RevealZone } from './Contextual';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
 import { DataRow } from './DataRow';
@@ -44,7 +43,7 @@ export function VesselTile({
   onSize: (s: TileSize) => void;
 }) {
   const d = vessel.derived;
-  const { motion, crossings } = useFleet();
+  const { motion, crossings, revealStyle } = useFleet();
   const [hot, setHot] = useState(false); // hover/focus-within → show controls
   const status = vesselStatus(vessel.alerts);
   const badge = worstLevel(vessel.alerts);
@@ -117,14 +116,6 @@ export function VesselTile({
           )}
         </span>
       )}
-      <RevealZone
-        meter={{ frac: fuelFrac, color: meterColor }}
-        reveal={
-          <Field level="fleet" field="burn_rate_gph" revealed>
-            <span>burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}</span>
-          </Field>
-        }
-      >
       {/* header block: fixed */}
       <div style={{ textAlign: 'center' }}>
         <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: dotColor, marginBottom: 8 }} />
@@ -173,6 +164,13 @@ export function VesselTile({
           <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
         </div>
       )}
+      {tier === 2 && (
+        <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkSecondary }}>
+          <Field level="fleet" field="burn_rate_gph" revealed>
+            <span>burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}</span>
+          </Field>
+        </div>
+      )}
       {tier === 1 && !mini && (
         <div style={{ marginTop: 10, textAlign: 'left' }}>
           <DataRow label="endurance" value={`${d.endurance_hours} h`} />
@@ -183,7 +181,15 @@ export function VesselTile({
           </div>
         </div>
       )}
-      </RevealZone>
+      {/* round 18: passive endurance strip (meter variant) — indicator only,
+          not a trigger */}
+      {revealStyle === 'meter' && (
+        <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+          <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: 2 }}>
+            <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: 2 }} />
+          </div>
+        </div>
+      )}
     </Link>
   );
 }

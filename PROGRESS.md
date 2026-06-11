@@ -1,3 +1,19 @@
+# PROGRESS — 2026-06-11 (Session 21: ROUND 18 — calm the board)
+
+## Done
+
+1. **Tile hover reveals removed entirely**: the RevealZone is off the fleet tiles. Tiles are inert to hover except the size control appearing (round 17). Nothing opens, reflows, or flip-flops as the cursor crosses the board.
+2. **Detail is click-only and explicit**: the expand control is the single path to more of a vessel on the board. The former hover content (burn · next port — registry-CONTEXTUAL fields) now renders inside the EXPANDED layout via `Field revealed`: the expand click IS the registry's "one interaction away," so the discipline holds without hover. The round 14 affordance folded into the size system: the meter variant survives as a **passive** endurance strip (indicator, not trigger); the chevron variant has no tile remnant (it was purely a reveal affordance) — DEV DECISION logged.
+3. **Chart tooltips kept and debounced**: 150ms delay before a marker tooltip shows (FleetMap markers + InspectorChart ghosts); leaving cancels the pending timer — sweeping the cursor no longer strobes tooltips. Keyboard focus still shows immediately (a deliberate focus is not a sweep).
+4. **OPEN CONSISTENCY QUESTION for Anthony's Figma pass**: inspector cards still use hover reveals (unchanged this round). The fleet board now says "hover is for pointing, click is for asking" — should the whole system go click-to-reveal? RevealZone supports pinning already; converting the inspector is a per-card prop, not a rework.
+
+## Decisions Made (DEV DECISIONS pending Anthony)
+
+- DEV DECISION: meter strip survives as passive indicator on tiles; chevron variant leaves no tile remnant — if Anthony wants a visible "expandable" cue beyond the hover control, the chevron could return as a static corner mark.
+- REVERSIBLE: 150ms debounce constant.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 20: ROUND 17 — manual tile sizing)
 
 ## Done
