@@ -8,6 +8,7 @@ import type { EngineSample } from '../data/types';
 import { getDisposition } from './Field';
 import { Contextual } from './Contextual';
 import { DataRow } from './DataRow';
+import { Sparkline } from './Sparkline';
 import { gb } from './gb';
 
 const SENSOR_ROWS: { field: string; label: string; value: (e: EngineSample) => string }[] = [
@@ -19,7 +20,16 @@ const SENSOR_ROWS: { field: string; label: string; value: (e: EngineSample) => s
   { field: 'engine.running_hours', label: 'hours', value: (e) => `${e.running_hours}` },
 ];
 
-export function EngineCard({ engine, title }: { engine: EngineSample; title: string }) {
+export function EngineCard({
+  engine,
+  title,
+  egtTrend30d,
+}: {
+  engine: EngineSample;
+  title: string;
+  /** daily mean EGT, last 30 days — spec v2 §8 trend overlay (round 10) */
+  egtTrend30d?: number[];
+}) {
   const contextualRows = SENSOR_ROWS.filter(
     (r) => getDisposition('vessel', r.field)?.disposition === 'CONTEXTUAL',
   );
@@ -35,6 +45,12 @@ export function EngineCard({ engine, title }: { engine: EngineSample; title: str
       <div style={{ marginTop: 4 }}>
         <Contextual label="sensors">
           <span>{contextualRows.map((r) => `${r.label} ${r.value(engine)}`).join(' · ')}</span>
+          {egtTrend30d && egtTrend30d.length > 2 && (
+            <span style={{ display: 'block', marginTop: 4 }}>
+              <Sparkline values={egtTrend30d} width={150} height={26} zeroBaseline={false} />
+              <span style={{ fontSize: 10, color: 'var(--color-ink-muted)', marginLeft: 6 }}>EGT 30d</span>
+            </span>
+          )}
         </Contextual>
       </div>
     </div>

@@ -69,7 +69,9 @@ export function FleetRail({
                 background: colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted,
               }}
             />
-            {v.static.name}
+            <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {v.static.name}
+            </span>
           </Link>
         );
       })}

@@ -59,7 +59,9 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
     body = (
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={node} />
-        <span style={{ ...mono, color: NEUTRAL.inkSecondary, whiteSpace: 'nowrap' }}>{from ?? 'UNDERWAY >24H'}</span>
+        <span style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {from ?? 'UNDERWAY >24H'}
+        </span>
         <div style={{ flex: 1, height: 6, background: NEUTRAL.surfaceDim, borderRadius: RADIUS, position: 'relative' }}>
           {frac !== null && (
             <div style={{ position: 'absolute', inset: 0, width: `${(frac * 100).toFixed(1)}%`, background: ACCENT.primary, borderRadius: RADIUS }} />
@@ -76,13 +78,19 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
         {next && (
           <>
             <span style={node} />
-            <span style={{ ...mono, whiteSpace: 'nowrap' }}>
-              {next.port} <span style={{ color: NEUTRAL.inkMuted }}>ETA {fmtTime(next.eta)}</span>
+            <span style={{ ...mono, minWidth: 0, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {next.port}
+            </span>
+            {/* ETA never clips: zero shrink */}
+            <span style={{ ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap', flexShrink: 0 }}>
+              ETA {fmtTime(next.eta)}
             </span>
           </>
         )}
         {calls[1] && (
-          <span style={{ ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap' }}>→ {calls[1].port}</span>
+          <span style={{ ...mono, color: NEUTRAL.inkMuted, minWidth: 0, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            → {calls[1].port}
+          </span>
         )}
       </div>
     );

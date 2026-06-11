@@ -45,7 +45,7 @@ export function AppHeader() {
       <span style={{ fontFamily: 'var(--font-display)', fontSize: 18, letterSpacing: 2 }}>
         OCEANUS FLEET
       </span>
-      <span style={{ display: 'inline-flex', gap: 18, alignItems: 'center' }}>
+      <span style={{ display: 'inline-flex', gap: 18, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end', minWidth: 0 }}>
         <Annotated name="SystemStatusStrip" inline><SystemStatusStrip /></Annotated>
         <LiveControls />
       </span>

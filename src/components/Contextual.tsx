@@ -42,6 +42,9 @@ export function Contextual({
         <span
           style={{
             display: 'inline-block',
+            maxWidth: 420,
+            whiteSpace: 'normal',
+            verticalAlign: 'top',
             border: `1px solid ${pinned ? 'var(--color-accent-bright)' : 'var(--color-line-strong)'}`,
             background: 'var(--color-surface-overlay)',
             padding: '2px 6px',

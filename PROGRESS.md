@@ -1,3 +1,22 @@
+# PROGRESS — 2026-06-11 (Session 13: ROUND 10 — fitting & resilience)
+
+## Done
+
+1. **Self-hosted fonts**: all three faces switched to `next/font/local`; six woff2 files (latin) committed under `src/fonts/` (DM Sans 400/500/700, DM Mono 400/500, Bebas Neue 400, ~137 KB total). **Network note: the production build was run twice with HTTP/HTTPS proxies blackholed (127.0.0.1:9) and succeeded — zero-network builds verified.** This was a real demo-day risk: next/font/google fetches at build time.
+2. **Overflow safety pass**: tile and rail vessel names ellipsize (rail names get minWidth:0 in their flex row); RoutePanel port names truncate at 180px while ETAs carry flexShrink:0 — names give way before numerals/ETAs ever clip; the following-port hint truncates at 140px; SystemStatusStrip's header row wraps instead of overflowing; Contextual reveal boxes cap at 420px and wrap (the DATALINK affected-vessels list could previously explode the header).
+3. **Timeline chips**: minWidth 96px floor; name span truncates first; ETA and the BUNKER flag are zero-shrink — they never clip.
+4. **Ruling 11 amended in the ledger**: the metric + formula stand as the PM ruling; the "HIDDEN at fleet level / rank-order-only" clause was dev-proposed and is reclassified as DEV DECISION pending Anthony — **⚖ verdict #12** (sd numeral on tiles vs rank-order-only). Behavior unchanged until his verdict; the fleet-chart tooltip now shows **mode + 30d trend** (was mode + sd) so no surface contradicts another while it pends. Registry note updated to match.
+5. **Engine-card trend overlays built** (spec v2 §8, ledger note closed): daily-mean EGT over 30d as a small auto-ranged sparkline in each engine card's "sensors" contextual layer (Sparkline gained a `zeroBaseline:false` mode — EGT at ~800°F against a zero axis would be a flat line). Demo step 3 material: Engine 2's line climbs ≈60°F while Engine 1 stays flat.
+6. **Ledger hygiene rule** added to CLAUDE.md and DECISIONS.md notes: dev-proposed design choices log as "DEV DECISION (pending Anthony)", never folded into a numbered PM ruling's text.
+
+## Decisions Made (ALL REVERSIBLE)
+
+- REVERSIBLE: latin subset only for the committed fonts — the UI renders no non-latin strings; other subsets are a re-download.
+- REVERSIBLE: port-name truncation widths (180px/140px) and chip floor (96px) are constants, tune in Figma.
+- REVERSIBLE: EGT overlay = per-engine absolute EGT rather than twin-gap — reads directly on each card and the divergence is visible by comparison across the two cards; a twin-gap variant is ~5 lines if Anthony prefers one chart over two.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 12: ROUND 9 — strip the scaffolding)
 
 All meta/process language is out of the rendered UI. Learn Mode (L) is the

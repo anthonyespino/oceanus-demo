@@ -111,6 +111,7 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
                       style={{
                         position: 'absolute', top: lane * LANE_H + 3, left,
                         maxWidth: plotW - left - 4,
+                        minWidth: 96, // chips never collapse below a readable block
                         display: 'inline-flex', gap: 6, alignItems: 'baseline',
                         background: NEUTRAL.surface,
                         border: '1px solid var(--color-line-strong)',
@@ -120,8 +121,11 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
                         textDecoration: 'none', color: NEUTRAL.ink,
                         ...mono, whiteSpace: 'nowrap', overflow: 'hidden',
                       }}>
-                      {b.vessel.static.name.toUpperCase()}
-                      <span style={{ color: NEUTRAL.inkMuted, fontSize: 10 }}>
+                      {/* truncation priority: name first; ETA and BUNKER never */}
+                      <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {b.vessel.static.name.toUpperCase()}
+                      </span>
+                      <span style={{ color: NEUTRAL.inkMuted, fontSize: 10, flexShrink: 0 }}>
                         {b.etaMs === null ? 'IN PORT' : new Date(b.etaMs).toISOString().slice(11, 16) + 'Z'}
                       </span>
                       {b.bunker && (

@@ -77,7 +77,7 @@ export function VesselTile({
           marginBottom: 8,
         }}
       />
-      <div style={TYPE.name}>{vessel.static.name}</div>
+      <div style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{vessel.static.name}</div>
       {/* hero: ONE oversized tabular numeral anchors the card (round 7).
           sustained_deviation numeral REMOVED — registry rules it HIDDEN
           (ruling 11: rank order expresses it); showing it was a violation. */}

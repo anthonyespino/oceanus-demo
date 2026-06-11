@@ -141,7 +141,7 @@ export function FleetMap({
         </NauticalChart>
         {hovered && hoveredPt && (
           <MarkerTooltip x={hoveredPt.x} y={hoveredPt.y} label={hovered.static.name}>
-            {hovered.derived.mode} · sd {fmtPct(hovered.derived.sustained_deviation)}
+            {hovered.derived.mode} · 30d {fmtPct(hovered.derived.trend_30d)}
             {worstLevel(hovered.alerts) ? ` · [${worstLevel(hovered.alerts)}]` : ''}
           </MarkerTooltip>
         )}

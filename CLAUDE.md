@@ -69,3 +69,4 @@ Determinism contract: same `SEED` → identical fleet and timeline. "Now" is the
 - Current session scope only — do not build ahead of the active kickoff brief.
 - No new dependencies without logging the reason in PROGRESS.md.
 - Update PROGRESS.md before the session ends (Done / In Progress / Decisions Made / Questions for Anthony / Next Session Plan). The PM reviews raw files on GitHub; write decisions for a skeptical CTO reviewer.
+- Ledger hygiene: dev-proposed design choices are logged as "DEV DECISION (pending Anthony)" — never folded into a numbered PM ruling's text in DECISIONS.md.

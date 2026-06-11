@@ -20,16 +20,21 @@ originals.*
 | 8 | 2026-06-10 | §9 EGT wording: ≈50–60°F divergence by week 3 (weekly average; instantaneous peak ≈60°F) | Matches what the generated data actually shows | Applied S3 (verify wording, bounds 45–65) |
 | 9 | 2026-06-10 | Fleet is 15 vessels (dropped *Petrel*, v16) | Per customer answer (M. McMunigle): target profile is a 15-OSV operator | Applied S3 |
 | 10 | 2026-06-10 | Mode is a reported telemetry field (new §3.4 vessel status feed, carries last_updated); §2 derivation retained as validation cross-check / documented fallback only | Per customer answer (M. McMunigle): modes are exposed in telemetry | Applied S3; verify asserts ≥99.5% agreement |
-| 11 | 2026-06-10 | New derived metric `sustained_deviation`: recency-weighted mean of last 30 daily deltas (linear weights) × sign-persistence fraction. Registry: HIDDEN at fleet level — expressed as rank order, not numerals | Per customer answer (M. McMunigle): analytical-first posture needs a ranking score where sustained drift outranks momentary spikes. Formula proposed by dev (spec says "e.g."); verify proves Meridian #1 and spike < drifter | Applied S3 (`derived.ts`) |
+| 11 | 2026-06-10 | New derived metric `sustained_deviation`: recency-weighted mean of last 30 daily deltas (linear weights) × sign-persistence fraction | Per customer answer (M. McMunigle): analytical-first posture needs a ranking score where sustained drift outranks momentary spikes. Formula proposed by dev (spec says "e.g."); verify proves Meridian #1 and spike < drifter | Applied S3 (`derived.ts`). **Amended 2026-06-11**: the "HIDDEN at fleet level / rank-order-only" clause was DEV-proposed, not part of this ruling — reclassified as DEV DECISION pending Anthony, ⚖ verdict #12 (sd numeral on tiles vs rank-order-only). Current behavior unchanged until his verdict; fleet-chart tooltip now shows mode + 30d so no surface contradicts another meanwhile |
 | 12 | 2026-06-10 | FleetView becomes the trend board: sorted by \|sustained_deviation\|; 30/90d trend sparkline is the primary per-vessel graphic; 24h sparkline → CONTEXTUAL pending Anthony's registry ruling; AlertRail demoted to context strip below the ranking header (greybox position only — final placement is Anthony's Figma call); new `FleetView/FleetTrend` 1y strip | Per customer answer (M. McMunigle): posture flip — trends organize the view, alerts annotate it | Applied S3 |
 | 13 | 2026-06-10 | `trend_30d` and `trend_90d` → VISIBLE at fleet level | Per customer answer (M. McMunigle): trend is the primary fleet-level signal | Applied S3 (`dispositions.ts`) |
 
 ## Notes
 
+- **Ledger hygiene (2026-06-11, standing)**: dev-proposed design choices are
+  logged as "DEV DECISION (pending Anthony)" and never folded into a numbered
+  PM ruling's text. Ruling 11 was the corrective case.
+
+
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was
   promoted to `DATA_MODEL.md` (the spec-of-record filename all code and docs
   reference); v1 is preserved in git history.
-- v2 §8 Level 2 also calls for "trend overlays" on engine cards. Not in the
-  Session 3 brief's scope — **not built**; flagged in PROGRESS.md as a
-  candidate next-session item (it would strengthen §9 step 3: the EGT gap as
-  a 3-week trend line, not just a number).
+- v2 §8 Level 2 "trend overlays" on engine cards: **built round 10**
+  (2026-06-11) — daily-mean EGT, 30d, on each engine card's contextual layer.
+  Demo step 3 material: Engine 2's line visibly climbs while Engine 1's stays
+  flat.
