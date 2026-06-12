@@ -100,8 +100,6 @@ export function DevPanel() {
         options={[{ v: false, text: 'off' }, { v: true, text: 'IKB fill' }]} />
       <Row label="learn" value={learnOn} onPick={setLearnOn}
         options={[{ v: false, text: 'off' }, { v: true, text: 'LEARN MODE (L)' }]} />
-      <Row label="fuel view" value={f.tankStyle} onPick={f.setTankStyle}
-        options={[{ v: 'bars' as const, text: 'rows' }, { v: 'dots' as const, text: 'dot matrix' }, { v: 'synoptic' as const, text: 'synoptic' }]} />
       <Row label="chart pos" value={f.chartTop} onPick={f.setChartTop}
         options={[{ v: false, text: 'below board' }, { v: true, text: 'top (trial)' }]} />
       <Row label="state marks" value={f.stateMarks} onPick={f.setStateMarks}
@@ -112,6 +110,8 @@ export function DevPanel() {
         options={[{ v: true, text: 'BRG ray' }, { v: false, text: 'voyage card only' }]} />
       <Row label="rail mode" value={f.railMode} onPick={f.setRailMode}
         options={[{ v: 'glyph' as const, text: 'mode glyph' }, { v: 'stroke' as const, text: 'transit stroke' }]} />
+      <Row label="auto 2x" value={f.autoPromote} onPick={f.setAutoPromote}
+        options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
       <Row label="reveal" value={f.revealStyle} onPick={f.setRevealStyle}
         options={[{ v: 'chevron' as const, text: 'chevron' }, { v: 'meter' as const, text: 'meter strip' }]} />
       <Row label="stress" value={f.stress} onPick={f.setStress}

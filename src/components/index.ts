@@ -22,6 +22,7 @@ export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — des
 export { VoyagePanel } from './VoyagePanel'; // ROUND 21 A5: Environment+Route+Mode merged
 export { Collapse } from './Collapse'; // ROUND 21 B3: collapsible panels
 export { StateMark } from './StateMark'; // ROUND 21 B4: state silhouettes (trial)
+export { FuelViewSwitch } from './FuelViewSwitch'; // ROUND 26: in-card fuel view switching
 export { VesselSynoptic } from './VesselSynoptic'; // ROUND 7 addendum: top-down fuel synoptic (verdict 11)
 export { Gauge } from './Gauge'; // ROUND 11: shared radial gauge primitive
 export { TrendChartFill } from './TrendChartFill'; // ROUND 13: fill-parent tile trend chart

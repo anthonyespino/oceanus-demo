@@ -18,7 +18,7 @@ import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize, chartTop } = useFleet();
+  const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize, chartTop, autoPromote } = useFleet();
 
   // Round 21 A1: shared activity-aware comparator (board + rail)
   const ranked = [...fleet].sort(compareVessels);
@@ -61,7 +61,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         {ranked.map((v) => {
           // round 17: manual size overrides auto in BOTH directions; the
           // cap applies only to automatic promotion
-          const auto = promotedIds.has(v.static.id) ? 'expanded' : density === 'minimal' ? 'mini' : 'standard';
+          // round 26: auto-promotion OFF by default — the board points, the
+          // human zooms. Kept behind the dev flag in case the verdict flips.
+          const auto = autoPromote && promotedIds.has(v.static.id) ? 'expanded' : density === 'minimal' ? 'mini' : 'standard';
           const size = tileSizes[v.static.id] ?? auto;
           return (
             <div

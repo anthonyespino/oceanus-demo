@@ -11,6 +11,7 @@ import type { VesselState } from '../data/types';
 import { RECON_CAUTION_PCT } from '../data/alerts';
 import { useContentWidth } from './NauticalChart';
 import { ReconChip } from './FlowReconciliation';
+import { FuelViewSwitch } from './FuelViewSwitch';
 import { RevealZone } from './Contextual';
 import { Field } from './Field';
 import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
@@ -89,7 +90,10 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26 }}>
         <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
-        <ReconChip vessel={vessel} />
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+          <ReconChip vessel={vessel} />
+          <FuelViewSwitch />
+        </span>
       </div>
       <div style={{ height: 'var(--pad-section)' }} />
       <RevealZone

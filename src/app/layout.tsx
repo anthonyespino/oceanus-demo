@@ -5,22 +5,21 @@ import { FleetProvider } from '../state/FleetProvider';
 import { LearnProvider } from '../learn/LearnProvider'; // LEARN MODE — strip before demo week
 import { AppHeader, DevPanel } from '../components';
 
-// Type system: DM Sans = UI, DM Mono = all data/numerals (tabular), D-DIN =
-// display (round 22 swap; Bebas removed from the repo). Self-hosted woff2
-// (src/fonts/, OFL license committed) via next/font/local — zero-network
-// builds.
-const dmSans = localFont({
+// Type system (round 26): Barlow = UI, IBM Plex Mono = data/numerals
+// (tabular), D-DIN = display. Self-hosted woff2 (src/fonts/, OFL licenses
+// committed) via next/font/local — zero-network builds.
+const barlow = localFont({
   src: [
-    { path: '../fonts/dm-sans-400.woff2', weight: '400' },
-    { path: '../fonts/dm-sans-500.woff2', weight: '500' },
-    { path: '../fonts/dm-sans-700.woff2', weight: '700' },
+    { path: '../fonts/barlow-400.woff2', weight: '400' },
+    { path: '../fonts/barlow-500.woff2', weight: '500' },
+    { path: '../fonts/barlow-700.woff2', weight: '700' },
   ],
   variable: '--font-ui',
 });
-const dmMono = localFont({
+const plexMono = localFont({
   src: [
-    { path: '../fonts/dm-mono-400.woff2', weight: '400' },
-    { path: '../fonts/dm-mono-500.woff2', weight: '500' },
+    { path: '../fonts/ibm-plex-mono-400.woff2', weight: '400' },
+    { path: '../fonts/ibm-plex-mono-500.woff2', weight: '500' },
   ],
   variable: '--font-data',
 });
@@ -39,7 +38,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${dmMono.variable} ${dDin.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${plexMono.variable} ${dDin.variable}`}>
       <body>
         <FleetProvider>
           <LearnProvider>

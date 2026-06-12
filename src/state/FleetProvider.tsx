@@ -54,6 +54,8 @@ interface FleetContextValue {
   setBearingLine: (b: boolean) => void;
   railMode: RailMode; // round 24: rail mode indicator variant
   setRailMode: (r: RailMode) => void;
+  autoPromote: boolean; // round 26: auto-2x disabled by default, flag kept
+  setAutoPromote: (b: boolean) => void;
   stateMarks: boolean; // round 21 B4: state silhouettes beside port names
   setStateMarks: (b: boolean) => void;
   /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
@@ -89,6 +91,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [stickyBand, setStickyBand] = useState(false);
   const [bearingLine, setBearingLine] = useState(true);
   const [railMode, setRailMode] = useState<RailMode>('glyph');
+  const [autoPromote, setAutoPromote] = useState(false);
   const [stateMarks, setStateMarks] = useState(false);
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
@@ -144,7 +147,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
         chartTop, setChartTop, stateMarks, setStateMarks, stickyBand, setStickyBand,
-        bearingLine, setBearingLine, railMode, setRailMode,
+        bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,

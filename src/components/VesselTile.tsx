@@ -51,13 +51,15 @@ export function VesselTile({
     if (next) onSize(next);
   };
   const colored = treatment === 'automotive' || status !== 'nominal';
-  const statusColor = colored ? STATUS_COLOR[status] : NEUTRAL.border;
   const dotColor = colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
+  // Round 26: ONE border voice — rail grammar exactly. Alerted: status
+  // border + tinted name; active: hairline full ink; idle nominal: 45% dim.
+  const alerted = vessel.alerts.length > 0;
+  const active = d.mode === 'TRANSIT' || d.mode === 'STATION';
+  const borderColor = status !== 'nominal' ? STATUS_COLOR[status] : 'var(--color-line-hairline)';
+  const tileDim = !alerted && !active && status === 'nominal';
   const fullAlerts = vessel.alerts.filter((a) => a.level !== 'ADVISORY');
-  // round 24: idle nominal minis recede — same dim grammar as the rail
-  const idleDim =
-    mini && status === 'nominal' && vessel.alerts.length === 0 &&
-    (d.mode === 'PORT' || d.mode === 'STANDBY');
+
   const now = vessel.history.minutes.at(-1)!;
   const fuelFrac = now.tanks.reduce((a, t) => a + t.level_gal, 0) / now.tanks.reduce((a, t) => a + t.capacity_gal, 0);
   const enduranceAlert = vessel.alerts.find((a) => a.code === 'ENDURANCE' || a.code === 'BUNKER_SOON');
@@ -81,15 +83,14 @@ export function VesselTile({
         flexDirection: 'column',
         textDecoration: 'none',
         color: NEUTRAL.ink,
-        border: `1px solid ${colored ? statusColor : 'var(--color-line-hairline)'}`,
-        borderTop: `3px solid ${statusColor}`,
+        border: `1px solid ${borderColor}`,
         borderRadius: RADIUS,
         background: NEUTRAL.surface,
         padding: 'var(--pad-card)',
         height: '100%',
         boxSizing: 'border-box',
         position: 'relative',
-        opacity: idleDim ? 0.45 : 1,
+        opacity: tileDim ? 0.45 : 1, // round 26: all idle nominal tiles recede
       }}
     >
       {motion === 'ripple' && crossings[vessel.static.id] && (
@@ -121,7 +122,7 @@ export function VesselTile({
       {/* header block: fixed */}
       <div style={{ textAlign: 'center' }}>
         <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: dotColor, marginBottom: 8 }} />
-        <div style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{vessel.static.name}</div>
+        <div style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
         <div style={{ marginTop: 6, display: 'inline-block', color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
           <Stat label="30d trend" value={
             <>

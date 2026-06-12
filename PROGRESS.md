@@ -1,3 +1,25 @@
+# PROGRESS — 2026-06-11 (Session 29: ROUND 26 — de-can the board)
+
+## Done
+
+1. **Tile stroke grammar = rail grammar.** The 3px status top-border is gone. Every tile sits on a uniform 1px hairline; an alerted tile earns a 1px status-colored border plus a status-tinted name (same "when the class earns it" rule as the rail — advisory stays muted per A6); active (transit/station) holds full ink; idle nominal unalerted dims to 45%. One grammar, three surfaces (rail, minis, tiles) — the round-24 layers now describe the whole board. Meridian is the only status-bordered tile on the demo seed, exactly as §9 wants the eye to land.
+2. **Type swap: Barlow (UI) + IBM Plex Mono (data).** Self-hosted woff2 (Barlow 400/500/700 → `--font-ui`, Plex Mono 400/500 → `--font-data`), OFL licenses committed, DM Sans/DM Mono removed from the repo entirely. D-DIN display face untouched. Offline build re-verified with proxies blackholed.
+3. **Fitting pass (Plex Mono runs ~4% wider than DM Mono):** checked in pixels at production scale — board DataRows (labels-left/numerals-right) hold alignment, gauge center values clear their min/max labels at sizes 62/86/96, mission-clock hero fits its 200px min-width cell, timeline chips un-clipped. No layout edits needed; the round-10 overflow guards absorbed the width.
+4. **In-card fuel view switcher.** New `FuelViewSwitch` (barrel + Figma contract): three glyph buttons — vessel (synoptic), tank (bars), dots (matrix) — in the fuel card header next to the recon chip, active view in accent wash/bright (interaction voice, not severity). Clicks don't trigger the card reveal. The dev-panel "fuel view" row is retired; the view choice now lives where the officer looks. All three views remain shippable pending ⚖11.
+5. **Auto-promotion to 2x disabled by default.** The board points, the human zooms: tiles open at standard/mini and only the officer's own sizing (corner controls, +/− keys) expands them. The legacy behavior is preserved behind a new `auto 2x` dev toggle (default off) so the A/B stays honest for the Figma pass; the promotion-cap logic is intact, not deleted.
+
+## Screenshots
+
+- `r26-board-decanned.png`: full board, default state — uniform hairlines, Meridian's amber border + tinted name the only status stroke, idle row (Bayou Runner / Albatross / Gulf Harrier) dimmed to 45%, no tile auto-expanded.
+- `r26-fuel-switcher.png`: Meridian fuel card — switcher in the header (synoptic active in accent), recon chip beside it.
+
+## Notes
+
+- New glyph `dots` added to the contract (24px grid, 1.5px stroke, Figma 1:1).
+- `npm run verify` ALL CHECKS PASSED (no data-layer changes this round); offline production build clean.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 28: ROUND 24 — rail states + sticky)
 
 ## Done
