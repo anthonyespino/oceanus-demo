@@ -1,3 +1,14 @@
+# PROGRESS — 2026-06-12 (Session 36: ROUND 38 micro — treatment verdict)
+
+## Done
+
+1. **Automotive (green-on-nominal) is the DEFAULT.** The quiet-nominal variant stays behind the dev toggle, relabeled "B quiet (dies at token lock)".
+2. **Consistency sweep:** green audit across all `STATUS_COLOR` consumers. Compliant already: tile/rail dots, census numeral, the nominal ✓ moments, chart markers (status dots in hull form); values everywhere stay ink (ruling 14's round-19 amendment holds — gauge values never green). **One violation found and fixed:** PortCallsTimeline gave NOMINAL time-span blocks green edges in automotive — decorative green on a duration; nominal edges are now neutral in both treatments (severity edges unchanged). The dead `treatment` prop was removed from its signature.
+3. **Idle dimming:** idle nominal rows/tiles dim at the element level (whole-row opacity), so their green dots dim with them — quiet green, by construction.
+4. **Stress check (screenshots):** with the fleet green at rest, the synthetic multi-vessel scenario reads instantly — Gulf Harrier's red border/name/hero and three amber tiles dominate the green field. Green stays at its current step (#3fb950): it reads as background truth, amber/red as figure. No brightness drop needed.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 36: ROUND 37 — fills, not fences)
 
 ## Done

@@ -77,7 +77,10 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [live, setLive] = useState(false);
   const [speed, setSpeed] = useState<TickSpeed>(60);
   const [density, setDensity] = useState<TileDensity>('standard');
-  const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
+  // Round 38 verdict: automotive (green-on-nominal) is the DEFAULT; the
+  // quiet-nominal variant stays behind the dev toggle until Figma tokens
+  // lock, then dies.
+  const [treatment, setTreatment] = useState<ColorTreatment>('automotive');
   const [motion, setMotion] = useState<MotionVariant>('off');
   const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
   const [ikbBand, setIkbBand] = useState(false);

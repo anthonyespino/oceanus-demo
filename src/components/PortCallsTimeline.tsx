@@ -9,7 +9,6 @@ import type { VesselState } from '../data/types';
 import { vesselStatus, ENDURANCE_RESERVE } from '../data/alerts';
 import { PORTS, distanceNm } from '../data/fleet';
 import { HOUR_MS } from '../data/rng';
-import type { ColorTreatment } from '../state/FleetProvider';
 import { useContentWidth } from './NauticalChart';
 import { Field } from './Field';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
@@ -51,7 +50,7 @@ function nearestPortName(pos: { lat: number; lon: number }): string {
   return PORTS.reduce((a, b) => (distanceNm(pos, a) < distanceNm(pos, b) ? a : b)).name;
 }
 
-export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; treatment: ColorTreatment }) {
+export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
   const [wrapRef, w] = useContentWidth(1100);
   const now = fleet[0].history.minutes.at(-1)!.t;
   const blocks = collectBlocks(fleet, now);
@@ -107,8 +106,9 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
                 ))}
                 {bs.map((b, lane) => {
                   const status = vesselStatus(b.vessel.alerts);
-                  const colored = treatment === 'automotive' || status !== 'nominal';
-                  const edge = colored ? STATUS_COLOR[status] : 'var(--color-line-strong)';
+                  // round 38 sweep: green is status confirmation on dots/census/✓
+                  // ONLY — nominal time-span edges stay neutral in BOTH treatments
+                  const edge = status !== 'nominal' ? STATUS_COLOR[status] : 'var(--color-line-strong)';
                   const left = b.etaMs === null ? 2 : x(b.etaMs);
                   return (
                     <Link key={`${b.vessel.static.id}-${lane}`} href={`/vessel/${b.vessel.static.id}`}

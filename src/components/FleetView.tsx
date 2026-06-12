@@ -89,7 +89,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         </Annotated>
       )}
       {/* round 6 — final probe component: 72h arrivals board */}
-      <Annotated name="PortCallsTimeline"><PortCallsTimeline fleet={fleet} treatment={treatment} /></Annotated>
+      <Annotated name="PortCallsTimeline"><PortCallsTimeline fleet={fleet} /></Annotated>
     </main>
   );
 }
