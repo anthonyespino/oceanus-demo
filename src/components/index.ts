@@ -32,8 +32,7 @@ export { FleetMap } from './FleetMap';
 export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';
 export { EfficiencyPanel } from './EfficiencyPanel';
-export { EngineTwinPanel } from './EngineTwinPanel';
-export { EngineCard } from './EngineCard';
+export { EngineTwinPanel } from './EngineTwinPanel'; // ROUND 31: hero + one-line rows + cluster (EngineCard retired)
 export { FlowReconciliation } from './FlowReconciliation';
 export { WeatherPanel } from './WeatherPanel';
 export { RoutePanel } from './RoutePanel';

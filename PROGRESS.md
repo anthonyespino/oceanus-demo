@@ -1,3 +1,21 @@
+# PROGRESS — 2026-06-12 (Session 31: ROUND 31 — engine panel restructure)
+
+## Done
+
+1. **Twin-gap hero centered, owns the 30d GAP trend**: daily-mean E2−E1 EGT (both mains running) as an area chart with axis ticks, zero line, low-alpha fill (`fill/level` token — data display, not alert color). This replaces the cluster's absolute-EGT 30d sparkline: the GAP is the diagnosis, and the chart is the demo's "three weeks early" graphic — Meridian's climbs ~0 → +58°F across the window.
+2. **Calm-not-empty floor**: the trend's y-domain floors at ±20°F, so a nominal twin (Marlin Ridge, +4°F now / −0.2°F 24h avg) reads as a flat line hugging zero instead of auto-ranged noise filling the frame. Verified in pixels on both vessels.
+3. **Engine rows, one grammar**: E1/E2/G1/G2 collapse to one-line rows — `ID ROLE · RUNNING · load% · fuel gph` (OFF when stopped) — mains and gens identical, two aligned columns on wide (E1|E2 over G1|G2; the G1/G2 orphan split is gone). EngineCard died (rename recorded for barrel + Figma; its docent annotation unanchored).
+4. **Cluster uniform**: centered grid, selector chips above-right, and EVERY gauge gets the same micro 24h area-trace beneath it (minute data sampled to ~96 points, gauge-cell width, dimmed with dormant dials). No orphans.
+5. **Text/gauge contract enforced**: state/load/fuel appear ONLY in the rows; sensor internals ONLY in the cluster; the hero holds only the twin comparison. Nothing repeats.
+6. **Panel composition**: content max-width 880, centered — same discipline as the command band.
+
+## Screenshots
+
+- `r31-engines-meridian.png`: gap visible — +58°F hero, climbing 30d gap trend, E2 dials amber.
+- `r31-engines-nominal.png`: Marlin Ridge — +4°F, calm trend near the zero line, traces under all five dials.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 31: ROUND 30 — band absorbs voyage, crew+log merge)
 
 ## Done
