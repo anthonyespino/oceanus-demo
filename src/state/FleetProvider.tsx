@@ -48,8 +48,6 @@ interface FleetContextValue {
   setTankStyle: (t: TankStyle) => void;
   chartTop: boolean; // round 21 A2: fleet plot above the board (trial)
   setChartTop: (b: boolean) => void;
-  stickyBand: boolean; // round 22: telemetry band pins on inspector scroll
-  setStickyBand: (b: boolean) => void;
   bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
   setBearingLine: (b: boolean) => void;
   railMode: RailMode; // round 24: rail mode indicator variant
@@ -88,7 +86,6 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [ikbBand, setIkbBand] = useState(false);
   const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel
   const [chartTop, setChartTop] = useState(false);
-  const [stickyBand, setStickyBand] = useState(false);
   const [bearingLine, setBearingLine] = useState(true);
   const [railMode, setRailMode] = useState<RailMode>('glyph');
   const [autoPromote, setAutoPromote] = useState(false);
@@ -146,7 +143,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         motion, setMotion, crossings,
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
-        chartTop, setChartTop, stateMarks, setStateMarks, stickyBand, setStickyBand,
+        chartTop, setChartTop, stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,

@@ -104,8 +104,6 @@ export function DevPanel() {
         options={[{ v: false, text: 'below board' }, { v: true, text: 'top (trial)' }]} />
       <Row label="state marks" value={f.stateMarks} onPick={f.setStateMarks}
         options={[{ v: false, text: 'off' }, { v: true, text: 'on' }]} />
-      <Row label="sticky band" value={f.stickyBand} onPick={f.setStickyBand}
-        options={[{ v: false, text: 'off' }, { v: true, text: 'pins on scroll' }]} />
       <Row label="bearing" value={f.bearingLine} onPick={f.setBearingLine}
         options={[{ v: true, text: 'BRG ray' }, { v: false, text: 'voyage card only' }]} />
       <Row label="rail mode" value={f.railMode} onPick={f.setRailMode}

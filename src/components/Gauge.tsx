@@ -80,6 +80,18 @@ export function Gauge({
   const fontScale = Math.max(7, 7.5 * k);
   const [minLabel, maxLabel] = minMaxLabels ?? [String(min), String(max)];
 
+  // ROUND 27 hard rule: no text may intersect the dial or the value's
+  // bounding box. Min/max scale labels render ONLY when both clear the value
+  // by ≥6px at the arc terminals — otherwise the pair drops and the ticks
+  // alone carry the scale. Width estimate: Plex Mono fixed advance ≈0.6em.
+  const valStr = off ? 'OFF' : display ?? `${Math.round(value)}${unit}`;
+  const valFs = Math.max(9, 11 * k);
+  const half = (s: string, fs: number) => s.length * fs * 0.3;
+  const CLEAR = 6;
+  const showMinMax =
+    loLbl.x + half(minLabel, fontScale) + CLEAR <= cx - half(valStr, valFs) &&
+    hiLbl.x - half(maxLabel, fontScale) - CLEAR >= cx + half(valStr, valFs);
+
   return (
     <div style={{ width: size, textAlign: 'center' }}>
       <svg width={size} height={size - 6 * k} style={{ display: 'block' }}>
@@ -95,8 +107,12 @@ export function Gauge({
               const t2 = polar(cx, cy, a, r + 3 * k);
               return <line key={f} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkMuted} strokeWidth={1} />;
             })}
-            <text x={loLbl.x} y={loLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{minLabel}</text>
-            <text x={hiLbl.x} y={hiLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{maxLabel}</text>
+            {showMinMax && (
+              <>
+                <text x={loLbl.x} y={loLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{minLabel}</text>
+                <text x={hiLbl.x} y={hiLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{maxLabel}</text>
+              </>
+            )}
             {/* display-only limits: neutral ticks, slightly long */}
             {displayLimits.map((v) => {
               const t1 = polar(cx, cy, angle(v), r - 4 * k);
@@ -115,7 +131,7 @@ export function Gauge({
         <text x={cx} y={cy + r * 0.78 + 4 * k} textAnchor="middle"
           style={{ fontFamily: FONT.data, fontSize: Math.max(9, 11 * k), fontVariantNumeric: 'tabular-nums' }}
           fill={off ? NEUTRAL.inkMuted : VALUE_COLOR[vital]}>
-          {off ? 'OFF' : display ?? `${Math.round(value)}${unit}`}
+          {valStr}
         </text>
       </svg>
       <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted }}>

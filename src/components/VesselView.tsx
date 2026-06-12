@@ -4,7 +4,7 @@
 // environment → human factors → operations → mode context.
 
 import type { VesselState } from '../data/types';
-import { VesselHeader } from './VesselHeader';
+import { VesselCommandBand } from './VesselCommandBand';
 import { EfficiencyPanel } from './EfficiencyPanel';
 import { EngineTwinPanel } from './EngineTwinPanel';
 import { TankSchematic } from './TankSchematic';
@@ -18,7 +18,7 @@ import { gb } from './gb';
 export function VesselView({ vessel }: { vessel: VesselState }) {
   return (
     <main style={{ padding: 12, maxWidth: 1100 }}>
-      <VesselHeader vessel={vessel} />
+      <VesselCommandBand vessel={vessel} />
       {vessel.alerts.length > 0 && (
         <section style={{ ...gb.box, marginBottom: 8 }}>
           <div style={gb.label}>active alerts — this vessel</div>

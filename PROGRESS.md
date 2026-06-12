@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-12 (Session 30: ROUND 27 — command band)
+
+## Done
+
+1. **Gauge label clearance, hard rule.** Min/max scale labels render only when both clear the value's bounding box by ≥6px at the arc terminals (Plex Mono fixed-advance width estimate); otherwise the pair drops and the ticks alone carry the scale. At band size this lands as ticks-only, as the brief expected.
+2. **FLAG — clearance at cluster size:** the brief expected full min/max to return at cluster size (86px), but wide values ("935°F", "1569" against "400"/"2000") genuinely fail the 6px clearance there too, so the rule drops them at the cluster as well. Enforced honestly rather than special-cased. Round 28's value-on-top anatomy empties the dial and brings min/max back at all sizes — resolution lands in the next commit.
+3. **VesselCommandBand** (new; VesselHeader + TelemetryBand both die — renames recorded for barrel + Figma). Broadcast symmetry: [SPEED][BURN] · NAME (D-DIN, hero) over mode chip over MISSION CLOCK, all centered · [EFF Δ][ENDURANCE]. Secondary facts row beneath, full width, muted: relative position · speed · next port + ETA (state mark kept) · master. "← fleet" top-left of the band. Mode chip consumes the shared MODE_GLYPH map — the old header carried a stale private copy (STATION still mapped to the vessel glyph from round 16); the merge killed it, so band, rail, and tiles now provably share one glyph set.
+4. **Placement + sticky.** Band is the inspector's first element, above the position chart. `position: sticky` with a 1px sentinel + IntersectionObserver for stuck detection: stuck collapses the secondary facts row (band tightens to its primary row), un-stuck expands it; shadow hairline + elevation only when stuck; zIndex over the scrolling cards. Collapse chevron works: collapsed = name + mode chip + clock on one line (per-vessel session persistence, same mechanism as the other panels).
+5. **`sticky band` dev toggle retired** — round 27 makes stickiness the spec, not a trial. The round-22 toggle and its provider state are gone.
+
+## Notes
+
+- DEV DECISION (pending Anthony): the old header's length/class fact ("240 ft OSV") wasn't in the brief's secondary-row list but dropping data silently felt wrong — it leads the secondary row in muted ink. Strike it if the row should hold exactly the four listed facts.
+- The VesselHeader docent annotation is unanchored (component died) — pending Anthony's copy for VesselCommandBand, same as the round-21 card merges.
+- Legacy greybox VesselView (unrouted on this branch) swapped to the band to stay compiling.
+
+## Screenshots
+
+- `r27-band-top.png`: top of page — full band with secondary facts row.
+- `r27-band-stuck.png`: mid-scroll — pinned, primary row only, shadow hairline.
+- `r27-band-collapsed.png`: chevron-collapsed — one line.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 29: ROUND 26 — de-can the board)
 
 ## Done

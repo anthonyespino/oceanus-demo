@@ -1,6 +1,8 @@
 'use client';
-// ROUND 21: stack = chart → header → alerts → instrument band → engine twins
+// ROUND 27: stack = command band (sticky) → chart → alerts → engine twins
 // → efficiency (trend + burn-vs-speed) → fuel → voyage → crew → event log.
+// The band merges the old header + telemetry card and is the inspector's
+// first element; it pins on scroll and tightens to its primary row.
 // Every panel collapses to header + one summary stat (state persists per
 // vessel for the session). Alerts card stays uncollapsible — severity never
 // folds. Voyage merges Environment + Route + ModeTimeline (the three cards
@@ -20,10 +22,9 @@ import { EventLog } from './EventLog';
 import { InspectorChart } from './InspectorChart';
 import { TankSchematic } from './TankSchematic';
 import { VesselSynoptic } from './VesselSynoptic';
-import { VesselHeader } from './VesselHeader';
+import { VesselCommandBand } from './VesselCommandBand';
 import { VoyagePanel } from './VoyagePanel';
 import { CrewPanel } from './CrewPanel';
-import { TelemetryBand } from './TelemetryBand';
 import { Label } from './Glyph';
 import { ALERT_TEXT_COLOR, NEUTRAL } from './probeTokens';
 import { gb, fmtPct, fmtTime } from './gb';
@@ -38,7 +39,7 @@ export function VesselInspector({
   fleet: VesselState[];
   treatment: ColorTreatment;
 }) {
-  const { tankStyle, stickyBand } = useFleet();
+  const { tankStyle } = useFleet();
   const [canvasH, setCanvasH] = useState(300);
   useEffect(() => {
     const fit = () => setCanvasH(Math.min(360, Math.round(window.innerHeight * 0.3)));
@@ -62,11 +63,11 @@ export function VesselInspector({
   return (
     <div style={{ flex: 1, minWidth: 0, position: 'relative', '--pad-card': 'var(--pad-card-dense)' } as React.CSSProperties}>
       <div style={{ position: 'relative' }}>
+        <VesselCommandBand vessel={vessel} />
         <Collapse k={`${id}:position`} glyph="route" title="position"
           summary={`${distanceNm(now.position, nearest).toFixed(0)} nm from ${nearest.name}`}>
           <Annotated name="NauticalChart"><InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} /></Annotated>
         </Collapse>
-        <Annotated name="VesselHeader"><VesselHeader vessel={vessel} /></Annotated>
         {vessel.alerts.length > 0 && (
           <section style={{ ...gb.box, marginBottom: 8 }}>
             <Label g="alert-triangle">alerts</Label>
@@ -77,12 +78,6 @@ export function VesselInspector({
             ))}
           </section>
         )}
-        <div style={stickyBand ? { position: 'sticky', top: 8, zIndex: 5 } : undefined}>
-          <Collapse k={`${id}:telemetry`} glyph="gauge" title="telemetry"
-            summary={`${now.position.speed_over_ground_kn.toFixed(1)} kn · ${Math.round(d.burn_rate_gph)} gph`}>
-            <TelemetryBand vessel={vessel} />
-          </Collapse>
-        </div>
         <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
           summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
           <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
