@@ -13,7 +13,8 @@ export type GlyphName =
   | 'expand' | 'collapse' // round 17 control glyphs — same Figma 1:1 contract
   | 'crosshair' // round 24: STATION (DP holding) — replaces the weak vessel mapping
   | 'dots' // round 26: dot-matrix fuel view
-  | 'vesselMarker'; // round 36 (⚖6 resolved): directional hull — bow up, rotate to heading
+  | 'vesselMarker' // round 36 (⚖6 resolved): directional hull — bow up, rotate to heading
+  | 'delta'; // round 39: clean uppercase delta — efficiency-vs-baseline rows
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -35,6 +36,7 @@ const PATHS: Record<GlyphName, string[]> = {
   crosshair: ['M12 19 A7 7 0 1 0 12 5 A7 7 0 0 0 12 19', 'M12 2.5 V7 M12 17 V21.5 M2.5 12 H7 M17 12 H21.5', 'M12 13.2 A1.2 1.2 0 1 0 12 10.8 A1.2 1.2 0 0 0 12 13.2'],
   dots: ['M6 7 V7.01 M12 7 V7.01 M18 7 V7.01', 'M6 12 V12.01 M12 12 V12.01 M18 12 V12.01', 'M6 17 V17.01 M12 17 V17.01 M18 17 V17.01'],
   vesselMarker: ['M12 3 L16.5 8.5 L16.5 20.5 L7.5 20.5 L7.5 8.5 Z'],
+  delta: ['M12 4.5 L19.5 19.5 H4.5 Z'],
 };
 
 /** Round 36 (⚖6 resolved: heading is VISIBLE as marker rotation): filled

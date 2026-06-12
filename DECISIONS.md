@@ -34,6 +34,10 @@ originals.*
 - **Ledger hygiene (2026-06-11, standing)**: dev-proposed design choices are
   logged as "DEV DECISION (pending Anthony)" and never folded into a numbered
   PM ruling's text. Ruling 11 was the corrective case.
+- **Ruling 12 pending item resolved (2026-06-12, round 39)**: the "24h
+  sparkline → CONTEXTUAL pending Anthony's registry ruling" clause is settled —
+  `efficiency_sparkline_24h` is VISIBLE at fleet level as the tile-bottom 24h
+  signature (full card width, fixed height, every tile size).
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

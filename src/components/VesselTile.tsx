@@ -13,7 +13,7 @@ import { vesselStatus } from '../data/alerts';
 import { Field } from './Field';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
-import { DataRow } from './DataRow';
+import { useContentWidth } from './NauticalChart';
 import { Stat } from './Stat';
 import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT, ALERT_TEXT_COLOR } from './probeTokens';
@@ -43,6 +43,7 @@ export function VesselTile({
   const d = vessel.derived;
   const { motion, crossings, revealStyle } = useFleet();
   const [hot, setHot] = useState(false); // hover/focus-within → show controls
+  const [sparkRef, sparkW] = useContentWidth(180); // round 39: full-width bottom spark
   const status = vesselStatus(vessel.alerts);
   const mini = size === 'mini';
   const tier = size === 'expanded' ? 2 : 1;
@@ -173,28 +174,39 @@ export function VesselTile({
           </Field>
         </div>
       )}
+      {/* round 39 label diet: glyph + numeral, fixed glyph column so the
+          numerals align down the board */}
       {tier === 1 && !mini && (
         <div style={{ marginTop: 10, textAlign: 'left' }}>
-          <div {...layer('VesselTile / body / endurance.text', 'DataRow: label ink/muted left · numeral tabular right', '{derived.endurance_hours} h')}>
-            <DataRow label="endurance" value={`${d.endurance_hours} h`} />
+          <div {...layer('VesselTile / body / endurance.glyph', 'glyph/fuel-drop 13px ink/muted left · numeral tabular right (label died round 39)', '{derived.endurance_hours} h')}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+            <span style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="fuel-drop" size={13} /></span>
+            <span style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
           </div>
-          <div {...layer('VesselTile / body / delta.text', 'DataRow: label ink/muted left · numeral tabular right', '{derived.efficiency_delta_pct} vs mode baseline')}>
-            <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />
-          </div>
-          <div {...layer('VesselTile / body / sparkline.chart', 'ink/secondary 1px · line/subtle frame', '{daily_delta_1y[-90d]}')} style={{ marginTop: 6, textAlign: 'center' }}>
-            <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={120} height={20} />
-          </div>
-        </div>
-      )}
-      {/* round 18: passive endurance strip (meter variant) — indicator only,
-          not a trigger */}
-      {revealStyle === 'meter' && (
-        <div {...layer('VesselTile / footer / fuel.fill', 'ink/muted fill | alert color when endurance-backed · surface/overlay track', '{Σ tank level / Σ capacity}')} style={{ marginTop: 'auto', paddingTop: 8 }}>
-          <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
-            <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: RADIUS }} />
+          <div {...layer('VesselTile / body / delta.glyph', 'glyph/delta 13px ink/muted left · numeral tabular right (label died round 39)', '{derived.efficiency_delta_pct} vs mode baseline')}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginTop: 2 }}>
+            <span style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="delta" size={13} /></span>
+            <span style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
           </div>
         </div>
       )}
+      {/* round 39: the 24h signature docks at the bottom edge — full card
+          width, fixed height, every size; the 2x trend chart stays the
+          elastic element */}
+      <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+        {/* round 18: passive endurance strip (meter variant) — indicator
+            only, not a trigger */}
+        {revealStyle === 'meter' && (
+          <div {...layer('VesselTile / footer / fuel.fill', 'ink/muted fill | alert color when endurance-backed · surface/overlay track', '{Σ tank level / Σ capacity}')} style={{ paddingBottom: 6 }}>
+            <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
+              <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: RADIUS }} />
+            </div>
+          </div>
+        )}
+        <div ref={sparkRef} {...layer('VesselTile / footer / spark24.chart', 'ink/secondary 1px · zero axis · full card width, fixed 20px — the 24h signature (round 39)', '{derived.sparkline_24h — hourly efficiency_delta}')}>
+          <Sparkline values={d.sparkline_24h} width={sparkW} height={20} />
+        </div>
+      </div>
     </Link>
   );
 }

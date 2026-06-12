@@ -337,21 +337,21 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `body / alert.text`
   - TOKENS — tag = severity color · message ink/secondary (round 33 grammar)
   - BINDS — {alerts[] level + message}
-- `body / delta.text`
-  - TOKENS — DataRow: label ink/muted left · numeral tabular right
+- `body / delta.glyph`
+  - TOKENS — glyph/delta 13px ink/muted left · numeral tabular right (label died round 39)
   - BINDS — {derived.efficiency_delta_pct} vs mode baseline
-- `body / endurance.text`
-  - TOKENS — DataRow: label ink/muted left · numeral tabular right
+- `body / endurance.glyph`
+  - TOKENS — glyph/fuel-drop 13px ink/muted left · numeral tabular right (label died round 39)
   - BINDS — {derived.endurance_hours} h
-- `body / sparkline.chart`
-  - TOKENS — ink/secondary 1px · line/subtle frame
-  - BINDS — {daily_delta_1y[-90d]}
 - `body / trendChart.chart`
   - TOKENS — ink/secondary line · zero axis
   - BINDS — {daily_delta_1y[-30d]}
 - `footer / fuel.fill`
   - TOKENS — ink/muted fill | alert color when endurance-backed · surface/overlay track
   - BINDS — {Σ tank level / Σ capacity}
+- `footer / spark24.chart`
+  - TOKENS — ink/secondary 1px · zero axis · full card width, fixed 20px — the 24h signature (round 39)
+  - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
 - `frame / border.status`
   - TOKENS — hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar)
   - BINDS — {vesselStatus(alerts)} · {derived.mode}
@@ -368,4 +368,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*99 instrumented leaves · 13 components · generated 2026-06-12T15:56:49.082Z*
+*99 instrumented leaves · 13 components · generated 2026-06-12T23:10:45.827Z*

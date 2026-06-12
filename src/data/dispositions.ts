@@ -33,7 +33,7 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'fleet_trend_1y', level: 'fleet', disposition: 'VISIBLE', note: 'whole-fleet trajectory strip (v2 §8, ruling 12)' },
   { field: 'alert_badges', level: 'fleet', disposition: 'VISIBLE', note: 'worst active level; context layer in v2' },
   { field: 'endurance_hours', level: 'fleet', disposition: 'VISIBLE' },
-  { field: 'efficiency_sparkline_24h', level: 'fleet', disposition: 'CONTEXTUAL', note: 'demoted from primary graphic (v2, ruling 12) — pending Anthony registry ruling' },
+  { field: 'efficiency_sparkline_24h', level: 'fleet', disposition: 'VISIBLE', note: 'round 39 (Anthony): the tile-bottom 24h signature — resolves ruling 12\'s pending registry call' },
   { field: 'position', level: 'fleet', disposition: 'VISIBLE', note: 'as map marker, not numerals' },
   { field: 'next_port_eta', level: 'fleet', disposition: 'CONTEXTUAL' },
   { field: 'port_calls_timeline', level: 'fleet', disposition: 'VISIBLE', note: 'round 6: 72h arrivals board — promotes next-port data to persistent at fleet level for the window; Anthony to confirm vs next_port_eta CONTEXTUAL' },

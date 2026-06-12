@@ -1,3 +1,17 @@
+# PROGRESS — 2026-06-12 (Session 37: ROUND 39 — tile label diet + full-width spark)
+
+## Done
+
+1. **Stat labels died**: tile rows are now [fuel-drop glyph] 179 h and [Δ glyph] +13.7% — glyph column fixed at 16px so numerals align down the board, values keep tabular figures. New `glyph/delta` in the contract (clean uppercase delta outline, 24px grid; distinct from alert-triangle, which carries its mark).
+2. **Full-width 24h signature**: the sparkline docks at every tile's bottom edge — full card width (ResizeObserver-measured), fixed 20px height, every size including mini and 2x; the 2x trend chart remains the only elastic element. The spark's DATA changed with its meaning: it now draws `sparkline_24h` (hourly efficiency delta — "the 24h signature") instead of the 90d daily series. **Registry: `efficiency_sparkline_24h` CONTEXTUAL → VISIBLE — this resolves ruling 12's "pending Anthony's registry ruling" clause; noted in DECISIONS.md.** The meter-variant fuel strip sits just above the spark when toggled.
+3. **Learn leaves updated**: `VesselTile / body / endurance.glyph`, `delta.glyph`, and `footer / spark24.chart` (with the new binding); the atlas regenerated at build.
+
+## Ops
+
+Quick tunnels kept dying today (QUIC flakiness, then registration losses). The watchdog is now SELF-HEALING: it restarts cloudflared on failure and announces each new URL as a monitor event instead of waiting for a manual fix. Reiterating: demo day is localhost; the tunnel is review-only.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 36: ROUND 38 micro — treatment verdict)
 
 ## Done
