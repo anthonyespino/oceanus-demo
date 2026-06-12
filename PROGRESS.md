@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-12 (Session 33: ROUND 34 — merges + hierarchy)
+
+## 1. Band absorbs the profile (one container)
+
+Primary row and the facts/profile section now share ONE frame silhouette: the radius splits across the seam, the lower half drops its top border, and the primary row's bottom hairline is the internal divider. The round-32 sticky mechanics are untouched — the primary row alone pins. Wind · waves moved UP onto the mission clock's line (one centered row: clock · port · [wind] kn · [waves] ft); the WIND/WAVES micro labels died, and the "mission clock" micro label went with them (the row is no longer only the clock; T− self-describes — flag if it should return). The weather reveal (current/vis/precip) now lives on the clock row.
+
+## 2. Band header row
+
+Centered; every glyph sits on the text line via one flex centerline (the floating-above-baseline misalignment is gone). The "…" reveal died: degradation renders inline — "DATALINK DEGRADED · SABINE WX 45M STALE" (vessel + feed + age, worst first); multiple stale feeds collapse to "+N more", expanding in place. Feed abbreviations: WX/POS/ENG/TANK/FLOW/STATUS/CREW.
+
+## 3. Efficiency: one card
+
+Burn-vs-Speed merged into EfficiencyPanel: header EFFICIENCY · {mode} → hero row (30D TREND · NOW VS BASELINE) → chart row (envelope ~60% left, 30d trend ~40% right, equal 250px height) → footer (baseline · 24h strip). EfficiencyCurve survives as the embedded chart component (name unchanged). Dedup honored: "vs envelope" stays on the envelope (speed-specific) beside the mode-wide vs-baseline number — both labeled; burn gph left the footer (the band gauge owns it). Collapse keys: `curve` retired, `efficiency` carries both summaries.
+
+## 4. Engine twins: newsroom layout
+
+Row 1: verdict block left (~30%) — micro label → gap °F at hero scale (largest in the section) → fuel Δ 14px → 24h avg micro — with the EGT GAP 30D chart filling ALL remaining width (responsive, was fixed 360px). Row 2: E1/E2 + G1/G2 one-liners, two columns enforced (a wide panel was wrapping three-across — basis fixed at 40%). Row 3: cluster centered, unchanged. The round-31 maxWidth wrapper died — every row spans the panel, no side voids.
+
+## 5. Sweep
+
+Inspector: band(+facts+profile, one frame) → position → alerts (alerted vessels only) → engines → efficiency → fuel → crew & log. No nested frames found (chips/charts/diagram exemptions per round 32).
+
+---
+
 # PROGRESS — 2026-06-12 (Session 32: ROUND 33 — alert diet + status integration)
 
 ## Done

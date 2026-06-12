@@ -15,7 +15,6 @@ import { envelopeDeltaPct } from '../data/curve';
 import { vesselEvents, EVENT_WINDOW_24H } from '../data/events';
 import { PORTS, distanceNm } from '../data/fleet';
 import { Collapse } from './Collapse';
-import { EfficiencyCurve } from './EfficiencyCurve';
 import { EfficiencyPanel } from './EfficiencyPanel';
 import { EngineTwinPanel } from './EngineTwinPanel';
 import { InspectorChart } from './InspectorChart';
@@ -78,20 +77,11 @@ export function VesselInspector({
           summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
           <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
         </Collapse>
-        <div className="cardrow">
-          <div style={{ flex: '1 1 480px', minWidth: 0 }}>
-            <Collapse k={`${id}:curve`} glyph="chart" title="burn vs speed"
-              summary={envDelta === null ? 'not in transit' : `${fmtPct(envDelta)} vs envelope`}>
-              <Annotated name="EfficiencyCurve"><EfficiencyCurve vessel={vessel} /></Annotated>
-            </Collapse>
-          </div>
-          <div style={{ flex: '1 1 380px', minWidth: 0 }}>
-            <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
-              summary={`now ${fmtPct(d.efficiency_delta_pct)}`}>
-              <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
-            </Collapse>
-          </div>
-        </div>
+        {/* round 34: ONE efficiency card (burn-vs-speed merged in) */}
+        <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
+          summary={`now ${fmtPct(d.efficiency_delta_pct)}${envDelta === null ? '' : ` · ${fmtPct(envDelta)} vs envelope`}`}>
+          <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
+        </Collapse>
         <Collapse k={`${id}:fuel`} glyph="tank" title="fuel"
           summary={`RECON ${d.reconciliation.status} · ${totalGal.toLocaleString()} gal`}>
           <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>

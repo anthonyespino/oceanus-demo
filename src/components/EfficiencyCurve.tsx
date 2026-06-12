@@ -1,17 +1,19 @@
 'use client';
-// ROUND 5: inspector hero — burn-vs-speed envelope from the vessel's OWN 1y
-// transit history. Quiet grey IQR band + median line, optimal-speed bracket,
-// live operating point (accent ring; status fill when watch/degraded), and
-// the payoff: a dotted drop-line measuring the point's vertical displacement
-// from the envelope ("+14% vs envelope") — degradation as geometry.
+// ROUND 5: burn-vs-speed envelope from the vessel's OWN 1y transit history.
+// Quiet grey IQR band + median line, optimal-speed bracket, live operating
+// point (accent ring; status fill when watch/degraded), and the payoff: a
+// dotted drop-line measuring the point's vertical displacement from the
+// envelope ("+14% vs envelope") — degradation as geometry. ROUND 34: chart
+// only — EfficiencyPanel is the one efficiency card and embeds this. The
+// "vs envelope" annotation stays here: a speed-specific comparison, distinct
+// from the panel's mode-wide vs-baseline number; both are labeled.
 
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { transitEnvelope, liveOperatingPoint, envelopeMedianAt, MIN_TRANSIT_HOURS } from '../data/curve';
 import { useContentWidth } from './NauticalChart';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
-import { gb, fmtPct } from './gb';
-import { Label } from './Glyph';
+import { fmtPct } from './gb';
 
 const H = 250;
 // Round 11 axis hygiene: titles get reserved gutters (y rotated far-left,
@@ -37,12 +39,9 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
 
   if (env.bins.length < 3) {
     return (
-      <section style={{ ...gb.box, marginBottom: 8 }}>
-        <Label g="chart">burn vs speed</Label>
-        <div style={{ fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkMuted, padding: 24, textAlign: 'center' }}>
-          INSUFFICIENT TRANSIT HISTORY
-        </div>
-      </section>
+      <div style={{ fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkMuted, padding: 24, textAlign: 'center' }}>
+        INSUFFICIENT TRANSIT HISTORY
+      </div>
     );
   }
 
@@ -74,9 +73,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   const yTicks = ticksFor(yLo, yHi, yStep);
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
-      <Label g="chart">burn vs speed</Label>
-      <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
+    <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <svg width={w} height={H} style={{ display: 'block', background: 'var(--color-surface-base)', borderRadius: RADIUS }}>
           <g opacity={sparse ? 0.4 : 1}>
             <path d={bandD} fill="var(--color-surface-overlay)" />
@@ -146,12 +143,11 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
             </text>
           )}
         </svg>
-        {!pt && !sparse && (
-          <div style={{ position: 'absolute', right: 10, top: 8, fontFamily: FONT.data, fontSize: 10, color: NEUTRAL.inkMuted }}>
-            NO LIVE POINT — NOT IN TRANSIT
-          </div>
-        )}
-      </div>
-    </section>
+      {!pt && !sparse && (
+        <div style={{ position: 'absolute', right: 10, top: 8, fontFamily: FONT.data, fontSize: 10, color: NEUTRAL.inkMuted }}>
+          NO LIVE POINT — NOT IN TRANSIT
+        </div>
+      )}
+    </div>
   );
 }

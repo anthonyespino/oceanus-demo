@@ -13,7 +13,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useFleet } from '../state/FleetProvider';
-import { Contextual } from './Contextual';
 import { Glyph } from './Glyph';
 import { ALERT_TEXT_COLOR, FONT, NEUTRAL, RADIUS } from './probeTokens';
 
@@ -24,11 +23,23 @@ function fmtAge(ms: number): string {
   return `${Math.floor(m / 60)}h ${m % 60}m ago`;
 }
 
+/** Compact feed-age: "5H" / "45M" (round 34 inline degradation grammar). */
+function fmtFeedAge(ms: number): string {
+  const h = Math.floor(ms / 3_600_000);
+  return h >= 1 ? `${h}H` : `${Math.max(1, Math.floor(ms / 60_000))}M`;
+}
+
+const FEED_ABBREV: Record<string, string> = {
+  weather: 'WX', position: 'POS', engines: 'ENG', tanks: 'TANK',
+  flow: 'FLOW', status: 'STATUS', crew: 'CREW',
+};
+
 const LEVEL_RANK: Record<string, number> = { WARNING: 0, CAUTION: 1, ADVISORY: 2 };
 
 export function StatusHeader() {
   const { fleet, simTime } = useFleet();
   const [open, setOpen] = useState(false);
+  const [allStale, setAllStale] = useState(false);
   const wrap = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     if (!open) return;
@@ -44,13 +55,20 @@ export function StatusHeader() {
     return <span style={{ ...item, color: NEUTRAL.inkMuted }}>DATALINK —</span>;
   }
 
-  const staleByVessel = fleet.map((v) => ({
-    name: v.static.name,
-    stale: Object.entries(v.derived.staleness).filter(([, f]) => f === 'STALE').map(([k]) => k),
-  })).filter((x) => x.stale.length > 0);
-  const staleStreamCount = staleByVessel.reduce((a, x) => a + x.stale.length, 0);
-  const datalink = staleStreamCount === 0 ? 'FRESH' : staleStreamCount === 1 ? 'DEGRADED' : 'STALE';
+  // round 34: inline degradation detail (the "…" reveal died) — vessel +
+  // feed + age, worst first; "+N more" expands the rest in place
+  const staleEntries = fleet.flatMap((v) =>
+    (Object.entries(v.derived.staleness) as [keyof typeof v.history.timestamps, string][])
+      .filter(([, f]) => f === 'STALE')
+      .map(([stream]) => ({
+        vessel: v.static.name.toUpperCase(),
+        feed: FEED_ABBREV[stream] ?? String(stream).toUpperCase(),
+        age: simTime - v.history.timestamps[stream],
+      })),
+  ).sort((a, b) => b.age - a.age);
+  const datalink = staleEntries.length === 0 ? 'FRESH' : staleEntries.length === 1 ? 'DEGRADED' : 'STALE';
   const datalinkColor = datalink === 'FRESH' ? NEUTRAL.inkSecondary : 'var(--color-alert-advisory)';
+  const shownStale = allStale ? staleEntries : staleEntries.slice(0, 1);
   const oldestTs = Math.min(...fleet.flatMap((v) => Object.values(v.history.timestamps)));
 
   const counts = { WARNING: 0, CAUTION: 0, ADVISORY: 0 };
@@ -66,14 +84,24 @@ export function StatusHeader() {
       || Math.abs(y.v.derived.sustained_deviation) - Math.abs(x.v.derived.sustained_deviation));
 
   return (
-    <span ref={wrap} style={{ display: 'inline-flex', gap: 14, alignItems: 'baseline', position: 'relative' }}>
-      <span style={{ ...item, color: datalinkColor }}>
-        <Glyph name="datalink" size={12} />{' '}
-        <Contextual label={`DATALINK ${datalink}`}>
-          {staleByVessel.length === 0
-            ? 'all streams fresh'
-            : staleByVessel.map((x) => `${x.name}: ${x.stale.join(', ')}`).join(' · ')}
-        </Contextual>
+    // round 34: one flex baseline — glyphs vertically centered on the text
+    <span ref={wrap} style={{ display: 'inline-flex', gap: 14, alignItems: 'center', position: 'relative', flexWrap: 'wrap' }}>
+      <span style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+        <Glyph name="datalink" size={12} />
+        <span>
+          DATALINK {datalink}
+          {shownStale.map((s, i) => (
+            <span key={`${s.vessel}-${s.feed}-${i}`}> · {s.vessel} {s.feed} {fmtFeedAge(s.age)} STALE</span>
+          ))}
+        </span>
+        {staleEntries.length > 1 && (
+          <button
+            onClick={() => setAllStale((a) => !a)}
+            style={{ ...item, background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NEUTRAL.inkMuted, textDecoration: 'underline' }}
+          >
+            {allStale ? 'less' : `+${staleEntries.length - 1} more`}
+          </button>
+        )}
       </span>
       <span style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
       {/* the counts ARE the alert surface — click summons the sheet */}
@@ -81,19 +109,21 @@ export function StatusHeader() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label="open alert sheet"
-        style={{ ...item, background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NEUTRAL.inkSecondary }}
+        style={{ ...item, background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 5 }}
       >
-        <Glyph name="alert-triangle" size={12} />{' '}
-        {countParts.length === 0 ? (
-          <span style={{ color: NEUTRAL.inkMuted }}>NO ALERTS</span>
-        ) : (
-          countParts.map((l, i) => (
-            <span key={l}>
-              {i > 0 && ' · '}
-              <span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span>
-            </span>
-          ))
-        )}
+        <Glyph name="alert-triangle" size={12} />
+        <span>
+          {countParts.length === 0 ? (
+            <span style={{ color: NEUTRAL.inkMuted }}>NO ALERTS</span>
+          ) : (
+            countParts.map((l, i) => (
+              <span key={l}>
+                {i > 0 && ' · '}
+                <span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span>
+              </span>
+            ))
+          )}
+        </span>
       </button>
       {open && (
         <div

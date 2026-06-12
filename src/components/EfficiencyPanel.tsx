@@ -1,14 +1,18 @@
 'use client';
-// Efficiency panel, v2 order: trend history FIRST (the analytical posture),
-// then the current delta vs mode baseline as the instantaneous context.
-// trend_90d, 1y history and the baseline band stay behind Contextual reveals
-// per the vessel-level registry.
+// ROUND 34: ONE efficiency card — the burn-vs-speed card merged in.
+// header → hero row (30d trend · now vs baseline) → chart row (envelope
+// left ~60% + 30d trend right ~40%, equal height) → footer (baseline ·
+// 24h strip). Dedup: "vs envelope" stays on the envelope chart — a
+// speed-specific comparison, distinct from the mode-wide vs-baseline
+// number (both labeled). Burn gph left the footer — the band gauge owns
+// it. trend_90d / 1y history / baseline band stay behind the reveal.
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
 import { RevealZone } from './Contextual';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
+import { EfficiencyCurve } from './EfficiencyCurve';
 import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
@@ -33,7 +37,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
         }
       >
       <Label g="chart">efficiency · {d.mode}</Label>
-      {/* fixed stats row */}
+      {/* hero row */}
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
           <Stat label="30d trend" value={fmtPct(d.trend_30d)} />
@@ -42,16 +46,21 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
         </Field>
       </div>
-      {/* the ONE elastic element: 30d chart grows to match the row-mate */}
-      <div style={{ flex: 1, minHeight: 90, marginTop: 10 }}>
-        <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
+      {/* chart row: envelope (left) + 30d trend (right), equal height */}
+      <div style={{ display: 'flex', gap: 'var(--pad-card)', marginTop: 10, alignItems: 'stretch', flexWrap: 'wrap' }}>
+        <div style={{ flex: '3 1 380px', minWidth: 0 }}>
+          <EfficiencyCurve vessel={vessel} />
+        </div>
+        <div style={{ flex: '2 1 260px', minWidth: 0, height: 250, display: 'flex', flexDirection: 'column' }}>
+          <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
+        </div>
       </div>
-      {/* footer: 24h strip + baseline context */}
+      {/* footer: baseline context + 24h strip (burn gph lives in the band) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>24h</span>
         <Sparkline values={d.sparkline_24h} width={140} height={20} />
         <span style={{ ...gb.dim, fontSize: 12 }}>
-          baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'} · burn {d.burn_rate_gph} gph
+          baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
         </span>
       </div>
       </RevealZone>

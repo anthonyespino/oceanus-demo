@@ -89,18 +89,13 @@ function transitOrigin(v: VesselState): { pos: { lat: number; lon: number }; lab
 const LOG_MIN = Math.log10(12);
 const LOG_MAX = Math.log10(2400);
 
-/** Weather stat pair: gauge anatomy without the dial — glyph + hero value,
-    micro label below (round 32, docked in the center column). */
-function WxStat({ g, label, value }: { g: GlyphName; label: string; value: string }) {
+/** Round 34: weather rides the mission clock's line — glyph + value + unit,
+    no labels (they self-describe at this size). */
+function WxInline({ g, value }: { g: GlyphName; value: string }) {
   return (
-    <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <Glyph name={g} size={14} color={NEUTRAL.inkSecondary} />
-        <span style={{ fontFamily: FONT.data, fontSize: 17, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
-      </span>
-      <span style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 1 }}>
-        {label}
-      </span>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+      <Glyph name={g} size={14} color={NEUTRAL.inkSecondary} />
+      <span style={{ fontFamily: FONT.data, fontSize: 14, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
     </span>
   );
 }
@@ -153,15 +148,20 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
     fontFamily: FONT.display, fontSize: 'var(--type-hero-size)', fontWeight: 700,
     textTransform: 'uppercase', letterSpacing: 1, lineHeight: 1.1,
   };
+  // Round 34: ONE visual frame — the primary row and the profile/facts
+  // section share a container silhouette (radius split across the seam, no
+  // top border on the lower half). The primary row alone stays sticky
+  // (round 32 mechanics untouched).
   const sticky: React.CSSProperties = {
-    ...gb.box, marginBottom: 8, position: 'sticky', top: 0, zIndex: 6,
+    ...gb.box, marginBottom: 0, position: 'sticky', top: 0, zIndex: 6,
+    borderRadius: `${RADIUS}px ${RADIUS}px 0 0`,
     boxShadow: '0 1px 0 var(--color-line-strong)',
   };
 
   // collapsed: name + mode + clock, one line (still sticky, still constant)
   if (min) {
     return (
-      <section style={{ ...sticky, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)', position: 'sticky' }}>
+      <section style={{ ...sticky, marginBottom: 8, borderRadius: RADIUS, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
         <span style={{ ...nameStyle, fontSize: 18 }}>{vessel.static.name}</span>
         {modeChip}
         <span style={{ fontFamily: FONT.data, fontSize: 14, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
@@ -238,8 +238,8 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           <Glyph name="collapse" size={12} />
         </button>
         {/* round 33: the global status strip merged into the band's header
-            row — counts summon the alert sheet */}
-        <div style={{ display: 'flex' }}>
+            row — counts summon the alert sheet. Round 34: centered. */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <StatusHeader />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)', flexWrap: 'wrap', marginTop: 6 }}>
@@ -253,16 +253,9 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               master: {master?.name ?? '—'}
             </div>
             <div style={{ marginTop: 4 }}>{modeChip}</div>
-            <div style={{ marginTop: 6, fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
-              {now.mode === 'TRANSIT' ? clock : `${context} ${clock}`}
-              {now.mode === 'TRANSIT' && context && (
-                <span style={{ fontSize: 12, color: NEUTRAL.inkSecondary }}> · {context}</span>
-              )}
-            </div>
-            <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 2 }}>
-              mission clock
-            </div>
-            {/* weather docks in the center column's negative space */}
+            {/* round 34: clock + weather share one centered line — labels
+                die, the glyphs + units self-describe. Reveal holds
+                current/vis/precip. */}
             <RevealZone
               reveal={
                 <Field level="vessel" field="weather.current" revealed>
@@ -270,14 +263,21 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </Field>
               }
             >
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 8, padding: '0 6px', ...(wxStale ? gb.stale : {}) }}
-                title={wxStale ? 'weather feed STALE' : undefined}>
-                <Field level="vessel" field="weather.wind">
-                  <WxStat g="wind" label="wind" value={`${wx.wind_speed_kn} kn`} />
-                </Field>
-                <Field level="vessel" field="weather.waves">
-                  <WxStat g="wave" label="waves" value={`${wx.wave_height_ft} ft`} />
-                </Field>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 6, flexWrap: 'wrap' }}>
+                <span style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
+                  {now.mode === 'TRANSIT' ? clock : `${context} ${clock}`}
+                  {now.mode === 'TRANSIT' && context && (
+                    <span style={{ fontSize: 12, color: NEUTRAL.inkSecondary }}> · {context}</span>
+                  )}
+                </span>
+                <span style={{ display: 'inline-flex', gap: 14, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
+                  <Field level="vessel" field="weather.wind">
+                    <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} />
+                  </Field>
+                  <Field level="vessel" field="weather.waves">
+                    <WxInline g="wave" value={`${wx.wave_height_ft} ft`} />
+                  </Field>
+                </span>
               </div>
             </RevealZone>
           </div>
@@ -289,8 +289,10 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
             band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
         </div>
       </section>
-      {/* SECONDARY — static flow, scrolls away naturally (no stuck logic) */}
-      <section style={{ ...gb.box, marginBottom: 8 }}>
+      {/* SECONDARY — static flow, scrolls away naturally (no stuck logic);
+          round 34: same frame as the primary row (facts line between,
+          profile as the bottom row) */}
+      <section style={{ ...gb.box, marginBottom: 8, borderTop: 'none', borderRadius: `0 0 ${RADIUS}px ${RADIUS}px` }}>
         <div style={{
           display: 'flex', gap: 18, flexWrap: 'wrap', justifyContent: 'center',
           color: NEUTRAL.inkSecondary, fontFamily: FONT.data, fontSize: 12,
