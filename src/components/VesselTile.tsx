@@ -54,6 +54,10 @@ export function VesselTile({
   const statusColor = colored ? STATUS_COLOR[status] : NEUTRAL.border;
   const dotColor = colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
   const fullAlerts = vessel.alerts.filter((a) => a.level !== 'ADVISORY');
+  // round 24: idle nominal minis recede — same dim grammar as the rail
+  const idleDim =
+    mini && status === 'nominal' && vessel.alerts.length === 0 &&
+    (d.mode === 'PORT' || d.mode === 'STANDBY');
   const now = vessel.history.minutes.at(-1)!;
   const fuelFrac = now.tanks.reduce((a, t) => a + t.level_gal, 0) / now.tanks.reduce((a, t) => a + t.capacity_gal, 0);
   const enduranceAlert = vessel.alerts.find((a) => a.code === 'ENDURANCE' || a.code === 'BUNKER_SOON');
@@ -85,6 +89,7 @@ export function VesselTile({
         height: '100%',
         boxSizing: 'border-box',
         position: 'relative',
+        opacity: idleDim ? 0.45 : 1,
       }}
     >
       {motion === 'ripple' && crossings[vessel.static.id] && (

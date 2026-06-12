@@ -110,6 +110,8 @@ export function DevPanel() {
         options={[{ v: false, text: 'off' }, { v: true, text: 'pins on scroll' }]} />
       <Row label="bearing" value={f.bearingLine} onPick={f.setBearingLine}
         options={[{ v: true, text: 'BRG ray' }, { v: false, text: 'voyage card only' }]} />
+      <Row label="rail mode" value={f.railMode} onPick={f.setRailMode}
+        options={[{ v: 'glyph' as const, text: 'mode glyph' }, { v: 'stroke' as const, text: 'transit stroke' }]} />
       <Row label="reveal" value={f.revealStyle} onPick={f.setRevealStyle}
         options={[{ v: 'chevron' as const, text: 'chevron' }, { v: 'meter' as const, text: 'meter strip' }]} />
       <Row label="stress" value={f.stress} onPick={f.setStress}

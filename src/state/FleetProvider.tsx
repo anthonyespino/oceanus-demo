@@ -24,6 +24,7 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 export type LayoutVariant = 'board-first' | 'chart-band';
 export type TankStyle = 'bars' | 'dots' | 'synoptic'; // round 5 dots + round 7 synoptic experiments
 export type RevealStyle = 'chevron' | 'meter'; // round 14 affordance experiment
+export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator experiment
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
 
 interface FleetContextValue {
@@ -51,6 +52,8 @@ interface FleetContextValue {
   setStickyBand: (b: boolean) => void;
   bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
   setBearingLine: (b: boolean) => void;
+  railMode: RailMode; // round 24: rail mode indicator variant
+  setRailMode: (r: RailMode) => void;
   stateMarks: boolean; // round 21 B4: state silhouettes beside port names
   setStateMarks: (b: boolean) => void;
   /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
@@ -85,6 +88,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [chartTop, setChartTop] = useState(false);
   const [stickyBand, setStickyBand] = useState(false);
   const [bearingLine, setBearingLine] = useState(true);
+  const [railMode, setRailMode] = useState<RailMode>('glyph');
   const [stateMarks, setStateMarks] = useState(false);
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
@@ -140,7 +144,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
         chartTop, setChartTop, stateMarks, setStateMarks, stickyBand, setStickyBand,
-        bearingLine, setBearingLine,
+        bearingLine, setBearingLine, railMode, setRailMode,
         collapsedPanels, togglePanel, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,

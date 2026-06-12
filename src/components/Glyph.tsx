@@ -10,7 +10,8 @@ import { gb } from './gb';
 export type GlyphName =
   | 'vessel' | 'engine' | 'tank' | 'fuel-drop' | 'wind' | 'wave' | 'anchor'
   | 'route' | 'crew' | 'clock' | 'alert-triangle' | 'datalink' | 'gauge' | 'chart'
-  | 'expand' | 'collapse'; // round 17 control glyphs — same Figma 1:1 contract
+  | 'expand' | 'collapse' // round 17 control glyphs — same Figma 1:1 contract
+  | 'crosshair'; // round 24: STATION (DP holding) — replaces the weak vessel mapping
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -29,6 +30,15 @@ const PATHS: Record<GlyphName, string[]> = {
   chart: ['M4 4 V20 H20', 'M7 15 L11 9.5 L14 12.5 L19 6.5'],
   expand: ['M14 4 H20 V10', 'M20 4 L13 11', 'M10 20 H4 V14', 'M4 20 L11 13'],
   collapse: ['M10 4 V10 H4', 'M11 9 L4 2.5 M11 9 L11 9.01', 'M14 20 V14 H20', 'M13 15 L20 21.5'],
+  crosshair: ['M12 19 A7 7 0 1 0 12 5 A7 7 0 0 0 12 19', 'M12 2.5 V7 M12 17 V21.5 M2.5 12 H7 M17 12 H21.5', 'M12 13.2 A1.2 1.2 0 1 0 12 10.8 A1.2 1.2 0 0 0 12 13.2'],
+};
+
+/** Mode → glyph, one map (round 24 consolidation; STATION = crosshair). */
+export const MODE_GLYPH: Record<string, GlyphName> = {
+  TRANSIT: 'route',
+  STATION: 'crosshair',
+  STANDBY: 'clock',
+  PORT: 'anchor',
 };
 
 export function Glyph({ name, size = 14, color = 'currentColor' }: { name: GlyphName; size?: number; color?: string }) {

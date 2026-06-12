@@ -1,3 +1,19 @@
+# PROGRESS — 2026-06-11 (Session 28: ROUND 24 — rail states + sticky)
+
+## Done
+
+1. **Three rail layers**: IDLE+NOMINAL (port/standby, no alerts) dims to 45% — idle recedes; ACTIVE (transit/station) full ink; ALERTED never dims at any severity or mode — full ink, status dot, status-tinted name when the class earns it (advisory-only vessels stay full-ink untinted, since A6 made advisory the muted voice — DEV DECISION, flag if advisory should tint). Alerts outrank mode everywhere.
+2. **Mode indicator variants** behind `rail mode` dev toggle: (a) right-aligned mode glyph per row — and the brief's crosshair resolves round 16's weakest mapping: STATION = crosshair now, consolidated into one shared MODE_GLYPH map used by rail, tiles, and header chips; (b) 1px ink stroke on transit rows, built despite the flagged selection-border collision for honest comparison (it does read close — Anthony judges).
+3. **Selection stays strongest**: border + wash fill, never dimmed, wins over the transit stroke.
+4. **Sticky rail**: pins below the header on inspector scroll, independently scrollable beyond viewport height, selected vessel auto-scrolled into view on open.
+5. **Board minis share the grammar**: idle nominal mini tiles dim to 45% (alerted/active/selected minis never do).
+
+## Notes
+
+- Rail ordering already used the shared activity comparator (round 21), so the dim layer lands exactly on the rows that sort to the bottom — the two systems agree by construction.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 27: ROUND 23 — greyscale base, water-only blue, land discipline)
 
 ## 1. Neutral desaturation
