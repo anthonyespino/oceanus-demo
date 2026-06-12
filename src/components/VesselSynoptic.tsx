@@ -15,7 +15,7 @@ import { useContentWidth } from './NauticalChart';
 import { ReconChip } from './FlowReconciliation';
 import { RevealZone } from './Contextual';
 import { Field } from './Field';
-import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
+import { FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 import { Label } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -162,9 +162,9 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             const fillH = (g.h - 4) * (t.level_pct / 100);
             return (
               <g key={g.id}>
-                <rect {...layer('VesselSynoptic / tanks / tank.shape', 'surface/base · line/strong | TANK_LOW tint (own alert only, round 20)', '{tank.tank_id}')} x={g.x} y={g.y} width={g.w} height={g.h} fill="var(--color-surface-base)" stroke={tint ?? LINE} strokeWidth={tint ? 1.5 : 1} rx={3} />
+                <rect {...layer('VesselSynoptic / tanks / tank.shape', 'surface/base · line/strong | TANK_LOW tint (own alert only, round 20)', '{tank.tank_id}')} x={g.x} y={g.y} width={g.w} height={g.h} fill="var(--color-surface-base)" stroke={tint ?? LINE} strokeWidth={tint ? 1.5 : 1} rx={RADIUS} />
                 <rect {...layer('VesselSynoptic / tanks / fill.shape', 'fill/level · bottom-up vertical (round 20)', '{tank.level_pct}')} x={g.x + 2} y={g.y + 2 + (g.h - 4 - fillH)} width={g.w - 4} height={fillH}
-                  fill={tint ?? 'var(--color-fill-level)'} opacity={tint ? 0.35 : 1} rx={2} />
+                  fill={tint ?? 'var(--color-fill-level)'} opacity={tint ? 0.35 : 1} rx={RADIUS} />
                 <text {...layer('VesselSynoptic / tanks / value.text', 'font/data 11 · ink/primary | tint', '{tank.level_pct}%')} x={g.x + g.w / 2} y={g.y + g.h / 2 + 4} textAnchor="middle" style={mono(11)} fill={tint ?? NEUTRAL.ink}>
                   {t.level_pct.toFixed(0)}%
                 </text>
@@ -197,7 +197,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             {Math.round(now.flow_gps * 3600)} gph
           </text>
           <g {...layer('VesselSynoptic / meter / recon.chip', 'border + text = recon severity (OK ink/secondary · advisory · watch)', '{reconciliation.status · error_pct}')}>
-            <rect x={GEOM.meter.x - 34} y={GEOM.meter.y - 46} width={68} height={16} rx={3}
+            <rect x={GEOM.meter.x - 34} y={GEOM.meter.y - 46} width={68} height={16} rx={RADIUS}
               fill="var(--color-surface-raised)" stroke={reconColor} strokeWidth={1} />
             <text x={GEOM.meter.x} y={GEOM.meter.y - 34} textAnchor="middle" style={mono(9)} fill={reconColor}>
               RECON {recon.status}

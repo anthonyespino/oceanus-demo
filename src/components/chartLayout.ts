@@ -72,21 +72,24 @@ export function placeLabels(
   blocked: Rect[] = [],
 ): (PlacedLabel | null)[] {
   const h = 10;
+  // round 36: markers are directional hulls — the bow reaches ~7px from
+  // center at ANY rotation, so the keep-out box and anchor offsets are
+  // radial (bow-safe) rather than square-sized
   const taken: Rect[] = [
-    ...anchors.map((m) => ({ x: m.x - 6, y: m.y - 6, w: 12, h: 12 })),
+    ...anchors.map((m) => ({ x: m.x - 7, y: m.y - 7, w: 14, h: 14 })),
     ...blocked,
   ];
   return anchors.map((m) => {
     const w = labelWidth(m.name);
     const candidates: (Rect & { leader: boolean })[] = [
-      { x: m.x + 7, y: m.y - 5, w, h, leader: false }, // E
-      { x: m.x - 7 - w, y: m.y - 5, w, h, leader: false }, // W
-      { x: m.x - w / 2, y: m.y - 18, w, h, leader: false }, // N
-      { x: m.x - w / 2, y: m.y + 9, w, h, leader: false }, // S
-      { x: m.x + 11, y: m.y - 19, w, h, leader: true }, // NE
-      { x: m.x - 11 - w, y: m.y - 19, w, h, leader: true }, // NW
-      { x: m.x + 11, y: m.y + 12, w, h, leader: true }, // SE
-      { x: m.x - 11 - w, y: m.y + 12, w, h, leader: true }, // SW
+      { x: m.x + 9, y: m.y - 5, w, h, leader: false }, // E
+      { x: m.x - 9 - w, y: m.y - 5, w, h, leader: false }, // W
+      { x: m.x - w / 2, y: m.y - 20, w, h, leader: false }, // N
+      { x: m.x - w / 2, y: m.y + 11, w, h, leader: false }, // S
+      { x: m.x + 12, y: m.y - 20, w, h, leader: true }, // NE
+      { x: m.x - 12 - w, y: m.y - 20, w, h, leader: true }, // NW
+      { x: m.x + 12, y: m.y + 13, w, h, leader: true }, // SE
+      { x: m.x - 12 - w, y: m.y + 13, w, h, leader: true }, // SW
     ];
     for (const c of candidates) {
       const inBounds = c.x >= 2 && c.y >= 2 && c.x + c.w <= bounds.w - 2 && c.y + c.h <= bounds.h - 2;

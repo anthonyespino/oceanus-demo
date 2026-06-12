@@ -152,7 +152,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
           position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 70,
           fontFamily: 'var(--font-data)', fontSize: 11, letterSpacing: 1.5,
           color: 'var(--color-alert-caution)', border: '1px solid var(--color-alert-caution)',
-          background: 'var(--color-surface-raised)', borderRadius: 6, padding: '4px 10px',
+          background: 'var(--color-surface-raised)', borderRadius: 1, padding: '4px 10px', // RADIUS token value (state layer)
         }}>
           SCENARIO: MULTI-VESSEL — synthetic
         </div>

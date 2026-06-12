@@ -43,7 +43,7 @@ export function Annotated({
           pointerEvents: 'none',
           background: 'var(--color-surface-overlay)',
           border: '1px solid var(--color-accent-bright)',
-          borderRadius: 6,
+          borderRadius: 1, // RADIUS token value
           padding: '10px 12px',
           fontFamily: 'var(--font-data)',
           fontSize: 12,

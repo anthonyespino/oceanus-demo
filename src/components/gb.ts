@@ -3,17 +3,19 @@
 // + the radius token + tokenized padding. Labels whisper (DM Mono micro-caps,
 // letterspaced); values shout (see Stat); supporting data keeps DataRow rhythm.
 
+import { RADIUS } from './probeTokens';
+
 export const gb = {
   box: {
     border: '1px solid var(--color-line-hairline)',
     background: 'var(--color-surface-raised)',
     padding: 'var(--pad-card)',
-    borderRadius: 6,
+    borderRadius: RADIUS,
   } as React.CSSProperties,
   boxTight: {
     border: '1px solid var(--color-line-strong)',
     padding: '2px 8px',
-    borderRadius: 6,
+    borderRadius: RADIUS,
   } as React.CSSProperties,
   dim: { color: 'var(--color-ink-secondary)' } as React.CSSProperties,
   label: {

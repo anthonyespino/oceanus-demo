@@ -189,8 +189,8 @@ export function VesselTile({
           not a trigger */}
       {revealStyle === 'meter' && (
         <div {...layer('VesselTile / footer / fuel.fill', 'ink/muted fill | alert color when endurance-backed · surface/overlay track', '{Σ tank level / Σ capacity}')} style={{ marginTop: 'auto', paddingTop: 8 }}>
-          <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: 2 }}>
-            <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: 2 }} />
+          <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
+            <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: RADIUS }} />
           </div>
         </div>
       )}

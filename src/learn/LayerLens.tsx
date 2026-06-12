@@ -93,7 +93,7 @@ export function LayerLens() {
           position: 'fixed', left: info.x, top: Math.min(info.y + 8, window.innerHeight - 110), width: CARD_W,
           zIndex: 66, pointerEvents: 'none',
           background: 'var(--color-surface-overlay)', border: '1px solid var(--color-accent-bright)',
-          borderRadius: 6, padding: '8px 10px',
+          borderRadius: 1, padding: '8px 10px', // RADIUS token value
           fontFamily: 'var(--font-data)', fontSize: 11, lineHeight: 1.6,
         }}>
           {row('LAYER', info.path)}
@@ -106,7 +106,7 @@ export function LayerLens() {
         <div style={{
           position: 'fixed', bottom: 48, left: '50%', transform: 'translateX(-50%)',
           zIndex: 71, background: 'var(--color-surface-overlay)',
-          border: '1px solid var(--color-accent-bright)', borderRadius: 6, padding: '6px 14px',
+          border: '1px solid var(--color-accent-bright)', borderRadius: 1, padding: '6px 14px', // RADIUS token value
           fontFamily: 'var(--font-data)', fontSize: 11, color: 'var(--color-ink-primary)',
           maxWidth: '70vw', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>

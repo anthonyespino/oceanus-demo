@@ -86,7 +86,7 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'baseline_band_visualization', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'raw_sample_timestamps', level: 'vessel', disposition: 'HIDDEN', note: 'surface only as freshness state (FRESH/STALE)' },
   { field: 'generator_seed_internals', level: 'vessel', disposition: 'HIDDEN' },
-  { field: 'heading_deg', level: 'vessel', disposition: 'UNDEFINED', note: 'Anthony to call' },
+  { field: 'heading_deg', level: 'vessel', disposition: 'VISIBLE', note: '⚖6 resolved round 36: rendered as chart-marker rotation (fleet + inspector), never as a numeral' },
   { field: 'wind_direction_visualization', level: 'vessel', disposition: 'UNDEFINED', note: 'Anthony to call' },
   { field: 'crew_efficiency_comparison', level: 'vessel', disposition: 'UNDEFINED', note: 'sensitive framing — needs Anthony\'s design call' },
 ];

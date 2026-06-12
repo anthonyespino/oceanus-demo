@@ -55,7 +55,7 @@ export function LearnProvider({ children }: { children: React.ReactNode }) {
             color: 'var(--color-accent-bright)',
             border: '1px solid var(--color-accent-bright)',
             background: 'var(--color-surface-raised)',
-            borderRadius: 6,
+            borderRadius: 1, // RADIUS token value
             padding: '4px 10px',
           }}
         >

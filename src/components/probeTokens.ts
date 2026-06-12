@@ -5,8 +5,10 @@
 import type { Mode } from '../data/types';
 import type { StatusLevel } from '../data/alerts';
 
-/** The one radius token. Used everywhere a corner is rounded. */
-export const RADIUS = 6;
+/** The one radius token. Used everywhere a corner is rounded.
+    Round 36: sharp corners — 1px globally. Status dots stay circles
+    (dots, not boxes); gauge arcs unaffected. */
+export const RADIUS = 1;
 
 /** Status hues map onto the standard vocabulary: data/nominal + alert/*. */
 export const STATUS_COLOR: Record<StatusLevel, string> = {

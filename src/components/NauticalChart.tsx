@@ -136,7 +136,7 @@ export function FollowChip({ onClick }: { onClick: () => void }) {
         position: 'absolute', top: 8, right: 8, zIndex: 4,
         fontFamily: 'var(--font-data)', fontSize: 10, letterSpacing: 1,
         color: 'var(--color-accent-bright)', border: '1px solid var(--color-accent-bright)',
-        background: 'var(--color-surface-raised)', borderRadius: 6, padding: '2px 8px', cursor: 'pointer',
+        background: 'var(--color-surface-raised)', borderRadius: 1, padding: '2px 8px', cursor: 'pointer', // RADIUS token value
       }}
     >
       ⌖ FOLLOW

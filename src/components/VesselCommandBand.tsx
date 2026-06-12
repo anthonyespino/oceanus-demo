@@ -215,8 +215,8 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
             {frac !== null && (
               <>
                 <div {...layer('VesselCommandBand / profile / fill.line', 'accent/primary 2px — interaction/identity voice, never severity', '{distance covered fraction}')} style={{ position: 'absolute', top: 7, left: 0, width: `${(frac * 100).toFixed(1)}%`, height: 2, background: ACCENT.primary }} />
-                <div {...layer('VesselCommandBand / profile / vessel.glyph', 'glyph/vessel 16px · ink/primary', '{live position on track}')} style={{ position: 'absolute', top: 0, left: `calc(${(frac * 100).toFixed(1)}% - 8px)` }}>
-                  <Glyph name="vessel" size={16} color={NEUTRAL.ink} />
+                <div {...layer('VesselCommandBand / profile / vessel.glyph', 'glyph/vesselMarker 16px · ink/primary — bow along the track (round 36)', '{live position on track}')} style={{ position: 'absolute', top: 0, left: `calc(${(frac * 100).toFixed(1)}% - 8px)`, transform: 'rotate(90deg)' }}>
+                  <Glyph name="vesselMarker" size={16} color={NEUTRAL.ink} />
                 </div>
               </>
             )}

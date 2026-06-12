@@ -15,7 +15,7 @@ import { clusterPoints, placeLabels, labelWidth } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
 import { gb, fmtPct } from './gb';
-import { Label } from './Glyph';
+import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 function fitFleetFrame(fleet: VesselState[]): ChartFrame {
@@ -96,13 +96,19 @@ export function FleetMap({
               {fleet.map((v) => {
                 const trail = v.history.minutes.filter((_, i) => i % 20 === 0).map((s) => s.position);
                 const seg = Math.ceil(trail.length / 4);
+                // round 36: the trail tucks into the STERN, not the marker
+                // center — the bow points away from where it's been
+                const here = v.history.minutes.at(-1)!.position;
+                const stern = sternPoint(px(here.lon), py(here.lat), here.heading_deg);
                 return [0, 1, 2, 3].map((k) => {
                   const part = trail.slice(k * seg, (k + 1) * seg + 1);
                   if (part.length < 2) return null;
+                  const pts = part.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')
+                    + (k === 3 ? ` ${stern.x.toFixed(1)},${stern.y.toFixed(1)}` : '');
                   return (
                     <polyline
                       key={`${v.static.id}-t${k}`}
-                      points={part.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')}
+                      points={pts}
                       fill="none" stroke="#909090" strokeWidth={0.75}
                       opacity={[0.07, 0.13, 0.2, 0.3][k]}
                     />
@@ -136,7 +142,10 @@ export function FleetMap({
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && go(m.id)}>
                     <rect x={m.x - 14} y={m.y - 14} width={28} height={28} fill="transparent" />
                     {hoverId === m.id && <circle cx={m.x} cy={m.y} r={9} fill="none" stroke="var(--color-accent-bright)" strokeWidth={1.5} />}
-                    <rect x={m.x - 3.5} y={m.y - 3.5} width={7} height={7} fill={markerFill(v)} stroke="#141414" strokeWidth={0.75} />
+                    {/* round 36 (⚖6): directional hull, rotated to heading */}
+                    <path d={VESSEL_MARKER_PATH}
+                      transform={`translate(${m.x.toFixed(1)} ${m.y.toFixed(1)}) rotate(${byId.get(m.id)!.history.minutes.at(-1)!.position.heading_deg.toFixed(0)})`}
+                      fill={markerFill(v)} stroke="#141414" strokeWidth={0.75} />
                   </g>
                 );
               })}

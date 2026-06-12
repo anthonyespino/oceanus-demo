@@ -10,6 +10,7 @@
 
 import { useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
+import { RADIUS } from './probeTokens';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 // ROUND 20 — system rule: "hover points, click asks." All reveals are
@@ -111,8 +112,8 @@ export function RevealZone({
       )}
       <Annotated name="Contextual" inline>
         {useMeter ? (
-          <div style={{ position: 'absolute', left: 0, right: 0, bottom: -6, height: 3, background: 'var(--color-surface-overlay)', borderRadius: 2 }}>
-            <div style={{ height: '100%', width: `${Math.round(Math.min(1, Math.max(0, meter!.frac)) * 100)}%`, background: meter!.color ?? 'var(--color-ink-muted)', borderRadius: 2 }} />
+          <div style={{ position: 'absolute', left: 0, right: 0, bottom: -6, height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
+            <div style={{ height: '100%', width: `${Math.round(Math.min(1, Math.max(0, meter!.frac)) * 100)}%`, background: meter!.color ?? 'var(--color-ink-muted)', borderRadius: RADIUS }} />
           </div>
         ) : (
           <svg width={10} height={10} viewBox="0 0 10 10"

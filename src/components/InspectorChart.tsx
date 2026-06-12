@@ -16,7 +16,7 @@ import { clusterPoints } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
 import { gb } from './gb';
-import { Label } from './Glyph';
+import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
 
 // Round 15: frame to content — focus vessel + 24h trail + the nearest few
 // ghosts at a sensible radius (~60-90 nm). The next port deliberately does
@@ -133,8 +133,10 @@ export function InspectorChart({
                   </g>
                 ),
               )}
+              {/* round 36: trail tucks into the stern (marker has a bow) */}
               <polyline
-                points={trail.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')}
+                points={trail.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')
+                  + (() => { const s = sternPoint(px(pos.lon), py(pos.lat), pos.heading_deg, 1.3); return ` ${s.x.toFixed(1)},${s.y.toFixed(1)}`; })()}
                 fill="none" stroke="#7a7a7a" strokeWidth={1} strokeDasharray="3 3" />
               {/* round 23: NOT a route — a dashed bearing ray, clipped at the
                   chart edge, labeled BRG; the voyage card carries the real
@@ -167,9 +169,12 @@ export function InspectorChart({
                   </g>
                 );
               })()}
-              <rect x={px(pos.lon) - 4.5} y={py(pos.lat) - 4.5} width={9} height={9}
-                fill={focusFill} stroke="#141414" strokeWidth={1} />
-              <text x={px(pos.lon) + 9} y={py(pos.lat) + 4} fontSize={11} fontWeight={700} fill="var(--color-ink-primary)">
+              {/* round 36 (⚖6): directional hull rotated to heading; label
+                  anchor pushed clear of the bow's swing radius */}
+              <path d={VESSEL_MARKER_PATH}
+                transform={`translate(${px(pos.lon).toFixed(1)} ${py(pos.lat).toFixed(1)}) rotate(${pos.heading_deg.toFixed(0)}) scale(1.3)`}
+                fill={focusFill} stroke="#141414" strokeWidth={0.75} />
+              <text x={px(pos.lon) + 12} y={py(pos.lat) + 4} fontSize={11} fontWeight={700} fill="var(--color-ink-primary)">
                 {vessel.static.name}
               </text>
             </>

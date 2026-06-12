@@ -265,7 +265,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — surface/overlay 2px
   - BINDS — {origin→destination}
 - `profile / vessel.glyph`
-  - TOKENS — glyph/vessel 16px · ink/primary
+  - TOKENS — glyph/vesselMarker 16px · ink/primary — bow along the track (round 36)
   - BINDS — {live position on track}
 
 ## VesselSynoptic
@@ -368,4 +368,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*99 instrumented leaves · 13 components · generated 2026-06-12T15:37:52.638Z*
+*99 instrumented leaves · 13 components · generated 2026-06-12T15:56:49.082Z*

@@ -1,3 +1,24 @@
+# PROGRESS — 2026-06-12 (Session 35: ROUND 36 — sharp corners + directional vessels)
+
+## 1. RADIUS → 1px
+
+The token flipped (6 → 1); everything inherits. **Audit (grep borderRadius/rx) found and fixed these bypasses, all now consuming the token:** gb.box + gb.boxTight (the card grammar itself was hardcoded 6!), VesselTile endurance meter (2), Contextual meter strip (2), VesselSynoptic tank rects + fill + recon badge (rx 3/2/3), NauticalChart FOLLOW chip (6), the stress badge in FleetProvider (6 — state layer can't import component tokens, so it carries the literal with a comment), and the three learn-mode overlays. Exceptions honored: status dots stay circles (50%), gauge arcs untouched.
+
+## 2. Directional vessel markers (⚖ #6 RESOLVED: yes)
+
+- `glyph/vesselMarker` added to the Glyph contract (Figma 1:1) + `VESSEL_MARKER_PATH`, the filled hull for charts: pointed bow, flat stern, elongated pentagon — local coords bow (0,−6) / stern y+5, rotated to `heading_deg` (0° = north).
+- FleetMap singles and the InspectorChart focus marker (1.3× scale) are hulls now; status fill, hit areas, hover ring, and click-through unchanged. Cluster chips stay squares (groups, not boats).
+- **Registry updated**: `heading_deg` UNDEFINED → VISIBLE, "rendered as marker rotation, never as a numeral" — ⚖6 logged RESOLVED in DECISIONS.md. (Three UNDEFINED dispositions remain: fleet spend, wind direction viz, crew comparison.)
+- Label anchors recomputed for rotation: the bow reaches ~7px from center at any heading, so the keep-out box and all eight candidate anchors moved out radially (E/W 7→9, N/S 18/9→20/11, diagonals 11→12); the inspector name label moved +9→+12.
+- The profile strip's vessel dot is the same hull glyph rotated 90° — bow along the track.
+- PortCallsTimeline blocks untouched: time spans, not boats.
+
+## 3. Trails meet the stern
+
+Both charts: the trail's final point is now the stern anchor (`sternPoint()` in Glyph.tsx — center offset rotated with the heading), so the 24h trail visually connects to the back of the boat instead of poking out under the hull. Verified in the inspector screenshot: Meridian's trail arrives from the east and tucks into the stern while the bow points at Galveston.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 34: ROUND 35 — learn mode v2, the layer atlas)
 
 ## Done

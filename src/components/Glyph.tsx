@@ -12,7 +12,8 @@ export type GlyphName =
   | 'route' | 'crew' | 'clock' | 'alert-triangle' | 'datalink' | 'gauge' | 'chart'
   | 'expand' | 'collapse' // round 17 control glyphs — same Figma 1:1 contract
   | 'crosshair' // round 24: STATION (DP holding) — replaces the weak vessel mapping
-  | 'dots'; // round 26: dot-matrix fuel view
+  | 'dots' // round 26: dot-matrix fuel view
+  | 'vesselMarker'; // round 36 (⚖6 resolved): directional hull — bow up, rotate to heading
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -33,7 +34,22 @@ const PATHS: Record<GlyphName, string[]> = {
   collapse: ['M10 4 V10 H4', 'M11 9 L4 2.5 M11 9 L11 9.01', 'M14 20 V14 H20', 'M13 15 L20 21.5'],
   crosshair: ['M12 19 A7 7 0 1 0 12 5 A7 7 0 0 0 12 19', 'M12 2.5 V7 M12 17 V21.5 M2.5 12 H7 M17 12 H21.5', 'M12 13.2 A1.2 1.2 0 1 0 12 10.8 A1.2 1.2 0 0 0 12 13.2'],
   dots: ['M6 7 V7.01 M12 7 V7.01 M18 7 V7.01', 'M6 12 V12.01 M12 12 V12.01 M18 12 V12.01', 'M6 17 V17.01 M12 17 V17.01 M18 17 V17.01'],
+  vesselMarker: ['M12 3 L16.5 8.5 L16.5 20.5 L7.5 20.5 L7.5 8.5 Z'],
 };
+
+/** Round 36 (⚖6 resolved: heading is VISIBLE as marker rotation): filled
+    hull silhouette for chart markers. Local px, bow at (0,−6), flat stern
+    at y=+5, beam 7 — `translate(x y) rotate(heading_deg)` points the bow
+    along the heading (0° = north/up). Same hull as glyph/vesselMarker. */
+export const VESSEL_MARKER_PATH = 'M 0 -6 L 3.5 -1.5 L 3.5 5 L -3.5 5 L -3.5 -1.5 Z';
+const STERN_PX = 5;
+
+/** Stern anchor for trails: trails meet the boat at the stern, not the
+    marker center (the bow points away from where it's been). */
+export function sternPoint(x: number, y: number, headingDeg: number, scale = 1): { x: number; y: number } {
+  const r = (headingDeg * Math.PI) / 180;
+  return { x: x - STERN_PX * scale * Math.sin(r), y: y + STERN_PX * scale * Math.cos(r) };
+}
 
 /** Mode → glyph, one map (round 24 consolidation; STATION = crosshair). */
 export const MODE_GLYPH: Record<string, GlyphName> = {
