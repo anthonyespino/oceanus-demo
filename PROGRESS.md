@@ -1,3 +1,19 @@
+# PROGRESS — 2026-06-12 (Session 30: ROUND 28 — gauge anatomy, value on top)
+
+## Done
+
+1. **Gauge is a vertical stack**: VALUE (Plex Mono, tabular, hero scale) on top → arc + needle below → micro label at bottom. The dial interior is empty except the needle hub. The round-27 hard rule is now satisfied by construction, so the min/max scale labels return at the arc terminals at ALL sizes (the round-27 clearance gate is gone with the collision it guarded against) and the ticks stay. This also dissolves the round-27 flag about cluster-size labels — they're back everywhere.
+2. **Color rules untouched**: value keeps earned color (status tint only when alert-backed; white = stillness), needle stays ink/primary always, ruling 11 bands unchanged.
+3. **Hero value sized per context via the type ratio**: anchored to `TYPE.hero` (15) and scaled by dial size, so the command band (96 → 17px) sits a step above the engine cluster (86 → 15px) with no extra props.
+4. **Stuck-band rhythm**: value-on-top makes gauges taller, and the pinned band stopped reading as one tight row — stuck now drops the dials one step (96 → 80) and it tightens back up. Also cleared the "← fleet" link, which the raised speed value had started colliding with (primary row offset).
+
+## Screenshots
+
+- `r28-band-anatomy.png`: command band at top — values riding above the dials, min/max at the terminals.
+- `r28-cluster-anatomy.png`: stuck band (one tight row, 80px dials) over the engine cluster — all five dials with min/max back, E2's alerted values amber on top.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 30: ROUND 27 — command band)
 
 ## Done

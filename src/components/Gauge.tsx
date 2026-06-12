@@ -1,15 +1,18 @@
 'use client';
-// ROUND 19 redesign: 270° C-arc opening at the bottom (-135°→+135°), min/max
-// labels + 3 intermediate ticks so the arc reads as a scale. Needle is
-// ink/primary ALWAYS; the center value takes status color ONLY when an
-// alert-backed threshold is crossed (amends ruling 14: green-alive dropped,
-// white still = stillness). Ruling 11 enforced — it regressed in round 11's
-// own DEV DECISION (display ceilings drawn as colored bands): display-only
-// limits are now neutral ink ticks; a colored band exists ONLY where alert
-// logic backs it. DORMANT: stopped engine → arc dimmed ~30%, no needle, no
-// bands, OFF in muted ink — a dead gauge looks dead.
+// ROUND 28 anatomy: vertical stack — VALUE (hero scale, Plex Mono, tabular)
+// on top → arc + needle below → micro label at bottom. The dial interior is
+// empty except the needle hub, so the round-27 hard rule (no text intersects
+// the dial or the value's bbox) is satisfied by construction and the min/max
+// scale labels return at the arc terminals at ALL sizes. Value keeps the
+// earned-color rule (round 19, amending ruling 14: status tint only when
+// alert-backed; white = static stillness); needle is ink/primary ALWAYS.
+// Ruling 11 holds: display-only limits are neutral ink ticks; a colored band
+// exists ONLY where alert logic backs it. DORMANT: stopped engine → arc
+// dimmed ~30%, no needle, no bands, OFF in muted ink — a dead gauge looks
+// dead. Value size rides TYPE.hero scaled by dial size, so the command band
+// (96) sits a step above the engine cluster (86) automatically.
 
-import { FONT, NEUTRAL } from './probeTokens';
+import { FONT, NEUTRAL, TYPE } from './probeTokens';
 
 const A0 = -135; // sweep start (degrees, 0 = up)
 const A1 = 135; // sweep end — 270° C, opening at bottom
@@ -21,6 +24,8 @@ const VALUE_COLOR: Record<Vital, string> = {
   watch: 'var(--color-alert-caution)',
   degraded: 'var(--color-alert-warning)',
 };
+
+const HERO = TYPE.hero.fontSize as number; // type ratio anchor (15 at k=1)
 
 function polar(cx: number, cy: number, deg: number, r: number): { x: number; y: number } {
   const rad = ((deg - 90) * Math.PI) / 180;
@@ -70,49 +75,43 @@ export function Gauge({
   minMaxLabels?: [string, string];
 }) {
   const angle = (v: number) => A0 + (A1 - A0) * Math.min(1, Math.max(0, (v - min) / (max - min)));
-  const cx = size / 2;
-  const cy = size / 2;
-  const r = size * 0.36;
   const k = size / 86;
+  const r = size * 0.36;
+  const cx = size / 2;
+  const cy = r + 4 * k; // circle hugs the top of the svg — value lives above it
+  const svgH = Math.ceil(cy + 0.707 * (r + 1) + 12 * k); // arc terminals + min/max line
   const needleEnd = polar(cx, cy, angle(value), r - 3 * k);
   const loLbl = polar(cx, cy, A0, r + 1);
   const hiLbl = polar(cx, cy, A1, r + 1);
   const fontScale = Math.max(7, 7.5 * k);
   const [minLabel, maxLabel] = minMaxLabels ?? [String(min), String(max)];
-
-  // ROUND 27 hard rule: no text may intersect the dial or the value's
-  // bounding box. Min/max scale labels render ONLY when both clear the value
-  // by ≥6px at the arc terminals — otherwise the pair drops and the ticks
-  // alone carry the scale. Width estimate: Plex Mono fixed advance ≈0.6em.
   const valStr = off ? 'OFF' : display ?? `${Math.round(value)}${unit}`;
-  const valFs = Math.max(9, 11 * k);
-  const half = (s: string, fs: number) => s.length * fs * 0.3;
-  const CLEAR = 6;
-  const showMinMax =
-    loLbl.x + half(minLabel, fontScale) + CLEAR <= cx - half(valStr, valFs) &&
-    hiLbl.x - half(maxLabel, fontScale) - CLEAR >= cx + half(valStr, valFs);
 
   return (
     <div style={{ width: size, textAlign: 'center' }}>
-      <svg width={size} height={size - 6 * k} style={{ display: 'block' }}>
+      {/* value on top — hero scale, earned color */}
+      <div style={{
+        fontFamily: FONT.data, fontSize: Math.max(11, Math.round(HERO * k)), fontWeight: 500,
+        fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', lineHeight: 1.25, marginBottom: 2 * k,
+        color: off ? NEUTRAL.inkMuted : VALUE_COLOR[vital],
+      }}>
+        {valStr}
+      </div>
+      <svg width={size} height={svgH} style={{ display: 'block' }}>
         <g opacity={off ? 0.3 : 1}>
           <path d={arcPath(cx, cy, A0, A1, r)} fill="none" stroke="var(--color-line-strong)" strokeWidth={2.5 * k} strokeLinecap="round" />
         </g>
         {!off && (
           <>
-            {/* scale: 3 intermediate ticks + min/max labels */}
+            {/* scale: 3 intermediate ticks + min/max at the terminals (all sizes) */}
             {[0.25, 0.5, 0.75].map((f) => {
               const a = A0 + (A1 - A0) * f;
               const t1 = polar(cx, cy, a, r - 3 * k);
               const t2 = polar(cx, cy, a, r + 3 * k);
               return <line key={f} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkMuted} strokeWidth={1} />;
             })}
-            {showMinMax && (
-              <>
-                <text x={loLbl.x} y={loLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{minLabel}</text>
-                <text x={hiLbl.x} y={hiLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{maxLabel}</text>
-              </>
-            )}
+            <text x={loLbl.x} y={loLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{minLabel}</text>
+            <text x={hiLbl.x} y={hiLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{maxLabel}</text>
             {/* display-only limits: neutral ticks, slightly long */}
             {displayLimits.map((v) => {
               const t1 = polar(cx, cy, angle(v), r - 4 * k);
@@ -123,18 +122,13 @@ export function Gauge({
             {band && (
               <path d={arcPath(cx, cy, angle(band.from), angle(band.to), r)} fill="none" stroke={band.color} strokeWidth={2.5 * k} strokeLinecap="butt" />
             )}
-            {/* needle: ink/primary, always */}
+            {/* needle: ink/primary, always; the hub is the dial's only interior mark */}
             <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke={NEUTRAL.ink} strokeWidth={1.5} />
             <circle cx={cx} cy={cy} r={2.2 * k} fill={NEUTRAL.ink} />
           </>
         )}
-        <text x={cx} y={cy + r * 0.78 + 4 * k} textAnchor="middle"
-          style={{ fontFamily: FONT.data, fontSize: Math.max(9, 11 * k), fontVariantNumeric: 'tabular-nums' }}
-          fill={off ? NEUTRAL.inkMuted : VALUE_COLOR[vital]}>
-          {valStr}
-        </text>
       </svg>
-      <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted }}>
+      <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 2 }}>
         {label}
       </div>
     </div>

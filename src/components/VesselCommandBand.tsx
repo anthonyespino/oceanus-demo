@@ -115,6 +115,10 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   const nearest = PORTS.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b));
   const nearestNm = distanceNm(now.position, nearest);
 
+  // round 28: value-on-top makes gauges taller — stuck drops the dials one
+  // step so the pinned band still reads as a single tight row
+  const gz = stuck ? 80 : 96;
+
   const chevronBtn: React.CSSProperties = {
     background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)',
     borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0,
@@ -173,9 +177,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <button aria-label="minimize command band" style={{ ...chevronBtn, position: 'absolute', top: 8, right: 8, zIndex: 3 }} onClick={() => togglePanel(`${id}:command`)}>
           <Glyph name="collapse" size={12} />
         </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)', flexWrap: 'wrap' }}>
-          <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
-          <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
+        {/* round 28: value-on-top raises the gauge tops — clear the ← fleet
+            link and the chevron before the first row of values */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)', flexWrap: 'wrap', marginTop: 14 }}>
+          <Gauge size={gz} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
+          <Gauge size={gz} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
             display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
           {/* broadcast center: identity over the mission clock */}
           <div style={{ flex: 1, minWidth: 220, textAlign: 'center' }}>
@@ -196,10 +202,10 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               mission clock
             </div>
           </div>
-          <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
+          <Gauge size={gz} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
             display={fmtPct(d.efficiency_delta_pct)} vital={effVital} minMaxLabels={['-20', '+20']}
             band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
-          <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
+          <Gauge size={gz} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
             display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
             band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
         </div>
