@@ -3,8 +3,6 @@
 // just buttons. Demo epoch stays pinned — "live" advances simulated minutes.
 
 import { useFleet } from '../state/FleetProvider';
-import { SystemStatusStrip } from './SystemStatusStrip';
-import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 import { toggleStyle } from './probeTokens';
 import { fmtTime } from './gb';
 
@@ -30,24 +28,21 @@ export function LiveControls() {
   );
 }
 
+// Round 33: the header is the wordmark only — system status dissolved into
+// FleetHealthBand / VesselCommandBand header rows; sim clock + speed moved
+// to the dev panel (simulator chrome, not product).
 export function AppHeader() {
   return (
     <header
       style={{
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        gap: 16,
         borderBottom: '1px solid var(--color-line-subtle)',
         padding: '6px 12px',
       }}
     >
       <span style={{ fontFamily: 'var(--font-display)', fontSize: 18, letterSpacing: 2 }}>
         OCEANUS FLEET
-      </span>
-      <span style={{ display: 'inline-flex', gap: 18, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end', minWidth: 0 }}>
-        <Annotated name="SystemStatusStrip" inline><SystemStatusStrip /></Annotated>
-        <LiveControls />
       </span>
     </header>
   );

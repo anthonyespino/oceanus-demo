@@ -23,8 +23,9 @@ export default function VesselPage({ params }: { params: Promise<{ id: string }>
   }
   return (
     <main style={{ padding: 12, maxWidth: 1400, margin: '0 auto' }}>
-      {/* alert dedup (round 11): inspector shows only this-vessel alerts;
-          the global AlertRail lives on the fleet board exclusively */}
+      {/* alert dedup (round 11): the inspector's alerts card shows only
+          this-vessel lines; fleet-wide alerts live in the summoned sheet
+          (round 33) */}
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
         <FleetRail fleet={fleet} selectedId={id} treatment={treatment} />
         <VesselInspector vessel={vessel} fleet={fleet} treatment={treatment} />

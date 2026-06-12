@@ -66,9 +66,10 @@ export function VesselInspector({
         {vessel.alerts.length > 0 && (
           <section style={{ ...gb.box, marginBottom: 8 }}>
             <Label g="alert-triangle">alerts</Label>
+            {/* round 33 grammar: one severity voice per line — the tag */}
             {vessel.alerts.map((a, i) => (
-              <div key={i} style={{ color: ALERT_TEXT_COLOR[a.level] ?? NEUTRAL.inkSecondary }}>
-                [{a.level}] {a.message}
+              <div key={i} style={{ color: NEUTRAL.inkSecondary }}>
+                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
               </div>
             ))}
           </section>

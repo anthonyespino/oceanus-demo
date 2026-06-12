@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // LEARN MODE — strip before demo week
+import { LiveControls } from './LiveControls';
 import { NEUTRAL, RADIUS, toggleStyle } from './probeTokens';
 
 function Row<T extends string | boolean>({
@@ -87,6 +88,10 @@ export function DevPanel() {
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 8 }}>
         <span>toggles (D or ⚙)</span>
         <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: NEUTRAL.inkSecondary, cursor: 'pointer', fontSize: 12 }}>✕</button>
+      </div>
+      {/* round 33: sim clock + speed live here — simulator chrome, not product */}
+      <div style={{ marginBottom: 8 }}>
+        <LiveControls />
       </div>
       <Row label="density" value={f.density} onPick={f.setDensity}
         options={[{ v: 'minimal' as const, text: 'minimal' }, { v: 'standard' as const, text: 'standard' }]} />

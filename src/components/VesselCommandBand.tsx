@@ -24,6 +24,7 @@ import { Gauge } from './Gauge';
 import { Glyph, MODE_GLYPH, type GlyphName } from './Glyph';
 import { StateMark } from './StateMark';
 import { RevealZone } from './Contextual';
+import { StatusHeader } from './AlertSheet';
 import { ACCENT, FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, fmtTime } from './gb';
 
@@ -236,6 +237,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <button aria-label="minimize command band" style={{ ...chevronBtn, position: 'absolute', top: 8, right: 8, zIndex: 3 }} onClick={() => togglePanel(`${id}:command`)}>
           <Glyph name="collapse" size={12} />
         </button>
+        {/* round 33: the global status strip merged into the band's header
+            row — counts summon the alert sheet */}
+        <div style={{ display: 'flex' }}>
+          <StatusHeader />
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)', flexWrap: 'wrap', marginTop: 6 }}>
           <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
           <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
@@ -264,7 +270,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </Field>
               }
             >
-              <div style={{ display: 'inline-flex', gap: 24, marginTop: 8, padding: '0 6px', ...(wxStale ? gb.stale : {}) }}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 8, padding: '0 6px', ...(wxStale ? gb.stale : {}) }}
                 title={wxStale ? 'weather feed STALE' : undefined}>
                 <Field level="vessel" field="weather.wind">
                   <WxStat g="wind" label="wind" value={`${wx.wind_speed_kn} kn`} />

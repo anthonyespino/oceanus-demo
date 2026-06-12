@@ -22,6 +22,7 @@ import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
+import { StatusHeader } from './AlertSheet';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 
 type TrendRange = 30 | 90 | 365;
@@ -85,8 +86,13 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'var(--pad-section)' }}>
-        <Label g="vessel" style={{ marginBottom: 0 }}>fleet</Label>
+      {/* round 33: the standalone status strip dissolved into this micro
+          header row — the counts summon the alert sheet */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, marginBottom: 'var(--pad-section)', flexWrap: 'wrap' }}>
+        <span style={{ display: 'inline-flex', gap: 20, alignItems: 'baseline', minWidth: 0 }}>
+          <Label g="vessel" style={{ marginBottom: 0 }}>fleet</Label>
+          <StatusHeader />
+        </span>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           <button style={toggleStyle(range === 30)} onClick={() => setRange(30)}>30d</button>
           <button style={toggleStyle(range === 90)} onClick={() => setRange(90)}>90d</button>

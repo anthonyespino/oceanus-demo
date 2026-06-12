@@ -14,7 +14,7 @@ export { DataRow } from './DataRow'; // LAYOUT PROBE only (label-left / numeral-
 export { Stat } from './Stat'; // ROUND 4: instrument-stat primitive (label above numeral)
 // ROUND 5 components:
 export { EfficiencyCurve } from './EfficiencyCurve'; // inspector hero: burn-vs-speed envelope
-export { SystemStatusStrip } from './SystemStatusStrip';
+export { StatusHeader } from './AlertSheet'; // ROUND 33: SystemStatusStrip + AlertRail merged — micro header + summoned alert sheet
 export { DevPanel } from './DevPanel'; // probe toggles, press D
 export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrivals board (final probe component)
 export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — designed in Figma, templated after
@@ -29,7 +29,6 @@ export { VesselCommandBand } from './VesselCommandBand'; // ROUND 27: VesselHead
 export { InstrumentCluster } from './InstrumentCluster'; // ROUND 11: DP-console dials (verdict 13)
 export { ReconChip } from './FlowReconciliation'; // ROUND 11: recon dissolved into fuel card header
 export { FleetMap } from './FleetMap';
-export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';
 export { EfficiencyPanel } from './EfficiencyPanel';
 export { EngineTwinPanel } from './EngineTwinPanel'; // ROUND 31: hero + one-line rows + cluster (EngineCard retired)

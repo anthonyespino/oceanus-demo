@@ -9,7 +9,7 @@
 
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
-import { vesselStatus, worstLevel } from '../data/alerts';
+import { vesselStatus } from '../data/alerts';
 import { Field } from './Field';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
@@ -43,7 +43,6 @@ export function VesselTile({
   const { motion, crossings, revealStyle } = useFleet();
   const [hot, setHot] = useState(false); // hover/focus-within → show controls
   const status = vesselStatus(vessel.alerts);
-  const badge = worstLevel(vessel.alerts);
   const mini = size === 'mini';
   const tier = size === 'expanded' ? 2 : 1;
   const step = (dir: 1 | -1) => {
@@ -139,12 +138,8 @@ export function VesselTile({
           </span>
         </div>
       </div>
-      {/* mini keeps severity visible: badge never hides at any size */}
-      {mini && badge && (
-        <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: ALERT_TEXT_COLOR[badge] ?? NEUTRAL.inkSecondary }}>
-          [{badge}]
-        </div>
-      )}
+      {/* round 33: the alert badge concept is retired — border + dot + name
+          tint ARE the badge; full alert lines appear only at 2x */}
       {/* expanded: the chart absorbs the void — flex-grow, plot scales */}
       {tier === 2 && (
         <div style={{ flex: 1, minHeight: 96, marginTop: 10 }}>
@@ -154,9 +149,10 @@ export function VesselTile({
       {/* 2x: alerts in full text — the tile's reason for being big */}
       {tier === 2 && fullAlerts.length > 0 && (
         <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 11, lineHeight: 1.6 }}>
+          {/* round 33 grammar: one severity voice per line — the tag */}
           {fullAlerts.map((a, i) => (
-            <div key={i} style={{ color: ALERT_TEXT_COLOR[a.level] ?? NEUTRAL.inkSecondary }}>
-              [{a.level}] {a.message}
+            <div key={i} style={{ color: NEUTRAL.inkSecondary }}>
+              <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
             </div>
           ))}
         </div>
@@ -178,7 +174,6 @@ export function VesselTile({
         <div style={{ marginTop: 10, textAlign: 'left' }}>
           <DataRow label="endurance" value={`${d.endurance_hours} h`} />
           <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />
-          {badge && <DataRow label="alert" value={`[${badge}]`} />}
           <div style={{ marginTop: 6, textAlign: 'center' }}>
             <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={120} height={20} />
           </div>

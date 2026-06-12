@@ -1,3 +1,16 @@
+# PROGRESS — 2026-06-12 (Session 32: ROUND 33 — alert diet + status integration)
+
+## Done
+
+1. **Status strip dissolved.** SystemStatusStrip + AlertRail died into `StatusHeader` (rename recorded for barrel + Figma): [datalink] DATALINK {state} · LAST SYNC {age} · counts in severity colors. FleetHealthBand embeds it in its header row (board); VesselCommandBand embeds it in the primary row's header (inspector — still constant-height, still pure-CSS sticky). The AppHeader is now the wordmark only; sim clock + live/speed controls moved into the dev panel — simulator chrome, not product.
+2. **Alerts summoned, not standing.** The board's ALERTS card is gone. The counts are the click target: an anchored sheet opens beneath them — full lines, click a line → that vessel, click-outside or Esc closes. Zero standing pixels when closed. **Ordering note:** alerts carry no onset timestamp in the model (only the event log does), so "newest first" is approximated as severity class → fleet ranking score; flagged if true recency ordering matters enough to add onset times to the alert model.
+3. **Line grammar (one severity voice per line):** [LEVEL] tag in severity color · vessel name link (sheet only) · message in plain ink. Applied in the sheet, expanded tiles, and the inspector's alerts card. The per-line triangle glyph is gone (the sheet's one triangle lives on the summon control). This amends round 21 A6 (whole-line severity color) — the tag is the line's one color now.
+4. **Standing tile cleanup:** the `alert [CAUTION]` DataRow (1x) and the mini `[CAUTION]` badge line are deleted — border + dot + name tint are the badge, and the sort puts alerted vessels first. Full alert lines render only at 2x.
+
+**Acceptance check (screenshots):** board at rest shows zero alert prose; any alert's full text is one click away (counts → sheet) from both views.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 32: ROUND 32 — sticky fix, container purge, voyage profile)
 
 ## 1. Sticky, priority fix

@@ -9,7 +9,6 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
 import { useFleet } from '../state/FleetProvider';
-import { AlertRail } from './AlertRail';
 import { FleetHealthBand } from './FleetHealthBand';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
@@ -36,8 +35,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
       </div>
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
+      {/* round 33: the standing ALERTS card is gone — the health band's
+          count header summons the alert sheet on demand */}
       <Annotated name="FleetHealthBand"><FleetHealthBand fleet={fleet} /></Annotated>
-      <Annotated name="AlertRail"><AlertRail fleet={fleet} /></Annotated>
       {/* round 21 A2 trial: chart above the board, behind the dev toggle so
           the 2s Meridian glance test can be re-run honestly */}
       {chartTop && (
