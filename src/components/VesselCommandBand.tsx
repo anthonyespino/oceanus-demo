@@ -27,6 +27,7 @@ import { RevealZone } from './Contextual';
 import { StatusHeader } from './AlertSheet';
 import { ACCENT, FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, fmtTime } from './gb';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 function maxObservedBurn(v: VesselState): number {
   let max = 0;
@@ -91,9 +92,9 @@ const LOG_MAX = Math.log10(2400);
 
 /** Round 34: weather rides the mission clock's line — glyph + value + unit,
     no labels (they self-describe at this size). */
-function WxInline({ g, value }: { g: GlyphName; value: string }) {
+function WxInline({ g, value, attrs }: { g: GlyphName; value: string; attrs?: Record<string, string> }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+    <span {...attrs} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
       <Glyph name={g} size={14} color={NEUTRAL.inkSecondary} />
       <span style={{ fontFamily: FONT.data, fontSize: 14, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
     </span>
@@ -139,7 +140,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   };
   const modeChip = (
     <Field level="vessel" field="mode">
-      <span style={{ ...gb.boxTight, display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
+      <span {...layer('VesselCommandBand / centerStack / mode.chip', 'boxTight chip · line/strong · MODE_GLYPH map', '{derived.mode}')} style={{ ...gb.boxTight, display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
         <Glyph name={MODE_GLYPH[d.mode]} size={12} />{d.mode}
       </span>
     </Field>
@@ -199,31 +200,31 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
     profile = (
       <div>
         {toGoNm !== null && (
-          <div style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginBottom: 4 }}>
+          <div {...layer('VesselCommandBand / profile / toGo.text', 'font/data 10 · ink/muted · right-aligned', '{pct covered} · {nm to destination} — distance-to-go lives HERE only')} style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginBottom: 4 }}>
             {pctStr ? `${pctStr} · ` : ''}{toGoNm.toFixed(0)} NM TO GO
           </div>
         )}
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(56px, auto) 1fr minmax(56px, auto)', gap: 10, alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-            <span style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{origin?.label ?? 'UNDERWAY'}</span>
+            <span {...layer('VesselCommandBand / profile / origin.text', 'font/data 11 · ink/secondary', '{transit-run start: nearest port <5nm | nearest site}')} style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{origin?.label ?? 'UNDERWAY'}</span>
             {origin?.isPort && <StateMark port={origin.label} />}
           </div>
           {/* 2px track, filled = covered, vessel glyph at the live position */}
           <div style={{ position: 'relative', height: 16, minWidth: 80 }}>
-            <div style={{ position: 'absolute', top: 7, left: 0, right: 0, height: 2, background: NEUTRAL.surfaceDim }} />
+            <div {...layer('VesselCommandBand / profile / track.line', 'surface/overlay 2px', '{origin→destination}')} style={{ position: 'absolute', top: 7, left: 0, right: 0, height: 2, background: NEUTRAL.surfaceDim }} />
             {frac !== null && (
               <>
-                <div style={{ position: 'absolute', top: 7, left: 0, width: `${(frac * 100).toFixed(1)}%`, height: 2, background: ACCENT.primary }} />
-                <div style={{ position: 'absolute', top: 0, left: `calc(${(frac * 100).toFixed(1)}% - 8px)` }}>
+                <div {...layer('VesselCommandBand / profile / fill.line', 'accent/primary 2px — interaction/identity voice, never severity', '{distance covered fraction}')} style={{ position: 'absolute', top: 7, left: 0, width: `${(frac * 100).toFixed(1)}%`, height: 2, background: ACCENT.primary }} />
+                <div {...layer('VesselCommandBand / profile / vessel.glyph', 'glyph/vessel 16px · ink/primary', '{live position on track}')} style={{ position: 'absolute', top: 0, left: `calc(${(frac * 100).toFixed(1)}% - 8px)` }}>
                   <Glyph name="vessel" size={16} color={NEUTRAL.ink} />
                 </div>
               </>
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, justifyContent: 'flex-end' }}>
-            <span style={{ ...mono, minWidth: 0, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{next?.port ?? '—'}</span>
+            <span {...layer('VesselCommandBand / profile / destination.text', 'font/data 11 · ink/primary', '{next_port_calls[0].port}')} style={{ ...mono, minWidth: 0, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{next?.port ?? '—'}</span>
             {next && <StateMark port={next.port} />}
-            {next && <span style={{ ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap', flexShrink: 0 }}>ETA {fmtTime(next.eta)}</span>}
+            {next && <span {...layer('VesselCommandBand / profile / eta.text', 'font/data 11 · ink/muted', '{next_port_calls[0].eta} — absolute ETA + Z lives HERE only')} style={{ ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap', flexShrink: 0 }}>ETA {fmtTime(next.eta)}</span>}
           </div>
         </div>
       </div>
@@ -243,13 +244,17 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           <StatusHeader />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)', flexWrap: 'wrap', marginTop: 6 }}>
-          <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
-          <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
-            display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
+          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / speed.chart', 'Gauge primitive · 96px', '{position.speed_over_ground_kn} / max {cruise×1.35}')}>
+            <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
+          </div>
+          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / burn.chart', 'Gauge primitive · 96px', '{derived.burn_rate_gph} / max observed 1y')}>
+            <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
+              display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
+          </div>
           {/* broadcast center: name → master → mode → clock → weather */}
           <div style={{ flex: 1, minWidth: 240, textAlign: 'center' }}>
-            <div style={nameStyle}>{vessel.static.name}</div>
-            <div style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary, marginTop: 2 }}>
+            <div {...layer('VesselCommandBand / centerStack / name.text', 'type/hero · font/display caps · ink/primary', '{vessel.static.name}')} style={nameStyle}>{vessel.static.name}</div>
+            <div {...layer('VesselCommandBand / centerStack / master.text', 'font/data 12 · ink/secondary — names who you are calling', '{crew Master.name}')} style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary, marginTop: 2 }}>
               master: {master?.name ?? '—'}
             </div>
             <div style={{ marginTop: 4 }}>{modeChip}</div>
@@ -264,7 +269,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               }
             >
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 6, flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
+                <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · white when still (ruling 14)', '{T−(eta−now) in transit | mode + elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
                   {now.mode === 'TRANSIT' ? clock : `${context} ${clock}`}
                   {now.mode === 'TRANSIT' && context && (
                     <span style={{ fontSize: 12, color: NEUTRAL.inkSecondary }}> · {context}</span>
@@ -272,21 +277,25 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </span>
                 <span style={{ display: 'inline-flex', gap: 14, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
                   <Field level="vessel" field="weather.wind">
-                    <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} />
+                    <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 14 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wind_speed_kn} kn')} />
                   </Field>
                   <Field level="vessel" field="weather.waves">
-                    <WxInline g="wave" value={`${wx.wave_height_ft} ft`} />
+                    <WxInline g="wave" value={`${wx.wave_height_ft} ft`} attrs={layer('VesselCommandBand / centerStack / waves.text', 'font/data 14 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wave_height_ft} ft')} />
                   </Field>
                 </span>
               </div>
             </RevealZone>
           </div>
-          <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
-            display={`${d.efficiency_delta_pct > 0 ? '+' : ''}${d.efficiency_delta_pct.toFixed(1)}%`} vital={effVital} minMaxLabels={['-20', '+20']}
-            band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
-          <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
-            display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
-            band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
+          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / effDelta.chart', 'Gauge primitive · caution band ≥+8 (alert-backed)', '{derived.efficiency_delta_pct} vs mode baseline')}>
+            <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
+              display={`${d.efficiency_delta_pct > 0 ? '+' : ''}${d.efficiency_delta_pct.toFixed(1)}%`} vital={effVital} minMaxLabels={['-20', '+20']}
+              band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
+          </div>
+          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / endurance.chart', 'Gauge primitive · log dial · caution band <72h (alert-backed)', '{derived.endurance_hours}')}>
+            <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
+              display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
+              band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
+          </div>
         </div>
       </section>
       {/* SECONDARY — static flow, scrolls away naturally (no stuck logic);
@@ -297,11 +306,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           display: 'flex', gap: 18, flexWrap: 'wrap', justifyContent: 'center',
           color: NEUTRAL.inkSecondary, fontFamily: FONT.data, fontSize: 12,
         }}>
-          <span style={{ color: NEUTRAL.inkMuted }}>{vessel.static.length_ft} ft {vessel.static.class}</span>
+          <span {...layer('VesselCommandBand / factsLine / class.text', 'font/data 12 · ink/muted', '{static.length_ft} ft {static.class}')} style={{ color: NEUTRAL.inkMuted }}>{vessel.static.length_ft} ft {vessel.static.class}</span>
           <Field level="vessel" field="position">
-            <span>{nearestNm < 3 ? `alongside ${nearest.name}` : `${nearestNm.toFixed(0)} nm from ${nearest.name}`}</span>
+            <span {...layer('VesselCommandBand / factsLine / position.text', 'font/data 12 · ink/secondary — relative reference, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')}>{nearestNm < 3 ? `alongside ${nearest.name}` : `${nearestNm.toFixed(0)} nm from ${nearest.name}`}</span>
           </Field>
-          <span>{sog.toFixed(1)} kn</span>
+          <span {...layer('VesselCommandBand / factsLine / speed.text', 'font/data 12 · ink/secondary', '{position.speed_over_ground_kn} kn')}>{sog.toFixed(1)} kn</span>
           {wxStale && <span style={{ color: 'var(--color-data-stale)' }}>[STALE] weather last received {fmtTime(vessel.history.timestamps.weather)}</span>}
         </div>
         <div style={{ marginTop: 'var(--pad-section)' }}>

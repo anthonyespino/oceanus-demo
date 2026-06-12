@@ -1,3 +1,22 @@
+# PROGRESS — 2026-06-12 (Session 34: ROUND 35 — learn mode v2, the layer atlas)
+
+## Done
+
+1. **Leaf instrumentation.** New `layer(path, tokens, binds)` helper (src/learn/layer.ts) emits inert `data-layer*` attributes; 13 components / ~99 leaves instrumented across the redraw set — band, tile, rail row, engine panel, gauge primitive, efficiency (panel + envelope internals), synoptic + quartet, crew & log, status header + alert sheet, chart furniture (water/land/graticule/compass/scale/sea label). Convention enforced: `Component / region(camelCase) / role.kind`; kinds closed to text · line · shape · chart · glyph · chip · status; roles data-meaningful, no styling words.
+2. **Hover card v2** (`LayerLens`, src/learn/): learn-mode hover on any instrumented element shows LAYER / TOKENS / BINDS for the innermost `data-layer` ancestor. Component docent cards survive and yield via a shared `leafActive` flag — leaf beats region beats component.
+3. **Click = copy.** In learn mode any instrumented element click-copies its layer path (capture-phase, beats the reveal/docent handlers; clipboard API with execCommand fallback; toast confirms). Verified end-to-end in the acceptance run: clipboard read back exactly `VesselTile / header / name.text`.
+4. **The atlas.** `scripts/atlas.ts` regenerates `docs/LAYER_ATLAS.md` from the instrumentation on every build (npm prebuild hook) — per component, the layer tree with tokens + bindings exactly as the hover cards report. Can't drift: the same `layer()` strings feed both.
+5. **FIGMA_STANDARD.md §4a** added: the three rules + the kind/role vocabulary + the atlas pointer. Learn mode stays strip-by-directory; the data attributes are inert in production (≈3 KB of DOM strings, zero behavior) and go with the strip sweep.
+
+## Acceptance (screenshots)
+
+- `r35-hover-tilename.png` — VesselTile / header / name.text with tokens + {vessel.static.name}
+- `r35-hover-needle.png` — Gauge / dial / needle.line, ink/primary-always noted with its ruling
+- `r35-hover-flowline.png` — VesselSynoptic / flow / feedLine.line with transfer-state binding
+- `r35-copy-toast.png` — copy confirm; clipboard verified programmatically
+
+---
+
 # PROGRESS — 2026-06-12 (Session 33: ROUND 34 — merges + hierarchy)
 
 ## 1. Band absorbs the profile (one container)

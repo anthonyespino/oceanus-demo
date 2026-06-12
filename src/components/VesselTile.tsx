@@ -20,6 +20,7 @@ import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT, ALERT_TEXT_COLOR } from './p
 import { useState } from 'react';
 import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
 import { Glyph, type GlyphName } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
 
@@ -68,6 +69,7 @@ export function VesselTile({
 
   return (
     <Link
+      {...layer('VesselTile / frame / border.status', 'hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar)', '{vesselStatus(alerts)} · {derived.mode}')}
       href={`/vessel/${vessel.static.id}`}
       onMouseEnter={() => setHot(true)}
       onMouseLeave={() => setHot(false)}
@@ -120,9 +122,9 @@ export function VesselTile({
       )}
       {/* header block: fixed */}
       <div style={{ textAlign: 'center' }}>
-        <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: dotColor, marginBottom: 8 }} />
-        <div style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
-        <div style={{ marginTop: 6, display: 'inline-block', color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
+        <span {...layer('VesselTile / header / dot.status', 'status color | ink/muted when nominal (treatment B)', '{vesselStatus(alerts)}')} style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: dotColor, marginBottom: 8 }} />
+        <div {...layer('VesselTile / header / name.text', 'type/name · font/display caps · status tint when alerted (earned)', '{vessel.static.name}')} style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+        <div {...layer('VesselTile / header / trend.text', 'type/hero · font/data tabular · status tint (earned)', '{derived.trend_30d} %/30d')} style={{ marginTop: 6, display: 'inline-block', color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
           <Stat label="30d trend" value={
             <>
               {fmtPct(d.trend_30d)}
@@ -133,7 +135,7 @@ export function VesselTile({
           } size={mini ? 24 : 'var(--type-hero-size)'} />
         </div>
         <div style={{ marginTop: 6 }}>
-          <span style={{ ...TYPE.micro, border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '1px 8px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          <span {...layer('VesselTile / header / mode.chip', 'type/micro · line/strong chip · ink/secondary', '{derived.mode} + MODE_GLYPH')} style={{ ...TYPE.micro, border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '1px 8px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
             <Glyph name={MODE_GLYPH[d.mode]} size={11} />{d.mode}
           </span>
         </div>
@@ -142,7 +144,7 @@ export function VesselTile({
           tint ARE the badge; full alert lines appear only at 2x */}
       {/* expanded: the chart absorbs the void — flex-grow, plot scales */}
       {tier === 2 && (
-        <div style={{ flex: 1, minHeight: 96, marginTop: 10 }}>
+        <div {...layer('VesselTile / body / trendChart.chart', 'ink/secondary line · zero axis', '{daily_delta_1y[-30d]}')} style={{ flex: 1, minHeight: 96, marginTop: 10 }}>
           <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
         </div>
       )}
@@ -151,7 +153,7 @@ export function VesselTile({
         <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 11, lineHeight: 1.6 }}>
           {/* round 33 grammar: one severity voice per line — the tag */}
           {fullAlerts.map((a, i) => (
-            <div key={i} style={{ color: NEUTRAL.inkSecondary }}>
+            <div key={i} {...layer('VesselTile / body / alert.text', 'tag = severity color · message ink/secondary (round 33 grammar)', '{alerts[] level + message}')} style={{ color: NEUTRAL.inkSecondary }}>
               <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
             </div>
           ))}
@@ -172,9 +174,13 @@ export function VesselTile({
       )}
       {tier === 1 && !mini && (
         <div style={{ marginTop: 10, textAlign: 'left' }}>
-          <DataRow label="endurance" value={`${d.endurance_hours} h`} />
-          <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />
-          <div style={{ marginTop: 6, textAlign: 'center' }}>
+          <div {...layer('VesselTile / body / endurance.text', 'DataRow: label ink/muted left · numeral tabular right', '{derived.endurance_hours} h')}>
+            <DataRow label="endurance" value={`${d.endurance_hours} h`} />
+          </div>
+          <div {...layer('VesselTile / body / delta.text', 'DataRow: label ink/muted left · numeral tabular right', '{derived.efficiency_delta_pct} vs mode baseline')}>
+            <DataRow label="now" value={fmtPct(d.efficiency_delta_pct)} />
+          </div>
+          <div {...layer('VesselTile / body / sparkline.chart', 'ink/secondary 1px · line/subtle frame', '{daily_delta_1y[-90d]}')} style={{ marginTop: 6, textAlign: 'center' }}>
             <Sparkline values={d.daily_delta_1y.slice(-90).map((x) => x.delta)} width={120} height={20} />
           </div>
         </div>
@@ -182,7 +188,7 @@ export function VesselTile({
       {/* round 18: passive endurance strip (meter variant) — indicator only,
           not a trigger */}
       {revealStyle === 'meter' && (
-        <div style={{ marginTop: 'auto', paddingTop: 8 }}>
+        <div {...layer('VesselTile / footer / fuel.fill', 'ink/muted fill | alert color when endurance-backed · surface/overlay track', '{Σ tank level / Σ capacity}')} style={{ marginTop: 'auto', paddingTop: 8 }}>
           <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: 2 }}>
             <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: 2 }} />
           </div>

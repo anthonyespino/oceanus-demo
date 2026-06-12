@@ -18,6 +18,7 @@ import { Field } from './Field';
 import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 import { Label } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 // Tank fill as a 5×10 dot grid, filled from the bottom (round 5 experiment,
 // ⚖ #9 winner — the bars/row layout is deleted).
@@ -129,23 +130,23 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
       <div ref={wrapRef}>
         <svg width={w} height={h} viewBox={`0 0 ${VB.w} ${VB.h}`} style={{ display: 'block' }}>
           {/* hull + superstructure: neutral ink lines, schematic */}
-          <path d={HULL_PATH} fill="none" stroke={INK2} strokeWidth={1.5} />
-          <path d={SUPER_PATH} fill="var(--color-surface-overlay)" stroke={LINE} strokeWidth={1} />
-          <text x={150} y={154} textAnchor="middle" style={mono(9)} fill={NEUTRAL.inkMuted}>SUPERSTRUCTURE</text>
+          <path {...layer('VesselSynoptic / hull / hull.line', 'ink/secondary 1.5px — neutral, never status', '{HULL_PATH — Figma hull replaces 1:1}')} d={HULL_PATH} fill="none" stroke={INK2} strokeWidth={1.5} />
+          <path {...layer('VesselSynoptic / hull / superstructure.shape', 'surface/overlay fill · line/strong', '{SUPER_PATH}')} d={SUPER_PATH} fill="var(--color-surface-overlay)" stroke={LINE} strokeWidth={1} />
+          <text {...layer('VesselSynoptic / hull / label.text', 'font/data 9 · ink/muted', 'SUPERSTRUCTURE (static)')} x={150} y={154} textAnchor="middle" style={mono(9)} fill={NEUTRAL.inkMuted}>SUPERSTRUCTURE</text>
           <text x={36} y={150} textAnchor="middle" style={mono(8)} fill={NEUTRAL.inkMuted} transform="rotate(-90 36 150)">BOW</text>
 
           {/* flow paths storage→feeder→meter→engines (neutral) */}
           {[0, 1].map((i) => (
-            <line key={`sf${i}`} x1={GEOM.storage[i].x + GEOM.storage[i].w} y1={GEOM.storage[i].y + GEOM.storage[i].h / 2}
+            <line key={`sf${i}`} {...layer('VesselSynoptic / flow / feedLine.line', 'line/strong 1.2px · dashed when no transfer', '{storage→feeder · tank.transfer_active}')} x1={GEOM.storage[i].x + GEOM.storage[i].w} y1={GEOM.storage[i].y + GEOM.storage[i].h / 2}
               x2={GEOM.feeder[i].x} y2={GEOM.feeder[i].y + GEOM.feeder[i].h / 2}
               stroke={LINE} strokeWidth={1.2} strokeDasharray={xferActive ? undefined : '4 3'} />
           ))}
           {[0, 1].map((i) => (
-            <line key={`fm${i}`} x1={GEOM.feeder[i].x + GEOM.feeder[i].w} y1={GEOM.feeder[i].y + GEOM.feeder[i].h / 2}
+            <line key={`fm${i}`} {...layer('VesselSynoptic / flow / meterLine.line', 'line/strong 1.2px', '{feeder→flow meter}')} x1={GEOM.feeder[i].x + GEOM.feeder[i].w} y1={GEOM.feeder[i].y + GEOM.feeder[i].h / 2}
               x2={GEOM.meter.x} y2={GEOM.meter.y} stroke={LINE} strokeWidth={1.2} />
           ))}
           {GEOM.engines.map((e) => (
-            <line key={`me${e.id}`} x1={GEOM.meter.x} y1={GEOM.meter.y} x2={e.x - e.r} y2={e.y}
+            <line key={`me${e.id}`} {...layer('VesselSynoptic / flow / engineLine.line', 'line/strong 1.2px', '{flow meter→engine}')} x1={GEOM.meter.x} y1={GEOM.meter.y} x2={e.x - e.r} y2={e.y}
               stroke={LINE} strokeWidth={1.2} />
           ))}
           {xferActive && (
@@ -161,10 +162,10 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             const fillH = (g.h - 4) * (t.level_pct / 100);
             return (
               <g key={g.id}>
-                <rect x={g.x} y={g.y} width={g.w} height={g.h} fill="var(--color-surface-base)" stroke={tint ?? LINE} strokeWidth={tint ? 1.5 : 1} rx={3} />
-                <rect x={g.x + 2} y={g.y + 2 + (g.h - 4 - fillH)} width={g.w - 4} height={fillH}
+                <rect {...layer('VesselSynoptic / tanks / tank.shape', 'surface/base · line/strong | TANK_LOW tint (own alert only, round 20)', '{tank.tank_id}')} x={g.x} y={g.y} width={g.w} height={g.h} fill="var(--color-surface-base)" stroke={tint ?? LINE} strokeWidth={tint ? 1.5 : 1} rx={3} />
+                <rect {...layer('VesselSynoptic / tanks / fill.shape', 'fill/level · bottom-up vertical (round 20)', '{tank.level_pct}')} x={g.x + 2} y={g.y + 2 + (g.h - 4 - fillH)} width={g.w - 4} height={fillH}
                   fill={tint ?? 'var(--color-fill-level)'} opacity={tint ? 0.35 : 1} rx={2} />
-                <text x={g.x + g.w / 2} y={g.y + g.h / 2 + 4} textAnchor="middle" style={mono(11)} fill={tint ?? NEUTRAL.ink}>
+                <text {...layer('VesselSynoptic / tanks / value.text', 'font/data 11 · ink/primary | tint', '{tank.level_pct}%')} x={g.x + g.w / 2} y={g.y + g.h / 2 + 4} textAnchor="middle" style={mono(11)} fill={tint ?? NEUTRAL.ink}>
                   {t.level_pct.toFixed(0)}%
                 </text>
               </g>
@@ -179,9 +180,9 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             const stroke = tint ?? LINE;
             return (
               <g key={g.id}>
-                <circle cx={g.x} cy={g.y} r={g.r} fill={e.running ? (tint ?? 'var(--color-surface-overlay)') : 'none'}
+                <circle {...layer('VesselSynoptic / engines / node.shape', 'running = filled · stopped = outline · status tint only when alert names the engine', '{engine.engine_id · running}')} cx={g.x} cy={g.y} r={g.r} fill={e.running ? (tint ?? 'var(--color-surface-overlay)') : 'none'}
                   stroke={stroke} strokeWidth={tint ? 2 : 1.2} />
-                <text x={g.x} y={g.y + 3.5} textAnchor="middle" style={mono(9)}
+                <text {...layer('VesselSynoptic / engines / value.text', 'font/data 9', '{engine.load_pct}% | OFF')} x={g.x} y={g.y + 3.5} textAnchor="middle" style={mono(9)}
                   fill={e.running && tint ? '#0b0e13' : INK2}>
                   {e.running ? `${Math.round(e.load_pct)}%` : 'OFF'}
                 </text>
@@ -190,12 +191,12 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
           })}
 
           {/* flow meter + rate + reconciliation badge */}
-          <rect x={GEOM.meter.x - 7} y={GEOM.meter.y - 7} width={14} height={14}
+          <rect {...layer('VesselSynoptic / meter / meter.shape', 'surface/overlay · line/strong · 45° diamond', 'flow meter node')} x={GEOM.meter.x - 7} y={GEOM.meter.y - 7} width={14} height={14}
             fill="var(--color-surface-overlay)" stroke={LINE} strokeWidth={1.2} transform={`rotate(45 ${GEOM.meter.x} ${GEOM.meter.y})`} />
-          <text x={GEOM.meter.x} y={GEOM.meter.y + 28} textAnchor="middle" style={mono(11)} fill={NEUTRAL.ink}>
+          <text {...layer('VesselSynoptic / meter / value.text', 'font/data 11 · ink/primary', '{flow_gps × 3600} gph')} x={GEOM.meter.x} y={GEOM.meter.y + 28} textAnchor="middle" style={mono(11)} fill={NEUTRAL.ink}>
             {Math.round(now.flow_gps * 3600)} gph
           </text>
-          <g>
+          <g {...layer('VesselSynoptic / meter / recon.chip', 'border + text = recon severity (OK ink/secondary · advisory · watch)', '{reconciliation.status · error_pct}')}>
             <rect x={GEOM.meter.x - 34} y={GEOM.meter.y - 46} width={68} height={16} rx={3}
               fill="var(--color-surface-raised)" stroke={reconColor} strokeWidth={1} />
             <text x={GEOM.meter.x} y={GEOM.meter.y - 34} textAnchor="middle" style={mono(9)} fill={reconColor}>
@@ -212,8 +213,8 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             const anchorY = up ? c.ayTop : c.ayBot;
             return (
               <g key={`co-${c.id}`}>
-                <line x1={c.ax} y1={anchorY} x2={l.lx} y2={l.ly + (up ? 4 : -10)} stroke={LINE} strokeWidth={0.6} />
-                <text x={l.lx} y={l.ly} textAnchor="middle" style={mono(10)} fill={INK2}>{c.id}</text>
+                <line {...layer('VesselSynoptic / callouts / leader.line', 'line/strong 0.6px', '{node→label}')} x1={c.ax} y1={anchorY} x2={l.lx} y2={l.ly + (up ? 4 : -10)} stroke={LINE} strokeWidth={0.6} />
+                <text {...layer('VesselSynoptic / callouts / label.text', 'font/data 10 · ink/secondary — ST/FD/E annotation language', '{ST1 ST2 FD1 FD2 E1–E4}')} x={l.lx} y={l.ly} textAnchor="middle" style={mono(10)} fill={INK2}>{c.id}</text>
               </g>
             );
           })}
@@ -228,15 +229,17 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             return (
               <div key={g.id} style={{ textAlign: 'left' }}>
                 <Field level="vessel" field="tank.type">
-                  <div style={{ ...gb.label, marginBottom: 4, ...(tint ? { color: tint } : {}) }}>
+                  <div {...layer('VesselSynoptic / quartet / label.text', 'gb.label micro-caps · TANK_LOW tint (earned)', '{tank.tank_id} {tank.type}')} style={{ ...gb.label, marginBottom: 4, ...(tint ? { color: tint } : {}) }}>
                     {g.id} {t.type}
                   </div>
                 </Field>
                 <Field level="vessel" field="tank.level_pct">
-                  <DotMatrix pct={t.level_pct} tint={tint} />
+                  <div {...layer('VesselSynoptic / quartet / fill.chart', 'dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)', '{tank.level_pct → filled dots}')}>
+                    <DotMatrix pct={t.level_pct} tint={tint} />
+                  </div>
                 </Field>
                 <Field level="vessel" field="tank.level_gal">
-                  <div style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>
+                  <div {...layer('VesselSynoptic / quartet / value.text', 'font/data 12 tabular · gal ink/secondary', '{tank.level_pct}% · {tank.level_gal} gal')} style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>
                     {t.level_pct}% · <span style={{ color: NEUTRAL.inkSecondary }}>{t.level_gal.toLocaleString()} gal</span>
                   </div>
                 </Field>

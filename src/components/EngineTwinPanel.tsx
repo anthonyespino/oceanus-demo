@@ -17,6 +17,7 @@ import { useContentWidth } from './NauticalChart';
 import { FONT, NEUTRAL } from './probeTokens';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 /** Daily mean E2−E1 EGT gap (both mains running), last 30 days. */
 function gapTrend30d(vessel: VesselState): number[] {
@@ -83,16 +84,16 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
       <div style={{ display: 'flex', gap: 'var(--pad-card)', alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="twin_comparison_delta">
           <div style={{ flex: '0 1 30%', minWidth: 210 }}>
-            <div style={{ ...gb.label, marginBottom: 4 }}>E2 vs E1 EGT</div>
+            <div {...layer('EngineTwinPanel / verdict / label.text', 'gb.label micro-caps · ink/muted', 'E2 VS E1 EGT (static)')} style={{ ...gb.label, marginBottom: 4 }}>E2 vs E1 EGT</div>
             {/* gap hero — largest type in the section */}
-            <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+            <div {...layer('EngineTwinPanel / verdict / gap.text', 'type/hero · font/data tabular — largest type in the section', '{E2.egt − E1.egt} now, both running')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
               {egtGapNow > 0 ? '+' : ''}{egtGapNow} °F
             </div>
-            <div style={{ fontFamily: FONT.data, fontSize: 14, marginTop: 4 }}>fuel {fmtPct(fuelGapPct)} at matched load</div>
-            <div style={{ ...gb.dim, fontFamily: FONT.data, fontSize: 11, marginTop: 2 }}>24h avg gap {vessel.derived.egt_twin_gap_f} °F</div>
+            <div {...layer('EngineTwinPanel / verdict / fuelDelta.text', 'font/data 14', '{E2.fuel_rate / E1.fuel_rate − 1} at matched load')} style={{ fontFamily: FONT.data, fontSize: 14, marginTop: 4 }}>fuel {fmtPct(fuelGapPct)} at matched load</div>
+            <div {...layer('EngineTwinPanel / verdict / avg.text', 'font/data 11 · ink/secondary', '{derived.egt_twin_gap_f} — 24h avg at matched load')} style={{ ...gb.dim, fontFamily: FONT.data, fontSize: 11, marginTop: 2 }}>24h avg gap {vessel.derived.egt_twin_gap_f} °F</div>
           </div>
         </Field>
-        <div style={{ flex: '1 1 320px', minWidth: 0 }}>
+        <div {...layer('EngineTwinPanel / gapTrend / area.chart', 'fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)', '{daily mean E2−E1 EGT, 30d, both running} — the "three weeks early" graphic')} style={{ flex: '1 1 320px', minWidth: 0 }}>
           <GapTrend values={gapTrend30d(vessel)} />
           <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, color: NEUTRAL.inkMuted, marginTop: 2, textAlign: 'center' }}>EGT GAP · 30D</div>
         </div>
@@ -101,7 +102,7 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
           State/load/fuel live here and nowhere else. */}
       <div style={{ display: 'flex', gap: '0 var(--pad-card)', marginTop: 'var(--pad-section)', flexWrap: 'wrap', fontFamily: FONT.data, fontSize: 12 }}>
         {now.engines.map((e, i) => (
-          <span key={e.engine_id} style={{ flex: '1 1 40%', minWidth: 280, display: 'flex', justifyContent: 'space-between', gap: 8, borderTop: '1px solid var(--color-line-hairline)', padding: '6px 0' }}>
+          <span key={e.engine_id} {...layer('EngineTwinPanel / rows / engine.text', 'font/data 12 · id+role ink/muted left · state tabular right · hairline divider', '{id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only')} style={{ flex: '1 1 40%', minWidth: 280, display: 'flex', justifyContent: 'space-between', gap: 8, borderTop: '1px solid var(--color-line-hairline)', padding: '6px 0' }}>
             <span style={{ color: NEUTRAL.inkMuted }}>{ids[i]} {e.role}</span>
             <span style={{ color: e.running ? NEUTRAL.ink : NEUTRAL.inkMuted, fontVariantNumeric: 'tabular-nums' }}>
               {e.running ? `RUNNING · ${Math.round(e.load_pct)}% · ${e.fuel_rate_gph} gph` : 'OFF'}

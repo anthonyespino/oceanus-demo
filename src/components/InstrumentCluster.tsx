@@ -11,6 +11,7 @@ import type { VesselState } from '../data/types';
 import { toggleStyle, NEUTRAL } from './probeTokens';
 import { Gauge, type Vital } from './Gauge';
 import { gb } from './gb';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const DANGER = 'var(--color-alert-warning)';
 
@@ -88,7 +89,7 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
         <span style={{ ...gb.label, marginBottom: 0 }}>sensors — {['E1', 'E2', 'G1', 'G2'][idx]}</span>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           {now.engines.map((eng, i) => (
-            <button key={eng.engine_id} style={toggleStyle(i === idx)} onClick={() => setIdx(i)}>
+            <button key={eng.engine_id} {...layer('InstrumentCluster / selector / engine.chip', 'toggleStyle — accent when active (interaction voice)', '{engine index → cluster binding}')} style={toggleStyle(i === idx)} onClick={() => setIdx(i)}>
               {['E1', 'E2', 'G1', 'G2'][i]}
             </button>
           ))}
@@ -102,7 +103,9 @@ export function InstrumentCluster({ vessel }: { vessel: VesselState }) {
             <Gauge label={d.label} value={d.value} min={d.min} max={d.max} unit={d.unit} off={off}
               vital={engineVital(vessel, e.engine_id, e.running, d.over ?? false, d.limitLevel ?? 'watch')}
               displayLimits={d.displayLimits} band={d.band} />
-            <AreaTrace values={trace24h(vessel, idx, d.pick)} off={off} />
+            <div {...layer('InstrumentCluster / cell / trace.chart', 'fill/level area · ink/muted line · gauge-cell width · dims with dormant dial', '{selected engine sensor, 24h minutes → ~96 pts}')}>
+              <AreaTrace values={trace24h(vessel, idx, d.pick)} off={off} />
+            </div>
           </div>
         ))}
       </div>

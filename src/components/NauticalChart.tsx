@@ -24,6 +24,7 @@ const GRID = '#262626'; // graticule: faint, neutral
 // — the same polygon renders here, steers the schedule's land avoidance,
 // and backs the verify no-trail-on-land case.
 import { LAND } from '../data/coast';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 function gridStep(span: number): number {
   return span >= 8 ? 2 : span >= 3 ? 1 : 0.5;
@@ -165,11 +166,12 @@ export function NauticalChart({
   const barNm = [200, 100, 50, 20, 10].find((nm) => nm * pxPerNm <= width * 0.3) ?? 10;
 
   return (
-    <svg width={width} height={height} style={{ display: 'block', background: 'var(--color-chart-water)' /* blue's only job */ }}>
-      <path d={landD} fill="var(--color-chart-land)" stroke="var(--color-line-hairline)" strokeWidth={1} />
+    <svg {...layer('NauticalChart / base / water.shape', 'chart/water #0d1924 — the ONLY navy (round 23)', '{chart frame}')} width={width} height={height} style={{ display: 'block', background: 'var(--color-chart-water)' /* blue's only job */ }}>
+      <path {...layer('NauticalChart / base / land.shape', 'chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23)', '{LAND polygon from src/data/coast.ts}')} d={landD} fill="var(--color-chart-land)" stroke="var(--color-line-hairline)" strokeWidth={1} />
       {/* sea-area label: chart furniture, very low contrast (round 4) */}
       {frame.lonMax - frame.lonMin > 6 && (
         <text
+          {...layer('NauticalChart / base / seaLabel.text', 'font/ui letterspaced · near-water contrast — furniture, not data', 'GULF OF MEXICO (static)')}
           x={width * 0.52}
           y={height * 0.72}
           fontSize={Math.min(22, width / 40)}
@@ -182,7 +184,7 @@ export function NauticalChart({
         </text>
       )}
       {ticks(frame.lonMin, frame.lonMax, lonStep).map((lon) => (
-        <g key={`lon${lon}`}>
+        <g key={`lon${lon}`} {...layer('NauticalChart / graticule / meridian.line', 'grid faint 0.5px · frame ticks · 9px labels', '{longitude grid at adaptive step}')}>
           <line x1={px(lon)} y1={0} x2={px(lon)} y2={height} stroke={GRID} strokeWidth={0.5} />
           <line x1={px(lon)} y1={0} x2={px(lon)} y2={6} stroke={CHART_INK} strokeWidth={1.5} />
           <line x1={px(lon)} y1={height - 6} x2={px(lon)} y2={height} stroke={CHART_INK} strokeWidth={1.5} />
@@ -190,21 +192,21 @@ export function NauticalChart({
         </g>
       ))}
       {ticks(frame.latMin, frame.latMax, latStep).map((lat) => (
-        <g key={`lat${lat}`}>
+        <g key={`lat${lat}`} {...layer('NauticalChart / graticule / parallel.line', 'grid faint 0.5px · frame ticks · 9px labels', '{latitude grid at adaptive step}')}>
           <line x1={0} y1={py(lat)} x2={width} y2={py(lat)} stroke={GRID} strokeWidth={0.5} />
           <line x1={0} y1={py(lat)} x2={6} y2={py(lat)} stroke={CHART_INK} strokeWidth={1.5} />
           <line x1={width - 6} y1={py(lat)} x2={width} y2={py(lat)} stroke={CHART_INK} strokeWidth={1.5} />
           <text x={9} y={py(lat) - 3} fontSize={9} fill={CHART_INK}>{lat}°N</text>
         </g>
       ))}
-      <g transform={`translate(${width - 46}, 52)`}>
+      <g {...layer('NauticalChart / furniture / compass.glyph', 'chart ink · ring + needle + N', 'north-up (static)')} transform={`translate(${width - 46}, 52)`}>
         <circle r={16} fill="none" stroke={CHART_INK} strokeWidth={1} />
         <line x1={0} y1={13} x2={0} y2={-13} stroke={CHART_INK} strokeWidth={1} />
         <line x1={-13} y1={0} x2={13} y2={0} stroke={CHART_INK} strokeWidth={0.5} />
         <polygon points="-3.5,-7 0,-16 3.5,-7" fill={CHART_INK} />
         <text x={0} y={-21} fontSize={10} fill={CHART_INK} textAnchor="middle">N</text>
       </g>
-      <g transform={`translate(20, ${height - 18})`}>
+      <g {...layer('NauticalChart / furniture / scale.line', 'chart ink · end + mid ticks', '{bar length adapts: 10–200 nm at mid-latitude}')} transform={`translate(20, ${height - 18})`}>
         <line x1={0} y1={0} x2={barNm * pxPerNm} y2={0} stroke={CHART_INK} strokeWidth={1.5} />
         <line x1={0} y1={-4} x2={0} y2={4} stroke={CHART_INK} strokeWidth={1.5} />
         <line x1={(barNm / 2) * pxPerNm} y1={-3} x2={(barNm / 2) * pxPerNm} y2={3} stroke={CHART_INK} strokeWidth={1} />

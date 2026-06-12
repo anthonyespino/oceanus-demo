@@ -19,6 +19,7 @@ import { compareVessels } from '../data/fleetState';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
 import { Glyph, MODE_GLYPH } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, TYPE, selectionBorder } from './probeTokens';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const ACTIVE_MODES = new Set(['TRANSIT', 'STATION']);
 
@@ -98,6 +99,7 @@ export function FleetRail({
             }}
           >
             <span
+              {...layer('FleetRail / row / dot.status', 'status color | ink/muted nominal (treatment B)', '{vesselStatus(alerts)}')}
               style={{
                 width: 8,
                 height: 8,
@@ -106,11 +108,11 @@ export function FleetRail({
                 background: colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted,
               }}
             />
-            <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+            <span {...layer('FleetRail / row / name.text', 'font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)', '{vessel.static.name}')} style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
               {v.static.name}
             </span>
             {railMode === 'glyph' && (
-              <span style={{ color: NEUTRAL.inkMuted, lineHeight: 0, flexShrink: 0 }}>
+              <span {...layer('FleetRail / row / mode.glyph', 'MODE_GLYPH 11px · ink/muted', '{derived.mode}')} style={{ color: NEUTRAL.inkMuted, lineHeight: 0, flexShrink: 0 }}>
                 <Glyph name={MODE_GLYPH[v.derived.mode]} size={11} />
               </span>
             )}

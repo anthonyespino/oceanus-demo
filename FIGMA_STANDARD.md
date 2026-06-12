@@ -58,6 +58,16 @@ ModeTimeline: (single variant; data-driven)
 - Every container is Auto Layout. No absolutely-positioned children outside FleetMap's marker field. Auto Layout IS the flexbox the React build uses; matching structure means matching behavior.
 - Decorative vector work gets flattened and named (`glyph-anchor`, `texture-grid`), never left as 30 loose paths.
 
+### 4a. Leaf convention (round 35 — the layer atlas)
+
+The probe instruments every redraw-bound element with a layer path the code and the Figma file share. Three rules:
+
+1. **Path shape**: `Component / region(camelCase) / role.kind` — exactly the component's barrel name, then the region, then the leaf. The path IS the Figma layer name; learn mode (L) click-copies it from any element.
+2. **Kind vocabulary is closed**: `text · line · shape · chart · glyph · chip · status`. Nothing else.
+3. **Roles are data-meaningful** (`name`, `value`, `label`, `needle`, `arc`, `track`, `fill`, `dot`, …) — never styling words. "amber-bar" is wrong twice; `band.line` with the alert token is right.
+
+`docs/LAYER_ATLAS.md` is auto-generated from the instrumentation on every build (tokens + bindings per leaf, exactly as the learn-mode hover cards report) — the desk-side reference while drawing. The `data-layer` attributes are inert in production and stripped with `src/learn/`.
+
 ## 5. Token Naming (Figma Variables ↔ Tailwind config)
 
 One vocabulary, defined in Figma Variables, mirrored in `tailwind.config`:

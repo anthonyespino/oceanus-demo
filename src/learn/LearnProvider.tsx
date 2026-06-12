@@ -5,10 +5,19 @@
 // imports — nothing else depends on this directory.
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { LayerLens } from './LayerLens'; // round 35: leaf hover cards + click-copy
 
-const LearnContext = createContext<{ learnOn: boolean; setLearnOn: (b: boolean) => void }>({
+const LearnContext = createContext<{
+  learnOn: boolean;
+  setLearnOn: (b: boolean) => void;
+  /** round 35: a leaf card is showing — component docent cards yield */
+  leafActive: boolean;
+  setLeafActive: (b: boolean) => void;
+}>({
   learnOn: false,
   setLearnOn: () => {},
+  leafActive: false,
+  setLeafActive: () => {},
 });
 
 export function useLearn() {
@@ -17,6 +26,7 @@ export function useLearn() {
 
 export function LearnProvider({ children }: { children: React.ReactNode }) {
   const [learnOn, setLearnOn] = useState(false);
+  const [leafActive, setLeafActive] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -29,8 +39,9 @@ export function LearnProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <LearnContext.Provider value={{ learnOn, setLearnOn }}>
+    <LearnContext.Provider value={{ learnOn, setLearnOn, leafActive, setLeafActive }}>
       {children}
+      <LayerLens />
       {learnOn && (
         <div
           style={{

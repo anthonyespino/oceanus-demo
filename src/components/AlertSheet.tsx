@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { useFleet } from '../state/FleetProvider';
 import { Glyph } from './Glyph';
 import { ALERT_TEXT_COLOR, FONT, NEUTRAL, RADIUS } from './probeTokens';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 function fmtAge(ms: number): string {
   const m = Math.floor(ms / 60000);
@@ -86,7 +87,7 @@ export function StatusHeader() {
   return (
     // round 34: one flex baseline — glyphs vertically centered on the text
     <span ref={wrap} style={{ display: 'inline-flex', gap: 14, alignItems: 'center', position: 'relative', flexWrap: 'wrap' }}>
-      <span style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+      <span {...layer('StatusHeader / datalink / state.text', 'font/data 11 · ink/secondary | advisory when degraded — inline grammar: vessel + feed + age, worst first', '{stale stream census → FRESH | DEGRADED | STALE}')} style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
         <Glyph name="datalink" size={12} />
         <span>
           DATALINK {datalink}
@@ -103,9 +104,10 @@ export function StatusHeader() {
           </button>
         )}
       </span>
-      <span style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
+      <span {...layer('StatusHeader / sync / age.text', 'font/data 11 · ink/secondary', '{simTime − oldest stream timestamp}')} style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
       {/* the counts ARE the alert surface — click summons the sheet */}
       <button
+        {...layer('StatusHeader / alerts / counts.chip', 'counts in severity colors — THE alert click target (round 33: summoned, not standing)', '{fleet alert counts by level} → opens AlertSheet')}
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label="open alert sheet"
@@ -143,6 +145,7 @@ export function StatusHeader() {
             lines.map(({ v, a }, i) => (
               <Link
                 key={`${v.static.id}-${a.code}-${i}`}
+                {...layer('AlertSheet / sheet / line.text', 'round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary', '{alert.level · vessel.name → /vessel/id · alert.message}')}
                 href={`/vessel/${v.static.id}`}
                 onClick={() => setOpen(false)}
                 style={{ display: 'block', textDecoration: 'none', fontFamily: FONT.data, fontSize: 12, lineHeight: 1.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}

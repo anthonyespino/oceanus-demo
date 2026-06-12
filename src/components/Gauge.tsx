@@ -13,6 +13,7 @@
 // (96) sits a step above the engine cluster (86) automatically.
 
 import { FONT, NEUTRAL, TYPE } from './probeTokens';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const A0 = -135; // sweep start (degrees, 0 = up)
 const A1 = 135; // sweep end — 270° C, opening at bottom
@@ -90,7 +91,7 @@ export function Gauge({
   return (
     <div style={{ width: size, textAlign: 'center' }}>
       {/* value on top — hero scale, earned color */}
-      <div style={{
+      <div {...layer('Gauge / readout / value.text', 'font/data tabular · type/hero×k · earned color (ruling 14)', '{display ?? round(value)+unit}')} style={{
         fontFamily: FONT.data, fontSize: Math.max(11, Math.round(HERO * k)), fontWeight: 500,
         fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', lineHeight: 1.25, marginBottom: 2 * k,
         color: off ? NEUTRAL.inkMuted : VALUE_COLOR[vital],
@@ -99,7 +100,7 @@ export function Gauge({
       </div>
       <svg width={size} height={svgH} style={{ display: 'block' }}>
         <g opacity={off ? 0.3 : 1}>
-          <path d={arcPath(cx, cy, A0, A1, r)} fill="none" stroke="var(--color-line-strong)" strokeWidth={2.5 * k} strokeLinecap="round" />
+          <path {...layer('Gauge / dial / arc.line', 'line/strong · 2.5×k', '{min→max, 270° sweep}')} d={arcPath(cx, cy, A0, A1, r)} fill="none" stroke="var(--color-line-strong)" strokeWidth={2.5 * k} strokeLinecap="round" />
         </g>
         {!off && (
           <>
@@ -108,27 +109,27 @@ export function Gauge({
               const a = A0 + (A1 - A0) * f;
               const t1 = polar(cx, cy, a, r - 3 * k);
               const t2 = polar(cx, cy, a, r + 3 * k);
-              return <line key={f} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkMuted} strokeWidth={1} />;
+              return <line key={f} {...layer('Gauge / dial / tick.line', 'ink/muted · 1px', '{25 / 50 / 75 %}')} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkMuted} strokeWidth={1} />;
             })}
-            <text x={loLbl.x} y={loLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{minLabel}</text>
-            <text x={hiLbl.x} y={hiLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{maxLabel}</text>
+            <text {...layer('Gauge / dial / minLabel.text', 'font/data micro · ink/muted', '{minMaxLabels?.[0] ?? min}')} x={loLbl.x} y={loLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{minLabel}</text>
+            <text {...layer('Gauge / dial / maxLabel.text', 'font/data micro · ink/muted', '{minMaxLabels?.[1] ?? max}')} x={hiLbl.x} y={hiLbl.y + 8 * k} textAnchor="middle" style={{ fontFamily: FONT.data, fontSize: fontScale }} fill={NEUTRAL.inkMuted}>{maxLabel}</text>
             {/* display-only limits: neutral ticks, slightly long */}
             {displayLimits.map((v) => {
               const t1 = polar(cx, cy, angle(v), r - 4 * k);
               const t2 = polar(cx, cy, angle(v), r + 4 * k);
-              return <line key={v} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkSecondary} strokeWidth={1.25} />;
+              return <line key={v} {...layer('Gauge / dial / limit.line', 'ink/secondary · neutral tick (ruling 11)', '{displayLimits[]}')} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkSecondary} strokeWidth={1.25} />;
             })}
             {/* alert-backed band: the only color on the arc */}
             {band && (
-              <path d={arcPath(cx, cy, angle(band.from), angle(band.to), r)} fill="none" stroke={band.color} strokeWidth={2.5 * k} strokeLinecap="butt" />
+              <path {...layer('Gauge / dial / band.line', 'alert color — alert-backed ONLY (ruling 11)', '{band.from→band.to}')} d={arcPath(cx, cy, angle(band.from), angle(band.to), r)} fill="none" stroke={band.color} strokeWidth={2.5 * k} strokeLinecap="butt" />
             )}
             {/* needle: ink/primary, always; the hub is the dial's only interior mark */}
-            <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke={NEUTRAL.ink} strokeWidth={1.5} />
-            <circle cx={cx} cy={cy} r={2.2 * k} fill={NEUTRAL.ink} />
+            <line {...layer('Gauge / dial / needle.line', 'ink/primary — ALWAYS (round 19, amends ruling 14)', '{value→angle(min,max)}')} x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke={NEUTRAL.ink} strokeWidth={1.5} />
+            <circle {...layer('Gauge / dial / hub.dot', 'ink/primary', '—')} cx={cx} cy={cy} r={2.2 * k} fill={NEUTRAL.ink} />
           </>
         )}
       </svg>
-      <div style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 2 }}>
+      <div {...layer('Gauge / label / label.text', 'font/data 9 caps letterspaced · ink/muted', '{label}')} style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 2 }}>
         {label}
       </div>
     </div>

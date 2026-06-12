@@ -21,13 +21,14 @@ export function Annotated({
   children: React.ReactNode;
   inline?: boolean;
 }) {
-  const { learnOn } = useLearn();
+  const { learnOn, leafActive } = useLearn();
   const [anchor, setAnchor] = useState<{ top: number; left: number; bottom: number } | null>(null);
   if (!learnOn) return <>{children}</>;
   const a = ANNOTATIONS[name];
 
   let card: React.ReactNode = null;
-  if (anchor && a && typeof window !== 'undefined') {
+  // round 35: innermost wins — a leaf layer card suppresses the docent card
+  if (anchor && a && !leafActive && typeof window !== 'undefined') {
     const left = Math.min(Math.max(anchor.left, 8), window.innerWidth - CARD_W - 8);
     const below = anchor.bottom + 8 + CARD_H < window.innerHeight;
     const top = below ? anchor.bottom + 8 : Math.max(8, anchor.top - CARD_H - 8);

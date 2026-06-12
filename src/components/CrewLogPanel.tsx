@@ -13,6 +13,7 @@ import { Field } from './Field';
 import { Glyph, Label } from './Glyph';
 import { ACCENT, FONT, MODE_COLOR, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, fmtDay } from './gb';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const TYPES: EventType[] = ['MODE', 'CREW', 'BUNKER', 'ALERT', 'DATALINK'];
 // round 21 A6: ADVISORY drops to muted ink — earned color is amber/red only
@@ -70,10 +71,10 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
               {vessel.history.crew.map((c) => (
                 <tr key={c.crew_member_id}>
                   <Field level="vessel" field="crew.roles">
-                    <td style={{ ...gb.boxTight, border: 'none' }}>{c.role}</td>
+                    <td {...layer('CrewLogPanel / roster / role.text', 'font/ui 13', '{crew.role}')} style={{ ...gb.boxTight, border: 'none' }}>{c.role}</td>
                   </Field>
                   <Field level="vessel" field="crew.names">
-                    <td style={{ ...gb.boxTight, border: 'none' }}>{c.name}</td>
+                    <td {...layer('CrewLogPanel / roster / name.text', 'font/ui 13', '{crew.name}')} style={{ ...gb.boxTight, border: 'none' }}>{c.name}</td>
                   </Field>
                   {shared === null && (
                     <Field level="vessel" field="crew.onboard_since">
@@ -88,7 +89,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
           </table>
           {shared !== null && (
             <Field level="vessel" field="crew.onboard_since">
-              <div style={{ marginTop: 6, fontFamily: 'var(--font-data)', fontSize: 12, color: 'var(--color-ink-muted)' }}>
+              <div {...layer('CrewLogPanel / roster / since.text', 'font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)', '{crew.onboard_since shared date + days}')} style={{ marginTop: 6, fontFamily: 'var(--font-data)', fontSize: 12, color: 'var(--color-ink-muted)' }}>
                 all aboard since {fmtDay(shared)} · {Math.floor((now - shared) / 86_400_000)}d
               </div>
             </Field>
@@ -99,7 +100,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
         <div style={{ flex: '1 1 380px', minWidth: 0 }}>
           {/* round 32 container purge: outer border demoted — the segment
               dividers carry the structure */}
-          <div style={{ display: 'flex', width: '100%', height: 20 }}>
+          <div {...layer('CrewLogPanel / log / modeStrip.chart', 'MODE_COLOR segments · line/subtle dividers — recent memory, same family as the log (round 30)', '{24h minute modes → segments}')} style={{ display: 'flex', width: '100%', height: 20 }}>
             {segments.map((seg, i) => (
               <div key={i} title={`${seg.mode} — ${(seg.minutes / 60).toFixed(1)} h`}
                 style={{ width: `${(seg.minutes / vessel.history.minutes.length) * 100}%`, background: MODE_COLOR[seg.mode], borderRight: '1px solid var(--color-line-subtle)', overflow: 'hidden', fontSize: 9, textAlign: 'center', lineHeight: '20px', whiteSpace: 'nowrap', fontFamily: FONT.data }}>
@@ -113,7 +114,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
             </span>
             <span style={{ display: 'inline-flex', gap: 4 }}>
               {TYPES.map((t) => (
-                <button key={t} style={chip(!hidden.has(t))}
+                <button key={t} {...layer('CrewLogPanel / log / filter.chip', 'chip — accent when active (interaction voice)', '{event type visibility toggle}')} style={chip(!hidden.has(t))}
                   onClick={() => setHidden((h) => { const n = new Set(h); if (n.has(t)) n.delete(t); else n.add(t); return n; })}>
                   {t}
                 </button>
@@ -123,7 +124,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
           <div style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 6, lineHeight: 1.7 }}>
             {events.length === 0 && <div style={{ color: NEUTRAL.inkMuted }}>no events in window</div>}
             {events.map((e, i) => (
-              <div key={i} style={{ color: e.level ? LEVEL_COLOR[e.level] : NEUTRAL.inkSecondary, whiteSpace: 'pre' }}>
+              <div key={i} {...layer('CrewLogPanel / log / entry.text', 'font/data 12 terminal grammar · alert lines tint by level (advisory muted, A6)', '{stamp · type · text} newest first')} style={{ color: e.level ? LEVEL_COLOR[e.level] : NEUTRAL.inkSecondary, whiteSpace: 'pre' }}>
                 {stamp(e.t, now).padEnd(8)}{e.type.padEnd(10)}{e.text}
               </div>
             ))}

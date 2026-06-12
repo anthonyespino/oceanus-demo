@@ -14,6 +14,7 @@ import { transitEnvelope, liveOperatingPoint, envelopeMedianAt, MIN_TRANSIT_HOUR
 import { useContentWidth } from './NauticalChart';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { fmtPct } from './gb';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const H = 250;
 // Round 11 axis hygiene: titles get reserved gutters (y rotated far-left,
@@ -76,8 +77,8 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
     <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <svg width={w} height={H} style={{ display: 'block', background: 'var(--color-surface-base)', borderRadius: RADIUS }}>
           <g opacity={sparse ? 0.4 : 1}>
-            <path d={bandD} fill="var(--color-surface-overlay)" />
-            <polyline points={medianPts} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.25} />
+            <path {...layer('EfficiencyCurve / plot / envelope.shape', 'surface/overlay fill — 12-mo IQR band', '{transit envelope p25→p75 by speed bin}')} d={bandD} fill="var(--color-surface-overlay)" />
+            <polyline {...layer('EfficiencyCurve / plot / median.line', 'ink/secondary 1.25px', '{envelope median by speed bin}')} points={medianPts} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.25} />
           </g>
           {/* axes: ticks in their row, titles in their own gutters */}
           {xTicks.map((s) => (
@@ -117,16 +118,19 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
           {pt && medianAtPt && (
             <g>
               <line
+                {...layer('EfficiencyCurve / plot / drop.line', 'ink/muted dashed — degradation as geometry', '{live point → envelope median at same speed}')}
                 x1={x(pt.speed)} y1={y(pt.galNm)} x2={x(pt.speed)} y2={y(medianAtPt)}
                 stroke={NEUTRAL.inkMuted} strokeWidth={1} strokeDasharray="2 3"
               />
               <circle
+                {...layer('EfficiencyCurve / plot / now.dot', 'accent ring (identity) · status fill when watch/degraded (status outranks accent)', '{live gal/nm @ speed_over_ground}')}
                 cx={x(pt.speed)} cy={y(pt.galNm)} r={6}
                 fill={status !== 'nominal' ? STATUS_COLOR[status] : 'none'}
                 stroke={ACCENT.bright} strokeWidth={2}
               />
               <text x={x(pt.speed)} y={y(pt.galNm) - 10} textAnchor="middle" {...mono} fontSize={8.5}>NOW</text>
               <text
+                {...layer('EfficiencyCurve / plot / delta.text', 'font/data 10 · status tint (earned) — labeled: speed-specific, distinct from vs-baseline', '{live gal/nm / envelope median − 1} vs envelope')}
                 x={x(pt.speed) + 130 > w - M.r ? x(pt.speed) - 11 : x(pt.speed) + 11}
                 y={(y(pt.galNm) + y(medianAtPt)) / 2 + 3}
                 textAnchor={x(pt.speed) + 130 > w - M.r ? 'end' : 'start'}
