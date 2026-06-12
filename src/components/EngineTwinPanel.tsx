@@ -78,8 +78,10 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
   const ids = ['E1', 'E2', 'G1', 'G2'];
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
-      <Label g="engine">engine twins</Label>
+    // round 37: header floats above the fill
+    <div style={{ marginBottom: 8 }}>
+      <Label g="engine" style={{ marginBottom: 4 }}>engine twins</Label>
+      <section style={gb.box}>
       {/* ROW 1 — verdict left, panel-wide evidence right */}
       <div style={{ display: 'flex', gap: 'var(--pad-card)', alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="twin_comparison_delta">
@@ -114,6 +116,7 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
       <div style={{ marginTop: 'var(--pad-section)', borderTop: '1px solid var(--color-line-hairline)', paddingTop: 'var(--pad-section)' }}>
         <InstrumentCluster vessel={vessel} />
       </div>
-    </section>
+      </section>
+    </div>
   );
 }

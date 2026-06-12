@@ -52,11 +52,12 @@ export function VesselTile({
   };
   const colored = treatment === 'automotive' || status !== 'nominal';
   const dotColor = colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
-  // Round 26: ONE border voice — rail grammar exactly. Alerted: status
-  // border + tinted name; active: hairline full ink; idle nominal: 45% dim.
+  // Round 26: ONE border voice — rail grammar. Round 37 (fills, not
+  // fences): the nominal hairline DIES — tiles are filled surfaces, and an
+  // outline on the board now means severity, nothing else.
   const alerted = vessel.alerts.length > 0;
   const active = d.mode === 'TRANSIT' || d.mode === 'STATION';
-  const borderColor = status !== 'nominal' ? STATUS_COLOR[status] : 'var(--color-line-hairline)';
+  const borderColor = status !== 'nominal' ? STATUS_COLOR[status] : 'transparent';
   const tileDim = !alerted && !active && status === 'nominal';
   const fullAlerts = vessel.alerts.filter((a) => a.level !== 'ADVISORY');
 

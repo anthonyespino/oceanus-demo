@@ -63,15 +63,17 @@ export function VesselInspector({
           <Annotated name="NauticalChart"><InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} /></Annotated>
         </Collapse>
         {vessel.alerts.length > 0 && (
-          <section style={{ ...gb.box, marginBottom: 8 }}>
-            <Label g="alert-triangle">alerts</Label>
-            {/* round 33 grammar: one severity voice per line — the tag */}
-            {vessel.alerts.map((a, i) => (
-              <div key={i} style={{ color: NEUTRAL.inkSecondary }}>
-                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
-              </div>
-            ))}
-          </section>
+          <div style={{ marginBottom: 8 }}>
+            <Label g="alert-triangle" style={{ marginBottom: 4 }}>alerts</Label>
+            <section style={gb.box}>
+              {/* round 33 grammar: one severity voice per line — the tag */}
+              {vessel.alerts.map((a, i) => (
+                <div key={i} style={{ color: NEUTRAL.inkSecondary }}>
+                  <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
+                </div>
+              ))}
+            </section>
+          </div>
         )}
         <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
           summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>

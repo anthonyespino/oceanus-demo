@@ -34,10 +34,12 @@ export const ACCENT = {
   wash: 'var(--color-accent-wash)',
 };
 
-/** Status outranks accent: selected-but-degraded keeps its status border. */
+/** Status outranks accent: selected-but-degraded keeps its status border.
+    Round 37: nominal + unselected = NO outline — on a borderless board, an
+    outline means severity or selection, nothing else. */
 export function selectionBorder(status: StatusLevel, selected: boolean): string {
   if (status !== 'nominal') return STATUS_COLOR[status];
-  return selected ? ACCENT.bright : 'var(--color-line-strong)';
+  return selected ? ACCENT.bright : 'transparent';
 }
 
 export const NEUTRAL = {

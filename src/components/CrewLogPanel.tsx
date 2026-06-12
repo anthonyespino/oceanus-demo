@@ -61,8 +61,10 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
   });
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
-      <Label g="crew">crew &amp; log</Label>
+    // round 37: header floats above the fill
+    <div style={{ marginBottom: 8 }}>
+      <Label g="crew" style={{ marginBottom: 4 }}>crew &amp; log</Label>
+      <section style={gb.box}>
       <div style={{ display: 'flex', gap: 'var(--pad-section)', alignItems: 'flex-start', flexWrap: 'wrap' }}>
         {/* roster — operational facts only (no rest/sleep inference) */}
         <div style={{ flex: '0 1 auto', minWidth: 240 }}>
@@ -137,6 +139,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
           </div>
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   );
 }

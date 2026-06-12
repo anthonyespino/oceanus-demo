@@ -106,12 +106,13 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
   const mono = (size = 10): React.CSSProperties => ({ fontFamily: FONT.data, fontSize: size });
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26 }}>
+    // round 37: header row floats above the fill
+    <div style={{ marginBottom: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26, marginBottom: 4 }}>
         <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
         <ReconChip vessel={vessel} />
       </div>
-      <div style={{ height: 'var(--pad-section)' }} />
+      <section style={gb.box}>
       <RevealZone
         reveal={
           <span>
@@ -249,6 +250,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
         </div>
       </div>
       </RevealZone>
-    </section>
+      </section>
+    </div>
   );
 }

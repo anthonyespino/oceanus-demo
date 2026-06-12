@@ -72,8 +72,10 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
   const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
 
   return (
-    <section id="port-calls" style={{ ...gb.box, marginBottom: 8 }}>
-      <Label g="anchor">port calls — 72h</Label>
+    // round 37: header floats above the fill
+    <div id="port-calls" style={{ marginBottom: 8 }}>
+      <Label g="anchor" style={{ marginBottom: 4 }}>port calls — 72h</Label>
+      <section style={gb.box}>
       <Field level="fleet" field="port_calls_timeline">
         <div ref={wrapRef} style={{ position: 'relative' }}>
           {/* axis header */}
@@ -143,6 +145,7 @@ export function PortCallsTimeline({ fleet, treatment }: { fleet: VesselState[]; 
           ))}
         </div>
       </Field>
-    </section>
+      </section>
+    </div>
   );
 }

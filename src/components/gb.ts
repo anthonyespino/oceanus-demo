@@ -6,8 +6,10 @@
 import { RADIUS } from './probeTokens';
 
 export const gb = {
+  // Round 37 — fills, not fences: section cards are FILLED surfaces, no
+  // stroke. Border tokens survive only for selection states, status
+  // borders (severity voice), and table/divider hairlines.
   box: {
-    border: '1px solid var(--color-line-hairline)',
     background: 'var(--color-surface-raised)',
     padding: 'var(--pad-card)',
     borderRadius: RADIUS,

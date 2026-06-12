@@ -85,10 +85,12 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   const bunkers = blocks24.filter((b) => b.bunker).length;
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8 }}>
+    // round 37: the header row (label + status header + range) floats
+    // above the fill
+    <div style={{ marginBottom: 8 }}>
       {/* round 33: the standalone status strip dissolved into this micro
           header row — the counts summon the alert sheet */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, marginBottom: 'var(--pad-section)', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, marginBottom: 4, flexWrap: 'wrap' }}>
         <span style={{ display: 'inline-flex', gap: 20, alignItems: 'baseline', minWidth: 0 }}>
           <Label g="vessel" style={{ marginBottom: 0 }}>fleet</Label>
           <StatusHeader />
@@ -99,6 +101,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
           <button style={toggleStyle(range === 365)} onClick={() => setRange(365)}>1y</button>
         </span>
       </div>
+      <section style={gb.box}>
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         {/* CELL 1 — status census (clickable filters; never separable from the mean) */}
         <div style={{ ...cell, borderLeft: 'none', paddingLeft: 0, flexDirection: 'row', gap: 18, alignItems: 'center' }}>
@@ -156,6 +159,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
           </span>
         </a>
       </div>
-    </section>
+      </section>
+    </div>
   );
 }

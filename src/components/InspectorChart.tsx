@@ -194,9 +194,10 @@ export function InspectorChart({
       </div>
   );
   return (
-    <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
-      <Label g="route">position</Label>
-      {body}
-    </section>
+    // round 37: header floats above the fill
+    <div style={{ marginBottom: 8 }}>
+      <Label g="route" style={{ marginBottom: 4 }}>position</Label>
+      <section style={{ ...gb.box, borderRadius: RADIUS }}>{body}</section>
+    </div>
   );
 }

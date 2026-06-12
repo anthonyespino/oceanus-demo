@@ -1,3 +1,19 @@
+# PROGRESS — 2026-06-12 (Session 36: ROUND 37 — fills, not fences)
+
+## Done
+
+1. **Card chrome purged**: `gb.box` lost its hairline stroke — every section card is a filled surface (surface/raised, 1px radius). Tiles lost their nominal hairline (`transparent` border keeps layout stable); rail rows lost theirs (`selectionBorder` returns transparent for nominal+unselected). Border tokens survive exactly where the brief says: selection (rail accent), status borders (tile/rail severity voice — untouched), and divider hairlines (engine rows, band seam, cluster divider).
+2. **Floating headers**: section headers (glyph + title) moved ABOVE their fills in FleetHealthBand (whole header row: label + status header + range toggles), FleetMap, InspectorChart, the alerts card, EngineTwinPanel, EfficiencyPanel (label left the RevealZone — the reveal zone is now the fill only), VesselSynoptic (label + recon chip row), CrewLogPanel, PortCallsTimeline. Gap rhythm: 4px header→fill, 8px unit→unit — header + surface read as one unit.
+3. **Contrast pass**: surface/raised #181818 on base #101010 carries the separation cleanly at both treatments in the after screenshots — no ramp nudge needed. (Charts keep their surface/base wells inside cards, which now adds depth instead of competing with strokes.)
+4. **The payoff confirmed in pixels**: on the after board, Meridian's amber border is the only rectangle outline on the entire screen.
+
+## Notes
+
+- SCOPE CALL (DEV DECISION, pending Anthony): control chrome — chips (mode/recon/filter), toggle buttons, the collapse chevrons, and floating overlays (alert sheet, tooltips, dev panel) — kept their strokes; they're affordances, not section fences. Flag if chips should go filled too.
+- Before/after: befores are the round-33/34 captures (`r33-board-calm.png`, `r34-inspector-full.png`); afters are `r37-board-after.png`, `r37-inspector-after.png`.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 35: ROUND 36 — sharp corners + directional vessels)
 
 ## 1. RADIUS → 1px

@@ -21,7 +21,10 @@ import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   const d = vessel.derived;
   return (
-    <section style={{ ...gb.box, marginBottom: 8, display: 'flex', flexDirection: 'column' }}>
+    // round 37: header floats above the fill
+    <div style={{ marginBottom: 8 }}>
+      <Label g="chart" style={{ marginBottom: 4 }}>efficiency · {d.mode}</Label>
+      <section style={{ ...gb.box, display: 'flex', flexDirection: 'column' }}>
       <RevealZone
         reveal={
           <span style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -37,7 +40,6 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           </span>
         }
       >
-      <Label g="chart">efficiency · {d.mode}</Label>
       {/* hero row */}
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
@@ -71,6 +73,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
         </span>
       </div>
       </RevealZone>
-    </section>
+      </section>
+    </div>
   );
 }

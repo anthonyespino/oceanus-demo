@@ -82,8 +82,11 @@ export function FleetMap({
   const hoveredPt = hoverId ? pts.find((p) => p.id === hoverId) : null;
 
   return (
-    <section style={{ ...gb.box, marginBottom: 8, borderRadius: RADIUS }}>
-      <Label g="vessel">fleet plot — gulf of mexico</Label>
+    // round 37: header floats above the fill — type owns hierarchy,
+    // the fill owns grouping
+    <div style={{ marginBottom: 8 }}>
+      <Label g="vessel" style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>
+      <section style={{ ...gb.box, borderRadius: RADIUS }}>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <div ref={wheelRef} {...handlers} style={{ cursor: following ? 'default' : 'grab' }}>
@@ -178,6 +181,7 @@ export function FleetMap({
         {!following && <FollowChip onClick={follow} />}
       </div>
       </Annotated>
-    </section>
+      </section>
+    </div>
   );
 }
