@@ -15,15 +15,13 @@ export { Stat } from './Stat'; // ROUND 4: instrument-stat primitive (label abov
 // ROUND 5 components:
 export { EfficiencyCurve } from './EfficiencyCurve'; // inspector hero: burn-vs-speed envelope
 export { SystemStatusStrip } from './SystemStatusStrip';
-export { EventLog } from './EventLog';
 export { DevPanel } from './DevPanel'; // probe toggles, press D
 export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrivals board (final probe component)
 export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — designed in Figma, templated after
-export { VoyagePanel } from './VoyagePanel'; // ROUND 21 A5: Environment+Route+Mode merged
 export { Collapse } from './Collapse'; // ROUND 21 B3: collapsible panels
 export { StateMark } from './StateMark'; // ROUND 21 B4: state silhouettes (trial)
-export { FuelViewSwitch } from './FuelViewSwitch'; // ROUND 26: in-card fuel view switching
-export { VesselSynoptic } from './VesselSynoptic'; // ROUND 7 addendum: top-down fuel synoptic (verdict 11)
+export { VesselSynoptic } from './VesselSynoptic'; // ROUND 30: THE fuel card — synoptic + dot quartet (⚖9, ⚖11 resolved; TankSchematic + FuelViewSwitch retired)
+export { CrewLogPanel } from './CrewLogPanel'; // ROUND 30: CrewPanel + EventLog merged; VoyagePanel died into VesselCommandBand
 export { Gauge } from './Gauge'; // ROUND 11: shared radial gauge primitive
 export { TrendChartFill } from './TrendChartFill'; // ROUND 13: fill-parent tile trend chart
 export { Glyph, Label } from './Glyph'; // ROUND 16: glyph contract (Figma icon library 1:1)
@@ -36,10 +34,8 @@ export { VesselView } from './VesselView';
 export { EfficiencyPanel } from './EfficiencyPanel';
 export { EngineTwinPanel } from './EngineTwinPanel';
 export { EngineCard } from './EngineCard';
-export { TankSchematic } from './TankSchematic';
 export { FlowReconciliation } from './FlowReconciliation';
 export { WeatherPanel } from './WeatherPanel';
-export { CrewPanel } from './CrewPanel';
 export { RoutePanel } from './RoutePanel';
 export { ModeTimeline } from './ModeTimeline';
 export { Contextual } from './Contextual';

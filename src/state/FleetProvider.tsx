@@ -22,7 +22,6 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // (a) board-first: trend board top, large chart below; (b) chart-band:
 // shallow full-width chart strip on top, board directly below.
 export type LayoutVariant = 'board-first' | 'chart-band';
-export type TankStyle = 'bars' | 'dots' | 'synoptic'; // round 5 dots + round 7 synoptic experiments
 export type RevealStyle = 'chevron' | 'meter'; // round 14 affordance experiment
 export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator experiment
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
@@ -44,8 +43,6 @@ interface FleetContextValue {
   setLayoutVariant: (l: LayoutVariant) => void;
   ikbBand: boolean; // round 5: the one large IKB fill moment, behind a toggle
   setIkbBand: (b: boolean) => void;
-  tankStyle: TankStyle;
-  setTankStyle: (t: TankStyle) => void;
   chartTop: boolean; // round 21 A2: fleet plot above the board (trial)
   setChartTop: (b: boolean) => void;
   bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
@@ -84,7 +81,6 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [motion, setMotion] = useState<MotionVariant>('off');
   const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
   const [ikbBand, setIkbBand] = useState(false);
-  const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel
   const [chartTop, setChartTop] = useState(false);
   const [bearingLine, setBearingLine] = useState(true);
   const [railMode, setRailMode] = useState<RailMode>('glyph');
@@ -142,7 +138,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         density, setDensity, treatment, setTreatment,
         motion, setMotion, crossings,
         layoutVariant, setLayoutVariant,
-        ikbBand, setIkbBand, tankStyle, setTankStyle,
+        ikbBand, setIkbBand,
         chartTop, setChartTop, stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, stress, setStress,

@@ -1,3 +1,25 @@
+# PROGRESS — 2026-06-12 (Session 31: ROUND 30 — band absorbs voyage, crew+log merge)
+
+## Done
+
+1. **Mission clock drops one type step** (60% of hero via `calc`) — the vessel name is the band's only hero; micro label unchanged.
+2. **Fuel card composition resolved**: VesselSynoptic IS the fuel card — synoptic on top, dot-matrix tank quartet beneath (ST1 ST2 FD1 FD2, label + dots + % · gal each, TANK_LOW tints carry through). FuelViewSwitch retired (one round old — it existed to compare the variants this round resolves), TankSchematic deleted (bars + flow-box schematic), `tankStyle` provider state gone. **⚖ #9 (dots) and ⚖ #11 (synoptic+dots composition) logged RESOLVED in DECISIONS.md.** The transfer-state reveal moved into the synoptic's capacity reveal so no CONTEXTUAL field lost its surface.
+3. **Voyage card died into the command band** (third row, hidden when stuck/collapsed): route strip (from-port → progress → to-port, MOORED/ON STATION variants) + compact wind/waves glyph-stats + the weather reveal (current/vis/precip) + stale handling. **DEDUP LEDGER enforced:**
+   - countdown: mission clock ONLY · absolute ETA + Z: route strip ONLY
+   - distance-to-go: route strip ONLY · next-port name: clock subtitle ONLY (the secondary row's "next: …" fact deleted)
+   - wind/waves: band ONLY (the voyage card was the sole other surface; legacy greybox WeatherPanel is unrouted on this branch)
+   - DEV CALL within the round's intent: the round-22 route-progress hairline under the clock died too — progress is the strip's fact, and the band shouldn't say it twice.
+4. **Mode strip relocated** to the log column's header in the merged card — it's recent memory, same family as the log.
+5. **CREW & LOG**: one card, CrewLogPanel (CrewPanel + EventLog die — renames recorded for Figma). Roster left (roles + names + shared-date footer, round-19 dedup kept); log right (mode strip header → filter chips → entries → load-earlier). Crew-change events in the log tie the halves. The log's internal open/close toggle died — the card-level Collapse already does that job. **For the deck: no rest/sleep inference — the roster shows operational facts only (who is aboard, since when). Fatigue modeling would be invented capability and a sensitive framing; crew correlation stays UNDEFINED pending Anthony (registry unchanged).**
+6. **Sweep**: inspector stack = band → position → alerts → engine twins → efficiency row → fuel → crew & log. No orphan cards; voyage/environment/route/mode all absorbed. Collapse keys: `crewlog` replaces `crew` + `log` (+`voyage` gone).
+
+## Notes
+
+- Docent annotations for VesselHeader/TankSchematic/CrewPanel/EventLog are now unanchored (components died) — pending Anthony's copy for the merged surfaces.
+- Legacy greybox VesselView swapped to the surviving components to stay compiling (unrouted on this branch).
+
+---
+
 # PROGRESS — 2026-06-12 (Session 30: ROUND 28 — gauge anatomy, value on top)
 
 ## Done

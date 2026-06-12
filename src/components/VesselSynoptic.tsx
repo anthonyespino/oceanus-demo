@@ -1,22 +1,40 @@
 'use client';
-// ROUND 7 addendum — VesselSynoptic (⚖️ verdict #11 vs TankSchematic boxes).
+// ROUND 7 addendum — VesselSynoptic. ⚖ verdict #11 RESOLVED round 30: this IS
+// the fuel card — synoptic on top, dot-matrix tank quartet beneath (⚖ #9:
+// dots won; TankSchematic, the bars variant, and the view switcher are gone).
 // Top-down generic OSV: superstructure forward, working deck aft. Schematic,
 // not illustrative. ALL geometry lives in GEOM + HULL_PATH below so Anthony's
 // Figma hull replaces it 1:1. Hull and plumbing stay neutral ink lines;
 // status color appears ONLY where status exists (degraded engine node,
-// reconciliation badge). Leader-line callouts in DM Mono: ST1/ST2, FD1/FD2,
+// reconciliation badge). Leader-line callouts in Plex Mono: ST1/ST2, FD1/FD2,
 // E1–E4 — our L1-L5 annotation language.
 
 import type { VesselState } from '../data/types';
 import { RECON_CAUTION_PCT } from '../data/alerts';
 import { useContentWidth } from './NauticalChart';
 import { ReconChip } from './FlowReconciliation';
-import { FuelViewSwitch } from './FuelViewSwitch';
 import { RevealZone } from './Contextual';
 import { Field } from './Field';
 import { FONT, NEUTRAL, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 import { Label } from './Glyph';
+
+// Tank fill as a 5×10 dot grid, filled from the bottom (round 5 experiment,
+// ⚖ #9 winner — the bars/row layout is deleted).
+function DotMatrix({ pct, tint }: { pct: number; tint: string | null }) {
+  const filled = Math.round(pct / 2); // 50 dots = 100%
+  const rows = Array.from({ length: 5 }, (_, r) => {
+    const rowFilled = Math.min(10, Math.max(0, filled - (4 - r) * 10));
+    return '●'.repeat(rowFilled).padStart(10, '○').split('').reverse().join('');
+  });
+  return (
+    <div style={{ fontFamily: FONT.data, fontSize: 10, letterSpacing: 3, lineHeight: 1.3, color: tint ?? NEUTRAL.inkSecondary }}>
+      {rows.map((row, i) => (
+        <div key={i}>{row}</div>
+      ))}
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------- geometry --
 // ViewBox 720×300, bow LEFT. Replace HULL_PATH + GEOM with Figma export later.
@@ -90,10 +108,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26 }}>
         <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-          <ReconChip vessel={vessel} />
-          <FuelViewSwitch />
-        </span>
+        <ReconChip vessel={vessel} />
       </div>
       <div style={{ height: 'var(--pad-section)' }} />
       <RevealZone
@@ -103,6 +118,10 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
               <span>
                 capacity {tanks.map((t) => `${t.tank_id.split('-')[1]} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal
               </span>
+            </Field>
+            {' — '}
+            <Field level="vessel" field="tank.transfer_active" revealed>
+              <span>{xferActive ? 'TRANSFER ACTIVE' : 'no transfer in progress'}</span>
             </Field>
           </span>
         }
@@ -199,6 +218,31 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             );
           })}
         </svg>
+        {/* round 30 composition (⚖ #11): dot-matrix tank quartet beneath the
+            synoptic — ST1 ST2 FD1 FD2, % + gal under each */}
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginTop: 'var(--pad-section)' }}>
+          {tankGeo.map((g, i) => {
+            const t = tanks[i];
+            const tint = tankTint(vessel, g.id);
+            return (
+              <div key={g.id} style={{ textAlign: 'left' }}>
+                <Field level="vessel" field="tank.type">
+                  <div style={{ ...gb.label, marginBottom: 4, ...(tint ? { color: tint } : {}) }}>
+                    {g.id} {t.type}
+                  </div>
+                </Field>
+                <Field level="vessel" field="tank.level_pct">
+                  <DotMatrix pct={t.level_pct} tint={tint} />
+                </Field>
+                <Field level="vessel" field="tank.level_gal">
+                  <div style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>
+                    {t.level_pct}% · <span style={{ color: NEUTRAL.inkSecondary }}>{t.level_gal.toLocaleString()} gal</span>
+                  </div>
+                </Field>
+              </div>
+            );
+          })}
+        </div>
       </div>
       </RevealZone>
     </section>
