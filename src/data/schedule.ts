@@ -3,6 +3,7 @@
 
 import { DEMO_EPOCH, DAY_MS, HOUR_MS, Rng } from './rng';
 import { PORTS, SITES, place, distanceNm, type Place } from './fleet';
+import { avoidLand, pathLengthNm } from './coast';
 import type { ScheduleLeg, VesselStatic } from './types';
 
 /** Simulation span: 1 year of history plus headroom for live ticks and ETAs. */
@@ -22,6 +23,21 @@ export function buildSchedule(v: VesselStatic): ScheduleLeg[] {
       }
     }
     throw new Error(`no transit-at-epoch schedule found for ${v.id}`);
+  }
+  // The flow-meter-bias vessel must be judgeable at the epoch: reconciliation
+  // isn't evaluated below the 150-gal metered floor (port/standby hotel
+  // loads), so its scripted DISAGREE needs a burning mode. Same deterministic
+  // salt mechanism as the anomaly vessel (round 23: the land-avoidance
+  // reroute shifted its schedule into port at epoch).
+  if (v.scripted.flow_meter_bias) {
+    for (let salt = 0; salt < 64; salt++) {
+      const legs = buildScheduleSalted(v, salt);
+      const leg = legAt(legs, DEMO_EPOCH);
+      if ((leg.mode === 'STATION' || leg.mode === 'TRANSIT') && DEMO_EPOCH - leg.startMs > 6 * HOUR_MS) {
+        return legs;
+      }
+    }
+    throw new Error(`no judgeable-at-epoch schedule found for ${v.id}`);
   }
   return buildScheduleSalted(v, 0);
 }
@@ -73,7 +89,12 @@ function pickSite(rng: Rng, from: Place, far: boolean): Place {
 }
 
 function pushTransit(legs: ScheduleLeg[], v: VesselStatic, t: number, a: Place, b: Place): number {
-  const hours = Math.max(2, distanceNm(a, b) / v.cruise_kn);
+  // Round 23: validate the leg against the coastline polygon and insert
+  // offshore waypoints where it clips land. Deterministic — same seed,
+  // same fix. Duration follows the avoided path's true length.
+  const path = avoidLand([{ lat: a.lat, lon: a.lon }, { lat: b.lat, lon: b.lon }]);
+  const nm = pathLengthNm(path, distanceNm);
+  const hours = Math.max(2, nm / v.cruise_kn);
   legs.push({
     mode: 'TRANSIT',
     startMs: t,
@@ -82,6 +103,7 @@ function pushTransit(legs: ScheduleLeg[], v: VesselStatic, t: number, a: Place, 
     toPort: b.name,
     a,
     b,
+    path: path.length > 2 ? path : undefined,
   });
   return t + hours * HOUR_MS;
 }

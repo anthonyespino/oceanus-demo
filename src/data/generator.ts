@@ -15,7 +15,7 @@ import {
   smoothNoise,
   smoothNoise2,
 } from './rng';
-import { FIRST_NAMES, LAST_NAMES, bearingDeg } from './fleet';
+import { FIRST_NAMES, LAST_NAMES, bearingDeg, distanceNm } from './fleet';
 import { buildSchedule, legAt, nextPortCalls, SIM_START } from './schedule';
 import type {
   CrewMember,
@@ -101,9 +101,17 @@ function stepSample(v: VesselStatic, legs: ScheduleLeg[], st: SimState, t: numbe
   if (mode === 'TRANSIT') {
     sog = v.cruise_kn * (1 - 0.012 * wx.wave_height_ft) + 0.25 * smoothNoise(`sog:${v.id}`, t, HOUR_MS);
     const f = (t - leg.startMs) / (leg.endMs - leg.startMs);
-    lat = leg.a.lat + (leg.b.lat - leg.a.lat) * f;
-    lon = leg.a.lon + (leg.b.lon - leg.a.lon) * f;
-    heading = bearingDeg(leg.a, leg.b);
+    if (leg.path && leg.path.length > 2) {
+      // round 23: follow the land-avoiding waypoint path by distance fraction
+      const pos = alongPath(leg.path, f);
+      lat = pos.lat;
+      lon = pos.lon;
+      heading = pos.heading;
+    } else {
+      lat = leg.a.lat + (leg.b.lat - leg.a.lat) * f;
+      lon = leg.a.lon + (leg.b.lon - leg.a.lon) * f;
+      heading = bearingDeg(leg.a, leg.b);
+    }
   } else {
     sog = mode === 'PORT' ? 0 : round2(Math.abs(0.2 * smoothNoise(`dpsog:${v.id}`, t, 30 * MIN_MS)));
     lat = leg.a.lat + (mode === 'PORT' ? 0 : 0.004 * smoothNoise(`dlat:${v.id}`, t, 2 * HOUR_MS));
@@ -353,6 +361,30 @@ export function advanceMinutes(rt: VesselRuntime, n: number): void {
   ts.engines = ts.tanks = ts.flow = ts.status = ts.crew = ts.position = now;
   ts.weather = rt.v.scripted.stale_weather ? ts.weather : now;
   rt.history.nextPortCalls = nextPortCalls(rt.legs, now);
+}
+
+/** Position + segment heading at distance-fraction f along a waypoint path. */
+function alongPath(path: { lat: number; lon: number }[], f: number): { lat: number; lon: number; heading: number } {
+  const segs: number[] = [];
+  let total = 0;
+  for (let i = 0; i < path.length - 1; i++) {
+    const d = distanceNm(path[i], path[i + 1]);
+    segs.push(d);
+    total += d;
+  }
+  let target = Math.min(1, Math.max(0, f)) * total;
+  for (let i = 0; i < segs.length; i++) {
+    if (target <= segs[i] || i === segs.length - 1) {
+      const g = segs[i] > 0 ? target / segs[i] : 0;
+      return {
+        lat: path[i].lat + (path[i + 1].lat - path[i].lat) * g,
+        lon: path[i].lon + (path[i + 1].lon - path[i].lon) * g,
+        heading: bearingDeg(path[i], path[i + 1]),
+      };
+    }
+    target -= segs[i];
+  }
+  return { ...path[path.length - 1], heading: 0 };
 }
 
 function clamp(x: number, a: number, b: number): number {

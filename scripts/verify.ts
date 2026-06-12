@@ -17,6 +17,8 @@ import { getFleet, advanceFleet, resetFleet } from '../src/data/fleetState';
 import { sustainedDeviation } from '../src/data/derived';
 import { envelopeDeltaPct, transitEnvelope, MIN_TRANSIT_HOURS } from '../src/data/curve';
 import { worstLevel, evaluateAlerts, FEEDER_LOW_PCT, TANK_CRITICAL_PCT } from '../src/data/alerts';
+import { pointInLand } from '../src/data/coast';
+import { PORTS, distanceNm } from '../src/data/fleet';
 import { ANOMALY_START } from '../src/data/generator';
 import { DEMO_EPOCH, DAY_MS } from '../src/data/rng';
 import { undefinedDispositions } from '../src/data/dispositions';
@@ -187,6 +189,23 @@ console.log('\n== Checks: TANK_LOW (scenario fixture, ruling-backed tank color) 
     !anomaly.alerts.some((a) => a.code === 'TANK_LOW'),
     'demo seed unaffected: Meridian carries no TANK_LOW (story stays E2 injector, not fuel starvation)',
   );
+}
+
+// --------------------------------------------- 3c. nothing sails over land
+console.log('\n== Checks: land avoidance (round 23) ==');
+{
+  let violations = 0;
+  let checked = 0;
+  for (const v of fleet) {
+    for (const s of [...v.history.hourly, ...v.history.minutes]) {
+      if (s.mode === 'PORT') continue; // moored touches the coast by design
+      const nearPort = PORTS.some((p) => distanceNm(s.position, p) < 4);
+      if (nearPort) continue; // approaches exempt (same rule as the fixer)
+      checked++;
+      if (pointInLand(s.position.lat, s.position.lon)) violations++;
+    }
+  }
+  check(violations === 0, `no trail point on land across the demo seed (${checked.toLocaleString()} positions checked)`);
 }
 
 // ------------------------------------------------------ 4. staleness state

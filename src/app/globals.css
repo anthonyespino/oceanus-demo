@@ -7,16 +7,16 @@
    Anthony's blessing — flagged in PROGRESS.md. */
 @theme {
   /* color/surface — near-black scale */
-  --color-surface-base: #0e1116;
-  --color-surface-raised: #151a21;
-  --color-surface-overlay: #1f2630;
+  --color-surface-base: #101010; /* round 23: true grey (was blue-cast) */
+  --color-surface-raised: #181818;
+  --color-surface-overlay: #232323;
   /* color/ink — light scale */
-  --color-ink-primary: #e8eaed;
-  --color-ink-secondary: #a9b1ba;
-  --color-ink-muted: #6e7681;
+  --color-ink-primary: #ebebeb;
+  --color-ink-secondary: #b0b0b0;
+  --color-ink-muted: #757575;
   /* color/line — vocabulary addition, pending ruling */
-  --color-line-subtle: #262d36;
-  --color-line-strong: #3d4651;
+  --color-line-subtle: #2b2b2b;
+  --color-line-strong: #454545;
   /* color/alert — retuned for dark background contrast */
   --color-alert-warning: #f85149;
   --color-alert-caution: #e3b341;
@@ -33,9 +33,12 @@
   --color-mode-station: #3f6052;
   --color-mode-standby: #55503f;
   --color-mode-port: #3c434d;
+  /* chart — round 23: water is blue's ONLY job in the system */
+  --color-chart-water: #0d1924; /* deep desaturated navy */
+  --color-chart-land: #1d1d1d; /* land stays neutral grey-dark */
   /* color/data */
   --color-data-nominal: #3fb950;
-  --color-data-stale: #59626c;
+  --color-data-stale: #5e5e5e;
   /* round 7 — card grammar tokens. Anthony retunes the scale here. */
   --type-label-size: 11px; /* labels whisper */
   --type-hero-size: 30px; /* values shout — ≈2.7x label */
@@ -45,9 +48,9 @@
   --pad-card-dense: 12px; /* round 15: inspector density step */
   --gap-card: 8px; /* round 21 B5: the one gap between cards */
   --pad-section: 12px;
-  --color-line-hairline: rgba(232, 234, 237, 0.12); /* card frames: ink at low alpha */
-  --color-fill-level: rgba(232, 234, 237, 0.1); /* round 20: tank level fill — white at low alpha */
-  --color-scrim: rgba(11, 14, 19, 0.62); /* dims the chart beneath floating cards */
+  --color-line-hairline: rgba(235, 235, 235, 0.12); /* card frames: ink at low alpha */
+  --color-fill-level: rgba(235, 235, 235, 0.1); /* round 20: tank level fill — white at low alpha */
+  --color-scrim: rgba(16, 16, 16, 0.62); /* dims the chart beneath floating cards */
   /* space — 4px base grid */
   --space-1: 4px;
   --space-2: 8px;

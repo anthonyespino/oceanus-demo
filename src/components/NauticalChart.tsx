@@ -17,20 +17,13 @@ export interface ChartFrame {
 
 // (tidy, round 8) GULF_FRAME export removed — fit-to-fleet superseded it in round 3 addendum
 
-export const CHART_INK = '#8b949e';
-const GRID = '#222a34'; // graticule: faint on near-black water
+export const CHART_INK = '#909090'; // round 23: grey furniture
+const GRID = '#262626'; // graticule: faint, neutral
 
-// Approximate Gulf coastline [lon, lat], SW Texas → Mississippi birdfoot →
-// Florida panhandle; closure corners sit far outside any sensible frame so
-// the land polygon stays valid when zoomed.
-const COAST: [number, number][] = [
-  [-97.55, 25.5], [-97.3, 26.3], [-97.25, 27.0], [-97.3, 27.8], [-96.9, 28.15],
-  [-96.2, 28.6], [-95.3, 28.95], [-94.7, 29.35], [-93.8, 29.7], [-92.8, 29.55],
-  [-91.8, 29.5], [-91.2, 29.25], [-90.4, 29.05], [-89.9, 29.25], [-89.55, 29.3],
-  [-89.2, 29.12], [-88.95, 28.95], [-89.25, 29.35], [-89.45, 29.75], [-89.35, 30.05],
-  [-88.95, 30.35], [-88.5, 30.32], [-88.05, 30.55], [-87.55, 30.28], [-86.8, 30.4],
-];
-const LAND: [number, number][] = [[-100, 24.5], ...COAST, [-85.5, 30.45], [-85.5, 33], [-100, 33]];
+// Round 23: the coastline polygon lives in the DATA layer (src/data/coast)
+// — the same polygon renders here, steers the schedule's land avoidance,
+// and backs the verify no-trail-on-land case.
+import { LAND } from '../data/coast';
 
 function gridStep(span: number): number {
   return span >= 8 ? 2 : span >= 3 ? 1 : 0.5;
@@ -172,15 +165,15 @@ export function NauticalChart({
   const barNm = [200, 100, 50, 20, 10].find((nm) => nm * pxPerNm <= width * 0.3) ?? 10;
 
   return (
-    <svg width={width} height={height} style={{ display: 'block', background: '#0b0e13' }}>
-      <path d={landD} fill="#1a212b" stroke="#2f3a47" strokeWidth={1} />
+    <svg width={width} height={height} style={{ display: 'block', background: 'var(--color-chart-water)' /* blue's only job */ }}>
+      <path d={landD} fill="var(--color-chart-land)" stroke="var(--color-line-hairline)" strokeWidth={1} />
       {/* sea-area label: chart furniture, very low contrast (round 4) */}
       {frame.lonMax - frame.lonMin > 6 && (
         <text
           x={width * 0.52}
           y={height * 0.72}
           fontSize={Math.min(22, width / 40)}
-          fill="#273039"
+          fill="#22303c"
           letterSpacing="0.35em"
           textAnchor="middle"
           fontFamily="var(--font-ui)"

@@ -75,7 +75,7 @@ export function FleetMap({
 
   const markerFill = (v: VesselState) => {
     const status = vesselStatus(v.alerts);
-    return treatment === 'automotive' || status !== 'nominal' ? STATUS_COLOR[status] : '#9aa3ad';
+    return treatment === 'automotive' || status !== 'nominal' ? STATUS_COLOR[status] : '#a3a3a3';
   };
   const go = (id: string) => router.push(`/vessel/${id}`);
   const hovered = hoverId ? byId.get(hoverId) : null;
@@ -103,7 +103,7 @@ export function FleetMap({
                     <polyline
                       key={`${v.static.id}-t${k}`}
                       points={part.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')}
-                      fill="none" stroke="#8b949e" strokeWidth={0.75}
+                      fill="none" stroke="#909090" strokeWidth={0.75}
                       opacity={[0.07, 0.13, 0.2, 0.3][k]}
                     />
                   );
@@ -117,9 +117,9 @@ export function FleetMap({
                   <g key={`lbl-${m.id}`}>
                     {l.leader && (
                       <line x1={m.x} y1={m.y} x2={l.x + (l.x > m.x ? 0 : l.w)} y2={l.y + 5}
-                        stroke="#4a535e" strokeWidth={0.5} />
+                        stroke="#4f4f4f" strokeWidth={0.5} />
                     )}
-                    <text x={l.x} y={l.y + 8} fontSize={9} fill="#8b949e">{m.name}</text>
+                    <text x={l.x} y={l.y + 8} fontSize={9} fill="#909090">{m.name}</text>
                   </g>
                 );
               })}
@@ -136,7 +136,7 @@ export function FleetMap({
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && go(m.id)}>
                     <rect x={m.x - 14} y={m.y - 14} width={28} height={28} fill="transparent" />
                     {hoverId === m.id && <circle cx={m.x} cy={m.y} r={9} fill="none" stroke="var(--color-accent-bright)" strokeWidth={1.5} />}
-                    <rect x={m.x - 3.5} y={m.y - 3.5} width={7} height={7} fill={markerFill(v)} stroke="#0b0e13" strokeWidth={0.75} />
+                    <rect x={m.x - 3.5} y={m.y - 3.5} width={7} height={7} fill={markerFill(v)} stroke="#141414" strokeWidth={0.75} />
                   </g>
                 );
               })}
@@ -146,8 +146,8 @@ export function FleetMap({
                   onMouseEnter={() => setSplay(i)} onFocus={() => setSplay(i)}
                   onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSplay(splay === i ? null : i)}>
                   <rect x={c.x - 14} y={c.y - 14} width={28} height={28} fill="transparent" />
-                  <rect x={c.x - 4.5} y={c.y - 4.5} width={9} height={9} fill="#8b949e" stroke="#0b0e13" strokeWidth={0.75} />
-                  <text x={c.x + 8} y={c.y + 4} fontSize={10} fill="#9aa3ad">{c.members.length} ▾</text>
+                  <rect x={c.x - 4.5} y={c.y - 4.5} width={9} height={9} fill="#909090" stroke="#141414" strokeWidth={0.75} />
+                  <text x={c.x + 8} y={c.y + 4} fontSize={10} fill="#a3a3a3">{c.members.length} ▾</text>
                 </g>
               ))}
             </>

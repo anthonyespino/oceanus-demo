@@ -92,9 +92,11 @@ export interface ScheduleLeg {
   fromPort?: string;
   toPort?: string;
   site?: string;
-  // straight-line route endpoints for interpolation
+  // route endpoints; TRANSIT legs may carry a land-avoiding waypoint path
+  // (round 23 — nothing sails over land)
   a: { lat: number; lon: number };
   b: { lat: number; lon: number };
+  path?: { lat: number; lon: number }[];
 }
 
 export interface VesselHistory {

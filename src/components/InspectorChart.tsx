@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { place, distanceNm } from '../data/fleet';
-import type { ColorTreatment } from '../state/FleetProvider';
+import { useFleet, type ColorTreatment } from '../state/FleetProvider';
 import { NauticalChart, useContentWidth, usePanZoom, FollowChip, CHART_INK, type ChartFrame } from './NauticalChart';
 import { clusterPoints } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
@@ -68,6 +68,7 @@ export function InspectorChart({
   height?: number;
 }) {
   const router = useRouter();
+  const { bearingLine } = useFleet();
   const [wrapRef, w] = useContentWidth(width);
   const [hoverId, setHoverId] = useState<string | null>(null);
   // round 18: tooltips are the legitimate hover use, but debounced so a
@@ -93,7 +94,7 @@ export function InspectorChart({
   const next = vessel.history.nextPortCalls[0];
   const nextPlace = next ? place(next.port) : null;
   const status = vesselStatus(vessel.alerts);
-  const focusFill = treatment === 'automotive' || status !== 'nominal' ? STATUS_COLOR[status] : '#c8d0d9';
+  const focusFill = treatment === 'automotive' || status !== 'nominal' ? STATUS_COLOR[status] : '#d0d0d0';
 
   const ghosts = fleet
     .filter((v) => v.static.id !== vessel.static.id)
@@ -120,34 +121,54 @@ export function InspectorChart({
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && router.push(`/vessel/${c.members[0].id}`)}>
                     <rect x={c.x - 12} y={c.y - 12} width={24} height={24} fill="transparent" />
                     {hoverId === c.members[0].id && <circle cx={c.x} cy={c.y} r={7} fill="none" stroke="var(--color-accent-bright)" strokeWidth={1} />}
-                    <circle cx={c.x} cy={c.y} r={3} fill="#5b646e" opacity={0.7} />
+                    <circle cx={c.x} cy={c.y} r={3} fill="#616161" opacity={0.7} />
                   </g>
                 ) : (
                   <g key={`gc-${i}`} tabIndex={0} style={{ cursor: 'pointer', outline: 'none' }}
                     onMouseEnter={() => setSplay(i)} onFocus={() => setSplay(i)}
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSplay(splay === i ? null : i)}>
                     <rect x={c.x - 12} y={c.y - 12} width={24} height={24} fill="transparent" />
-                    <circle cx={c.x} cy={c.y} r={4.5} fill="#5b646e" opacity={0.85} />
-                    <text x={c.x + 7} y={c.y + 3} fontSize={9} fill="#727b86">{c.members.length} ▾</text>
+                    <circle cx={c.x} cy={c.y} r={4.5} fill="#616161" opacity={0.85} />
+                    <text x={c.x + 7} y={c.y + 3} fontSize={9} fill="#7a7a7a">{c.members.length} ▾</text>
                   </g>
                 ),
               )}
               <polyline
                 points={trail.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')}
-                fill="none" stroke="#727b86" strokeWidth={1} strokeDasharray="3 3" />
-              {nextPlace && (
-                <g>
-                  <line x1={px(pos.lon)} y1={py(pos.lat)} x2={px(nextPlace.lon)} y2={py(nextPlace.lat)}
-                    stroke="#59626c" strokeWidth={0.75} strokeDasharray="6 4" />
-                  <rect x={px(nextPlace.lon) - 4} y={py(nextPlace.lat) - 4} width={8} height={8}
-                    fill="none" stroke="var(--color-accent-bright)" strokeWidth={1.5} />
-                  <text x={px(nextPlace.lon) + 8} y={py(nextPlace.lat) + 4} fontSize={10} fill={CHART_INK}>
-                    {next!.port}
-                  </text>
-                </g>
-              )}
+                fill="none" stroke="#7a7a7a" strokeWidth={1} strokeDasharray="3 3" />
+              {/* round 23: NOT a route — a dashed bearing ray, clipped at the
+                  chart edge, labeled BRG; the voyage card carries the real
+                  destination. Behind the dev toggle (Anthony judges). */}
+              {bearingLine && nextPlace && (() => {
+                const x0 = px(pos.lon);
+                const y0 = py(pos.lat);
+                const dx = px(nextPlace.lon) - x0;
+                const dy = py(nextPlace.lat) - y0;
+                if (dx === 0 && dy === 0) return null;
+                let tEdge = Infinity;
+                if (dx > 0) tEdge = Math.min(tEdge, (w - x0) / dx);
+                if (dx < 0) tEdge = Math.min(tEdge, -x0 / dx);
+                if (dy > 0) tEdge = Math.min(tEdge, (height - y0) / dy);
+                if (dy < 0) tEdge = Math.min(tEdge, -y0 / dy);
+                const t1 = Math.min(1, tEdge); // stop at the port if in frame
+                const lx = x0 + dx * t1 * 0.82;
+                const ly = y0 + dy * t1 * 0.82;
+                return (
+                  <g>
+                    <line x1={x0} y1={y0} x2={x0 + dx * t1} y2={y0 + dy * t1}
+                      stroke="#5e5e5e" strokeWidth={0.75} strokeDasharray="6 4" />
+                    <text x={lx} y={ly - 5} fontSize={9} fill={CHART_INK} textAnchor="middle">
+                      BRG {next!.port.replace(',', '').toUpperCase()}
+                    </text>
+                    {1 <= tEdge && (
+                      <rect x={px(nextPlace.lon) - 4} y={py(nextPlace.lat) - 4} width={8} height={8}
+                        fill="none" stroke={CHART_INK} strokeWidth={1.5} />
+                    )}
+                  </g>
+                );
+              })()}
               <rect x={px(pos.lon) - 4.5} y={py(pos.lat) - 4.5} width={9} height={9}
-                fill={focusFill} stroke="#1c1c1c" strokeWidth={1} />
+                fill={focusFill} stroke="#141414" strokeWidth={1} />
               <text x={px(pos.lon) + 9} y={py(pos.lat) + 4} fontSize={11} fontWeight={700} fill="var(--color-ink-primary)">
                 {vessel.static.name}
               </text>
@@ -161,7 +182,7 @@ export function InspectorChart({
         )}
         {splay !== null && ghostClusters[splay] && (
           <ClusterSplay x={ghostClusters[splay].x} y={ghostClusters[splay].y} onClose={() => setSplay(null)}
-            members={ghostClusters[splay].members.map((m) => ({ id: m.id, name: m.name, dotColor: '#5b646e' }))} />
+            members={ghostClusters[splay].members.map((m) => ({ id: m.id, name: m.name, dotColor: '#616161' }))} />
         )}
         </div>
         {!following && <FollowChip onClick={follow} />}

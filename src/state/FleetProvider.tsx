@@ -49,6 +49,8 @@ interface FleetContextValue {
   setChartTop: (b: boolean) => void;
   stickyBand: boolean; // round 22: telemetry band pins on inspector scroll
   setStickyBand: (b: boolean) => void;
+  bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
+  setBearingLine: (b: boolean) => void;
   stateMarks: boolean; // round 21 B4: state silhouettes beside port names
   setStateMarks: (b: boolean) => void;
   /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
@@ -82,6 +84,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [tankStyle, setTankStyle] = useState<TankStyle>('synoptic') // default flipped for Anthony's phone review (verdict 11); rows/dots in dev panel
   const [chartTop, setChartTop] = useState(false);
   const [stickyBand, setStickyBand] = useState(false);
+  const [bearingLine, setBearingLine] = useState(true);
   const [stateMarks, setStateMarks] = useState(false);
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
@@ -137,6 +140,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand, tankStyle, setTankStyle,
         chartTop, setChartTop, stateMarks, setStateMarks, stickyBand, setStickyBand,
+        bearingLine, setBearingLine,
         collapsedPanels, togglePanel, stress, setStress,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,

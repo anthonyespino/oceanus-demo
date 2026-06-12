@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-11 (Session 27: ROUND 23 — greyscale base, water-only blue, land discipline)
+
+## 1. Neutral desaturation
+
+Surface/ink/line/stale/scrim/hairline/fill tokens re-derived as true greys at the same lightness steps (e.g. base #0e1116 → #101010, ink #e8eaed → #ebebeb). ACCENT (IKB) and STATUS hues untouched — interaction and severity are now the only chromatic voices outside chart water. Both treatments + the IKB band verified reading on grey.
+
+**Contrast re-log (vs surface/base #101010 / raised #181818):** ink/primary 15.8 / 14.5 · ink/secondary 8.6 / 7.9 · ink/muted 4.2 / 3.9 · accent/bright 4.9 / 4.5 · caution 9.7 / 8.9 · warning 5.6 / 5.2 · advisory 7.5 / 6.9 · nominal 7.4 / 6.8 — all ratios within 0.1 of the round-5 table (lightness preserved by construction).
+
+**FLAGGED for Anthony's Figma pass:** mode chip hues left as-is — transit's steel-blue may want to move off blue now that blue = water.
+
+## 2. Water = the only navy
+
+`chart/water` token (#0d1924, deep desaturated navy) + `chart/land` (#1d1d1d) with a hairline coastline between, on both charts via the shared core. Chart furniture (graticule, ink, markers, trails, ghosts) all grey.
+
+## 3. Nothing sails over land
+
+- The coastline polygon moved to the DATA layer (`src/data/coast.ts`) — ONE polygon shared by chart rendering, the schedule builder, and verify.
+- `avoidLand`: two-pass deterministic fixer — segments sampled at 0.01° (then a 0.004° fine pass for vertex grazes); each violating run's midpoint is pushed offshore (fixed direction priority, southward first) and inserted as a waypoint; transit legs carry the waypoint path and the generator interpolates along it by distance fraction (headings follow segments); leg duration follows the avoided path's true length.
+- **Port nodes moved to sea entrances**: Morgan City, Mobile, Corpus Christi and Venice sat miles inside the polygon (inshore channels aren't modeled) — every departure crossed a land carpet no waypoint could fix. Documented in fleet.ts; names unchanged.
+- **Scripted-vessel guard**: the reroute shifted Cormorant into PORT at the demo epoch, where reconciliation isn't judgeable (below the 150-gal metered floor) and its scripted DISAGREE vanished — it now gets the same deterministic salt search as Meridian, requiring a judgeable mode at epoch. Meridian's story re-verified intact (+13.7%, both CAUTIONs, transit at epoch).
+- **Verify case added**: no trail point on land across the demo seed — ~120k positions checked (PORT samples and <4 nm port approaches exempt, same rule as the fixer). PASSING.
+- **Bearing indicator**: the straight line to the next port is NOT a route — restyled as a dashed bearing ray clipped at the chart edge, labeled "BRG {PORT}", port marker only when in frame; behind the `bearing` dev toggle (vs voyage-card-only) for Anthony's judgment.
+
+## Ops
+
+Quick tunnel died a third time mid-session; restarted (watchdog re-armed). Reiterating: demo day is localhost.
+
+---
+
 # PROGRESS — 2026-06-11 (Session 26: ROUND 22 — telemetry strip + type swap)
 
 ## Done
