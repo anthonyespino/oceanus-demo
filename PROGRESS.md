@@ -1,3 +1,35 @@
+# PROGRESS — 2026-06-12 (Session 32: ROUND 32 — sticky fix, container purge, voyage profile)
+
+## 1. Sticky, priority fix
+
+The band split into PRIMARY ROW (the only sticky element) + a static secondary section. The primary row is constant-height, pure CSS sticky — the stuck-state IntersectionObserver, sentinel, gauge-size swap, and secondary-row hiding are all GONE, so scroll-coupled height changes (the source of the bounce) are impossible by construction. **Acceptance run:** programmatic scroll walk, both directions, at 700/1000/1300px viewports, sampling the band's bounding rect every step — pinned at exactly 0 with zero negative excursions, all three heights.
+
+## 2. Band composition
+
+- "← fleet" link DELETED from the band (grep confirms: rail's "fleet board" link and the unknown-vessel fallback are the survivors — they're navigation surfaces, not band furniture).
+- Center stack: NAME → master: {name} (muted sub-heading — honors the authority, names who you're calling) → mode chip → mission clock. Master left the facts line (dedup ledger extended).
+- Weather docked under the clock in the center column's negative space: wind · waves as gauge-anatomy stat pairs (glyph + hero value + micro label), current/vis/precip behind the existing reveal, stale tint preserved (stale timestamp text lives in the facts line).
+
+## 3. Voyage profile strip
+
+Automotive trip canvas in the secondary section (scrolls away): origin → 2px track with accent fill = distance covered → destination, vessel glyph riding the live position; "{pct}% · {nm} NM TO GO" right-aligned above; ETA + Z at the destination end; MOORED/STATION text variants keep honest no-progress forms.
+
+**Data honesty fix found during the build:** "origin = last port visited" lies on return legs — schedule legs run port→site→port, so Meridian's strip initially read "Galveston → Galveston, 100% · 333 NM TO GO". Origin is now where the current transit RUN began (minute window, hourly-extended), labeled with the nearest port (<5 nm) or work site: Meridian honestly reads "Viosca Knoll 786 → Galveston, TX, 6% · 333 NM TO GO".
+
+## 4. Container purge (audit, removals listed)
+
+Rule applied: one frame per section, inner structure = whitespace + hairline dividers.
+- **EngineTwinPanel gap hero**: nested box + overlay background REMOVED — value + chart sit directly in the section.
+- **CrewLogPanel mode strip**: outer border demoted — segment dividers carry the structure.
+- Audited clean: EfficiencyPanel, EfficiencyCurve, alerts section, InstrumentCluster, CrewLogPanel roster (boxTight cells already border-none).
+- Exempt by rule/kind: synoptic tank rects + engine nodes (diagram), Sparkline/TrendChartFill/GapTrend frames (charts), mode/recon/filter chips and buttons (chips, not containers).
+
+## 5. Fuel matrices
+
+Quartet centered under the synoptic, equal 40px gutters, same centered-width discipline as the gauge cluster.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 31: ROUND 31 — engine panel restructure)
 
 ## Done

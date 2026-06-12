@@ -97,7 +97,9 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
         </div>
         {/* event log — mode strip header, then filters + entries */}
         <div style={{ flex: '1 1 380px', minWidth: 0 }}>
-          <div style={{ display: 'flex', width: '100%', border: '1px solid var(--color-line-subtle)', height: 20 }}>
+          {/* round 32 container purge: outer border demoted — the segment
+              dividers carry the structure */}
+          <div style={{ display: 'flex', width: '100%', height: 20 }}>
             {segments.map((seg, i) => (
               <div key={i} title={`${seg.mode} — ${(seg.minutes / 60).toFixed(1)} h`}
                 style={{ width: `${(seg.minutes / vessel.history.minutes.length) * 100}%`, background: MODE_COLOR[seg.mode], borderRight: '1px solid var(--color-line-subtle)', overflow: 'hidden', fontSize: 9, textAlign: 'center', lineHeight: '20px', whiteSpace: 'nowrap', fontFamily: FONT.data }}>

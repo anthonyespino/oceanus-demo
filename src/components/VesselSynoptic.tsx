@@ -219,8 +219,9 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
           })}
         </svg>
         {/* round 30 composition (⚖ #11): dot-matrix tank quartet beneath the
-            synoptic — ST1 ST2 FD1 FD2, % + gal under each */}
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginTop: 'var(--pad-section)' }}>
+            synoptic — ST1 ST2 FD1 FD2, % + gal under each. Round 32:
+            centered, equal gutters — same width discipline as the cluster */}
+        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', marginTop: 'var(--pad-section)', justifyContent: 'center' }}>
           {tankGeo.map((g, i) => {
             const t = tanks[i];
             const tint = tankTint(vessel, g.id);

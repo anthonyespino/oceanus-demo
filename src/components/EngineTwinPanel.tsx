@@ -76,9 +76,10 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
       <Label g="engine">engine twins</Label>
       {/* one centered column, command-band composition discipline */}
       <div style={{ maxWidth: 880, margin: '0 auto' }}>
-        {/* twin-gap hero — centered, owns the 30d GAP trend */}
+        {/* twin-gap hero — centered, owns the 30d GAP trend. Round 32
+            container purge: no nested box — the panel is the frame */}
         <Field level="vessel" field="twin_comparison_delta">
-          <div style={{ ...gb.box, background: 'var(--color-surface-overlay)', textAlign: 'center', maxWidth: 440, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', maxWidth: 440, margin: '0 auto' }}>
             <div style={gb.label}>E2 vs E1 EGT</div>
             <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
               {egtGapNow > 0 ? '+' : ''}{egtGapNow} °F
