@@ -1,3 +1,50 @@
+# PROGRESS — 2026-06-13 (Session 51: ROUND 58 — bridge diagnostic, DIAGNOSIS ONLY)
+
+No styling changes, no DECISIONS change. (Repo also moved this session: `~/Documents/oceanus-demo` → `~/dev/oceanus-demo`.) Three findings:
+
+## 1. Glyph import path — files now exist, but keyed to the wrong names
+
+`docs/glyphs-import/` (exact):
+| file | SVG? | viewBox | raster? | parses | import verdict |
+|---|---|---|---|---|---|
+| `endurance.glyph.svg` | yes | `0 0 40 29` | no | yes | **imports**, keyed `endurance.glyph` |
+| `now.glyph.svg` | yes | `0 0 35 35` | no | yes | **imports**, keyed `now.glyph` |
+| `trend.glyph.svg` | yes | `0 0 32 35` | no | yes | **imports**, keyed `trend.glyph` |
+| `.DS_Store` | no | — | — | — | skipped (macOS cruft, not SVG) |
+| `README.md` | no | — | — | — | skipped (docs) |
+| `glyph.calendar.svg` / `glyph.clock.svg` / `glyph.wave.svg` | — | — | — | — | **ABSENT — never reached the folder** |
+
+The PNG problem (round 55) is fixed — these are now real SVGs, valid, with viewBoxes, no embedded raster, and they DO import (normalized: viewBox→24×24, hex→currentColor). **But they import under their SLOT-name keys** (`endurance.glyph` / `now.glyph` / `trend.glyph`), because the importer keys by filename and the files are named for the slot, not the library icon. The expected library files (`glyph.calendar.svg` etc.) were never created.
+
+## 2. Slot render state (after build): all three on PLACEHOLDER
+
+`trend.glyph` / `now.glyph` / `endurance.glyph` render **placeholder pictograms**. The reason is **a key mismatch, not an unwired slot**: round 57 wired the slots to library glyphs `calendar` / `clock` / `wave`, so `Glyph` looks up `IMPORTED_GLYPHS['calendar' | 'clock' | 'wave']` — but the imported keys are `endurance.glyph` / `now.glyph` / `trend.glyph`. No match → fallback. So: **no matching library glyph (`glyph.calendar` etc.) imported** — the drawn art is present in the build but under keys nothing renders. The slots ARE wired correctly.
+
+## 3. Scrape scope — names + structure + dimensions, NOT visual properties
+
+**Direct answer: the binding scrape is names-and-structure (plus x/y/width/height). It does NOT read corner radius, fills, strokes, or spacing.** Checked, not guessed:
+- The scrape uses `get_metadata`, whose output is exactly: layer **name, type, hierarchy, and x/y/width/height**. No fills, no radius, no strokes. (Confirmed across every scrape this project.)
+- The MCP bridge also has `get_design_context`, which DOES return rich CSS (fills, strokes, type sizes, positions) + a screenshot — so *some* visual properties are readable through that tool. But the binding/apply workflow doesn't use it, and the rounded corners specifically can't be read as a property at all:
+- **The rounded corners are baked into a vector, not a property.** `get_design_context` on VesselTile shows your rounded top corners in the screenshot, but `bg.shape` (8:23) is a flattened **vector exported as an `<img>` asset** (`imgBgShape`) — there is no `border-radius` value to read; the curve lives inside the vector geometry. (Same output also shows `spark.container` carries a `#b1b1b1` border in Figma that the build omits — another visual property name-binding doesn't carry.)
+
+**Conclusion:** visual properties — corner radius, fills, geometry — **must be implemented in code via a round; they do not flow from Figma automatically.** The rounded corners didn't appear for three compounding reasons: (a) the scrape reads names + dimensions, not radius; (b) the radius is baked into a vector image, not a readable property; (c) the build's `RADIUS` token is 1px globally (round 36 sharp-corners ruling) and no round has changed the tile to rounded.
+
+## To move forward (no change made this round)
+
+Two clean fixes for the glyphs (your call next round): rename the three files to `glyph.calendar.svg` / `glyph.clock.svg` / `glyph.wave.svg`, **or** teach the importer to map a `{slot}.glyph.svg` file onto the library glyph its slot is wired to. Corner radius (and the spark.container border) need a styling round if you want them in the build.
+
+## RESOLVED in-session
+
+While the diagnostic was being written, Anthony **renamed the three files to the library convention** — `glyph.calendar.svg` / `glyph.clock.svg` / `glyph.wave.svg` (the slot-named `*.glyph.svg` exports are gone). The importer now keys them **`calendar` / `clock` / `wave`**, which match the slot wiring (round 57), so the build wired them and the three tile slots are now **LIVE on Anthony's drawn art** (was placeholder). End-to-end pipeline confirmed: SVG drop → importer (normalize) → `glyphs.generated.ts` → `Glyph` primitive → every render site. Screenshot `r58-glyphs-live.png`.
+
+*Transparency: round 58 was scoped diagnosis-only, but this glyph go-live is the round-47/55/57 drop-in completing — triggered by Anthony providing correctly-named SVGs, not a code/design change authored this round. No other styling touched; DECISIONS.md untouched.*
+
+## Repo move + git
+
+Repo moved to `~/dev/oceanus-demo`. Git is intact — a clone uses relative refs, so the move broke nothing: remote correct, `git fsck` clean, no absolute paths in `.git/config`. The 3 drawn SVGs are now committed (were untracked); stale `next-server` on port 3000 (old path) killed, prod restarted at the new path.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 50: ROUND 57 — apply VesselTile scrape + atlas update)
 
 ## Done (one-way Figma → code; no write-back to the file)
