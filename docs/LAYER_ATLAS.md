@@ -491,4 +491,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*131 instrumented leaves · 19 components · generated 2026-06-13T18:08:43.486Z*
+*131 instrumented leaves · 19 components · generated 2026-06-13T18:14:27.129Z*

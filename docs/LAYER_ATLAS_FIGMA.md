@@ -246,4 +246,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
 
-*131 leaves · 19 components · generated 2026-06-13T18:08:43.487Z*
+*131 leaves · 19 components · generated 2026-06-13T18:14:27.130Z*
