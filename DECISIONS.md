@@ -94,6 +94,22 @@ originals.*
     in BOTH states on the board (gate was 60), no particle reduction needed.
     Reduced-motion and expert-off kill it with the waves (it only runs inside the
     live shader). Cards untouched (flat-matte; glass/shadow permanently cut).
+  - **Wave FORM restored + texture made DENSE, dev sliders added (round 74)**: the
+    round-67 over-smoothing had flattened the waves into a vertical fade, and the
+    round-72 shimmer was too faint to register. Fixed: slower depth decay
+    (exp −0.22) + a narrower depth floor (0.05→0.15) so the WAVES carry the read,
+    with wave luminance amplitude/contrast now a uniform; the texture is denser
+    (finer ~2px cells, threshold driven by a density uniform, brighter) and gated
+    to the wave crests so texture and form REINFORCE (surface detail on moving
+    water). Texture is ON by default now (textured water is the intended look; the
+    toggle still turns it off). **Dev sliders added** (`D` panel) for wave
+    amplitude, texture density, texture brightness — pixel-level tuning on the
+    running build without a new round each time. Reduced-motion now freezes a
+    TEXTURED still (the canvas paints one mid-motion frame showing wave form +
+    texture, not a flat gradient still) — fixed a context-loss bug by remounting a
+    fresh canvas per mode (key). Held: greyscale, round-50 binding, severity
+    dominance (Meridian gold still dominates), expert-off/toggle-off. Perf:
+    sustained ~120 fps on the board with texture on (gate 60), no reduction needed.
 - **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
   and the layout-mode toggle retired. Audit found there were never two structural
   layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its

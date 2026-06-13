@@ -1,3 +1,42 @@
+# PROGRESS — 2026-06-13 (Session 63: ROUND 74 — Calm Sea, restore wave form + dense texture + dev sliders)
+
+## Round-73 status: LANDED (commit 28817db)
+The screenshot Anthony saw was pre-73 (status row at top, mode glyph present)
+because 73 wasn't committed yet. It is now in the branch (header rearranged,
+gauges flank, mode glyph gone, status split). 74 builds on top.
+
+## Done (verified on running build)
+- **Wave FORM restored**: slower depth decay (exp −0.22) + narrower depth floor
+  (0.05→0.15) so crests/troughs read as moving undulation, not a flat fade. Wave
+  amplitude/contrast is now a uniform. Still smooth (no coarse round-62 noise).
+- **Dense fine texture**: finer ~2px screen-space value-noise, density-driven
+  threshold + higher brightness, gated to the wave CRESTS + near foreground so it
+  reads as surface detail ON the waves (not a floating wash). ON by default now
+  (textured water is the look); toggle still turns it off.
+- **Dev sliders added** (`D` panel): WAVE AMP, TEX DENS, TEX BRIGHT — live tuning
+  on the running build (the efficiency move; no new round to re-dial).
+- **Reduced-motion → textured frozen still**: the canvas paints ONE mid-motion
+  frame (wave form + texture), not a flat gradient. Fixed a real bug — cleanup's
+  `loseContext()` left a dead canvas for the re-run; now a fresh canvas mounts per
+  mode (`key`). Confirmed: reduced-motion renders the canvas (not the gradient).
+
+## Verify / reported
+- Waves read as moving waves (crop `docs/screens/r74-crop.png`); texture clearly
+  visible as surface detail following the form; greyscale only.
+- **Severity dominates**: Meridian gold name + value out-read the textured grey
+  waves on the board (`docs/screens/r74-board.png`).
+- **FPS: sustained ~120** on the board with texture ON by default (gate 60) — no
+  density reduction needed; the slider can push further if wanted.
+- Reduced-motion frozen textured still confirmed (`docs/screens/r74-reduced-still.png`);
+  expert-off + toggle-off inherit the existing governance.
+
+## Scope
+`AmbientSea.tsx` (shader + uniforms + reduced-motion frame + canvas key),
+`FleetProvider.tsx` (3 slider states + texture default ON), `DevPanel.tsx`
+(Slider component + 3 sliders).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 62: ROUND 73 — VesselCommandBand header rearrangement)
 
 ## Done (verified on the running build, `docs/screens/r73-commandband.png`)

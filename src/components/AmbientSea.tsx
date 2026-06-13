@@ -36,7 +36,9 @@ const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`
 // Amplitude/cadence still bound to the dataset (round 50). Premultiplied alpha.
 const FRAG = `precision mediump float;
 uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
-uniform float u_shimmer; // round 72: 0 = smooth gradient only · 1 = + fine shimmer
+uniform float u_waveAmp;   // round 74: wave luminance amplitude/contrast (dev slider)
+uniform float u_texDens;   // round 74: fine-texture density, 0 = off (dev slider)
+uniform float u_texBright; // round 74: fine-texture brightness (dev slider)
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float vnoise(vec2 p){
   vec2 i = floor(p); vec2 f = fract(p);
@@ -53,27 +55,29 @@ void main(){
   float w = sin(depth * (4.0 + 6.0*u_freq) + uv.x*2.0 - drift);
   w += 0.50 * sin(depth * (7.0 + 9.0*u_freq) - uv.x*3.4 - drift*1.6);
   w += 0.28 * sin(depth * 2.4 + uv.x*1.0 + drift*0.55);
-  float amp = u_amp * exp(-depth * 0.32); // waves decay with depth (recede)
-  float wave = 0.5 * w * amp;             // smooth ripple around 0
-  // depth gradient floor: darker near the bottom → lighter haze higher up
-  float depthLum = mix(0.05, 0.17, smoothstep(0.0, 0.92, v));
-  float lum = depthLum + wave * 0.20;
-  // ROUND 72 — optional FINE particle shimmer (off by default). Rides ON the
-  // gradient (added to lum, never replaces it). FINE, not the coarse round-62
-  // grain: value-noise sampled in SCREEN space at ~2.4px cells (sub-pixel-scale
-  // at 1×, smoothly interpolated so no blocks/aliasing), drifting so it twinkles
-  // like light catching the water. Two soft octaves, hard-gated to sparse glints
-  // that ride the wave CRESTS and concentrate in the near foreground; intensity
-  // is dataset-bound (u_amp) so it expresses the same signal at finer grain.
-  // Low amplitude — stays in the wave luminance band so severity out-reads it.
-  if (u_shimmer > 0.5) {
-    vec2 sp = gl_FragCoord.xy / 2.4;
-    float sh = vnoise(sp + vec2(drift * 2.0, u_time * 0.9)) * 0.55
-             + vnoise(sp * 1.9 - u_time * 0.7) * 0.45;
-    float crest = smoothstep(-0.02, 0.12, wave);            // light on the wave tops
-    float near  = exp(-depth * 0.45);                        // denser in the foreground
-    float bind  = 0.45 + 0.55 * clamp(u_amp / 1.3, 0.0, 1.0); // same signal as the waves
-    lum += smoothstep(0.66, 0.97, sh) * crest * near * bind * 0.06;
+  // ROUND 74: slower depth decay so the wave FORM persists up the plane (round
+  // 67 over-smoothing flattened it into a vertical fade); the depth floor is kept
+  // narrow so the waves, not the fade, carry the read.
+  float amp = u_amp * exp(-depth * 0.22);
+  float wave = 0.5 * w * amp;
+  float depthLum = mix(0.05, 0.15, smoothstep(0.0, 0.92, v));
+  float lum = depthLum + wave * u_waveAmp; // u_waveAmp = wave amplitude/contrast (dev slider)
+  // ROUND 74 — DENSE fine texture riding ON the wave form (replaces the too-faint
+  // round-72 shimmer; still NOT the coarse round-62 grain). Screen-space
+  // value-noise at ~2px cells (fine, smooth-interpolated so no blocks/aliasing),
+  // two drifting octaves, gated to glints that concentrate on the wave CRESTS and
+  // near foreground so texture and form REINFORCE (surface detail on moving water,
+  // not a flat wash). u_texDens lowers the glint threshold (denser, higher count);
+  // u_texBright scales the add. Greyscale; dataset-bound (u_amp). 0 dens = off.
+  if (u_texDens > 0.001) {
+    vec2 sp = gl_FragCoord.xy / 2.0;
+    float sh = vnoise(sp + vec2(drift * 2.0, u_time * 1.0)) * 0.55
+             + vnoise(sp * 2.0 - u_time * 0.8) * 0.45;
+    float crest = smoothstep(-0.05, 0.14, wave);             // ride the wave tops
+    float near  = exp(-depth * 0.38);                         // denser in the foreground
+    float bind  = 0.5 + 0.5 * clamp(u_amp / 1.3, 0.0, 1.0);   // same signal as the waves
+    float thr   = mix(0.82, 0.28, clamp(u_texDens, 0.0, 1.0)); // density lowers the threshold
+    lum += smoothstep(thr, thr + 0.16, sh) * crest * near * bind * u_texBright;
   }
   // sub-LSB ordered dither — defeats 8-bit gradient banding, no visible texture
   float dith = (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
@@ -92,18 +96,22 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export function AmbientSea() {
-  const { fleet, ambientSea, shimmer } = useFleet();
+  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright } = useFleet();
   const { expertOn } = useLearn();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fallback, setFallback] = useState(false); // no WebGL / context fail → static still
   const [reduced, setReduced] = useState(false);
 
-  // live inputs in a ref so the rAF loop reads them without re-subscribing
-  const inputs = useRef({ amp: 0.4, freq: 1, shimmer: 0 });
+  // live inputs in a ref so the rAF loop reads them without re-subscribing.
+  // round 74: waveAmp/texDens/texBright are dev sliders; the shimmer toggle
+  // gates the texture (off → density 0).
+  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.34, texDens: 0.7, texBright: 0.11 });
   const { scope, vesselId } = waterScope(pathname);
   const target = waterInputs(fleet ?? null, scope, vesselId);
-  useEffect(() => { inputs.current = { amp: target.amp, freq: target.freq, shimmer: shimmer ? 1 : 0 }; }, [target.amp, target.freq, shimmer]);
+  useEffect(() => {
+    inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright };
+  }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright]);
 
   const on = ambientSea && !expertOn;
 
@@ -115,7 +123,7 @@ export function AmbientSea() {
   }, []);
 
   useEffect(() => {
-    if (!on || reduced) return; // reduced-motion → render the static still (below), no GL loop
+    if (!on) return; // expert-off / toggled off → no canvas at all
     const canvas = canvasRef.current;
     if (!canvas) return;
     const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true, powerPreference: 'low-power' }) as WebGLRenderingContext | null;
@@ -142,7 +150,9 @@ export function AmbientSea() {
     const uTime = gl.getUniformLocation(prog, 'u_time');
     const uAmp = gl.getUniformLocation(prog, 'u_amp');
     const uFreq = gl.getUniformLocation(prog, 'u_freq');
-    const uShimmer = gl.getUniformLocation(prog, 'u_shimmer');
+    const uWaveAmp = gl.getUniformLocation(prog, 'u_waveAmp');
+    const uTexDens = gl.getUniformLocation(prog, 'u_texDens');
+    const uTexBright = gl.getUniformLocation(prog, 'u_texBright');
 
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const resize = () => {
@@ -161,27 +171,39 @@ export function AmbientSea() {
     const onLost = (e: Event) => { e.preventDefault(); cancelAnimationFrame(raf); setFallback(true); };
     canvas.addEventListener('webglcontextlost', onLost);
 
-    const frame = () => {
-      if (document.hidden) { raf = requestAnimationFrame(frame); return; } // Page Visibility — free perf
-      // ease toward the current scope's inputs (no cut on fleet↔vessel)
-      amp += (inputs.current.amp - amp) * 0.02;
-      freq += (inputs.current.freq - freq) * 0.02;
-      gl.uniform1f(uTime, (performance.now() - t0) / 1000);
-      gl.uniform1f(uAmp, amp);
-      gl.uniform1f(uFreq, freq);
-      gl.uniform1f(uShimmer, inputs.current.shimmer); // round 72: toggle (uniform branch, cheap when off)
+    const paint = (tSec: number, ampV: number, freqV: number) => {
+      gl.uniform1f(uTime, tSec);
+      gl.uniform1f(uAmp, ampV);
+      gl.uniform1f(uFreq, freqV);
+      gl.uniform1f(uWaveAmp, inputs.current.waveAmp);
+      gl.uniform1f(uTexDens, inputs.current.texDens);
+      gl.uniform1f(uTexBright, inputs.current.texBright);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      raf = requestAnimationFrame(frame);
     };
-    raf = requestAnimationFrame(frame);
 
-    return () => {
-      cancelAnimationFrame(raf);
+    const cleanup = () => {
       window.removeEventListener('resize', resize);
       canvas.removeEventListener('webglcontextlost', onLost);
       const ext = gl.getExtension('WEBGL_lose_context');
       if (ext) ext.loseContext();
     };
+
+    // ROUND 74: reduced-motion freezes to a TEXTURED still — render ONE frame at
+    // a mid-motion time so the wave FORM + texture are visible (not a flat
+    // gradient), then stop. No rAF loop.
+    if (reduced) { paint(6.0, inputs.current.amp, inputs.current.freq); return cleanup; }
+
+    const frame = () => {
+      if (document.hidden) { raf = requestAnimationFrame(frame); return; } // Page Visibility — free perf
+      // ease toward the current scope's inputs (no cut on fleet↔vessel)
+      amp += (inputs.current.amp - amp) * 0.02;
+      freq += (inputs.current.freq - freq) * 0.02;
+      paint((performance.now() - t0) / 1000, amp, freq);
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+
+    return () => { cancelAnimationFrame(raf); cleanup(); };
   }, [on, reduced]);
 
   if (!on) return null;
@@ -190,14 +212,17 @@ export function AmbientSea() {
   // wrappers); page bg shows through where the plane dissolves
   const base: React.CSSProperties = { position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' };
 
-  // static depth-faded still: reduced-motion or WebGL fallback. Not blank, not
-  // the old paper-wave — a grey plane fading up into the page bg. No layout
-  // shift (same fixed layer as the canvas). ROUND 62: luminance raised to match
-  // the live layer's new presence (greyscale only, severity still out-reads).
-  if (reduced || fallback) {
+  // ROUND 74: reduced-motion now renders the CANVAS too — a single frozen frame
+  // showing the wave FORM + texture (painted once in the effect, no loop), not a
+  // flat gradient. Only the WebGL-unavailable FALLBACK uses the CSS gradient still
+  // (no shader possible). No layout shift (same fixed layer either way).
+  if (fallback) {
     return (
       <div aria-hidden style={{ ...base, background: 'linear-gradient(to top, rgba(122,124,127,0.18) 0%, rgba(122,124,127,0.09) 35%, transparent 64%)' }} />
     );
   }
-  return <canvas ref={canvasRef} aria-hidden style={base} />;
+  // key per mode: switching live↔still remounts a FRESH canvas, so the prior
+  // context's loseContext() (cleanup hygiene) never leaves a dead canvas for the
+  // next getContext() — the round-74 reduced-motion frozen frame needs a live ctx.
+  return <canvas key={reduced ? 'still' : 'live'} ref={canvasRef} aria-hidden style={base} />;
 }

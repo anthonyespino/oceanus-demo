@@ -509,4 +509,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T21:37:37.917Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T21:48:06.538Z*

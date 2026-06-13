@@ -27,6 +27,21 @@ function Row<T extends string | boolean>({ label, options, value, onPick }: {
   );
 }
 
+// ROUND 74: live numeric slider for pixel-level tuning on the running build.
+function Slider({ label, value, min, max, step, onChange }: {
+  label: string; value: number; min: number; max: number; step: number; onChange: (n: number) => void;
+}) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+      <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: NEUTRAL.inkMuted, width: 80 }}>{label}</span>
+      <input type="range" min={min} max={max} step={step} value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        style={{ flex: 1, accentColor: 'var(--color-accent-bright)' }} />
+      <span style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkSecondary, width: 32, textAlign: 'right' }}>{value.toFixed(2)}</span>
+    </div>
+  );
+}
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 12 }}>
@@ -135,8 +150,12 @@ export function DevPanel() {
           options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
-        <Row label="shimmer" value={f.shimmer} onPick={f.setShimmer}
-          options={[{ v: false, text: 'off (default)' }, { v: true, text: 'on' }]} />
+        <Row label="texture" value={f.shimmer} onPick={f.setShimmer}
+          options={[{ v: true, text: 'on (default)' }, { v: false, text: 'off' }]} />
+        {/* round 74: live Calm Sea tuning — turn these knobs on the running build */}
+        <Slider label="wave amp" value={f.waveAmp} min={0.05} max={0.7} step={0.01} onChange={f.setWaveAmp} />
+        <Slider label="tex dens" value={f.texDens} min={0} max={1} step={0.05} onChange={f.setTexDens} />
+        <Slider label="tex bright" value={f.texBright} min={0} max={0.25} step={0.01} onChange={f.setTexBright} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs
             feeding the shader (dev only; no on-screen label in default mode) */}
         <div style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>

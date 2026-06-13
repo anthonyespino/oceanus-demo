@@ -58,8 +58,12 @@ interface FleetContextValue {
   setScenario: (id: string) => void;
   ambientSea: boolean; // round 46: Calm Sea ambient wave (default on)
   setAmbientSea: (b: boolean) => void;
-  shimmer: boolean; // round 72: fine particle shimmer over the waves (default OFF)
+  shimmer: boolean; // round 72/74: fine texture toggle (round 74: default ON)
   setShimmer: (b: boolean) => void;
+  // round 74: live Calm Sea dev sliders — wave amplitude/contrast + texture density/brightness
+  waveAmp: number; setWaveAmp: (n: number) => void;
+  texDens: number; setTexDens: (n: number) => void;
+  texBright: number; setTexBright: (n: number) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -93,7 +97,10 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [scenario, setScenario] = useState('demo');
   const [ambientSea, setAmbientSea] = useState(true); // round 46: default on
-  const [shimmer, setShimmer] = useState(false); // round 72: fine shimmer, OFF by default
+  const [shimmer, setShimmer] = useState(true); // round 74: textured water is the default look
+  const [waveAmp, setWaveAmp] = useState(0.34); // round 74 dev slider — wave amplitude/contrast
+  const [texDens, setTexDens] = useState(0.7); // round 74 dev slider — texture density
+  const [texBright, setTexBright] = useState(0.11); // round 74 dev slider — texture brightness
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -147,6 +154,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
+        waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}
