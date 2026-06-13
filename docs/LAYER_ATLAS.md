@@ -6,14 +6,6 @@ hover cards report. Naming: `Component / region(camelCase) / role.kind`;
 kinds: text · line · shape · chart · glyph · chip · status. Click any element
 in learn mode (L) to copy its layer path for the Figma layer-name field.
 
-## AlertSheet
-
-*source: src/components/AlertSheet.tsx*
-
-- `sheet / line.text`
-  - TOKENS — round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary
-  - BINDS — {alert.level · vessel.name → /vessel/id · alert.message}
-
 ## CrewLogPanel
 
 *source: src/components/CrewLogPanel.tsx*
@@ -143,8 +135,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — status color | ink/muted nominal (treatment B)
   - BINDS — {vesselStatus(alerts)}
 - `row / mode.glyph`
-  - TOKENS — MODE_GLYPH 11px · ink/muted
-  - BINDS — {derived.mode}
+  - TOKENS — MODE_GLYPH · ink/muted · learn/title = full mode name (round 43)
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
 - `row / name.text`
   - TOKENS — font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)
   - BINDS — {vessel.static.name}
@@ -225,14 +217,17 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 *source: src/components/AlertSheet.tsx*
 
-- `alerts / counts.chip`
-  - TOKENS — counts in severity colors — THE alert click target (round 33: summoned, not standing)
-  - BINDS — {fleet alert counts by level} → opens AlertSheet
-- `datalink / state.text`
-  - TOKENS — font/data 11 · ink/secondary | advisory when degraded — inline grammar: vessel + feed + age, worst first
+- `alerts / alertcount.chip`
+  - TOKENS — counts in severity colors · click → alert sheet (round 33)
+  - BINDS — {fleet alert counts by level}
+- `alerts / line.text`
+  - TOKENS — round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary
+  - BINDS — {alert.level · vessel.name → /vessel/id · alert.message}
+- `datalink / datalink.chip`
+  - TOKENS — font/data 11 · ink/secondary | advisory when degraded · click → stale-feed breakdown
   - BINDS — {stale stream census → FRESH | DEGRADED | STALE}
-- `sync / age.text`
-  - TOKENS — font/data 11 · ink/secondary
+- `sync / lastsync.chip`
+  - TOKENS — font/data 11 · ink/secondary · click → per-vessel sync ages
   - BINDS — {simTime − oldest stream timestamp}
 
 ## VesselCommandBand
@@ -241,13 +236,16 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 - `centerStack / clock.text`
   - TOKENS — type/hero×0.6 · font/data tabular · white when still (ruling 14)
-  - BINDS — {T−(eta−now) in transit | mode + elapsed} · countdown lives HERE only
-- `centerStack / master.text`
-  - TOKENS — font/data 12 · ink/secondary — names who you are calling
-  - BINDS — {crew Master.name}
-- `centerStack / mode.chip`
-  - TOKENS — boxTight chip · line/strong · MODE_GLYPH map
-  - BINDS — {derived.mode}
+  - BINDS — {T−(eta−now) in transit | elapsed} · countdown lives HERE only
+- `centerStack / location.text`
+  - TOKENS — font/data 12 · ink/secondary · coupled under the mode glyph (round 43)
+  - BINDS — {destination | moored port | work site}
+- `centerStack / master.name.text`
+  - TOKENS — font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title
+  - BINDS — master · {crew Master.name}
+- `centerStack / mode.glyph`
+  - TOKENS — boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
 - `centerStack / name.text`
   - TOKENS — type/hero · font/display caps · ink/primary
   - BINDS — {vessel.static.name}
@@ -390,9 +388,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `header / dot.status`
   - TOKENS — status color | ink/muted when nominal (treatment B)
   - BINDS — {vesselStatus(alerts)}
-- `header / mode.chip`
-  - TOKENS — type/micro · line/strong chip · ink/secondary
-  - BINDS — {derived.mode} + MODE_GLYPH
+- `header / mode.glyph`
+  - TOKENS — line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
 - `header / name.text`
   - TOKENS — type/name · font/display caps · status tint when alerted (earned)
   - BINDS — {vessel.static.name}
@@ -400,4 +398,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*108 instrumented leaves · 14 components · generated 2026-06-13T17:01:47.301Z*
+*109 instrumented leaves · 13 components · generated 2026-06-13T17:19:43.367Z*

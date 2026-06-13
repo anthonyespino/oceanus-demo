@@ -19,7 +19,7 @@
   --color-line-strong: #454545;
   /* color/alert — retuned for dark background contrast */
   --color-alert-warning: #f85149;
-  --color-alert-caution: #e3b341;
+  --color-alert-caution: #e3d141; /* round 43: cooled ~11deg toward green (hue 42->53, same S+L) — single source; tile/synoptic tints + gauge bands consume this token */
   --color-alert-advisory: #79a8d8;
   /* color/accent — Yves Klein Blue system (round 5). Interaction & identity
      ONLY; never encodes health/severity — status tokens always win. */

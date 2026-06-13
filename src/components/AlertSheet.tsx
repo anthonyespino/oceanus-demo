@@ -1,20 +1,21 @@
 'use client';
-// ROUND 33: alert diet. SystemStatusStrip and AlertRail die (renames
-// recorded for barrel + Figma). StatusHeader is the micro header row —
-// [datalink] DATALINK {state} · LAST SYNC {age} · {counts in severity
-// colors} — embedded by FleetHealthBand (board) and VesselCommandBand
-// (inspector). The counts are the click target that summons the anchored
-// alert sheet: full lines, click a line → that vessel, click-outside or
-// Esc closes. Zero standing pixels when not summoned.
-// Line grammar (round 33, one severity voice per line): [LEVEL] tag in
-// severity color · vessel name link · message in plain ink. No per-line
-// triangle glyph.
+// ROUND 33: alert diet. SystemStatusStrip and AlertRail die. StatusHeader is
+// the micro status row, embedded by FleetHealthBand (board) and
+// VesselCommandBand (inspector).
+// ROUND 43: the three status items become DetailChips (the chip affordance
+// pattern) — each a 1px hairline chip whose click opens a popover anchored to
+// the chip, Esc / click-outside dismisses:
+//   DATALINK {state} → per-vessel stale-feed breakdown
+//   LAST SYNC {age}  → per-vessel sync ages
+//   {alert counts}   → the alert sheet (lines, click → vessel)
+// Line grammar (round 33): [LEVEL] tag in severity color · vessel name link ·
+// message in plain ink.
 
-import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useFleet } from '../state/FleetProvider';
 import { Glyph } from './Glyph';
-import { ALERT_TEXT_COLOR, FONT, NEUTRAL, RADIUS } from './probeTokens';
+import { DetailChip } from './DetailChip';
+import { ALERT_TEXT_COLOR, FONT, NEUTRAL } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 function fmtAge(ms: number): string {
@@ -24,40 +25,22 @@ function fmtAge(ms: number): string {
   return `${Math.floor(m / 60)}h ${m % 60}m ago`;
 }
 
-/** Compact feed-age: "5H" / "45M" (round 34 inline degradation grammar). */
-function fmtFeedAge(ms: number): string {
-  const h = Math.floor(ms / 3_600_000);
-  return h >= 1 ? `${h}H` : `${Math.max(1, Math.floor(ms / 60_000))}M`;
-}
-
 const FEED_ABBREV: Record<string, string> = {
   weather: 'WX', position: 'POS', engines: 'ENG', tanks: 'TANK',
   flow: 'FLOW', status: 'STATUS', crew: 'CREW',
 };
 
 const LEVEL_RANK: Record<string, number> = { WARNING: 0, CAUTION: 1, ADVISORY: 2 };
+const item: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11, whiteSpace: 'nowrap' };
+const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 12, lineHeight: 1.8, display: 'flex', justifyContent: 'space-between', gap: 16 };
 
 export function StatusHeader() {
   const { fleet, simTime } = useFleet();
-  const [open, setOpen] = useState(false);
-  const [allStale, setAllStale] = useState(false);
-  const wrap = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
-    const onDown = (e: MouseEvent) => { if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false); };
-    window.addEventListener('keydown', onKey);
-    window.addEventListener('mousedown', onDown);
-    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('mousedown', onDown); };
-  }, [open]);
-
-  const item: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11, whiteSpace: 'nowrap' };
   if (!fleet || simTime === null) {
     return <span style={{ ...item, color: NEUTRAL.inkMuted }}>DATALINK —</span>;
   }
 
-  // round 34: inline degradation detail (the "…" reveal died) — vessel +
-  // feed + age, worst first; "+N more" expands the rest in place
+  // per-vessel stale feeds (the DATALINK popover's content)
   const staleEntries = fleet.flatMap((v) =>
     (Object.entries(v.derived.staleness) as [keyof typeof v.history.timestamps, string][])
       .filter(([, f]) => f === 'STALE')
@@ -69,15 +52,19 @@ export function StatusHeader() {
   ).sort((a, b) => b.age - a.age);
   const datalink = staleEntries.length === 0 ? 'FRESH' : staleEntries.length === 1 ? 'DEGRADED' : 'STALE';
   const datalinkColor = datalink === 'FRESH' ? NEUTRAL.inkSecondary : 'var(--color-alert-advisory)';
-  const shownStale = allStale ? staleEntries : staleEntries.slice(0, 1);
   const oldestTs = Math.min(...fleet.flatMap((v) => Object.values(v.history.timestamps)));
+
+  // per-vessel sync ages (the LAST SYNC popover's content)
+  const syncAges = fleet
+    .map((v) => ({ name: v.static.name, age: simTime - Math.min(...Object.values(v.history.timestamps)) }))
+    .sort((a, b) => b.age - a.age);
 
   const counts = { WARNING: 0, CAUTION: 0, ADVISORY: 0 };
   for (const v of fleet) for (const a of v.alerts) counts[a.level]++;
   const countParts = (['WARNING', 'CAUTION', 'ADVISORY'] as const).filter((l) => counts[l] > 0);
 
-  // sheet lines: severity class first, then the fleet ranking score —
-  // alerts carry no onset timestamp in the model (only the event log does)
+  // alert lines: severity class first, then the fleet ranking score (alerts
+  // carry no onset timestamp in the model — only the event log does)
   const lines = fleet
     .flatMap((v) => v.alerts.map((a) => ({ v, a })))
     .sort((x, y) =>
@@ -85,79 +72,94 @@ export function StatusHeader() {
       || Math.abs(y.v.derived.sustained_deviation) - Math.abs(x.v.derived.sustained_deviation));
 
   return (
-    // round 34: one flex baseline — glyphs vertically centered on the text
-    <span ref={wrap} style={{ display: 'inline-flex', gap: 14, alignItems: 'center', position: 'relative', flexWrap: 'wrap' }}>
-      <span {...layer('StatusHeader / datalink / state.text', 'font/data 11 · ink/secondary | advisory when degraded — inline grammar: vessel + feed + age, worst first', '{stale stream census → FRESH | DEGRADED | STALE}')} style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-        <Glyph name="datalink" size={12} />
-        <span>
-          DATALINK {datalink}
-          {shownStale.map((s, i) => (
-            <span key={`${s.vessel}-${s.feed}-${i}`}> · {s.vessel} {s.feed} {fmtFeedAge(s.age)} STALE</span>
-          ))}
-        </span>
-        {staleEntries.length > 1 && (
-          <button
-            onClick={() => setAllStale((a) => !a)}
-            style={{ ...item, background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NEUTRAL.inkMuted, textDecoration: 'underline' }}
-          >
-            {allStale ? 'less' : `+${staleEntries.length - 1} more`}
-          </button>
-        )}
-      </span>
-      <span {...layer('StatusHeader / sync / age.text', 'font/data 11 · ink/secondary', '{simTime − oldest stream timestamp}')} style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
-      {/* the counts ARE the alert surface — click summons the sheet */}
-      <button
-        {...layer('StatusHeader / alerts / counts.chip', 'counts in severity colors — THE alert click target (round 33: summoned, not standing)', '{fleet alert counts by level} → opens AlertSheet')}
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-label="open alert sheet"
-        style={{ ...item, background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 5 }}
+    <span style={{ display: 'inline-flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+      {/* DATALINK chip → per-vessel stale-feed breakdown */}
+      <DetailChip
+        label="datalink detail"
+        align="left"
+        attrs={layer('StatusHeader / datalink / datalink.chip', 'font/data 11 · ink/secondary | advisory when degraded · click → stale-feed breakdown', '{stale stream census → FRESH | DEGRADED | STALE}')}
+        popover={
+          <div>
+            <div style={{ ...item, color: NEUTRAL.inkMuted, marginBottom: 6 }}>DATALINK · {datalink}</div>
+            {staleEntries.length === 0 ? (
+              <div style={{ ...popRow, color: NEUTRAL.inkSecondary }}>all streams fresh</div>
+            ) : (
+              staleEntries.map((s, i) => (
+                <div key={`${s.vessel}-${s.feed}-${i}`} style={{ ...popRow, color: 'var(--color-alert-advisory)' }}>
+                  <span>{s.vessel} · {s.feed}</span><span>{fmtFeedAge(s.age)} STALE</span>
+                </div>
+              ))
+            )}
+          </div>
+        }
       >
-        <Glyph name="alert-triangle" size={12} />
-        <span>
+        <span style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <Glyph name="datalink" size={12} />DATALINK {datalink}
+        </span>
+      </DetailChip>
+
+      {/* LAST SYNC chip → per-vessel sync ages */}
+      <DetailChip
+        label="last sync detail"
+        align="left"
+        attrs={layer('StatusHeader / sync / lastsync.chip', 'font/data 11 · ink/secondary · click → per-vessel sync ages', '{simTime − oldest stream timestamp}')}
+        popover={
+          <div>
+            <div style={{ ...item, color: NEUTRAL.inkMuted, marginBottom: 6 }}>LAST SYNC · per vessel</div>
+            {syncAges.map((s) => (
+              <div key={s.name} style={{ ...popRow, color: NEUTRAL.inkSecondary }}>
+                <span>{s.name}</span><span>{fmtAge(s.age)}</span>
+              </div>
+            ))}
+          </div>
+        }
+      >
+        <span style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
+      </DetailChip>
+
+      {/* alert-count chip → the round-33 alert sheet */}
+      <DetailChip
+        label="active alerts"
+        align="right"
+        attrs={layer('StatusHeader / alerts / alertcount.chip', 'counts in severity colors · click → alert sheet (round 33)', '{fleet alert counts by level}')}
+        popover={
+          <div style={{ minWidth: 400 }}>
+            {lines.length === 0 ? (
+              <div style={{ ...item, color: NEUTRAL.inkMuted }}>no active alerts</div>
+            ) : (
+              lines.map(({ v, a }, i) => (
+                <Link
+                  key={`${v.static.id}-${a.code}-${i}`}
+                  {...layer('StatusHeader / alerts / line.text', 'round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary', '{alert.level · vessel.name → /vessel/id · alert.message}')}
+                  href={`/vessel/${v.static.id}`}
+                  style={{ display: 'block', textDecoration: 'none', fontFamily: FONT.data, fontSize: 12, lineHeight: 1.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                >
+                  <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span>{' '}
+                  <span style={{ color: 'var(--color-accent-bright)', textDecoration: 'underline' }}>{v.static.name}</span>{' '}
+                  <span style={{ color: NEUTRAL.inkSecondary }}>{a.message}</span>
+                </Link>
+              ))
+            )}
+          </div>
+        }
+      >
+        <span style={{ ...item, color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <Glyph name="alert-triangle" size={12} />
           {countParts.length === 0 ? (
             <span style={{ color: NEUTRAL.inkMuted }}>NO ALERTS</span>
           ) : (
             countParts.map((l, i) => (
-              <span key={l}>
-                {i > 0 && ' · '}
-                <span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span>
-              </span>
+              <span key={l}>{i > 0 && ' · '}<span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span></span>
             ))
           )}
         </span>
-      </button>
-      {open && (
-        <div
-          role="dialog"
-          aria-label="active alerts"
-          style={{
-            position: 'absolute', top: 'calc(100% + 8px)', left: 0, zIndex: 60,
-            minWidth: 440, maxWidth: 600, maxHeight: '50vh', overflowY: 'auto',
-            background: NEUTRAL.surface, border: '1px solid var(--color-line-strong)',
-            borderRadius: RADIUS, padding: 'var(--pad-card)',
-            boxShadow: '0 12px 28px -8px rgba(0,0,0,0.65)',
-          }}
-        >
-          {lines.length === 0 ? (
-            <div style={{ ...item, color: NEUTRAL.inkMuted }}>no active alerts</div>
-          ) : (
-            lines.map(({ v, a }, i) => (
-              <Link
-                key={`${v.static.id}-${a.code}-${i}`}
-                {...layer('AlertSheet / sheet / line.text', 'round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary', '{alert.level · vessel.name → /vessel/id · alert.message}')}
-                href={`/vessel/${v.static.id}`}
-                onClick={() => setOpen(false)}
-                style={{ display: 'block', textDecoration: 'none', fontFamily: FONT.data, fontSize: 12, lineHeight: 1.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-              >
-                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span>{' '}
-                <span style={{ color: 'var(--color-accent-bright)', textDecoration: 'underline' }}>{v.static.name}</span>{' '}
-                <span style={{ color: NEUTRAL.inkSecondary }}>{a.message}</span>
-              </Link>
-            ))
-          )}
-        </div>
-      )}
+      </DetailChip>
     </span>
   );
+}
+
+/** Compact feed-age: "5H" / "45M". */
+function fmtFeedAge(ms: number): string {
+  const h = Math.floor(ms / 3_600_000);
+  return h >= 1 ? `${h}H` : `${Math.max(1, Math.floor(ms / 60_000))}M`;
 }

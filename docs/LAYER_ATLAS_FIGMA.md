@@ -6,11 +6,6 @@ it automatically. Unnamed layers are ignored; unrecognized names are noted, not
 applied. Convention: `Component / region(camelCase) / role.kind` — name the layer
 `region / role.kind` inside a frame named for the component (or use the full path).
 
-## AlertSheet
-
-  Region: sheet
-    • line.text  → round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary · {alert.level · vessel.name → /vessel/id · alert.message}
-
 ## CrewLogPanel
 
   Region: log
@@ -75,7 +70,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: row
     • dot.status  → status color | ink/muted nominal (treatment B) · {vesselStatus(alerts)}
-    • mode.glyph  → MODE_GLYPH 11px · ink/muted · {derived.mode}
+    • mode.glyph  → MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers) · {vessel.static.name}
 
 ## Gauge
@@ -117,18 +112,20 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## StatusHeader
 
   Region: alerts
-    • counts.chip  → counts in severity colors — THE alert click target (round 33: summoned, not standing) · {fleet alert counts by level} → opens AlertSheet
+    • alertcount.chip  → counts in severity colors · click → alert sheet (round 33) · {fleet alert counts by level}
+    • line.text  → round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary · {alert.level · vessel.name → /vessel/id · alert.message}
   Region: datalink
-    • state.text  → font/data 11 · ink/secondary | advisory when degraded — inline grammar: vessel + feed + age, worst first · {stale stream census → FRESH | DEGRADED | STALE}
+    • datalink.chip  → font/data 11 · ink/secondary | advisory when degraded · click → stale-feed breakdown · {stale stream census → FRESH | DEGRADED | STALE}
   Region: sync
-    • age.text  → font/data 11 · ink/secondary · {simTime − oldest stream timestamp}
+    • lastsync.chip  → font/data 11 · ink/secondary · click → per-vessel sync ages · {simTime − oldest stream timestamp}
 
 ## VesselCommandBand
 
   Region: centerStack
-    • clock.text  → type/hero×0.6 · font/data tabular · white when still (ruling 14) · {T−(eta−now) in transit | mode + elapsed} · countdown lives HERE only
-    • master.text  → font/data 12 · ink/secondary — names who you are calling · {crew Master.name}
-    • mode.chip  → boxTight chip · line/strong · MODE_GLYPH map · {derived.mode}
+    • clock.text  → type/hero×0.6 · font/data tabular · white when still (ruling 14) · {T−(eta−now) in transit | elapsed} · countdown lives HERE only
+    • location.text  → font/data 12 · ink/secondary · coupled under the mode glyph (round 43) · {destination | moored port | work site}
+    • master.name.text  → font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title · master · {crew Master.name}
+    • mode.glyph  → boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/hero · font/display caps · ink/primary · {vessel.static.name}
     • waves.text  → font/data 14 tabular · glyph ink/secondary · stale tint when WX stale · {weather.wave_height_ft} ft
     • wind.text  → font/data 14 tabular · glyph ink/secondary · stale tint when WX stale · {weather.wind_speed_kn} kn
@@ -193,8 +190,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • border.status  → hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar) · {vesselStatus(alerts)} · {derived.mode}
   Region: header
     • dot.status  → status color | ink/muted when nominal (treatment B) · {vesselStatus(alerts)}
-    • mode.chip  → type/micro · line/strong chip · ink/secondary · {derived.mode} + MODE_GLYPH
+    • mode.glyph  → line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
 
-*108 leaves · 14 components · generated 2026-06-13T17:01:47.302Z*
+*109 leaves · 13 components · generated 2026-06-13T17:19:43.368Z*

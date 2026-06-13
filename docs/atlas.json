@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T17:01:47.302Z",
+  "generated": "2026-06-13T17:19:43.368Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -12,39 +12,39 @@
   ],
   "leaves": [
     {
-      "path": "StatusHeader / alerts / counts.chip",
+      "path": "StatusHeader / alerts / alertcount.chip",
       "component": "StatusHeader",
       "region": "alerts",
-      "leaf": "counts.chip",
-      "tokens": "counts in severity colors — THE alert click target (round 33: summoned, not standing)",
-      "binds": "{fleet alert counts by level} → opens AlertSheet",
+      "leaf": "alertcount.chip",
+      "tokens": "counts in severity colors · click → alert sheet (round 33)",
+      "binds": "{fleet alert counts by level}",
       "file": "src/components/AlertSheet.tsx"
     },
     {
-      "path": "StatusHeader / datalink / state.text",
+      "path": "StatusHeader / alerts / line.text",
+      "component": "StatusHeader",
+      "region": "alerts",
+      "leaf": "line.text",
+      "tokens": "round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary",
+      "binds": "{alert.level · vessel.name → /vessel/id · alert.message}",
+      "file": "src/components/AlertSheet.tsx"
+    },
+    {
+      "path": "StatusHeader / datalink / datalink.chip",
       "component": "StatusHeader",
       "region": "datalink",
-      "leaf": "state.text",
-      "tokens": "font/data 11 · ink/secondary | advisory when degraded — inline grammar: vessel + feed + age, worst first",
+      "leaf": "datalink.chip",
+      "tokens": "font/data 11 · ink/secondary | advisory when degraded · click → stale-feed breakdown",
       "binds": "{stale stream census → FRESH | DEGRADED | STALE}",
       "file": "src/components/AlertSheet.tsx"
     },
     {
-      "path": "StatusHeader / sync / age.text",
+      "path": "StatusHeader / sync / lastsync.chip",
       "component": "StatusHeader",
       "region": "sync",
-      "leaf": "age.text",
-      "tokens": "font/data 11 · ink/secondary",
+      "leaf": "lastsync.chip",
+      "tokens": "font/data 11 · ink/secondary · click → per-vessel sync ages",
       "binds": "{simTime − oldest stream timestamp}",
-      "file": "src/components/AlertSheet.tsx"
-    },
-    {
-      "path": "AlertSheet / sheet / line.text",
-      "component": "AlertSheet",
-      "region": "sheet",
-      "leaf": "line.text",
-      "tokens": "round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary",
-      "binds": "{alert.level · vessel.name → /vessel/id · alert.message}",
       "file": "src/components/AlertSheet.tsx"
     },
     {
@@ -349,8 +349,8 @@
       "component": "FleetRail",
       "region": "row",
       "leaf": "mode.glyph",
-      "tokens": "MODE_GLYPH 11px · ink/muted",
-      "binds": "{derived.mode}",
+      "tokens": "MODE_GLYPH · ink/muted · learn/title = full mode name (round 43)",
+      "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
       "file": "src/components/FleetRail.tsx"
     },
     {
@@ -539,25 +539,34 @@
       "region": "centerStack",
       "leaf": "clock.text",
       "tokens": "type/hero×0.6 · font/data tabular · white when still (ruling 14)",
-      "binds": "{T−(eta−now) in transit | mode + elapsed} · countdown lives HERE only",
+      "binds": "{T−(eta−now) in transit | elapsed} · countdown lives HERE only",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
-      "path": "VesselCommandBand / centerStack / master.text",
+      "path": "VesselCommandBand / centerStack / location.text",
       "component": "VesselCommandBand",
       "region": "centerStack",
-      "leaf": "master.text",
-      "tokens": "font/data 12 · ink/secondary — names who you are calling",
-      "binds": "{crew Master.name}",
+      "leaf": "location.text",
+      "tokens": "font/data 12 · ink/secondary · coupled under the mode glyph (round 43)",
+      "binds": "{destination | moored port | work site}",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
-      "path": "VesselCommandBand / centerStack / mode.chip",
+      "path": "VesselCommandBand / centerStack / master.name.text",
       "component": "VesselCommandBand",
       "region": "centerStack",
-      "leaf": "mode.chip",
-      "tokens": "boxTight chip · line/strong · MODE_GLYPH map",
-      "binds": "{derived.mode}",
+      "leaf": "master.name.text",
+      "tokens": "font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title",
+      "binds": "master · {crew Master.name}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / mode.glyph",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "mode.glyph",
+      "tokens": "boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name",
+      "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
@@ -957,12 +966,12 @@
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / header / mode.chip",
+      "path": "VesselTile / header / mode.glyph",
       "component": "VesselTile",
       "region": "header",
-      "leaf": "mode.chip",
-      "tokens": "type/micro · line/strong chip · ink/secondary",
-      "binds": "{derived.mode} + MODE_GLYPH",
+      "leaf": "mode.glyph",
+      "tokens": "line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name",
+      "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
       "file": "src/components/VesselTile.tsx"
     },
     {

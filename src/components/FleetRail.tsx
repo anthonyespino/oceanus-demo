@@ -112,8 +112,8 @@ export function FleetRail({
               {v.static.name}
             </span>
             {railMode === 'glyph' && (
-              <span {...layer('FleetRail / row / mode.glyph', 'MODE_GLYPH 11px · ink/muted', '{derived.mode}')} style={{ color: NEUTRAL.inkMuted, lineHeight: 0, flexShrink: 0 }}>
-                <Glyph name={MODE_GLYPH[v.derived.mode]} size={11} />
+              <span {...layer('FleetRail / row / mode.glyph', 'MODE_GLYPH · ink/muted · learn/title = full mode name (round 43)', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')} title={v.derived.mode} style={{ color: NEUTRAL.inkMuted, lineHeight: 0, flexShrink: 0 }}>
+                <Glyph name={MODE_GLYPH[v.derived.mode]} size={15} />
               </span>
             )}
           </Link>

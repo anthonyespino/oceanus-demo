@@ -1,3 +1,21 @@
+# PROGRESS — 2026-06-13 (Session 39: ROUND 43 — amber cooler + label diet + chip affordance)
+
+## Done
+
+1. **Amber cooled** — `--color-alert-caution` #e3b341 → #e3d141 (hue 42°→53°, ~+11° toward green, S+L preserved). Single token; tile/synoptic tints and the eff-Δ/endurance gauge bands consume it, so all propagate. **Verified in the stress screenshot:** watch (Meridian/Sandpiper/Albatross) reads distinctly from red (Gulf Harrier) and from nominal green — no muddiness, no saturation drop needed.
+2. **Mode chips → glyphs** (band + tile; rail was already glyph-only): text label dropped, glyph 1.4× (12→17 band, 11→15 tile/rail), chip keeps its 1px hairline. Full mode name via `title` (a11y + hover) and the learn leaf binding. Leaf renamed `mode.chip` → `mode.glyph`.
+3. **Master prefix dies** — band identity is just `{name}` now; `title`="master · {name}" keeps the role teachable. Leaf `master.text` → `master.name.text` (role preserved in the path).
+4. **Location repositioned** — destination/site moved out of the clock subtitle to its own line coupled under the mode glyph (centered on it), at facts-row type size (12px, no longer demoted). Clock is now the time alone. New leaf `location.text`.
+5. **DetailChip primitive** (new system component, barrel-exported): 1px hairline chip → popover anchored to the chip (never center modal), Esc/click-outside dismiss, only where real drillable detail exists. First applications in StatusHeader: DATALINK → per-vessel stale-feed breakdown; LAST SYNC → per-vessel sync ages; alert counts → the round-33 alert sheet. The old inline "+N more" expansion is retired into the DATALINK popover.
+6. **Atlas** regenerated — new leaves `mode.glyph`, `location.text`, `master.name.text`, `datalink.chip`, `lastsync.chip`, `alertcount.chip` (+ `StatusHeader / alerts / line.text`). 13 components / 109 leaves.
+
+## Notes / next
+
+- Bookmark (not built, per brief): DetailChip on tank cells, crew names, endurance, mission clock — wherever a short summary hides a richer fact.
+- The location-move + glyph-swaps this round are exactly what Anthony's sketch was steering toward, so the build has converged on it directly. When he renames the FleetView layers to the atlas paths, `scrape FleetView` should round-trip clean (confirmation, not a big diff). Bridge stands ready.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 38: ROUND 41 — instrument FleetHealthBand + stale-sketch rule)
 
 ## Done

@@ -116,17 +116,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   const endVital = still ? 'still' : d.endurance_hours < BUNKER_SOON_H ? 'watch' : 'nominal';
   const aliveVital = still ? 'still' : 'nominal';
 
-  // mission clock (mode-aware, round 22; countdown lives HERE only)
+  // mission clock (mode-aware, round 22; countdown lives HERE only). Round
+  // 43: the location moved out to its own line under the mode glyph, so the
+  // clock is just the time now — no port/state subtitle.
   const next = vessel.history.nextPortCalls[0];
-  let clock: string;
-  let context: string | null = null;
-  if (now.mode === 'TRANSIT' && next) {
-    clock = `T−${hhmm(next.eta - now.t)}`;
-    context = next.port.replace(',', '').toUpperCase();
-  } else {
-    clock = hhmm(modeElapsedMs(vessel));
-    context = now.mode === 'STATION' ? 'ON STATION' : now.mode === 'PORT' ? 'IN PORT' : 'STANDBY';
-  }
+  const clock = now.mode === 'TRANSIT' && next ? `T−${hhmm(next.eta - now.t)}` : hhmm(modeElapsedMs(vessel));
 
   const master = vessel.history.crew.find((c) => c.role === 'Master');
   const nearest = PORTS.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b));
@@ -134,14 +128,24 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   const wx = now.weather;
   const wxStale = d.staleness.weather === 'STALE';
 
+  // round 43: "location" couples under the mode glyph — destination in
+  // transit, the moored port at PORT, the work site on station/standby
+  const locationName = now.mode === 'TRANSIT'
+    ? (next?.port ?? null)
+    : now.mode === 'PORT'
+    ? nearest.name
+    : SITES.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b)).name;
+
   const chevronBtn: React.CSSProperties = {
     background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)',
     borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0,
   };
+  // round 43: mode chip strips its text label — glyph only, 1.4x, the chip
+  // keeps its hairline; learn/title reveals the full mode name
   const modeChip = (
     <Field level="vessel" field="mode">
-      <span {...layer('VesselCommandBand / centerStack / mode.chip', 'boxTight chip · line/strong · MODE_GLYPH map', '{derived.mode}')} style={{ ...gb.boxTight, display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-        <Glyph name={MODE_GLYPH[d.mode]} size={12} />{d.mode}
+      <span {...layer('VesselCommandBand / centerStack / mode.glyph', 'boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')} title={d.mode} style={{ ...gb.boxTight, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Glyph name={MODE_GLYPH[d.mode]} size={17} />
       </span>
     </Field>
   );
@@ -166,7 +170,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <span style={{ ...nameStyle, fontSize: 18 }}>{vessel.static.name}</span>
         {modeChip}
         <span style={{ fontFamily: FONT.data, fontSize: 14, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
-          {now.mode === 'TRANSIT' ? `${clock} · ${context}` : `${context} ${clock}`}
+          {locationName ? `${locationName.toUpperCase()} · ` : ''}{clock}
         </span>
         <button aria-label="expand command band" style={{ ...chevronBtn, position: 'absolute', top: 8, right: 8 }} onClick={() => togglePanel(`${id}:command`)}>
           <Glyph name="expand" size={12} />
@@ -251,13 +255,23 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
             <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
               display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
           </div>
-          {/* broadcast center: name → master → mode → clock → weather */}
+          {/* broadcast center: name → master → mode glyph + location → clock → weather */}
           <div style={{ flex: 1, minWidth: 240, textAlign: 'center' }}>
             <div {...layer('VesselCommandBand / centerStack / name.text', 'type/hero · font/display caps · ink/primary', '{vessel.static.name}')} style={nameStyle}>{vessel.static.name}</div>
-            <div {...layer('VesselCommandBand / centerStack / master.text', 'font/data 12 · ink/secondary — names who you are calling', '{crew Master.name}')} style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary, marginTop: 2 }}>
-              master: {master?.name ?? '—'}
+            {/* round 43: master prefix dies — just the name; learn/title keeps the role teachable */}
+            <div {...layer('VesselCommandBand / centerStack / master.name.text', 'font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title', 'master · {crew Master.name}')} title={master ? `master · ${master.name}` : undefined} style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary, marginTop: 2 }}>
+              {master?.name ?? '—'}
             </div>
-            <div style={{ marginTop: 4 }}>{modeChip}</div>
+            {/* round 43: mode glyph + location coupled — location centered on
+                the glyph, type matches the facts row (no longer demoted) */}
+            <div style={{ marginTop: 6, display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+              {modeChip}
+              {locationName && (
+                <div {...layer('VesselCommandBand / centerStack / location.text', 'font/data 12 · ink/secondary · coupled under the mode glyph (round 43)', '{destination | moored port | work site}')} style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
+                  {locationName.toUpperCase()}
+                </div>
+              )}
+            </div>
             {/* round 34: clock + weather share one centered line — labels
                 die, the glyphs + units self-describe. Reveal holds
                 current/vis/precip. */}
@@ -269,11 +283,8 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               }
             >
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 6, flexWrap: 'wrap' }}>
-                <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · white when still (ruling 14)', '{T−(eta−now) in transit | mode + elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
-                  {now.mode === 'TRANSIT' ? clock : `${context} ${clock}`}
-                  {now.mode === 'TRANSIT' && context && (
-                    <span style={{ fontSize: 12, color: NEUTRAL.inkSecondary }}> · {context}</span>
-                  )}
+                <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · white when still (ruling 14)', '{T−(eta−now) in transit | elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
+                  {clock}
                 </span>
                 <span style={{ display: 'inline-flex', gap: 14, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
                   <Field level="vessel" field="weather.wind">

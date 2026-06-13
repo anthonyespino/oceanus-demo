@@ -19,6 +19,7 @@ export { DevPanel } from './DevPanel'; // probe toggles, press D
 export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrivals board (final probe component)
 export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — designed in Figma, templated after
 export { Collapse } from './Collapse'; // ROUND 21 B3: collapsible panels
+export { DetailChip } from './DetailChip'; // ROUND 43: chip affordance — hairline chip → anchored popover
 export { StateMark } from './StateMark'; // ROUND 21 B4: state silhouettes (trial)
 export { VesselSynoptic } from './VesselSynoptic'; // ROUND 30: THE fuel card — synoptic + dot quartet (⚖9, ⚖11 resolved; TankSchematic + FuelViewSwitch retired)
 export { CrewLogPanel } from './CrewLogPanel'; // ROUND 30: CrewPanel + EventLog merged; VoyagePanel died into VesselCommandBand

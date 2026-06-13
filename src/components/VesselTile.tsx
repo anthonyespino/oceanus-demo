@@ -137,8 +137,8 @@ export function VesselTile({
           } size={mini ? 24 : 'var(--type-hero-size)'} />
         </div>
         <div style={{ marginTop: 6 }}>
-          <span {...layer('VesselTile / header / mode.chip', 'type/micro · line/strong chip · ink/secondary', '{derived.mode} + MODE_GLYPH')} style={{ ...TYPE.micro, border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '1px 8px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            <Glyph name={MODE_GLYPH[d.mode]} size={11} />{d.mode}
+          <span {...layer('VesselTile / header / mode.glyph', 'line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')} title={d.mode} style={{ border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '3px 6px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', lineHeight: 0 }}>
+            <Glyph name={MODE_GLYPH[d.mode]} size={15} />
           </span>
         </div>
       </div>
