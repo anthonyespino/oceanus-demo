@@ -1,3 +1,41 @@
+# PROGRESS — 2026-06-13 (Session 55: ROUND 66 — resolve severity to STRIP, drop card border + name divider)
+
+## UNMISSABILITY GATE — PASS (run on the actual 15-tile board, demo seed)
+Captured the real fleet board (`docs/screens/r66-gate-board.png`, also
+`r66-tile-meridian.png` vs `r66-tile-standard.png`). Scanning cold with NO
+perimeter border, **Meridian out-reads the 14 nominal tiles by a clear margin.**
+It is the ONLY colored tile on a field of white/grey: gold **name** + gold
+**+7.6% value** + a **wide gold meter strip** (|+7.6%|/20 ≈ 38% fill vs the thin
+grey strips on nominals) — three reinforcing gold cues. Reads strongly; the eye
+lands on it immediately. **Border removal HELD (gate passed).**
+
+## Done
+- **Severity placement resolved to STRIP fleet-wide** — edge/both retired,
+  `severityPlacement` state + dev toggle removed (FleetProvider, DevPanel).
+- **Perimeter severity border removed** from the tile (Link `border: none`).
+  Removal, NOT recolored to white/neutral (that would be a non-severity outline
+  on every tile). Borderless, fill only (round 37).
+- **Name-divider `status.line` removed** (the stroke still rendering under the
+  name). The round-63 fill-STEP seam now separates header/body alone — and since
+  it was a touch subtle once the line went, **the delta was widened** (header +
+  spark bands `#2b2b2b` over the `#181818` body). Confirmed on screenshot: the
+  seam reads clearly with no line. Body stays #181818 so the borderless tile
+  still contrasts against the page bg.
+- Severity carriers now: strip (primary) + name tint + value tint. Nominal =
+  neutral strip, no tint, no border.
+
+## No stray strokes (confirmed)
+No perimeter border, no header/name line, sparkline still frameless (round 63
+`framed={false}`). The only thing on the tile carrying status color is the strip
++ name/value tint. Atlas dropped to 136 leaves (status.line leaf gone).
+
+## Kept intact
+Meter strip = sole expand affordance + deviation metering (round 61), VesselTile
+layout (round 63), glyph art + neutral inking (round 63), 1px sharp corners
+(round 36). TSC-OK · LINT-CLEAN · verify ALL CHECKS PASSED · offline build clean.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 54: ROUND 63 — VesselTile, match Figma layout, rulings held)
 
 Pulled Anthony's Figma VesselTile (node 11:68, 511×533) via the read-only bridge

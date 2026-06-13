@@ -234,7 +234,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: (root)
     • alert.line  → tag = severity color · message ink/secondary (round 33 grammar) · 2x only · {alerts[] level + message}
-    • bg.shape  → surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal · {vesselStatus(alerts)} drives border tint · {derived.mode}
+    • bg.shape  → surface/raised fill · BORDERLESS — no perimeter outline at all (round 66; the round-37 status border is removed, severity moves to the strip) · 45% dim when idle nominal · {derived.mode}
   Region: body
     • trendChart.chart  → ink/secondary line · zero axis · {daily_delta_1y[-30d]}
   Region: (root)
@@ -248,8 +248,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
     • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
-    • spark.container  → full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63) · —
-    • status.line  → severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57) · {vesselStatus(alerts)}
+    • spark.container  → full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66) · —
     • trend.glyph  → glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend · 30d trend
     • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
@@ -284,4 +283,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:12:15.901Z*
+*136 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:25:51.384Z*

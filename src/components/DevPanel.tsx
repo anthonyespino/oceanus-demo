@@ -137,8 +137,6 @@ export function DevPanel() {
           options={[{ v: 'glyph' as const, text: 'mode glyph' }, { v: 'stroke' as const, text: 'transit stroke' }]} />
         <Row label="auto 2x" value={f.autoPromote} onPick={f.setAutoPromote}
           options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
-        <Row label="severity" value={f.severityPlacement} onPick={f.setSeverityPlacement}
-          options={[{ v: 'edge' as const, text: 'edge' }, { v: 'strip' as const, text: 'strip' }, { v: 'both' as const, text: 'both' }]} />
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs

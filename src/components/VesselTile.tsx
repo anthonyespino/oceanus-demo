@@ -40,7 +40,7 @@ export function VesselTile({
   onSize: (s: TileSize) => void;
 }) {
   const d = vessel.derived;
-  const { motion, crossings, severityPlacement } = useFleet();
+  const { motion, crossings } = useFleet();
   const [hot, setHot] = useState(false); // hover/focus-within → show controls
   const [sparkRef, sparkW] = useContentWidth(180); // round 39: full-width bottom spark
   const status = vesselStatus(vessel.alerts);
@@ -51,33 +51,25 @@ export function VesselTile({
     if (next) onSize(next);
   };
   const colored = treatment === 'automotive' || status !== 'nominal';
-  // Round 26: ONE border voice — rail grammar. Round 37 (fills, not
-  // fences): the nominal hairline DIES — tiles are filled surfaces, and an
-  // outline on the board now means severity, nothing else.
   const alerted = vessel.alerts.length > 0;
   const active = d.mode === 'TRANSIT' || d.mode === 'STATION';
-  const borderColor = status !== 'nominal' ? STATUS_COLOR[status] : 'transparent';
   const tileDim = !alerted && !active && status === 'nominal';
   const fullAlerts = vessel.alerts.filter((a) => a.level !== 'ADVISORY');
 
-  // ROUND 61 — severity placement (⚖14 resolved). The status.line edge and the
-  // meter strip EACH may carry the alert color; the dev toggle decides which.
-  // Nominal tiles carry no severity color anywhere (neutral edge, neutral
-  // strip) — the automotive nominal affirmation lives on the trend ✓, not here.
+  // ROUND 66 — severity placement RESOLVED to STRIP fleet-wide (edge/both
+  // retired). The tile carries NO severity outline: the round-37 perimeter
+  // border and the round-57/63 name-divider status.line are both removed. The
+  // meter strip is the primary severity carrier, with name tint + value tint
+  // alongside. Nominal tiles: neutral strip, no tint, no border. The strip
+  // meters efficiency-deviation magnitude (fill ∝ |Δ|, ±20% full scale) at
+  // every size, tinting with status color only when alert-backed (round 61).
   const severe = status !== 'nominal';
-  const edgeColored = severe && (severityPlacement === 'edge' || severityPlacement === 'both');
-  const stripColored = severe && (severityPlacement === 'strip' || severityPlacement === 'both');
-  const edgeColor = edgeColored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
-  // The strip ALWAYS meters efficiency-deviation magnitude (fill ∝ |Δ|, full
-  // scale = ±20%), regardless of where color lives — it is never purely
-  // decorative. It tints only when alert-backed AND placement routes color to
-  // the strip; neutral data fill otherwise (same anatomy as the gauges).
   const devFrac = Math.min(1, Math.abs(d.efficiency_delta_pct) / 20);
-  const stripFill = stripColored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
+  const stripFill = severe ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
 
   return (
     <Link
-      {...layer('VesselTile / bg.shape', 'surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal', '{vesselStatus(alerts)} drives border tint · {derived.mode}')}
+      {...layer('VesselTile / bg.shape', 'surface/raised fill · BORDERLESS — no perimeter outline at all (round 66; the round-37 status border is removed, severity moves to the strip) · 45% dim when idle nominal', '{derived.mode}')}
       href={`/vessel/${vessel.static.id}`}
       onMouseEnter={() => setHot(true)}
       onMouseLeave={() => setHot(false)}
@@ -92,7 +84,7 @@ export function VesselTile({
         flexDirection: 'column',
         textDecoration: 'none',
         color: NEUTRAL.ink,
-        border: `1px solid ${borderColor}`,
+        border: 'none', // round 66: borderless, fill only — NO perimeter severity outline (NOT recolored to white/neutral; removed)
         borderRadius: RADIUS,
         background: NEUTRAL.surface, // body fill; header + spark bands step lighter
         padding: 0, // round 63: per-region padding so header/spark bands full-bleed
@@ -128,13 +120,16 @@ export function VesselTile({
           status.line is BOTH the header/body seam and the round-57/61 severity
           edge. Rounded corners in the mock are NOT replicated — RADIUS stays
           1px (round 36). Glyphs sized to the mock and neutral-inked (white). */}
-      {/* HEADER band — lighter fill-step, name with room above and below */}
-      <div style={{ background: 'var(--color-surface-overlay)', padding: mini ? '12px 14px' : '20px 14px', textAlign: 'center' }}>
+      {/* HEADER band — lighter fill-step (round 66: delta widened to #2b2b2b so
+          the seam separates header/body WITHOUT a stroke; body stays #181818 to
+          keep the borderless tile contrasting against the page bg) */}
+      <div style={{ background: '#2b2b2b', padding: mini ? '12px 14px' : '20px 14px', textAlign: 'center' }}>
         <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63)', '{vessel.static.name}')} style={{ ...TYPE.name, fontSize: mini ? 18 : 24, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
       </div>
-      {/* SEAM = the fill step above; this full-bleed line is the round-57/61
-          severity edge (behavior untouched, governed by severity placement) */}
-      <div {...layer('VesselTile / status.line', 'severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57)', '{vesselStatus(alerts)}')} style={{ height: 2, width: '100%', background: edgeColor }} />
+      {/* ROUND 66: the name-divider status.line stroke is REMOVED. Header/body
+          separation is carried by the fill-STEP alone (lighter header band over
+          the darker body) — no drawn line. status.line is gone from the tile
+          (severity now lives on the strip + name/value tint, not an edge). */}
       {/* BODY — darker fill (tile base shows through); centered glyph-above-
           value at top, two-column footer pinned to the base (round 63 mock) */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, padding: mini ? '10px 14px' : '16px 14px' }}>
@@ -206,8 +201,8 @@ export function VesselTile({
       </div>
       {/* SPARK band — its OWN lighter fill-step region, NO stroke frame (round
           63 mock item 6); the 24h signature docks full-width, every size */}
-      <div style={{ background: 'var(--color-surface-overlay)', padding: '6px 10px' }}>
-        <div ref={sparkRef} {...layer('VesselTile / spark.container', 'full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63)', '—')}>
+      <div style={{ background: '#2b2b2b', padding: '6px 10px' }}>
+        <div ref={sparkRef} {...layer('VesselTile / spark.container', 'full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66)', '—')}>
           <Sparkline
             values={d.sparkline_24h} width={sparkW} height={20} framed={false}
             layerSvg={layer('VesselTile / spark.chart', 'ink/secondary 1px polyline · the 24h signature', '{derived.sparkline_24h — hourly efficiency_delta}')}

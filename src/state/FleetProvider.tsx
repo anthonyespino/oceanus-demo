@@ -22,10 +22,10 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // (a) board-first: trend board top, large chart below; (b) chart-band:
 // shallow full-width chart strip on top, board directly below.
 export type LayoutVariant = 'board-first' | 'chart-band';
-// round 61: ⚖14 resolved — the meter strip is the sole expand affordance
-// (chevron/reveal dropped). What remains under evaluation is WHERE alert color
-// lands: the status.line edge, the meter strip, or both.
-export type SeverityPlacement = 'edge' | 'strip' | 'both';
+// round 61: ⚖14 resolved — the meter strip is the sole expand affordance.
+// round 66: the severity-placement experiment is RESOLVED to STRIP fleet-wide
+// (edge/both retired, toggle removed). Severity now lives on the strip + name
+// tint + value tint; the tile carries no severity outline at all.
 export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator experiment
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
 
@@ -65,8 +65,6 @@ interface FleetContextValue {
   setAmbientSea: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
-  severityPlacement: SeverityPlacement; // round 61: where alert color renders
-  setSeverityPlacement: (s: SeverityPlacement) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
       in BOTH directions; the engineer outranks the layout */
   tileSizes: Record<string, TileSize>;
@@ -101,7 +99,6 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [scenario, setScenario] = useState('demo');
   const [ambientSea, setAmbientSea] = useState(true); // round 46: default on
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
-  const [severityPlacement, setSeverityPlacement] = useState<SeverityPlacement>('edge'); // round 61: EDGE current
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
   const [crossings, setCrossings] = useState<Record<string, number>>({});
@@ -155,7 +152,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         chartTop, setChartTop, stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
-        censusFilter, setCensusFilter, severityPlacement, setSeverityPlacement,
+        censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}
     >

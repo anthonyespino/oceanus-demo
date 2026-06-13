@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T20:12:15.902Z",
+  "generated": "2026-06-13T20:25:51.384Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1114,8 +1114,8 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "bg.shape",
-      "tokens": "surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal",
-      "binds": "{vesselStatus(alerts)} drives border tint · {derived.mode}",
+      "tokens": "surface/raised fill · BORDERLESS — no perimeter outline at all (round 66; the round-37 status border is removed, severity moves to the strip) · 45% dim when idle nominal",
+      "binds": "{derived.mode}",
       "file": "src/components/VesselTile.tsx"
     },
     {
@@ -1204,17 +1204,8 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "spark.container",
-      "tokens": "full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63)",
+      "tokens": "full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66)",
       "binds": "—",
-      "file": "src/components/VesselTile.tsx"
-    },
-    {
-      "path": "VesselTile / status.line",
-      "component": "VesselTile",
-      "region": "(root)",
-      "leaf": "status.line",
-      "tokens": "severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57)",
-      "binds": "{vesselStatus(alerts)}",
       "file": "src/components/VesselTile.tsx"
     },
     {

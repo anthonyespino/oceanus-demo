@@ -467,8 +467,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — tag = severity color · message ink/secondary (round 33 grammar) · 2x only
   - BINDS — {alerts[] level + message}
 - `bg.shape`
-  - TOKENS — surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal
-  - BINDS — {vesselStatus(alerts)} drives border tint · {derived.mode}
+  - TOKENS — surface/raised fill · BORDERLESS — no perimeter outline at all (round 66; the round-37 status border is removed, severity moves to the strip) · 45% dim when idle nominal
+  - BINDS — {derived.mode}
 - `body / trendChart.chart`
   - TOKENS — ink/secondary line · zero axis
   - BINDS — {daily_delta_1y[-30d]}
@@ -497,11 +497,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary 1px polyline · the 24h signature
   - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
 - `spark.container`
-  - TOKENS — full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63)
+  - TOKENS — full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66)
   - BINDS — —
-- `status.line`
-  - TOKENS — severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57)
-  - BINDS — {vesselStatus(alerts)}
 - `trend.glyph`
   - TOKENS — glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend
   - BINDS — 30d trend
@@ -509,4 +506,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T20:12:15.900Z*
+*136 instrumented leaves · 19 components · generated 2026-06-13T20:25:51.383Z*

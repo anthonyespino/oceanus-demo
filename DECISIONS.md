@@ -105,8 +105,25 @@ originals.*
   status color **only when alert-backed** (value-tinted-only-when-alert-backed,
   same anatomy as the gauges); nominal vessels show a neutral greyscale fill.
   The strip is never purely decorative — it always carries the deviation read.
+- **⚖ Severity placement RESOLVED to STRIP (round 66)** — edge/both retired, the
+  dev toggle removed. Severity now expresses through the **meter strip + name
+  tint + value tint**; the tile carries **no severity outline at all**. The
+  round-37 perimeter status border is **removed** from the tile (removal, NOT
+  recolored to a white/neutral stroke — that would be a non-severity outline on
+  every tile, violating outlines-reserved-for-severity; the card edge is
+  borderless, fill only). The round-57/63 name-divider `status.line` is **removed**
+  — the round-63 fill-STEP seam separates header from body alone (delta widened to
+  `#2b2b2b` header over `#181818` body so it reads without the line; body stays
+  #181818 to keep the borderless tile contrasting against the page). Reasoning:
+  border + name + strip triple-encoded the same signal; the strip carries the
+  deviation it's metering, so severity color sits on its own substantiating
+  quantity. **Unmissability gate RE-VERIFIED on the 15-tile board (demo seed):
+  PASS** — scanning cold, Meridian out-reads the 14 nominal tiles by a clear
+  margin via gold name + gold value + a wide gold strip (|+7.6%| ≈ 38% fill); no
+  border needed (`docs/screens/r66-gate-board.png`). The strip stays the sole
+  expand affordance and meters deviation unchanged (round 61).
 - **Severity placement (edge / strip / both) — UNDER EVALUATION (round 61), no
-  verdict**: a dev toggle moves WHERE the alert color renders. EDGE (current):
+  verdict** *(superseded by round 66 above)*: a dev toggle moves WHERE the alert color renders. EDGE (current):
   status.line edge carries severity, strip neutral/data-only. STRIP: color on
   the strip, edge neutral. BOTH: redundant signal on both. **Color placement is
   the only variable** — the strip meters deviation in all three states, and the
