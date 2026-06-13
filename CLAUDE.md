@@ -4,6 +4,14 @@ Fleet fuel-efficiency monitoring dashboard for shore-side maritime engineers —
 
 **Spec of record: [DATA_MODEL.md](DATA_MODEL.md).** It is authoritative. **[FIGMA_STANDARD.md](FIGMA_STANDARD.md) is binding for all UI/styling sessions:** Figma and code are the same system described twice — component names match `src/components/index.ts` character for character, variant properties = React props (camelCase), tokens are semantic and mirrored in Tailwind, data-bound text uses `{field}` names from the disposition registry. Renames happen in both places in the same sitting or not at all. At the start of any Figma-connected session, pull current Figma MCP setup from official docs (don't trust memory) and diff the `02 · Components` page against the barrel as the drift check. If something in it looks wrong or unbuildable, log an objection in PROGRESS.md and ask Anthony — never silently deviate. Session briefs live in KICKOFF_PROMPT.md. Also read AGENTS.md: the installed Next.js is newer than training data; check `node_modules/next/dist/docs/` before leaning on memory of its APIs.
 
+## Figma MCP bridge (Sketchpad → probe, one-way) — round 40
+
+The Figma Dev Mode MCP server is connected and authenticates via OAuth on Anthony's own account (`whoami` confirms). It reads any file his account can open; it needs only the **file key** from the URL (`figma.com/design/:fileKey/...`) — no PAT, nothing in `.env` (the repo is public; we keep no Figma secret). Setup + scope guardrails: [docs/FIGMA_MCP.md](docs/FIGMA_MCP.md).
+
+**The bridge is one-way: Figma → code. Never write back to Anthony's file** — use only `get_metadata` / `get_design_context` / `get_screenshot` / `whoami`, never a `create_*` / `use_figma` / write tool against it. The probe is the rendered preview; the file stays his.
+
+**`scrape {frame name}` workflow:** read that frame's layer tree → match each *named* layer against `docs/atlas.json` (exact path, or `region / role.kind` inside a component-named frame) → report a translation diff **without applying** (recognized+changed / recognized+unchanged / unrecognized = "noted, no binding yet") → Anthony approves → apply to `layout-probe`, verify, push. Unnamed layers are ignored; unrecognized names never block. `docs/LAYER_ATLAS_FIGMA.md` is his "what can I name today" cheat sheet.
+
 ## Component naming rule
 
 UI component names exactly match Anthony's Figma component names (e.g. `VesselCard`, `EngineTwinPanel`, `TankSchematic`, `FleetMap`, `AlertRail`). Never rename, "improve," or alias them.

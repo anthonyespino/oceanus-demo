@@ -1,0 +1,906 @@
+{
+  "generated": "2026-06-13T16:51:26.275Z",
+  "convention": "Component / region(camelCase) / role.kind",
+  "kinds": [
+    "text",
+    "line",
+    "shape",
+    "chart",
+    "glyph",
+    "chip",
+    "status"
+  ],
+  "leaves": [
+    {
+      "path": "StatusHeader / alerts / counts.chip",
+      "component": "StatusHeader",
+      "region": "alerts",
+      "leaf": "counts.chip",
+      "tokens": "counts in severity colors — THE alert click target (round 33: summoned, not standing)",
+      "binds": "{fleet alert counts by level} → opens AlertSheet",
+      "file": "src/components/AlertSheet.tsx"
+    },
+    {
+      "path": "StatusHeader / datalink / state.text",
+      "component": "StatusHeader",
+      "region": "datalink",
+      "leaf": "state.text",
+      "tokens": "font/data 11 · ink/secondary | advisory when degraded — inline grammar: vessel + feed + age, worst first",
+      "binds": "{stale stream census → FRESH | DEGRADED | STALE}",
+      "file": "src/components/AlertSheet.tsx"
+    },
+    {
+      "path": "StatusHeader / sync / age.text",
+      "component": "StatusHeader",
+      "region": "sync",
+      "leaf": "age.text",
+      "tokens": "font/data 11 · ink/secondary",
+      "binds": "{simTime − oldest stream timestamp}",
+      "file": "src/components/AlertSheet.tsx"
+    },
+    {
+      "path": "AlertSheet / sheet / line.text",
+      "component": "AlertSheet",
+      "region": "sheet",
+      "leaf": "line.text",
+      "tokens": "round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary",
+      "binds": "{alert.level · vessel.name → /vessel/id · alert.message}",
+      "file": "src/components/AlertSheet.tsx"
+    },
+    {
+      "path": "CrewLogPanel / log / entry.text",
+      "component": "CrewLogPanel",
+      "region": "log",
+      "leaf": "entry.text",
+      "tokens": "font/data 12 terminal grammar · alert lines tint by level (advisory muted, A6)",
+      "binds": "{stamp · type · text} newest first",
+      "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "CrewLogPanel / log / filter.chip",
+      "component": "CrewLogPanel",
+      "region": "log",
+      "leaf": "filter.chip",
+      "tokens": "chip — accent when active (interaction voice)",
+      "binds": "{event type visibility toggle}",
+      "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "CrewLogPanel / log / modeStrip.chart",
+      "component": "CrewLogPanel",
+      "region": "log",
+      "leaf": "modeStrip.chart",
+      "tokens": "MODE_COLOR segments · line/subtle dividers — recent memory, same family as the log (round 30)",
+      "binds": "{24h minute modes → segments}",
+      "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "CrewLogPanel / roster / name.text",
+      "component": "CrewLogPanel",
+      "region": "roster",
+      "leaf": "name.text",
+      "tokens": "font/ui 13",
+      "binds": "{crew.name}",
+      "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "CrewLogPanel / roster / role.text",
+      "component": "CrewLogPanel",
+      "region": "roster",
+      "leaf": "role.text",
+      "tokens": "font/ui 13",
+      "binds": "{crew.role}",
+      "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "CrewLogPanel / roster / since.text",
+      "component": "CrewLogPanel",
+      "region": "roster",
+      "leaf": "since.text",
+      "tokens": "font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)",
+      "binds": "{crew.onboard_since shared date + days}",
+      "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "EfficiencyCurve / plot / delta.text",
+      "component": "EfficiencyCurve",
+      "region": "plot",
+      "leaf": "delta.text",
+      "tokens": "font/data 10 · status tint (earned) — labeled: speed-specific, distinct from vs-baseline",
+      "binds": "{live gal/nm / envelope median − 1} vs envelope",
+      "file": "src/components/EfficiencyCurve.tsx"
+    },
+    {
+      "path": "EfficiencyCurve / plot / drop.line",
+      "component": "EfficiencyCurve",
+      "region": "plot",
+      "leaf": "drop.line",
+      "tokens": "ink/muted dashed — degradation as geometry",
+      "binds": "{live point → envelope median at same speed}",
+      "file": "src/components/EfficiencyCurve.tsx"
+    },
+    {
+      "path": "EfficiencyCurve / plot / envelope.shape",
+      "component": "EfficiencyCurve",
+      "region": "plot",
+      "leaf": "envelope.shape",
+      "tokens": "surface/overlay fill — 12-mo IQR band",
+      "binds": "{transit envelope p25→p75 by speed bin}",
+      "file": "src/components/EfficiencyCurve.tsx"
+    },
+    {
+      "path": "EfficiencyCurve / plot / median.line",
+      "component": "EfficiencyCurve",
+      "region": "plot",
+      "leaf": "median.line",
+      "tokens": "ink/secondary 1.25px",
+      "binds": "{envelope median by speed bin}",
+      "file": "src/components/EfficiencyCurve.tsx"
+    },
+    {
+      "path": "EfficiencyCurve / plot / now.dot",
+      "component": "EfficiencyCurve",
+      "region": "plot",
+      "leaf": "now.dot",
+      "tokens": "accent ring (identity) · status fill when watch/degraded (status outranks accent)",
+      "binds": "{live gal/nm @ speed_over_ground}",
+      "file": "src/components/EfficiencyCurve.tsx"
+    },
+    {
+      "path": "EfficiencyPanel / charts / envelope.chart",
+      "component": "EfficiencyPanel",
+      "region": "charts",
+      "leaf": "envelope.chart",
+      "tokens": "IQR band surface/overlay · median ink/secondary · live point accent ring",
+      "binds": "{1y transit envelope: gal/nm vs kn} — speed-specific comparison",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
+      "path": "EfficiencyPanel / charts / trend30.chart",
+      "component": "EfficiencyPanel",
+      "region": "charts",
+      "leaf": "trend30.chart",
+      "tokens": "ink/secondary line · zero axis · fills cell",
+      "binds": "{daily_delta_1y[-30d]}",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
+      "path": "EfficiencyPanel / footer / baseline.text",
+      "component": "EfficiencyPanel",
+      "region": "footer",
+      "leaf": "baseline.text",
+      "tokens": "font/data 12 · ink/secondary",
+      "binds": "{derived.baseline_value} {baseline_metric}",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
+      "path": "EfficiencyPanel / footer / spark24.chart",
+      "component": "EfficiencyPanel",
+      "region": "footer",
+      "leaf": "spark24.chart",
+      "tokens": "ink/secondary 1px · line/subtle frame",
+      "binds": "{derived.sparkline_24h — hourly efficiency_delta}",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
+      "path": "EfficiencyPanel / heroRow / baselineDelta.text",
+      "component": "EfficiencyPanel",
+      "region": "heroRow",
+      "leaf": "baselineDelta.text",
+      "tokens": "Stat: micro-caps label · type/hero numeral tabular",
+      "binds": "{derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
+      "path": "EfficiencyPanel / heroRow / trend30.text",
+      "component": "EfficiencyPanel",
+      "region": "heroRow",
+      "leaf": "trend30.text",
+      "tokens": "Stat: micro-caps label · type/hero numeral tabular",
+      "binds": "{derived.trend_30d} %/30d — the primary fleet signal (ruling 13)",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / gapTrend / area.chart",
+      "component": "EngineTwinPanel",
+      "region": "gapTrend",
+      "leaf": "area.chart",
+      "tokens": "fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)",
+      "binds": "{daily mean E2−E1 EGT, 30d, both running} — the \"three weeks early\" graphic",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / rows / engine.text",
+      "component": "EngineTwinPanel",
+      "region": "rows",
+      "leaf": "engine.text",
+      "tokens": "font/data 12 · id+role ink/muted left · state tabular right · hairline divider",
+      "binds": "{id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / verdict / avg.text",
+      "component": "EngineTwinPanel",
+      "region": "verdict",
+      "leaf": "avg.text",
+      "tokens": "font/data 11 · ink/secondary",
+      "binds": "{derived.egt_twin_gap_f} — 24h avg at matched load",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / verdict / fuelDelta.text",
+      "component": "EngineTwinPanel",
+      "region": "verdict",
+      "leaf": "fuelDelta.text",
+      "tokens": "font/data 14",
+      "binds": "{E2.fuel_rate / E1.fuel_rate − 1} at matched load",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / verdict / gap.text",
+      "component": "EngineTwinPanel",
+      "region": "verdict",
+      "leaf": "gap.text",
+      "tokens": "type/hero · font/data tabular — largest type in the section",
+      "binds": "{E2.egt − E1.egt} now, both running",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / verdict / label.text",
+      "component": "EngineTwinPanel",
+      "region": "verdict",
+      "leaf": "label.text",
+      "tokens": "gb.label micro-caps · ink/muted",
+      "binds": "E2 VS E1 EGT (static)",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "FleetRail / row / dot.status",
+      "component": "FleetRail",
+      "region": "row",
+      "leaf": "dot.status",
+      "tokens": "status color | ink/muted nominal (treatment B)",
+      "binds": "{vesselStatus(alerts)}",
+      "file": "src/components/FleetRail.tsx"
+    },
+    {
+      "path": "FleetRail / row / mode.glyph",
+      "component": "FleetRail",
+      "region": "row",
+      "leaf": "mode.glyph",
+      "tokens": "MODE_GLYPH 11px · ink/muted",
+      "binds": "{derived.mode}",
+      "file": "src/components/FleetRail.tsx"
+    },
+    {
+      "path": "FleetRail / row / name.text",
+      "component": "FleetRail",
+      "region": "row",
+      "leaf": "name.text",
+      "tokens": "font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)",
+      "binds": "{vessel.static.name}",
+      "file": "src/components/FleetRail.tsx"
+    },
+    {
+      "path": "Gauge / dial / arc.line",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "arc.line",
+      "tokens": "line/strong · 2.5×k",
+      "binds": "{min→max, 270° sweep}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / band.line",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "band.line",
+      "tokens": "alert color — alert-backed ONLY (ruling 11)",
+      "binds": "{band.from→band.to}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / hub.dot",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "hub.dot",
+      "tokens": "ink/primary",
+      "binds": "—",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / limit.line",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "limit.line",
+      "tokens": "ink/secondary · neutral tick (ruling 11)",
+      "binds": "{displayLimits[]}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / maxLabel.text",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "maxLabel.text",
+      "tokens": "font/data micro · ink/muted",
+      "binds": "{minMaxLabels?.[1] ?? max}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / minLabel.text",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "minLabel.text",
+      "tokens": "font/data micro · ink/muted",
+      "binds": "{minMaxLabels?.[0] ?? min}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / needle.line",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "needle.line",
+      "tokens": "ink/primary — ALWAYS (round 19, amends ruling 14)",
+      "binds": "{value→angle(min,max)}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / dial / tick.line",
+      "component": "Gauge",
+      "region": "dial",
+      "leaf": "tick.line",
+      "tokens": "ink/muted · 1px",
+      "binds": "{25 / 50 / 75 %}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / label / label.text",
+      "component": "Gauge",
+      "region": "label",
+      "leaf": "label.text",
+      "tokens": "font/data 9 caps letterspaced · ink/muted",
+      "binds": "{label}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "Gauge / readout / value.text",
+      "component": "Gauge",
+      "region": "readout",
+      "leaf": "value.text",
+      "tokens": "font/data tabular · type/hero×k · earned color (ruling 14)",
+      "binds": "{display ?? round(value)+unit}",
+      "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "InstrumentCluster / cell / trace.chart",
+      "component": "InstrumentCluster",
+      "region": "cell",
+      "leaf": "trace.chart",
+      "tokens": "fill/level area · ink/muted line · gauge-cell width · dims with dormant dial",
+      "binds": "{selected engine sensor, 24h minutes → ~96 pts}",
+      "file": "src/components/InstrumentCluster.tsx"
+    },
+    {
+      "path": "InstrumentCluster / selector / engine.chip",
+      "component": "InstrumentCluster",
+      "region": "selector",
+      "leaf": "engine.chip",
+      "tokens": "toggleStyle — accent when active (interaction voice)",
+      "binds": "{engine index → cluster binding}",
+      "file": "src/components/InstrumentCluster.tsx"
+    },
+    {
+      "path": "NauticalChart / base / land.shape",
+      "component": "NauticalChart",
+      "region": "base",
+      "leaf": "land.shape",
+      "tokens": "chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23)",
+      "binds": "{LAND polygon from src/data/coast.ts}",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "NauticalChart / base / seaLabel.text",
+      "component": "NauticalChart",
+      "region": "base",
+      "leaf": "seaLabel.text",
+      "tokens": "font/ui letterspaced · near-water contrast — furniture, not data",
+      "binds": "GULF OF MEXICO (static)",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "NauticalChart / base / water.shape",
+      "component": "NauticalChart",
+      "region": "base",
+      "leaf": "water.shape",
+      "tokens": "chart/water #0d1924 — the ONLY navy (round 23)",
+      "binds": "{chart frame}",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "NauticalChart / furniture / compass.glyph",
+      "component": "NauticalChart",
+      "region": "furniture",
+      "leaf": "compass.glyph",
+      "tokens": "chart ink · ring + needle + N",
+      "binds": "north-up (static)",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "NauticalChart / furniture / scale.line",
+      "component": "NauticalChart",
+      "region": "furniture",
+      "leaf": "scale.line",
+      "tokens": "chart ink · end + mid ticks",
+      "binds": "{bar length adapts: 10–200 nm at mid-latitude}",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "NauticalChart / graticule / meridian.line",
+      "component": "NauticalChart",
+      "region": "graticule",
+      "leaf": "meridian.line",
+      "tokens": "grid faint 0.5px · frame ticks · 9px labels",
+      "binds": "{longitude grid at adaptive step}",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "NauticalChart / graticule / parallel.line",
+      "component": "NauticalChart",
+      "region": "graticule",
+      "leaf": "parallel.line",
+      "tokens": "grid faint 0.5px · frame ticks · 9px labels",
+      "binds": "{latitude grid at adaptive step}",
+      "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / clock.text",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "clock.text",
+      "tokens": "type/hero×0.6 · font/data tabular · white when still (ruling 14)",
+      "binds": "{T−(eta−now) in transit | mode + elapsed} · countdown lives HERE only",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / master.text",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "master.text",
+      "tokens": "font/data 12 · ink/secondary — names who you are calling",
+      "binds": "{crew Master.name}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / mode.chip",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "mode.chip",
+      "tokens": "boxTight chip · line/strong · MODE_GLYPH map",
+      "binds": "{derived.mode}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / name.text",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "name.text",
+      "tokens": "type/hero · font/display caps · ink/primary",
+      "binds": "{vessel.static.name}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / waves.text",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "waves.text",
+      "tokens": "font/data 14 tabular · glyph ink/secondary · stale tint when WX stale",
+      "binds": "{weather.wave_height_ft} ft",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / centerStack / wind.text",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "wind.text",
+      "tokens": "font/data 14 tabular · glyph ink/secondary · stale tint when WX stale",
+      "binds": "{weather.wind_speed_kn} kn",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / factsLine / class.text",
+      "component": "VesselCommandBand",
+      "region": "factsLine",
+      "leaf": "class.text",
+      "tokens": "font/data 12 · ink/muted",
+      "binds": "{static.length_ft} ft {static.class}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / factsLine / position.text",
+      "component": "VesselCommandBand",
+      "region": "factsLine",
+      "leaf": "position.text",
+      "tokens": "font/data 12 · ink/secondary — relative reference, never raw lat/lon (ruling 6)",
+      "binds": "{nm from nearest port | alongside}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / factsLine / speed.text",
+      "component": "VesselCommandBand",
+      "region": "factsLine",
+      "leaf": "speed.text",
+      "tokens": "font/data 12 · ink/secondary",
+      "binds": "{position.speed_over_ground_kn} kn",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / gaugeRail / burn.chart",
+      "component": "VesselCommandBand",
+      "region": "gaugeRail",
+      "leaf": "burn.chart",
+      "tokens": "Gauge primitive · 96px",
+      "binds": "{derived.burn_rate_gph} / max observed 1y",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / gaugeRail / effDelta.chart",
+      "component": "VesselCommandBand",
+      "region": "gaugeRail",
+      "leaf": "effDelta.chart",
+      "tokens": "Gauge primitive · caution band ≥+8 (alert-backed)",
+      "binds": "{derived.efficiency_delta_pct} vs mode baseline",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / gaugeRail / endurance.chart",
+      "component": "VesselCommandBand",
+      "region": "gaugeRail",
+      "leaf": "endurance.chart",
+      "tokens": "Gauge primitive · log dial · caution band <72h (alert-backed)",
+      "binds": "{derived.endurance_hours}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / gaugeRail / speed.chart",
+      "component": "VesselCommandBand",
+      "region": "gaugeRail",
+      "leaf": "speed.chart",
+      "tokens": "Gauge primitive · 96px",
+      "binds": "{position.speed_over_ground_kn} / max {cruise×1.35}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / destination.text",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "destination.text",
+      "tokens": "font/data 11 · ink/primary",
+      "binds": "{next_port_calls[0].port}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / eta.text",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "eta.text",
+      "tokens": "font/data 11 · ink/muted",
+      "binds": "{next_port_calls[0].eta} — absolute ETA + Z lives HERE only",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / fill.line",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "fill.line",
+      "tokens": "accent/primary 2px — interaction/identity voice, never severity",
+      "binds": "{distance covered fraction}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / origin.text",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "origin.text",
+      "tokens": "font/data 11 · ink/secondary",
+      "binds": "{transit-run start: nearest port <5nm | nearest site}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / toGo.text",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "toGo.text",
+      "tokens": "font/data 10 · ink/muted · right-aligned",
+      "binds": "{pct covered} · {nm to destination} — distance-to-go lives HERE only",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / track.line",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "track.line",
+      "tokens": "surface/overlay 2px",
+      "binds": "{origin→destination}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / profile / vessel.glyph",
+      "component": "VesselCommandBand",
+      "region": "profile",
+      "leaf": "vessel.glyph",
+      "tokens": "glyph/vesselMarker 16px · ink/primary — bow along the track (round 36)",
+      "binds": "{live position on track}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselSynoptic / callouts / label.text",
+      "component": "VesselSynoptic",
+      "region": "callouts",
+      "leaf": "label.text",
+      "tokens": "font/data 10 · ink/secondary — ST/FD/E annotation language",
+      "binds": "{ST1 ST2 FD1 FD2 E1–E4}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / callouts / leader.line",
+      "component": "VesselSynoptic",
+      "region": "callouts",
+      "leaf": "leader.line",
+      "tokens": "line/strong 0.6px",
+      "binds": "{node→label}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / engines / node.shape",
+      "component": "VesselSynoptic",
+      "region": "engines",
+      "leaf": "node.shape",
+      "tokens": "running = filled · stopped = outline · status tint only when alert names the engine",
+      "binds": "{engine.engine_id · running}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / engines / value.text",
+      "component": "VesselSynoptic",
+      "region": "engines",
+      "leaf": "value.text",
+      "tokens": "font/data 9",
+      "binds": "{engine.load_pct}% | OFF",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / flow / engineLine.line",
+      "component": "VesselSynoptic",
+      "region": "flow",
+      "leaf": "engineLine.line",
+      "tokens": "line/strong 1.2px",
+      "binds": "{flow meter→engine}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / flow / feedLine.line",
+      "component": "VesselSynoptic",
+      "region": "flow",
+      "leaf": "feedLine.line",
+      "tokens": "line/strong 1.2px · dashed when no transfer",
+      "binds": "{storage→feeder · tank.transfer_active}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / flow / meterLine.line",
+      "component": "VesselSynoptic",
+      "region": "flow",
+      "leaf": "meterLine.line",
+      "tokens": "line/strong 1.2px",
+      "binds": "{feeder→flow meter}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / hull / hull.line",
+      "component": "VesselSynoptic",
+      "region": "hull",
+      "leaf": "hull.line",
+      "tokens": "ink/secondary 1.5px — neutral, never status",
+      "binds": "{HULL_PATH — Figma hull replaces 1:1}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / hull / label.text",
+      "component": "VesselSynoptic",
+      "region": "hull",
+      "leaf": "label.text",
+      "tokens": "font/data 9 · ink/muted",
+      "binds": "SUPERSTRUCTURE (static)",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / hull / superstructure.shape",
+      "component": "VesselSynoptic",
+      "region": "hull",
+      "leaf": "superstructure.shape",
+      "tokens": "surface/overlay fill · line/strong",
+      "binds": "{SUPER_PATH}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / meter / meter.shape",
+      "component": "VesselSynoptic",
+      "region": "meter",
+      "leaf": "meter.shape",
+      "tokens": "surface/overlay · line/strong · 45° diamond",
+      "binds": "flow meter node",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / meter / recon.chip",
+      "component": "VesselSynoptic",
+      "region": "meter",
+      "leaf": "recon.chip",
+      "tokens": "border + text = recon severity (OK ink/secondary · advisory · watch)",
+      "binds": "{reconciliation.status · error_pct}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / meter / value.text",
+      "component": "VesselSynoptic",
+      "region": "meter",
+      "leaf": "value.text",
+      "tokens": "font/data 11 · ink/primary",
+      "binds": "{flow_gps × 3600} gph",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / quartet / fill.chart",
+      "component": "VesselSynoptic",
+      "region": "quartet",
+      "leaf": "fill.chart",
+      "tokens": "dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)",
+      "binds": "{tank.level_pct → filled dots}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / quartet / label.text",
+      "component": "VesselSynoptic",
+      "region": "quartet",
+      "leaf": "label.text",
+      "tokens": "gb.label micro-caps · TANK_LOW tint (earned)",
+      "binds": "{tank.tank_id} {tank.type}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / quartet / value.text",
+      "component": "VesselSynoptic",
+      "region": "quartet",
+      "leaf": "value.text",
+      "tokens": "font/data 12 tabular · gal ink/secondary",
+      "binds": "{tank.level_pct}% · {tank.level_gal} gal",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / fill.shape",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "fill.shape",
+      "tokens": "fill/level · bottom-up vertical (round 20)",
+      "binds": "{tank.level_pct}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / tank.shape",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "tank.shape",
+      "tokens": "surface/base · line/strong | TANK_LOW tint (own alert only, round 20)",
+      "binds": "{tank.tank_id}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "value.text",
+      "tokens": "font/data 11 · ink/primary | tint",
+      "binds": "{tank.level_pct}%",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselTile / body / alert.text",
+      "component": "VesselTile",
+      "region": "body",
+      "leaf": "alert.text",
+      "tokens": "tag = severity color · message ink/secondary (round 33 grammar)",
+      "binds": "{alerts[] level + message}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / body / delta.glyph",
+      "component": "VesselTile",
+      "region": "body",
+      "leaf": "delta.glyph",
+      "tokens": "glyph/delta 13px ink/muted left · numeral tabular right (label died round 39)",
+      "binds": "{derived.efficiency_delta_pct} vs mode baseline",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / body / endurance.glyph",
+      "component": "VesselTile",
+      "region": "body",
+      "leaf": "endurance.glyph",
+      "tokens": "glyph/fuel-drop 13px ink/muted left · numeral tabular right (label died round 39)",
+      "binds": "{derived.endurance_hours} h",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / body / trendChart.chart",
+      "component": "VesselTile",
+      "region": "body",
+      "leaf": "trendChart.chart",
+      "tokens": "ink/secondary line · zero axis",
+      "binds": "{daily_delta_1y[-30d]}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / footer / fuel.fill",
+      "component": "VesselTile",
+      "region": "footer",
+      "leaf": "fuel.fill",
+      "tokens": "ink/muted fill | alert color when endurance-backed · surface/overlay track",
+      "binds": "{Σ tank level / Σ capacity}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / footer / spark24.chart",
+      "component": "VesselTile",
+      "region": "footer",
+      "leaf": "spark24.chart",
+      "tokens": "ink/secondary 1px · zero axis · full card width, fixed 20px — the 24h signature (round 39)",
+      "binds": "{derived.sparkline_24h — hourly efficiency_delta}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / frame / border.status",
+      "component": "VesselTile",
+      "region": "frame",
+      "leaf": "border.status",
+      "tokens": "hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar)",
+      "binds": "{vesselStatus(alerts)} · {derived.mode}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / header / dot.status",
+      "component": "VesselTile",
+      "region": "header",
+      "leaf": "dot.status",
+      "tokens": "status color | ink/muted when nominal (treatment B)",
+      "binds": "{vesselStatus(alerts)}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / header / mode.chip",
+      "component": "VesselTile",
+      "region": "header",
+      "leaf": "mode.chip",
+      "tokens": "type/micro · line/strong chip · ink/secondary",
+      "binds": "{derived.mode} + MODE_GLYPH",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / header / name.text",
+      "component": "VesselTile",
+      "region": "header",
+      "leaf": "name.text",
+      "tokens": "type/name · font/display caps · status tint when alerted (earned)",
+      "binds": "{vessel.static.name}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / header / trend.text",
+      "component": "VesselTile",
+      "region": "header",
+      "leaf": "trend.text",
+      "tokens": "type/hero · font/data tabular · status tint (earned)",
+      "binds": "{derived.trend_30d} %/30d",
+      "file": "src/components/VesselTile.tsx"
+    }
+  ]
+}

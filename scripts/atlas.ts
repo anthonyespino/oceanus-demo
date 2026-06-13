@@ -11,6 +11,8 @@ import { join } from 'path';
 const ROOT = join(__dirname, '..');
 const SRC = join(ROOT, 'src');
 const OUT = join(ROOT, 'docs', 'LAYER_ATLAS.md');
+const OUT_FIGMA = join(ROOT, 'docs', 'LAYER_ATLAS_FIGMA.md'); // round 40: sketch cheat sheet
+const OUT_JSON = join(ROOT, 'docs', 'atlas.json'); // round 40: scrape match index
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -71,4 +73,61 @@ lines.push(`*${leaves.length} instrumented leaves · ${byComponent.size} compone
 
 mkdirSync(join(ROOT, 'docs'), { recursive: true });
 writeFileSync(OUT, lines.join('\n'));
-console.log(`LAYER_ATLAS.md: ${byComponent.size} components, ${leaves.length} leaves`);
+
+// ---- round 40: Figma cheat sheet (grouped component → region → leaf) ----
+// "What can I name today" — Anthony names a Figma layer to match a path here
+// and the scrape (Figma → code) recognizes it automatically.
+function regionOf(path: string): string {
+  const parts = path.split(' / ');
+  return parts.length >= 3 ? parts[1] : '(root)';
+}
+function leafOf(path: string): string {
+  const parts = path.split(' / ');
+  return parts.length >= 3 ? parts.slice(2).join(' / ') : parts[parts.length - 1];
+}
+
+const fig: string[] = [
+  '# LAYER ATLAS — FIGMA CHEAT SHEET',
+  '',
+  '**Auto-generated — do not edit.** The "what can I name today" reference while',
+  'sketching. Name a Figma layer to match a path below and `scrape {frame}` binds',
+  'it automatically. Unnamed layers are ignored; unrecognized names are noted, not',
+  'applied. Convention: `Component / region(camelCase) / role.kind` — name the layer',
+  '`region / role.kind` inside a frame named for the component (or use the full path).',
+  '',
+];
+for (const comp of [...byComponent.keys()].sort()) {
+  fig.push(`## ${comp}`, '');
+  const items = [...byComponent.get(comp)!].sort((a, b) => a.path.localeCompare(b.path));
+  let region: string | null = null;
+  for (const l of items) {
+    const r = regionOf(l.path);
+    if (r !== region) { fig.push(`  Region: ${r}`); region = r; }
+    const meta = [l.tokens, l.binds].filter(Boolean).join(' · ');
+    fig.push(`    • ${leafOf(l.path)}${meta ? `  → ${meta}` : ''}`);
+  }
+  fig.push('');
+}
+fig.push(`*${leaves.length} leaves · ${byComponent.size} components · generated ${new Date().toISOString()}*`, '');
+writeFileSync(OUT_FIGMA, fig.join('\n'));
+
+// ---- round 40: machine-readable index the scrape matches layer names against --
+const index = {
+  generated: new Date().toISOString(),
+  convention: 'Component / region(camelCase) / role.kind',
+  kinds: ['text', 'line', 'shape', 'chart', 'glyph', 'chip', 'status'],
+  leaves: [...byComponent.entries()].flatMap(([comp, items]) =>
+    items.map((l) => ({
+      path: l.path,
+      component: comp,
+      region: regionOf(l.path),
+      leaf: leafOf(l.path),
+      tokens: l.tokens ?? null,
+      binds: l.binds ?? null,
+      file: l.file,
+    })),
+  ),
+};
+writeFileSync(OUT_JSON, JSON.stringify(index, null, 2) + '\n');
+
+console.log(`LAYER_ATLAS.md + LAYER_ATLAS_FIGMA.md + atlas.json: ${byComponent.size} components, ${leaves.length} leaves`);
