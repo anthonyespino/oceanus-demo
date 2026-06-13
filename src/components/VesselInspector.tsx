@@ -22,6 +22,7 @@ import { VesselSynoptic } from './VesselSynoptic';
 import { VesselCommandBand } from './VesselCommandBand';
 import { CrewLogPanel } from './CrewLogPanel';
 import { Label } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { ALERT_TEXT_COLOR, NEUTRAL } from './probeTokens';
 import { gb, fmtPct } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
@@ -64,7 +65,7 @@ export function VesselInspector({
         </Collapse>
         {vessel.alerts.length > 0 && (
           <div style={{ marginBottom: 8 }}>
-            <Label g="alert-triangle" style={{ marginBottom: 4 }}>alerts</Label>
+            <Label g="alert-triangle" headerAttrs={layer('VesselInspector / alerts / header.glyph', 'section header · alert-triangle glyph · glyph-only in expert mode', 'ALERTS')} style={{ marginBottom: 4 }}>alerts</Label>
             <section style={gb.box}>
               {/* round 33 grammar: one severity voice per line — the tag */}
               {vessel.alerts.map((a, i) => (

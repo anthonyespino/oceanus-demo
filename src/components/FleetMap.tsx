@@ -16,6 +16,7 @@ import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
 import { gb, fmtPct } from './gb';
 import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 function fitFleetFrame(fleet: VesselState[]): ChartFrame {
@@ -85,7 +86,7 @@ export function FleetMap({
     // round 37: header floats above the fill — type owns hierarchy,
     // the fill owns grouping
     <div style={{ marginBottom: 8 }}>
-      <Label g="vessel" style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>
+      <Label g="chart.fleet" headerAttrs={layer('FleetMap / header / header.glyph', 'section header · chart.fleet (scatter motif) · glyph-only in expert mode', 'FLEET PLOT — GULF OF MEXICO')} style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>
       <section style={{ ...gb.box, borderRadius: RADIUS }}>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>

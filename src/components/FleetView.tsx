@@ -9,6 +9,9 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
 import { useFleet } from '../state/FleetProvider';
+import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
+import { Glyph } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { FleetHealthBand } from './FleetHealthBand';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
@@ -18,6 +21,7 @@ import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before d
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize, chartTop, autoPromote } = useFleet();
+  const { expertOn } = useLearn();
 
   // Round 21 A1: shared activity-aware comparator (board + rail)
   const ranked = [...fleet].sort(compareVessels);
@@ -30,9 +34,15 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
 
   return (
     <main style={{ padding: 20, maxWidth: 1280, margin: '0 auto' }}>
-      <div style={{ ...gb.label, fontSize: 13, marginBottom: 12 }}>
-        trend board — ranked by sustained deviation
-      </div>
+      {expertOn ? (
+        <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+          <Glyph name="chart.trend" size={20} />
+        </div>
+      ) : (
+        <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ ...gb.label, fontSize: 13, marginBottom: 12 }}>
+          trend board — ranked by sustained deviation
+        </div>
+      )}
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
       {/* round 33: the standing ALERTS card is gone — the health band's

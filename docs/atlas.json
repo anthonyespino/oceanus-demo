@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T17:24:46.930Z",
+  "generated": "2026-06-13T18:01:22.407Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -46,6 +46,15 @@
       "tokens": "font/data 11 · ink/secondary · click → per-vessel sync ages",
       "binds": "{simTime − oldest stream timestamp}",
       "file": "src/components/AlertSheet.tsx"
+    },
+    {
+      "path": "CrewLogPanel / header / header.glyph",
+      "component": "CrewLogPanel",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · crew glyph · glyph-only in expert mode",
+      "binds": "CREW & LOG",
+      "file": "src/components/CrewLogPanel.tsx"
     },
     {
       "path": "CrewLogPanel / log / entry.text",
@@ -183,6 +192,15 @@
       "file": "src/components/EfficiencyPanel.tsx"
     },
     {
+      "path": "EfficiencyPanel / header / header.glyph",
+      "component": "EfficiencyPanel",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · chart.efficiency (curve motif) · glyph-only in expert mode",
+      "binds": "EFFICIENCY · {mode}",
+      "file": "src/components/EfficiencyPanel.tsx"
+    },
+    {
       "path": "EfficiencyPanel / heroRow / baselineDelta.text",
       "component": "EfficiencyPanel",
       "region": "heroRow",
@@ -207,6 +225,15 @@
       "leaf": "area.chart",
       "tokens": "fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)",
       "binds": "{daily mean E2−E1 EGT, 30d, both running} — the \"three weeks early\" graphic",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / header / header.glyph",
+      "component": "EngineTwinPanel",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · engine glyph · glyph-only in expert mode",
+      "binds": "ENGINE TWINS",
       "file": "src/components/EngineTwinPanel.tsx"
     },
     {
@@ -318,6 +345,15 @@
       "file": "src/components/FleetHealthBand.tsx"
     },
     {
+      "path": "FleetHealthBand / header / header.glyph",
+      "component": "FleetHealthBand",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · vessel glyph · glyph-only in expert mode",
+      "binds": "FLEET",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
       "path": "FleetHealthBand / mean / trend.chart",
       "component": "FleetHealthBand",
       "region": "mean",
@@ -334,6 +370,24 @@
       "tokens": "type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)",
       "binds": "{30d fleet mean delta %}",
       "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetMap / header / header.glyph",
+      "component": "FleetMap",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · chart.fleet (scatter motif) · glyph-only in expert mode",
+      "binds": "FLEET PLOT — GULF OF MEXICO",
+      "file": "src/components/FleetMap.tsx"
+    },
+    {
+      "path": "FleetRail / nav / back.glyph",
+      "component": "FleetRail",
+      "region": "nav",
+      "leaf": "back.glyph",
+      "tokens": "back link · glyph-only in expert mode",
+      "binds": "→ /",
+      "file": "src/components/FleetRail.tsx"
     },
     {
       "path": "FleetRail / row / dot.status",
@@ -361,6 +415,15 @@
       "tokens": "font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)",
       "binds": "{vessel.static.name}",
       "file": "src/components/FleetRail.tsx"
+    },
+    {
+      "path": "FleetView / header / header.glyph",
+      "component": "FleetView",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "page header · chart.trend (sorted-bars motif) · glyph-only in expert mode",
+      "binds": "TREND BOARD — RANKED BY SUSTAINED DEVIATION",
+      "file": "src/components/FleetView.tsx"
     },
     {
       "path": "Gauge / dial / arc.line",
@@ -439,7 +502,7 @@
       "component": "Gauge",
       "region": "label",
       "leaf": "label.text",
-      "tokens": "font/data 9 caps letterspaced · ink/muted",
+      "tokens": "font/data 9 caps letterspaced · ink/muted · hidden in expert mode",
       "binds": "{label}",
       "file": "src/components/Gauge.tsx"
     },
@@ -451,6 +514,15 @@
       "tokens": "font/data tabular · type/hero×k · earned color (ruling 14)",
       "binds": "{display ?? round(value)+unit}",
       "file": "src/components/Gauge.tsx"
+    },
+    {
+      "path": "InspectorChart / header / header.glyph",
+      "component": "InspectorChart",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · route glyph · glyph-only in expert mode",
+      "binds": "POSITION",
+      "file": "src/components/InspectorChart.tsx"
     },
     {
       "path": "InstrumentCluster / cell / trace.chart",
@@ -532,6 +604,15 @@
       "tokens": "grid faint 0.5px · frame ticks · 9px labels",
       "binds": "{latitude grid at adaptive step}",
       "file": "src/components/NauticalChart.tsx"
+    },
+    {
+      "path": "PortCallsTimeline / header / header.glyph",
+      "component": "PortCallsTimeline",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · anchor glyph · glyph-only in expert mode",
+      "binds": "PORT CALLS — 72H",
+      "file": "src/components/PortCallsTimeline.tsx"
     },
     {
       "path": "VesselCommandBand / centerStack / clock.text",
@@ -723,6 +804,15 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
+      "path": "VesselInspector / alerts / header.glyph",
+      "component": "VesselInspector",
+      "region": "alerts",
+      "leaf": "header.glyph",
+      "tokens": "section header · alert-triangle glyph · glyph-only in expert mode",
+      "binds": "ALERTS",
+      "file": "src/components/VesselInspector.tsx"
+    },
+    {
       "path": "VesselSynoptic / callouts / label.text",
       "component": "VesselSynoptic",
       "region": "callouts",
@@ -783,6 +873,15 @@
       "leaf": "meterLine.line",
       "tokens": "line/strong 1.2px",
       "binds": "{feeder→flow meter}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / header / header.glyph",
+      "component": "VesselSynoptic",
+      "region": "header",
+      "leaf": "header.glyph",
+      "tokens": "section header · tank glyph · glyph-only in expert mode",
+      "binds": "FUEL",
       "file": "src/components/VesselSynoptic.tsx"
     },
     {

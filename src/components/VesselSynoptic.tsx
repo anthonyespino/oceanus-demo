@@ -126,7 +126,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
     // round 37: header row floats above the fill
     <div style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26, marginBottom: 4 }}>
-        <Label g="tank" style={{ marginBottom: 0 }}>fuel</Label>
+        <Label g="tank" headerAttrs={layer('VesselSynoptic / header / header.glyph', 'section header · tank glyph · glyph-only in expert mode', 'FUEL')} style={{ marginBottom: 0 }}>fuel</Label>
         <ReconChip vessel={vessel} />
       </div>
       <section style={gb.box}>

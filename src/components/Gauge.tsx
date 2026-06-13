@@ -14,6 +14,7 @@
 
 import { FONT, NEUTRAL, TYPE } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
+import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
 
 const A0 = -135; // sweep start (degrees, 0 = up)
 const A1 = 135; // sweep end — 270° C, opening at bottom
@@ -75,6 +76,7 @@ export function Gauge({
   /** override the printed min/max scale labels (e.g. log dials) */
   minMaxLabels?: [string, string];
 }) {
+  const { expertOn } = useLearn(); // round 44: micro label hides — value/unit/dial identify
   const angle = (v: number) => A0 + (A1 - A0) * Math.min(1, Math.max(0, (v - min) / (max - min)));
   const k = size / 86;
   const r = size * 0.36;
@@ -129,9 +131,11 @@ export function Gauge({
           </>
         )}
       </svg>
-      <div {...layer('Gauge / label / label.text', 'font/data 9 caps letterspaced · ink/muted', '{label}')} style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 2 }}>
-        {label}
-      </div>
+      {!expertOn && (
+        <div {...layer('Gauge / label / label.text', 'font/data 9 caps letterspaced · ink/muted · hidden in expert mode', '{label}')} style={{ fontFamily: FONT.data, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginTop: 2 }}>
+          {label}
+        </div>
+      )}
     </div>
   );
 }

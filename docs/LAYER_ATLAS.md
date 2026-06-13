@@ -10,6 +10,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 *source: src/components/CrewLogPanel.tsx*
 
+- `header / header.glyph`
+  - TOKENS — section header · crew glyph · glyph-only in expert mode
+  - BINDS — CREW & LOG
 - `log / entry.text`
   - TOKENS — font/data 12 terminal grammar · alert lines tint by level (advisory muted, A6)
   - BINDS — {stamp · type · text} newest first
@@ -65,6 +68,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `footer / spark24.chart`
   - TOKENS — ink/secondary 1px · line/subtle frame
   - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
+- `header / header.glyph`
+  - TOKENS — section header · chart.efficiency (curve motif) · glyph-only in expert mode
+  - BINDS — EFFICIENCY · {mode}
 - `heroRow / baselineDelta.text`
   - TOKENS — Stat: micro-caps label · type/hero numeral tabular
   - BINDS — {derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison
@@ -79,6 +85,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `gapTrend / area.chart`
   - TOKENS — fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)
   - BINDS — {daily mean E2−E1 EGT, 30d, both running} — the "three weeks early" graphic
+- `header / header.glyph`
+  - TOKENS — section header · engine glyph · glyph-only in expert mode
+  - BINDS — ENGINE TWINS
 - `rows / engine.text`
   - TOKENS — font/data 12 · id+role ink/muted left · state tabular right · hairline divider
   - BINDS — {id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only
@@ -120,6 +129,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `census / watch.status`
   - TOKENS — STATUS_COLOR.watch (amber) · count · click filters board
   - BINDS — {# vessels watch}
+- `header / header.glyph`
+  - TOKENS — section header · vessel glyph · glyph-only in expert mode
+  - BINDS — FLEET
 - `mean / trend.chart`
   - TOKENS — ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)
   - BINDS — {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
@@ -127,10 +139,21 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)
   - BINDS — {30d fleet mean delta %}
 
+## FleetMap
+
+*source: src/components/FleetMap.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · chart.fleet (scatter motif) · glyph-only in expert mode
+  - BINDS — FLEET PLOT — GULF OF MEXICO
+
 ## FleetRail
 
 *source: src/components/FleetRail.tsx*
 
+- `nav / back.glyph`
+  - TOKENS — back link · glyph-only in expert mode
+  - BINDS — → /
 - `row / dot.status`
   - TOKENS — status color | ink/muted nominal (treatment B)
   - BINDS — {vesselStatus(alerts)}
@@ -140,6 +163,14 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `row / name.text`
   - TOKENS — font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)
   - BINDS — {vessel.static.name}
+
+## FleetView
+
+*source: src/components/FleetView.tsx*
+
+- `header / header.glyph`
+  - TOKENS — page header · chart.trend (sorted-bars motif) · glyph-only in expert mode
+  - BINDS — TREND BOARD — RANKED BY SUSTAINED DEVIATION
 
 ## Gauge
 
@@ -170,11 +201,19 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/muted · 1px
   - BINDS — {25 / 50 / 75 %}
 - `label / label.text`
-  - TOKENS — font/data 9 caps letterspaced · ink/muted
+  - TOKENS — font/data 9 caps letterspaced · ink/muted · hidden in expert mode
   - BINDS — {label}
 - `readout / value.text`
   - TOKENS — font/data tabular · type/hero×k · earned color (ruling 14)
   - BINDS — {display ?? round(value)+unit}
+
+## InspectorChart
+
+*source: src/components/InspectorChart.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · route glyph · glyph-only in expert mode
+  - BINDS — POSITION
 
 ## InstrumentCluster
 
@@ -212,6 +251,14 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `graticule / parallel.line`
   - TOKENS — grid faint 0.5px · frame ticks · 9px labels
   - BINDS — {latitude grid at adaptive step}
+
+## PortCallsTimeline
+
+*source: src/components/PortCallsTimeline.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · anchor glyph · glyph-only in expert mode
+  - BINDS — PORT CALLS — 72H
 
 ## StatusHeader
 
@@ -298,6 +345,14 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — glyph/vesselMarker 16px · ink/primary — bow along the track (round 36)
   - BINDS — {live position on track}
 
+## VesselInspector
+
+*source: src/components/VesselInspector.tsx*
+
+- `alerts / header.glyph`
+  - TOKENS — section header · alert-triangle glyph · glyph-only in expert mode
+  - BINDS — ALERTS
+
 ## VesselSynoptic
 
 *source: src/components/VesselSynoptic.tsx*
@@ -323,6 +378,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `flow / meterLine.line`
   - TOKENS — line/strong 1.2px
   - BINDS — {feeder→flow meter}
+- `header / header.glyph`
+  - TOKENS — section header · tank glyph · glyph-only in expert mode
+  - BINDS — FUEL
 - `hull / hull.line`
   - TOKENS — ink/secondary 1.5px — neutral, never status
   - BINDS — {HULL_PATH — Figma hull replaces 1:1}
@@ -419,4 +477,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*116 instrumented leaves · 13 components · generated 2026-06-13T17:24:46.929Z*
+*128 instrumented leaves · 18 components · generated 2026-06-13T18:01:22.406Z*

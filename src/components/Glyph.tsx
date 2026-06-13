@@ -6,6 +6,7 @@
 // mechanically, file-for-file.
 
 import { gb } from './gb';
+import { useLearn } from '../learn/LearnProvider'; // LEARN/EXPERT MODE — strip before demo week
 
 export type GlyphName =
   | 'vessel' | 'engine' | 'tank' | 'fuel-drop' | 'wind' | 'wave' | 'anchor'
@@ -14,7 +15,11 @@ export type GlyphName =
   | 'crosshair' // round 24: STATION (DP holding) — replaces the weak vessel mapping
   | 'dots' // round 26: dot-matrix fuel view
   | 'vesselMarker' // round 36 (⚖6 resolved): directional hull — bow up, rotate to heading
-  | 'delta'; // round 39: clean uppercase delta — efficiency-vs-baseline rows
+  | 'delta' // round 39: clean uppercase delta — efficiency-vs-baseline rows
+  // round 44: chart-glyph disambiguation for expert-mode headers — Figma
+  // icon library mirrors these names (chart.fleet / chart.trend /
+  // chart.efficiency); plus a back glyph for the rail's ← fleet board
+  | 'chart.fleet' | 'chart.trend' | 'chart.efficiency' | 'back';
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -37,6 +42,11 @@ const PATHS: Record<GlyphName, string[]> = {
   dots: ['M6 7 V7.01 M12 7 V7.01 M18 7 V7.01', 'M6 12 V12.01 M12 12 V12.01 M18 12 V12.01', 'M6 17 V17.01 M12 17 V17.01 M18 17 V17.01'],
   vesselMarker: ['M12 3 L16.5 8.5 L16.5 20.5 L7.5 20.5 L7.5 8.5 Z'],
   delta: ['M12 4.5 L19.5 19.5 H4.5 Z'],
+  // round 44 disambiguation: axes + a distinct data motif each
+  'chart.fleet': ['M4 4 V20 H20', 'M9 14 V14.01 M13 8 V8.01 M17 12 V12.01'], // scatter — the position plot
+  'chart.trend': ['M4 4 V20 H20', 'M7 19 V9 M11 19 V12 M15 19 V14 M19 19 V16'], // sorted bars — ranking
+  'chart.efficiency': ['M4 4 V20 H20', 'M6 9 C10 10 13 16 20 17'], // curve — burn vs speed
+  back: ['M11 6 L5 12 L11 18', 'M5 12 H19'],
 };
 
 /** Round 36 (⚖6 resolved: heading is VISIBLE as marker rotation): filled
@@ -71,10 +81,22 @@ export function Glyph({ name, size = 14, color = 'currentColor' }: { name: Glyph
   );
 }
 
-/** Section header: glyph anchors, shortened title beside it (round 16). */
-export function Label({ g, children, style }: { g: GlyphName; children: React.ReactNode; style?: React.CSSProperties }) {
+/** Section header: glyph anchors, shortened title beside it (round 16).
+    ROUND 44 expert mode: the text strips and the glyph stands alone,
+    enlarged (~1.4x) and centered where the header sat. `headerAttrs` carries
+    the layer() leaf for the header glyph (static literal at each call site so
+    the atlas enumerates it). */
+export function Label({ g, children, style, headerAttrs }: { g: GlyphName; children: React.ReactNode; style?: React.CSSProperties; headerAttrs?: Record<string, string> }) {
+  const { expertOn } = useLearn();
+  if (expertOn) {
+    return (
+      <span {...headerAttrs} style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--pad-section)', ...style }}>
+        <Glyph name={g} size={20} />
+      </span>
+    );
+  }
   return (
-    <span style={{ ...gb.label, display: 'flex', alignItems: 'center', gap: 6, ...style }}>
+    <span {...headerAttrs} style={{ ...gb.label, display: 'flex', alignItems: 'center', gap: 6, ...style }}>
       <Glyph name={g} />
       <span>{children}</span>
     </span>

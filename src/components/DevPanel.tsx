@@ -44,7 +44,7 @@ function Row<T extends string | boolean>({
 export function DevPanel() {
   const [open, setOpen] = useState(false);
   const f = useFleet();
-  const { learnOn, setLearnOn } = useLearn();
+  const { mode, setMode } = useLearn();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -103,8 +103,8 @@ export function DevPanel() {
         options={[{ v: 'board-first' as const, text: 'a board first' }, { v: 'chart-band' as const, text: 'b chart band' }]} />
       <Row label="ikb band" value={f.ikbBand} onPick={f.setIkbBand}
         options={[{ v: false, text: 'off' }, { v: true, text: 'IKB fill' }]} />
-      <Row label="learn" value={learnOn} onPick={setLearnOn}
-        options={[{ v: false, text: 'off' }, { v: true, text: 'LEARN MODE (L)' }]} />
+      <Row label="mode" value={mode} onPick={setMode}
+        options={[{ v: 'default' as const, text: 'default' }, { v: 'learn' as const, text: 'learn (L)' }, { v: 'expert' as const, text: 'expert (E)' }]} />
       <Row label="chart pos" value={f.chartTop} onPick={f.setChartTop}
         options={[{ v: false, text: 'below board' }, { v: true, text: 'top (trial)' }]} />
       <Row label="state marks" value={f.stateMarks} onPick={f.setStateMarks}

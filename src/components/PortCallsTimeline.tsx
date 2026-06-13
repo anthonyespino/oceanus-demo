@@ -14,6 +14,7 @@ import { Field } from './Field';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 import { Glyph, Label } from './Glyph';
+import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 
 const WINDOW_H = 72;
 const LABEL_W = 150;
@@ -73,7 +74,7 @@ export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
   return (
     // round 37: header floats above the fill
     <div id="port-calls" style={{ marginBottom: 8 }}>
-      <Label g="anchor" style={{ marginBottom: 4 }}>port calls — 72h</Label>
+      <Label g="anchor" headerAttrs={layer('PortCallsTimeline / header / header.glyph', 'section header · anchor glyph · glyph-only in expert mode', 'PORT CALLS — 72H')} style={{ marginBottom: 4 }}>port calls — 72h</Label>
       <section style={gb.box}>
       <Field level="fleet" field="port_calls_timeline">
         <div ref={wrapRef} style={{ position: 'relative' }}>

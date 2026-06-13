@@ -23,7 +23,7 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   return (
     // round 37: header floats above the fill
     <div style={{ marginBottom: 8 }}>
-      <Label g="chart" style={{ marginBottom: 4 }}>efficiency · {d.mode}</Label>
+      <Label g="chart.efficiency" headerAttrs={layer('EfficiencyPanel / header / header.glyph', 'section header · chart.efficiency (curve motif) · glyph-only in expert mode', 'EFFICIENCY · {mode}')} style={{ marginBottom: 4 }}>efficiency · {d.mode}</Label>
       <section style={{ ...gb.box, display: 'flex', flexDirection: 'column' }}>
       <RevealZone
         reveal={

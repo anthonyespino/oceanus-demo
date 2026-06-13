@@ -17,6 +17,7 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
+import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
 import { Glyph, MODE_GLYPH } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, TYPE, selectionBorder } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -33,6 +34,7 @@ export function FleetRail({
   treatment: ColorTreatment;
 }) {
   const { railMode } = useFleet();
+  const { expertOn } = useLearn();
   const ranked = [...fleet].sort(compareVessels); // round 21 A1: shared comparator
   const selectedRef = useRef<HTMLAnchorElement>(null);
 
@@ -55,16 +57,19 @@ export function FleetRail({
     >
       <Link
         href="/"
+        aria-label="fleet board"
+        {...layer('FleetRail / nav / back.glyph', 'back link · glyph-only in expert mode', '→ /')}
         style={{
-          display: 'block',
+          display: expertOn ? 'flex' : 'block',
+          justifyContent: expertOn ? 'center' : undefined,
           ...TYPE.meta,
           color: NEUTRAL.inkSecondary,
-          textDecoration: 'underline',
+          textDecoration: expertOn ? 'none' : 'underline',
           padding: '4px 8px',
           marginBottom: 6,
         }}
       >
-        ← fleet board
+        {expertOn ? <Glyph name="back" size={18} /> : '← fleet board'}
       </Link>
       {ranked.map((v) => {
         const status = vesselStatus(v.alerts);

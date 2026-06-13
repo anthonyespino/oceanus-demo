@@ -8,6 +8,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
 ## CrewLogPanel
 
+  Region: header
+    • header.glyph  → section header · crew glyph · glyph-only in expert mode · CREW & LOG
   Region: log
     • entry.text  → font/data 12 terminal grammar · alert lines tint by level (advisory muted, A6) · {stamp · type · text} newest first
     • filter.chip  → chip — accent when active (interaction voice) · {event type visibility toggle}
@@ -34,6 +36,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: footer
     • baseline.text  → font/data 12 · ink/secondary · {derived.baseline_value} {baseline_metric}
     • spark24.chart  → ink/secondary 1px · line/subtle frame · {derived.sparkline_24h — hourly efficiency_delta}
+  Region: header
+    • header.glyph  → section header · chart.efficiency (curve motif) · glyph-only in expert mode · EFFICIENCY · {mode}
   Region: heroRow
     • baselineDelta.text  → Stat: micro-caps label · type/hero numeral tabular · {derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison
     • trend30.text  → Stat: micro-caps label · type/hero numeral tabular · {derived.trend_30d} %/30d — the primary fleet signal (ruling 13)
@@ -42,6 +46,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: gapTrend
     • area.chart  → fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty) · {daily mean E2−E1 EGT, 30d, both running} — the "three weeks early" graphic
+  Region: header
+    • header.glyph  → section header · engine glyph · glyph-only in expert mode · ENGINE TWINS
   Region: rows
     • engine.text  → font/data 12 · id+role ink/muted left · state tabular right · hairline divider · {id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only
   Region: verdict
@@ -62,16 +68,30 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • degraded.status  → STATUS_COLOR.degraded (red) · count · click filters board · {# vessels degraded}
     • nominal.status  → green (automotive) | ink/secondary (quiet) · count · click filters board · {# vessels nominal}
     • watch.status  → STATUS_COLOR.watch (amber) · count · click filters board · {# vessels watch}
+  Region: header
+    • header.glyph  → section header · vessel glyph · glyph-only in expert mode · FLEET
   Region: mean
     • trend.chart  → ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule) · {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
     • value.text  → type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle) · {30d fleet mean delta %}
 
+## FleetMap
+
+  Region: header
+    • header.glyph  → section header · chart.fleet (scatter motif) · glyph-only in expert mode · FLEET PLOT — GULF OF MEXICO
+
 ## FleetRail
 
+  Region: nav
+    • back.glyph  → back link · glyph-only in expert mode · → /
   Region: row
     • dot.status  → status color | ink/muted nominal (treatment B) · {vesselStatus(alerts)}
     • mode.glyph  → MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers) · {vessel.static.name}
+
+## FleetView
+
+  Region: header
+    • header.glyph  → page header · chart.trend (sorted-bars motif) · glyph-only in expert mode · TREND BOARD — RANKED BY SUSTAINED DEVIATION
 
 ## Gauge
 
@@ -85,9 +105,14 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • needle.line  → ink/primary — ALWAYS (round 19, amends ruling 14) · {value→angle(min,max)}
     • tick.line  → ink/muted · 1px · {25 / 50 / 75 %}
   Region: label
-    • label.text  → font/data 9 caps letterspaced · ink/muted · {label}
+    • label.text  → font/data 9 caps letterspaced · ink/muted · hidden in expert mode · {label}
   Region: readout
     • value.text  → font/data tabular · type/hero×k · earned color (ruling 14) · {display ?? round(value)+unit}
+
+## InspectorChart
+
+  Region: header
+    • header.glyph  → section header · route glyph · glyph-only in expert mode · POSITION
 
 ## InstrumentCluster
 
@@ -108,6 +133,11 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: graticule
     • meridian.line  → grid faint 0.5px · frame ticks · 9px labels · {longitude grid at adaptive step}
     • parallel.line  → grid faint 0.5px · frame ticks · 9px labels · {latitude grid at adaptive step}
+
+## PortCallsTimeline
+
+  Region: header
+    • header.glyph  → section header · anchor glyph · glyph-only in expert mode · PORT CALLS — 72H
 
 ## StatusHeader
 
@@ -147,6 +177,11 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • track.line  → surface/overlay 2px · {origin→destination}
     • vessel.glyph  → glyph/vesselMarker 16px · ink/primary — bow along the track (round 36) · {live position on track}
 
+## VesselInspector
+
+  Region: alerts
+    • header.glyph  → section header · alert-triangle glyph · glyph-only in expert mode · ALERTS
+
 ## VesselSynoptic
 
   Region: callouts
@@ -159,6 +194,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • engineLine.line  → line/strong 1.2px · {flow meter→engine}
     • feedLine.line  → line/strong 1.2px · dashed when no transfer · {storage→feeder · tank.transfer_active}
     • meterLine.line  → line/strong 1.2px · {feeder→flow meter}
+  Region: header
+    • header.glyph  → section header · tank glyph · glyph-only in expert mode · FUEL
   Region: hull
     • hull.line  → ink/secondary 1.5px — neutral, never status · {HULL_PATH — Figma hull replaces 1:1}
     • label.text  → font/data 9 · ink/muted · SUPERSTRUCTURE (static)
@@ -200,4 +237,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
 
-*116 leaves · 13 components · generated 2026-06-13T17:24:46.930Z*
+*128 leaves · 18 components · generated 2026-06-13T18:01:22.407Z*

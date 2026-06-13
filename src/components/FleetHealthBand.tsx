@@ -102,7 +102,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
           header row — the counts summon the alert sheet */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, marginBottom: 4, flexWrap: 'wrap' }}>
         <span style={{ display: 'inline-flex', gap: 20, alignItems: 'baseline', minWidth: 0 }}>
-          <Label g="vessel" style={{ marginBottom: 0 }}>fleet</Label>
+          <Label g="vessel" headerAttrs={layer('FleetHealthBand / header / header.glyph', 'section header · vessel glyph · glyph-only in expert mode', 'FLEET')} style={{ marginBottom: 0 }}>fleet</Label>
           <StatusHeader />
         </span>
         <span style={{ display: 'inline-flex', gap: 4 }}>

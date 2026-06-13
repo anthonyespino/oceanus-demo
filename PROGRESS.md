@@ -1,3 +1,28 @@
+# PROGRESS — 2026-06-13 (Session 40: ROUND 44 EXPERT MODE)
+
+*(Anthony reused "Round 44" — this is the Expert Mode brief, distinct from the startup-defaults micro below.)*
+
+## Done
+
+1. **Tri-state mode** — LearnProvider now holds one `mode: default | learn | expert`; `learnOn`/`expertOn` derive from it, so the two are mutually exclusive by construction. **L** toggles learn, **E** toggles expert (each off→on→off, and switches if the other was on). Expert badge: "EXPERT MODE — labels hidden · E to exit", accent-bordered, bottom-right (learn badge stays bottom-left). Dev panel: the "learn" row became a `mode` selector (default / learn (L) / expert (E)).
+2. **Header treatment** — `Label` is expert-aware: text strips, glyph stands alone at 1.4× (size 20), centered where the header sat. Applied to every section header via Label (engine, fuel, crew&log, position, alerts, efficiency, fleet, port calls, fleet plot) plus the two non-Label headers handled inline: FleetView page h1 → chart.trend glyph, rail "← fleet board" → back glyph.
+3. **Micro labels strip** — DataRow left labels hide (value right-aligns into the space); gauge micro labels (EGT/COOLANT/SPEED/BURN/…) hide. Kept: mode-glyph location (data), vessel name (identity), value units (gph/kn/ft/°F), and census labels (DEGRADED/WATCH/NOMINAL — not redundant with any glyph or unit, so they remain the only identifier).
+4. **Glyph disambiguation** — added to the contract (Figma icon library mirrors these names): **chart.fleet** (scatter motif — the position plot), **chart.trend** (sorted-bars — board ranking), **chart.efficiency** (curve — burn vs speed), plus **back** (rail). FleetMap→chart.fleet, FleetView→chart.trend, EfficiencyPanel→chart.efficiency.
+5. **Learn ⇄ Expert mutually exclusive** — single state; badge always reflects it. Verified: E from learn switches to expert, learn badge clears.
+6. **Atlas** — header glyph leaves added (`{Component} / header / header.glyph` ×9, `VesselInspector / alerts / header.glyph`, `FleetRail / nav / back.glyph`). 18 components / 128 leaves.
+
+## Notes
+
+- **TELEMETRY header**: the brief listed it, but no telemetry header exists — TelemetryBand merged into VesselCommandBand at round 27, and the band has no Label header to strip. Nothing to do; logged.
+- Collapse/RoutePanel/ModeTimeline headers also strip via the shared Label (consistent), without atlas leaves (not on the brief's audit list / legacy unrouted).
+- Atlas prefix uses real component names (e.g. `EfficiencyPanel / header / header.glyph`) rather than the brief's `VesselInspector / efficiency / …` shorthand, to stay consistent with the barrel.
+
+## Screenshots
+
+`r44e-default.png`, `r44e-learn.png`, `r44e-expert.png` (board in each mode), `r44e-expert-inspector.png` (glyph headers + stripped gauge labels + back glyph).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 39: ROUND 44 — startup defaults from the panel)
 
 ## Done
