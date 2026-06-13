@@ -19,9 +19,8 @@ export type TickSpeed = 1 | 60;
 export type TileDensity = 'minimal' | 'standard';
 export type ColorTreatment = 'automotive' | 'dark-cockpit';
 export type MotionVariant = 'off' | 'ripple' | 'breathe';
-// (a) board-first: trend board top, large chart below; (b) chart-band:
-// shallow full-width chart strip on top, board directly below.
-export type LayoutVariant = 'board-first' | 'chart-band';
+// round 68: LayoutVariant retired — chart-band is the sole FleetView layout
+// (board-first removed); the chart band gains a transient maximize control.
 // round 61: ⚖14 resolved — the meter strip is the sole expand affordance.
 // round 66: the severity-placement experiment is RESOLVED to STRIP fleet-wide
 // (edge/both retired, toggle removed). Severity now lives on the strip + name
@@ -42,12 +41,8 @@ interface FleetContextValue {
   setTreatment: (t: ColorTreatment) => void;
   motion: MotionVariant;
   setMotion: (m: MotionVariant) => void;
-  layoutVariant: LayoutVariant;
-  setLayoutVariant: (l: LayoutVariant) => void;
   ikbBand: boolean; // round 5: the one large IKB fill moment, behind a toggle
   setIkbBand: (b: boolean) => void;
-  chartTop: boolean; // round 21 A2: fleet plot above the board (trial)
-  setChartTop: (b: boolean) => void;
   bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
   setBearingLine: (b: boolean) => void;
   railMode: RailMode; // round 24: rail mode indicator variant
@@ -87,9 +82,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   // now the chosen look.)
   const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
   const [motion, setMotion] = useState<MotionVariant>('off');
-  const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
   const [ikbBand, setIkbBand] = useState(false);
-  const [chartTop, setChartTop] = useState(true); // round 44: chart on top
   const [bearingLine, setBearingLine] = useState(false); // round 44: voyage card only
   const [railMode, setRailMode] = useState<RailMode>('glyph');
   const [autoPromote, setAutoPromote] = useState(false);
@@ -147,9 +140,8 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         fleet: viewFleet, simTime, live, speed, setLive, setSpeed,
         density, setDensity, treatment, setTreatment,
         motion, setMotion, crossings,
-        layoutVariant, setLayoutVariant,
         ikbBand, setIkbBand,
-        chartTop, setChartTop, stateMarks, setStateMarks,
+        stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
         censusFilter, setCensusFilter,

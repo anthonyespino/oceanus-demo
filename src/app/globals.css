@@ -67,6 +67,20 @@ body {
   color: var(--color-ink-primary);
   font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
   font-size: 14px;
+  /* ROUND 64 (landed round 68): the dashboard is a control surface, not a
+     document — click/drag must not leave a blue text-selection smear across
+     tiles, gauges, labels. Disable selection app-wide; re-enable only where
+     copying genuinely matters (form fields + the /inspect data tables). */
+  -webkit-user-select: none;
+  user-select: none;
+}
+input,
+textarea,
+[contenteditable="true"],
+.selectable,
+.selectable * {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* Round 11: equal-height card rows — row-mates stretch, no orphan

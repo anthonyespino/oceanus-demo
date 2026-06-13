@@ -24,7 +24,7 @@ export default function InspectPage() {
   const now = fleet[0].history.minutes[fleet[0].history.minutes.length - 1].t;
 
   return (
-    <main style={{ fontFamily: 'monospace', padding: 16 }}>
+    <main className="selectable" style={{ fontFamily: 'monospace', padding: 16 }}>
       <h1>Oceanus data inspection — {new Date(now).toISOString()}</h1>
 
       <h2>Fleet (ranked by |efficiency_delta|)</h2>

@@ -90,6 +90,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
 ## FleetView
 
+  Region: chartBand
+    • maximize.glyph  → transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted · {chartMax} toggle
   Region: header
     • header.glyph  → page header · chart.trend (sorted-bars motif) · glyph-only in expert mode · TREND BOARD — RANKED BY SUSTAINED DEVIATION
 
@@ -283,4 +285,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*136 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:29:08.638Z*
+*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:42:00.352Z*

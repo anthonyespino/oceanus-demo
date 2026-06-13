@@ -123,12 +123,8 @@ export function DevPanel() {
           options={[{ v: 'automotive' as const, text: 'A automotive' }, { v: 'dark-cockpit' as const, text: 'B quiet (default)' }]} />
         <Row label="motion" value={f.motion} onPick={f.setMotion}
           options={[{ v: 'off' as const, text: 'off' }, { v: 'ripple' as const, text: 'ripple' }, { v: 'breathe' as const, text: 'breathe' }]} />
-        <Row label="layout" value={f.layoutVariant} onPick={f.setLayoutVariant}
-          options={[{ v: 'board-first' as const, text: 'a board first' }, { v: 'chart-band' as const, text: 'b chart band' }]} />
         <Row label="ikb band" value={f.ikbBand} onPick={f.setIkbBand}
           options={[{ v: false, text: 'off' }, { v: true, text: 'IKB fill' }]} />
-        <Row label="chart pos" value={f.chartTop} onPick={f.setChartTop}
-          options={[{ v: false, text: 'below board' }, { v: true, text: 'top' }]} />
         <Row label="state marks" value={f.stateMarks} onPick={f.setStateMarks}
           options={[{ v: false, text: 'off' }, { v: true, text: 'on' }]} />
         <Row label="bearing" value={f.bearingLine} onPick={f.setBearingLine}

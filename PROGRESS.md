@@ -1,3 +1,84 @@
+# PROGRESS — 2026-06-13 (Session 57: ROUND 68 — branch reconciliation + land mandatory; FleetView chart-band)
+
+## 1. Git log 58 → HEAD (commit by commit, actual branch)
+```
+fdf99e6 Round 67: Calm Sea — smooth gradient bands, drop grain
+6d59914 Round 66: resolve severity to STRIP, drop card border + name divider
+21c71c9 Round 63: VesselTile — match Figma layout (rulings held)
+e185d15 Round 62: Calm Sea — raise presence (light + texture + motion)
+ce0f766 Round 61: resolve ⚖14 — meter strip sole affordance + severity toggle
+16451ed fix(atlas) · 73b3df0 chore(atlas) · 3a9172c Round 58: bridge diagnostic
+```
+**Per-round landed/absent (from commits, not intent):**
+| Round | Status | Note |
+|---|---|---|
+| 59 | **ABSENT** | never committed |
+| 60 (consequence sort) | **ABSENT as a commit** — but the FEATURE is present (see §3) |
+| 61 | **LANDED** ce0f766 |
+| 62 | **LANDED** e185d15 |
+| 63 | **LANDED** 21c71c9 |
+| 64 (text-selection) | **ABSENT** — landed THIS round (§4) |
+| 65 (glass) | **ABSENT** — optional, still deferred |
+| 66 | **LANDED** 6d59914 |
+| 67 | **LANDED** fdf99e6 |
+
+## 2. Round-66 border in HEAD — reconciled
+**The perimeter severity border IS removed in committed code.** `VesselTile.tsx`
+HEAD line 87 = `border: 'none'`, and the running build computes `borderTopWidth:
+0px / borderStyle: none` on the Meridian tile. The border removal genuinely
+committed (6d59914). **Anthony's screenshot showing Meridian WITH a gold border
+is PRE-66** (round 61/63-era — those screenshots, still on GitHub, show the
+round-37 border that 66 removed). The round-66 PASS stands; it did not conflict
+with reality, only with an older screenshot.
+
+## 3. Rail/board sort — CONSEQUENCE, not default order
+The board AND rail both sort through `compareVessels` (`src/data/fleetState.ts`,
+round 21 A1): **status class first** (degraded→watch→nominal, so an alert always
+rises), **then activity** (TRANSIT/STATION above STANDBY/PORT), **then
+|sustained_deviation| desc**. That IS the consequence tier (alerted →
+active-worst-deviation-first → idle-dimmed); idle nominal tiles also dim
+(opacity 0.45). **Meridian is first BY the sort** (sole alerted vessel), not
+incidentally. So the round-60 "consequence sort" feature is functionally LANDED
+(under the round-21 name) — only the round-60 *commit* is absent. If round 60
+specced refinements beyond this comparator, that brief never reached me — flag.
+
+## 4. Landed this round
+- **Text-selection fix (round 64):** the dashboard had NO `user-select` rule, so
+  drag/click smeared blue selection across tiles/labels. Added `user-select:
+  none` to `body`, re-enabled on `input/textarea/[contenteditable]/.selectable`
+  and the `/inspect` data tables (so data stays copyable). *(Implemented from the
+  symptom — the round-64 brief text isn't in my session context; correct me if
+  the spec differed.)*
+- **Consequence sort:** confirmed already present (§3); no new code needed.
+
+## 5. Addendum — FleetView resolved to chart-band only
+**Audit:** there were NOT two structural layouts. `layoutVariant`
+('board-first'|'chart-band') only set the FleetMap *height* (480/560 vs 240); a
+separate `chartTop` toggle set chart *position* (above/below). Reported before
+removing. **Landed:** chart-band is now the sole layout (FleetMap = shallow band
+on top, board below); removed `layoutVariant` + `chartTop` (both layout-mode
+machinery) and their DevPanel rows. Added a **transient maximize** control on the
+band (resize posture). Verified on the build: FleetMap **240 → 520 → 240**, first
+tile Y **568 → 848 → 568** (tiles hold size, reflow down, stay visible —
+one-elastic-element); not persisted (local state, defaults to 240).
+
+## Unmissability gate — RE-RUN on the confirmed-borderless build: **PASS**
+Ran on the fresh build of this round's commit (border computed `0px/none`).
+Meridian is the only colored tile on the 15-tile board — gold name + gold value +
+wide gold strip vs 14 white/grey — and sorts first. `docs/screens/r68-gate-board.png`.
+
+## Verification habit (starts now)
+Every "done" report from here states the **commit hash** + a one-line
+confirmation the change is visible in the running build at that hash. Four rounds
+(59/60/64/65) were believed done but absent; this entry is built from the actual
+git log, not intent.
+
+## Scope held
+No new design (audit + land only). Touched FleetView/FleetProvider/DevPanel
+(layout), globals.css + inspect page (selection). Rounds 36/61/63/66/67 intact.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 56: ROUND 67 — Calm Sea, smooth gradient bands, drop grain)
 
 ## Done

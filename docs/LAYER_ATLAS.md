@@ -168,6 +168,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 *source: src/components/FleetView.tsx*
 
+- `chartBand / maximize.glyph`
+  - TOKENS — transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted
+  - BINDS — {chartMax} toggle
 - `header / header.glyph`
   - TOKENS — page header · chart.trend (sorted-bars motif) · glyph-only in expert mode
   - BINDS — TREND BOARD — RANKED BY SUSTAINED DEVIATION
@@ -506,4 +509,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*136 instrumented leaves · 19 components · generated 2026-06-13T20:29:08.637Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T20:42:00.350Z*

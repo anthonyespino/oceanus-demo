@@ -80,6 +80,25 @@ originals.*
     (±1/255 — invisible, NOT grain) prevents 8-bit gradient banding on high-DPI.
     Crests still ~0.24 grey (severity out-reads); greyscale + round-50 binding
     intact; cheaper than the noise field (sustained ~97 fps, no regression).
+- **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
+  and the layout-mode toggle retired. Audit found there were never two structural
+  layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its
+  position; both are removed. The FleetMap is now a shallow band on top, board
+  directly below. The band gains a **transient MAXIMIZE control** (resize is an
+  allowed posture: acknowledge/note/pin/resize/watch): one press grows the band
+  (240 → 520), a second restores; the tiles below stay visible and reflow down.
+  **One-elastic-element preserved** — only the band flexes, tiles hold their size.
+  Maximize is NOT persisted (transient, not a saved layout-mode); default load is
+  always the standard band size.
+- **Text-selection disabled on the control surface (round 64, landed round 68)**:
+  the dashboard is a control surface, not a document — `user-select: none` on the
+  body stops click/drag smearing a blue selection across tiles/labels; re-enabled
+  on form fields and the `/inspect` data tables so real data stays copyable.
+- **Consequence sort — confirmed PRESENT, not a new decision (round 68 audit)**:
+  the board + rail consequence tier (alerted → active-worst-deviation-first →
+  idle-dimmed) is the round-21 `compareVessels` comparator and has been in the
+  branch since then. Round 60 (a re-spec) never landed as a commit, but the
+  feature is live; Meridian sorts first by the comparator, not incidentally.
 - **CommandBand center stack is full-glyph in DEFAULT mode (round 52)**: category
   words drop wherever a glyph carries the category — master line = `crew.glyph` +
   name (no "master" word), place line = `anchor.glyph` + place. Clock stays text

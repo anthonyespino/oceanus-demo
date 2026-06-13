@@ -5,6 +5,7 @@
 // row suspended: 15 tiles fit one glanceable screen, which is what the probe
 // is testing.
 
+import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
@@ -20,8 +21,11 @@ import { gb } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
-  const { density, treatment, layoutVariant, censusFilter, tileSizes, setTileSize, chartTop, autoPromote } = useFleet();
+  const { density, treatment, censusFilter, tileSizes, setTileSize, autoPromote } = useFleet();
   const { expertOn } = useLearn();
+  // ROUND 68: chart-band maximize — a TRANSIENT resize, local to the view (not a
+  // persisted layout mode). Default load is always the standard band size.
+  const [chartMax, setChartMax] = useState(false);
 
   // Round 21 A1: shared activity-aware comparator (board + rail)
   const ranked = [...fleet].sort(compareVessels);
@@ -50,13 +54,26 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
       {/* round 33: the standing ALERTS card is gone — the health band's
           count header summons the alert sheet on demand */}
       <Annotated name="FleetHealthBand"><FleetHealthBand fleet={fleet} /></Annotated>
-      {/* round 21 A2 trial: chart above the board, behind the dev toggle so
-          the 2s Meridian glance test can be re-run honestly */}
-      {chartTop && (
-        <Annotated name="NauticalChart">
-          <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 480 : 240} />
-        </Annotated>
-      )}
+      {/* ROUND 68: chart-band is the sole FleetView layout — the FleetMap is a
+          shallow band on top, board directly below. board-first removed; the
+          layout-mode toggle (and the chart-position toggle) are retired. A
+          TRANSIENT maximize control (resize posture — acknowledge/note/pin/
+          resize/watch) grows the band within the view; the tiles below stay
+          visible and simply reflow down. One-elastic-element: ONLY the band
+          flexes (240 → 520); tiles hold their size. Not persisted. */}
+      <Annotated name="NauticalChart">
+        <div style={{ position: 'relative' }}>
+          <FleetMap fleet={fleet} treatment={treatment} width={1240} height={chartMax ? 520 : 240} />
+          <button
+            {...layer('FleetView / chartBand / maximize.glyph', 'transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted', '{chartMax} toggle')}
+            aria-label={chartMax ? 'restore chart band' : 'maximize chart band'}
+            onClick={() => setChartMax((m) => !m)}
+            style={{ position: 'absolute', top: 6, right: 6, zIndex: 2, background: 'var(--color-surface-overlay)', border: '1px solid var(--color-line-strong)', borderRadius: 1, padding: 3, cursor: 'pointer', color: 'var(--color-ink-secondary)', lineHeight: 0 }}
+          >
+            <Glyph name={chartMax ? 'collapse' : 'expand'} size={14} />
+          </button>
+        </div>
+      </Annotated>
 
       <div
         style={{
@@ -95,11 +112,6 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
         })}
       </div>
 
-      {!chartTop && (
-        <Annotated name="NauticalChart">
-          <FleetMap fleet={fleet} treatment={treatment} width={1240} height={layoutVariant === 'board-first' ? 560 : 240} />
-        </Annotated>
-      )}
       {/* round 6 — final probe component: 72h arrivals board */}
       <Annotated name="PortCallsTimeline"><PortCallsTimeline fleet={fleet} /></Annotated>
     </main>

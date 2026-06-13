@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T20:29:08.639Z",
+  "generated": "2026-06-13T20:42:00.353Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -442,6 +442,15 @@
       "tokens": "font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)",
       "binds": "{vessel.static.name}",
       "file": "src/components/FleetRail.tsx"
+    },
+    {
+      "path": "FleetView / chartBand / maximize.glyph",
+      "component": "FleetView",
+      "region": "chartBand",
+      "leaf": "maximize.glyph",
+      "tokens": "transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted",
+      "binds": "{chartMax} toggle",
+      "file": "src/components/FleetView.tsx"
     },
     {
       "path": "FleetView / header / header.glyph",
