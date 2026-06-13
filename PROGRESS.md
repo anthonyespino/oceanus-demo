@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-13 (Session 58: ROUND 69 — footer glyph squeeze, root-cause fix)
+
+## Bug fix (no ruling)
+The footer glyphs read squeezed (wave cramped). **Root cause: not the slot/flex —
+the rendered svgs measured perfectly square** (calendar 26×26, wave 24×24, clock
+22×22; `Glyph` already sets equal w/h + flexShrink:0). The distortion was baked
+into the GENERATED art: `scripts/glyphs.ts` `normalize()` used a **per-axis
+`scale(24/w 24/h)`**, which squeezes any non-square source — wave (40×29) →
+`scale(0.60 0.83)`, calendar (32×35) → `scale(0.75 0.69)` (~9%, subtle), clock
+(35×35) → `scale(0.69 0.69)` (already uniform, so it WAS round).
+
+**Fix:** normalize with a UNIFORM scale `24/max(w,h)` and center the art in 24×24
+(translate the leftover on the short axis). Regenerated `glyphs.generated.ts`:
+wave `scale(0.60)` + `translate(0 3.3)`, calendar `scale(0.6857)` + `translate(1.03 0)`,
+clock `scale(0.6857)`. Verified on a 3× crop (`docs/screens/r69-footer.png`):
+clock renders perfectly round, wave at natural proportion, both match the
+calendar family/scale. Because the fix is uniform-scale in the shared art, the
+aspect holds at every size and state by construction (no per-axis squeeze
+possible). Calendar's prior ~9% is also corrected (strictly better, no regress).
+
+## Scope
+Only `scripts/glyphs.ts` (normalizer) + regenerated `glyphs.generated.ts`. No
+meter strip, value, layout, or other component touched. No DECISIONS entry (fix).
+TSC-OK, offline build clean.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 57: ROUND 68 — branch reconciliation + land mandatory; FleetView chart-band)
 
 ## 1. Git log 58 → HEAD (commit by commit, actual branch)

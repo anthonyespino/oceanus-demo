@@ -40,8 +40,15 @@ function normalize(raw: string): string {
   if (vb) {
     const [, x, y, w, h] = vb.map(Number) as unknown as number[];
     if (Number(w) !== 24 || Number(h) !== 24 || Number(x) !== 0 || Number(y) !== 0) {
-      const sx = (24 / Number(w)).toFixed(4), sy = (24 / Number(h)).toFixed(4);
-      inner = `<g transform="scale(${sx} ${sy}) translate(${-Number(x)} ${-Number(y)})">${inner}</g>`;
+      // ROUND 69 — UNIFORM scale (preserve aspect ratio), then center in 24×24.
+      // The old per-axis `scale(24/w 24/h)` squeezed non-square art (e.g. the
+      // 40×29 wave → 0.60×0.83, cramped horizontally). One scale factor =
+      // 24/max(w,h) keeps the glyph's natural proportions; the leftover space on
+      // the short axis is centered so the art is never stretched on one axis.
+      const s = 24 / Math.max(Number(w), Number(h));
+      const tx = ((24 - Number(w) * s) / 2).toFixed(4);
+      const ty = ((24 - Number(h) * s) / 2).toFixed(4);
+      inner = `<g transform="translate(${tx} ${ty}) scale(${s.toFixed(4)}) translate(${(-Number(x)).toFixed(4)} ${(-Number(y)).toFixed(4)})">${inner}</g>`;
     }
   }
   return inner;
