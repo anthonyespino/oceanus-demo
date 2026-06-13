@@ -6,6 +6,11 @@ it automatically. Unnamed layers are ignored; unrecognized names are noted, not
 applied. Convention: `Component / region(camelCase) / role.kind` — name the layer
 `region / role.kind` inside a frame named for the component (or use the full path).
 
+## AppHeader
+
+  Region: clock
+    • master.clock.text  → global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock · system UTC now
+
 ## CrewLogPanel
 
   Region: header
@@ -170,17 +175,17 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • master.name.text  → font/data 12 · ink/secondary · name as value (no label, no stroke) · {crew Master.name}
     • mode.glyph  → boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/hero · font/display caps · ink/primary · {vessel.static.name}
-    • waves.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wave_height_ft} ft
+    • waves.text  → font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line · {weather.wave_height_ft} ft
     • wind.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wind_speed_kn} kn
   Region: factsLine
     • class.text  → font/data 12 · ink/muted · {static.length_ft} ft {static.class}
     • position.text  → font/data 12 · ink/secondary — relative reference, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
     • speed.text  → font/data 12 · ink/secondary · {position.speed_over_ground_kn} kn
   Region: gaugeRail
-    • burn.chart  → Gauge primitive · 96px · {derived.burn_rate_gph} / max observed 1y
+    • burn.chart  → Gauge primitive · 116px (round 79) · {derived.burn_rate_gph} / max observed 1y
     • effDelta.chart  → Gauge primitive · caution band ≥+8 (alert-backed) · {derived.efficiency_delta_pct} vs mode baseline
     • endurance.chart  → Gauge primitive · log dial · caution band <72h (alert-backed) · {derived.endurance_hours}
-    • speed.chart  → Gauge primitive · 96px · {position.speed_over_ground_kn} / max {cruise×1.35}
+    • speed.chart  → Gauge primitive · 116px (round 79) · {position.speed_over_ground_kn} / max {cruise×1.35}
   Region: profile
     • destination.text  → font/data 11 · ink/primary · {next_port_calls[0].port}
     • eta.text  → font/data 11 · ink/muted · {next_port_calls[0].eta} — absolute ETA + Z lives HERE only
@@ -285,4 +290,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T23:20:33.678Z*
+*138 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-13T23:45:26.917Z*

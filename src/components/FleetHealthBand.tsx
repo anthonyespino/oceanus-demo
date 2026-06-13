@@ -22,7 +22,6 @@ import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
-import { StatusHeader } from './AlertSheet';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
@@ -103,7 +102,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, marginBottom: 4, flexWrap: 'wrap' }}>
         <span style={{ display: 'inline-flex', gap: 20, alignItems: 'baseline', minWidth: 0 }}>
           <Label g="vessel" headerAttrs={layer('FleetHealthBand / header / header.glyph', 'section header · vessel glyph · glyph-only in expert mode', 'FLEET')} style={{ marginBottom: 0 }}>fleet</Label>
-          <StatusHeader />
+          {/* round 79: status moved to the GLOBAL top bar (AppHeader) */}
         </span>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           <button style={toggleStyle(range === 30)} onClick={() => setRange(30)}>30d</button>

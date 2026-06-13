@@ -6,6 +6,14 @@ hover cards report. Naming: `Component / region(camelCase) / role.kind`;
 kinds: text · line · shape · chart · glyph · chip · status. Click any element
 in learn mode (L) to copy its layer path for the Figma layer-name field.
 
+## AppHeader
+
+*source: src/components/LiveControls.tsx*
+
+- `clock / master.clock.text`
+  - TOKENS — global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock
+  - BINDS — system UTC now
+
 ## CrewLogPanel
 
 *source: src/components/CrewLogPanel.tsx*
@@ -320,7 +328,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/display caps · ink/primary
   - BINDS — {vessel.static.name}
 - `centerStack / waves.text`
-  - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
+  - TOKENS — font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line
   - BINDS — {weather.wave_height_ft} ft
 - `centerStack / wind.text`
   - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
@@ -335,7 +343,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — font/data 12 · ink/secondary
   - BINDS — {position.speed_over_ground_kn} kn
 - `gaugeRail / burn.chart`
-  - TOKENS — Gauge primitive · 96px
+  - TOKENS — Gauge primitive · 116px (round 79)
   - BINDS — {derived.burn_rate_gph} / max observed 1y
 - `gaugeRail / effDelta.chart`
   - TOKENS — Gauge primitive · caution band ≥+8 (alert-backed)
@@ -344,7 +352,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — Gauge primitive · log dial · caution band <72h (alert-backed)
   - BINDS — {derived.endurance_hours}
 - `gaugeRail / speed.chart`
-  - TOKENS — Gauge primitive · 96px
+  - TOKENS — Gauge primitive · 116px (round 79)
   - BINDS — {position.speed_over_ground_kn} / max {cruise×1.35}
 - `profile / destination.text`
   - TOKENS — font/data 11 · ink/primary
@@ -509,4 +517,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T23:20:33.676Z*
+*138 instrumented leaves · 20 components · generated 2026-06-13T23:45:26.916Z*

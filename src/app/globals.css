@@ -122,9 +122,21 @@ textarea,
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
 }
+/* ROUND 79: DATALINK breath — slow heartbeat pulse shown ONLY when the link is
+   LIVE (class applied conditionally in StatusHeader). Presence = alive. */
+.datalink-breath {
+  animation: datalink-breath 2.6s ease-in-out infinite;
+}
+@keyframes datalink-breath {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
 @media (prefers-reduced-motion: reduce) {
   .live-dot {
     animation: none;
+  }
+  .datalink-breath {
+    animation: none; /* freeze the breath — reduced-motion safe */
   }
 }
 

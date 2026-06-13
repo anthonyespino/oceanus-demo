@@ -101,7 +101,15 @@ export function StatusHeader({ parts = 'all' }: { parts?: 'all' | 'alerts' | 'he
           </div>
         }
       >
-        <span style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+        {/* ROUND 79: substantiation-bound breath — the DATALINK indicator pulses
+            (heartbeat = presence = alive) ONLY when the link is LIVE/FRESH; when
+            DEGRADED or STALE it goes still/flagged (absence of breath IS the
+            signal). Bound to actual state, never decorative. Reduced-motion
+            freezes it (globals.css). Demo seed is DEGRADED → still, not pulsing. */}
+        <span
+          className={datalink === 'FRESH' ? 'datalink-breath' : undefined}
+          style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}
+        >
           <Glyph name="datalink" size={12} />DATALINK {datalink}
         </span>
       </DetailChip>

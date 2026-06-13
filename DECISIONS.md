@@ -257,6 +257,36 @@ originals.*
     (same as the top alert chip), distinct from the borderless bar separation.
   Severity rules unchanged (name gold when alerted, EFF Δ value tinted +
   amber-arc only when alert-backed, white needle); gauge internals untouched.
+- **GLOBAL top status bar established — all pages (round 79)**: the AppHeader is
+  now the one system-state line, present on FleetView AND VesselInspector at the
+  app level. Left→right: wordmark + **DATALINK + LAST SYNC** (data-health) ·
+  **CAUTION · ADVISORY** counts (consequence, still clickable DetailChips → alert
+  popover) · **global master clock**. This **reverses the round-73 split** (the
+  ambient-at-bottom data-health footer) and pulls the per-page status strips
+  (CommandBand top/bottom, FleetHealthBand) into one place — reasoning: a global
+  system-state bar above all vessel content supersedes scattered/ambient
+  placements; one line answers "is the feed trustworthy / is anything wrong /
+  what time is it" everywhere.
+  - **Global UTC master clock added** — a real Zulu wall clock (system time),
+    top-right, identical on every page, IBM Plex Mono / neutral ink. DISTINCT
+    from the per-vessel mission clock (T−/ON STATION/IN PORT), which STAYS in the
+    CommandBand center stack.
+  - **DATALINK breath, substantiation-bound** — the DATALINK indicator pulses (a
+    slow opacity heartbeat = presence = alive) ONLY when the link is LIVE/FRESH;
+    when DEGRADED/STALE it goes still/flagged (absence of breath IS the signal).
+    Bound to actual datalink state, never decorative; reduced-motion freezes it.
+    The demo seed is DEGRADED, so it correctly does NOT breathe (verified: zero
+    breath elements in the seed).
+- **CommandBand composition pass (round 79)**: the round-73 top alerts strip and
+  bottom data-health footer are REMOVED from the band (now in the global bar).
+  The flanking **gauges are ENLARGED** (96 → 116px) and the clusters pulled
+  inward (gutter 44 → 30) — same dead-air fix as round 53 but this time the
+  consequence-bearing instruments GROW (size tracks importance); three-mass
+  balance + even gutters held. The **wave glyph is greyed to MATCH the wind
+  glyph** (it's a drawn filled glyph, visually heavier than the stroked wind
+  placeholder, so it drops to ink/muted to read at the same dim context weight —
+  color-match only, size held). Gauge internals/anatomy/tint logic and the
+  severity treatments are unchanged; the mission clock stays in the center stack.
 - **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
   separate collapse + expand corner buttons are now a single top-right button
   that shows the expand affordance when collapsed/default and the collapse

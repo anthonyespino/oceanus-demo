@@ -24,7 +24,6 @@ import { Gauge } from './Gauge';
 import { Glyph, MODE_GLYPH, type GlyphName } from './Glyph';
 import { StateMark } from './StateMark';
 import { RevealZone } from './Contextual';
-import { StatusHeader } from './AlertSheet';
 import { ACCENT, FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, fmtTime } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -92,13 +91,17 @@ const LOG_MAX = Math.log10(2400);
 
 /** Round 34: weather rides the mission clock's line — glyph + value + unit,
     no labels (they self-describe at this size). */
-function WxInline({ g, value, attrs }: { g: GlyphName; value: string; attrs?: Record<string, string> }) {
+function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary }: { g: GlyphName; value: string; attrs?: Record<string, string>; glyphColor?: string }) {
   // round 53: bumped 14→15 for legibility WITHIN the environment-context
   // register — still well below the clock (hero×0.6) and the gauges; not
-  // promoted to hero (wind/waves are nominal + already feed Calm Sea)
+  // promoted to hero (wind/waves are nominal + already feed Calm Sea).
+  // round 79: glyphColor lets the WAVE glyph (a filled drawn glyph, visually
+  // heavier than the stroked wind placeholder) drop to a dimmer ink so it MATCHES
+  // the wind glyph's perceived weight — both read as dim context ink (color-match
+  // only, size held).
   return (
     <span {...attrs} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-      <Glyph name={g} size={15} color={NEUTRAL.inkSecondary} />
+      <Glyph name={g} size={15} color={glyphColor} />
       <span style={{ fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
     </span>
   );
@@ -253,23 +256,20 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <button aria-label="minimize command band" style={{ ...chevronBtn, position: 'absolute', top: 8, right: 8, zIndex: 3 }} onClick={() => togglePanel(`${id}:command`)}>
           <Glyph name="collapse" size={12} />
         </button>
-        {/* ROUND 73: status row SPLIT by information type. CONSEQUENCE
-            (CAUTION · ADVISORY counts) stays at the TOP near the name — still a
-            clickable DetailChip opening the alert popover. Data-health
-            (DATALINK / LAST SYNC) moves to the bottom footer strip. */}
-        <div style={{ display: 'flex', justifyContent: 'center', minHeight: 16 }}>
-          <StatusHeader parts="alerts" />
-        </div>
-        {/* round 53: three balanced masses (left cluster · center · right
-            cluster) centered with equal gutters — clusters pulled inward, no
-            flex:1 greed, the air between them killed */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 44, flexWrap: 'wrap', marginTop: 6 }}>
+        {/* ROUND 79: the status row (CAUTION·ADVISORY + DATALINK/SYNC) moved to
+            the GLOBAL top bar (AppHeader). The CommandBand header is now purely
+            instruments + identity. Round-73's top alerts strip and bottom
+            data-health footer are both removed. */}
+        {/* round 53 / 79: three balanced masses (left cluster · center · right
+            cluster), even gutters — round 79 GROWS the gauges and pulls the
+            clusters inward (gap 44→30) to kill the dead air; balance preserved */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 30, flexWrap: 'wrap', marginTop: 4 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
-            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / speed.chart', 'Gauge primitive · 96px', '{position.speed_over_ground_kn} / max {cruise×1.35}')}>
-              <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / speed.chart', 'Gauge primitive · 116px (round 79)', '{position.speed_over_ground_kn} / max {cruise×1.35}')}>
+              <Gauge size={116} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
             </div>
-            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / burn.chart', 'Gauge primitive · 96px', '{derived.burn_rate_gph} / max observed 1y')}>
-              <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / burn.chart', 'Gauge primitive · 116px (round 79)', '{derived.burn_rate_gph} / max observed 1y')}>
+              <Gauge size={116} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
                 display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
             </div>
           </div>
@@ -316,39 +316,26 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                   <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)', '{weather.wind_speed_kn} kn')} />
                 </Field>
                 <Field level="vessel" field="weather.waves">
-                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} attrs={layer('VesselCommandBand / centerStack / waves.text', 'font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)', '{weather.wave_height_ft} ft')} />
+                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} attrs={layer('VesselCommandBand / centerStack / waves.text', 'font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line', '{weather.wave_height_ft} ft')} />
                 </Field>
               </span>
             </RevealZone>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
             <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / effDelta.chart', 'Gauge primitive · caution band ≥+8 (alert-backed)', '{derived.efficiency_delta_pct} vs mode baseline')}>
-              <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
+              <Gauge size={116} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
                 display={`${d.efficiency_delta_pct > 0 ? '+' : ''}${d.efficiency_delta_pct.toFixed(1)}%`} vital={effVital} minMaxLabels={['-20', '+20']}
                 band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
             </div>
             <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / endurance.chart', 'Gauge primitive · log dial · caution band <72h (alert-backed)', '{derived.endurance_hours}')}>
-              <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
+              <Gauge size={116} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
                 display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
                 band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
             </div>
           </div>
         </div>
-        {/* ROUND 73: bottom status bar — ambient DATA-HEALTH (DATALINK + LAST
-            SYNC). A quiet footer strip across the band, de-emphasized by
-            position below the consequence counts. Separation is a fill-STEP
-            (recessed surface-base) + spacing, NO stroke (borderless). It lives
-            inside the one sticky <section> — no second sticky element is
-            introduced; it stays with the primary row on scroll. DATALINK
-            DEGRADED keeps its existing advisory treatment (inside StatusHeader). */}
-        <div style={{
-          marginTop: 12,
-          marginLeft: 'calc(var(--pad-card) * -1)', marginRight: 'calc(var(--pad-card) * -1)', marginBottom: 'calc(var(--pad-card) * -1)',
-          padding: '7px var(--pad-card)', background: 'var(--color-surface-base)',
-          display: 'flex', justifyContent: 'center',
-        }}>
-          <StatusHeader parts="health" />
-        </div>
+        {/* ROUND 79: the round-73 bottom data-health footer is REMOVED —
+            DATALINK + LAST SYNC now live in the global top bar (AppHeader). */}
       </section>
       {/* SECONDARY — static flow, scrolls away naturally (no stuck logic);
           round 34: same frame as the primary row (facts line between,

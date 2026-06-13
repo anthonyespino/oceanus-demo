@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T23:20:33.678Z",
+  "generated": "2026-06-13T23:45:26.918Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -579,6 +579,15 @@
       "file": "src/components/InstrumentCluster.tsx"
     },
     {
+      "path": "AppHeader / clock / master.clock.text",
+      "component": "AppHeader",
+      "region": "clock",
+      "leaf": "master.clock.text",
+      "tokens": "global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock",
+      "binds": "system UTC now",
+      "file": "src/components/LiveControls.tsx"
+    },
+    {
       "path": "NauticalChart / base / land.shape",
       "component": "NauticalChart",
       "region": "base",
@@ -718,7 +727,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "waves.text",
-      "tokens": "font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)",
+      "tokens": "font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line",
       "binds": "{weather.wave_height_ft} ft",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -763,7 +772,7 @@
       "component": "VesselCommandBand",
       "region": "gaugeRail",
       "leaf": "burn.chart",
-      "tokens": "Gauge primitive · 96px",
+      "tokens": "Gauge primitive · 116px (round 79)",
       "binds": "{derived.burn_rate_gph} / max observed 1y",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -790,7 +799,7 @@
       "component": "VesselCommandBand",
       "region": "gaugeRail",
       "leaf": "speed.chart",
-      "tokens": "Gauge primitive · 96px",
+      "tokens": "Gauge primitive · 116px (round 79)",
       "binds": "{position.speed_over_ground_kn} / max {cruise×1.35}",
       "file": "src/components/VesselCommandBand.tsx"
     },

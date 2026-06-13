@@ -1,3 +1,44 @@
+# PROGRESS — 2026-06-13 (Session 68: ROUND 79 — global status bar + CommandBand composition)
+
+## Global status bar (all pages) — done
+- AppHeader is now the GLOBAL system-state bar (FleetView + VesselInspector,
+  app-level): wordmark + **DATALINK + LAST SYNC** (left) · **CAUTION · ADVISORY**
+  counts (center, clickable DetailChips → alert popover) · **master clock** (right).
+- **Global UTC master clock built** — real Zulu wall clock (system time), ticking,
+  IBM Plex Mono / neutral ink. Verified identical on both pages (fleet
+  `2026-06-13 23:45:39Z`, vessel `…41Z`). Distinct from the per-vessel mission
+  clock (T−26:43), which stays in the CommandBand center stack. Client-only +
+  mounted-gated (no SSR hydration mismatch).
+- **Round-73 split reversed**: DATALINK + LAST SYNC moved from the CommandBand
+  bottom footer to the global top-left; the bottom footer is REMOVED. The
+  per-page StatusHeaders (CommandBand top, FleetHealthBand) are removed too — one
+  global bar now, no duplication. `StatusHeader` gained nothing new (reused its
+  `parts` prop: health left, alerts center).
+- **DATALINK breath, substantiation-bound**: pulses (slow opacity heartbeat) ONLY
+  when LIVE/FRESH; still/flagged when DEGRADED/STALE; bound to actual state;
+  reduced-motion freezes it (globals.css). **Demo seed is DEGRADED → it does NOT
+  breathe** (verified: 0 `.datalink-breath` elements in the seed) — the one thing
+  that would pulse doesn't, because the link is degraded.
+
+## CommandBand composition (VesselInspector) — done
+- Removed the band's own status strips (top alerts + bottom health → global bar).
+- **Gauges enlarged 96 → 116px**, clusters pulled inward (gutter 44 → 30) — dead
+  air gone, three-mass balance held (consequence = size). Gauge internals/anatomy
+  /tint unchanged (EFF Δ +13.7% still gold + amber arc, white needle).
+- **Wave glyph greyed to match wind** — the drawn filled wave glyph drops to
+  ink/muted so it reads at the wind placeholder's dim weight (color-match only,
+  size held). Verified on a 3× crop (`docs/screens/r79-wx-line.png`): wind + wave
+  now read at matching dim context weight.
+- Center stack (NAME · master · mission clock · place · wind/waves) still breathes
+  with distinct registers after the gauges grew and the global bar took the top.
+
+## Verify
+TSC-OK · LINT-CLEAN · offline build clean. Screens: `r79-fleet-bar.png`,
+`r79-vessel.png`, `r79-wx-line.png`. Severity treatments intact; mission clock in
+the center stack; gauge internals/tint unchanged.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 67: ROUND 77 — DOT FLOW FIELD (dense flowing dot-ridges))
 
 ## Done
