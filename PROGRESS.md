@@ -63,7 +63,7 @@ tile Y **568 → 848 → 568** (tiles hold size, reflow down, stay visible —
 one-elastic-element); not persisted (local state, defaults to 240).
 
 ## Unmissability gate — RE-RUN on the confirmed-borderless build: **PASS**
-Ran on the fresh build of this round's commit (border computed `0px/none`).
+Ran on the fresh build of commit **57d2d00** (border computed `0px/none`).
 Meridian is the only colored tile on the 15-tile board — gold name + gold value +
 wide gold strip vs 14 white/grey — and sorts first. `docs/screens/r68-gate-board.png`.
 
