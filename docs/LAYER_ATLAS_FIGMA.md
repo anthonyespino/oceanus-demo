@@ -252,4 +252,35 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • trend.glyph  → glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped) · 30d trend
     • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*136 leaves · 19 components · generated 2026-06-13T18:25:34.457Z*
+## Glyph library (icon components)
+
+  Name a Figma frame for the matching path; `scrape glyphs` pulls + normalizes it.
+  ✓ = a drawn SVG is already in docs/glyphs-import/ (else placeholder pictogram).
+
+    · glyph/vessel  → vessel.svg
+    · glyph/engine  → engine.svg
+    · glyph/tank  → tank.svg
+    · glyph/fuel-drop  → fuel-drop.svg
+    · glyph/wind  → wind.svg
+    · glyph/wave  → wave.svg
+    · glyph/anchor  → anchor.svg
+    · glyph/route  → route.svg
+    · glyph/crew  → crew.svg
+    · glyph/clock  → clock.svg
+    · glyph/alert-triangle  → alert-triangle.svg
+    · glyph/datalink  → datalink.svg
+    · glyph/gauge  → gauge.svg
+    · glyph/chart  → chart.svg
+    · glyph/expand  → expand.svg
+    · glyph/collapse  → collapse.svg
+    · glyph/crosshair  → crosshair.svg
+    · glyph/dots  → dots.svg
+    · glyph/vesselMarker  → vesselMarker.svg
+    · glyph/delta  → delta.svg
+    · glyph/chart.fleet  → chart.fleet.svg
+    · glyph/chart.trend  → chart.trend.svg
+    · glyph/chart.efficiency  → chart.efficiency.svg
+    · glyph/back  → back.svg
+    · glyph/calendar  → calendar.svg
+
+*136 leaves · 19 components · 25 glyphs (0 drawn) · generated 2026-06-13T18:36:53.624Z*

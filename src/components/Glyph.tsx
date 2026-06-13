@@ -20,7 +20,8 @@ export type GlyphName =
   // round 44: chart-glyph disambiguation for expert-mode headers — Figma
   // icon library mirrors these names (chart.fleet / chart.trend /
   // chart.efficiency); plus a back glyph for the rail's ← fleet board
-  | 'chart.fleet' | 'chart.trend' | 'chart.efficiency' | 'back';
+  | 'chart.fleet' | 'chart.trend' | 'chart.efficiency' | 'back'
+  | 'calendar'; // round 49: 30-day window — VesselTile trend.glyph slot's library icon
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -48,6 +49,7 @@ const PATHS: Record<GlyphName, string[]> = {
   'chart.trend': ['M4 4 V20 H20', 'M7 19 V9 M11 19 V12 M15 19 V14 M19 19 V16'], // sorted bars — ranking
   'chart.efficiency': ['M4 4 V20 H20', 'M6 9 C10 10 13 16 20 17'], // curve — burn vs speed
   back: ['M11 6 L5 12 L11 18', 'M5 12 H19'],
+  calendar: ['M4 6 H20 V20 H4 Z', 'M4 10 H20', 'M8 3.5 V7 M16 3.5 V7', 'M8 14 V14.01 M12 14 V14.01 M16 14 V14.01 M8 17 V17.01 M12 17 V17.01'],
 };
 
 /** Round 36 (⚖6 resolved: heading is VISIBLE as marker rotation): filled

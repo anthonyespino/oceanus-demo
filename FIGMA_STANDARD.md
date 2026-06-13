@@ -68,6 +68,16 @@ The probe instruments every redraw-bound element with a layer path the code and 
 
 `docs/LAYER_ATLAS.md` is auto-generated from the instrumentation on every build (tokens + bindings per leaf, exactly as the learn-mode hover cards report) — the desk-side reference while drawing. The `data-layer` attributes are inert in production and stripped with `src/learn/`.
 
+### 4b. Glyph slot vs library icon (round 49)
+
+Two distinct things, two naming forms — do not conflate:
+
+- **`{role}.glyph`** — a glyph **slot** on a component: it says WHERE an icon is used and which data it stands for (`endurance.glyph`, `now.glyph`, `trend.glyph`). These are instrumented leaves in the atlas.
+- **`glyph.{name}`** — a **library icon** component: it says WHAT THE SHAPE IS (`glyph.wave`, `glyph.clock`, `glyph.calendar`). These are the reusable Figma icon components; in code they are entries in `GlyphName`/`PATHS` (`src/components/Glyph.tsx`) and they appear in the atlas's **glyph library** section, marked as library icons.
+- **Relationship**: a tile-level `{role}.glyph` slot **contains** a `glyph.{name}` instance. Current VesselTile wiring (canonical): `trend.glyph` → `glyph.calendar`, `now.glyph` → `glyph.clock`, `endurance.glyph` → `glyph.wave`.
+
+Drawn icons drop into `docs/glyphs-import/{name}.svg` (round 47); the scrape pulls any `glyph.{name}` component frame from Figma into the same folder. The slot name never changes when the icon art changes — that is the whole point of the split.
+
 ## 5. Token Naming (Figma Variables ↔ Tailwind config)
 
 One vocabulary, defined in Figma Variables, mirrored in `tailwind.config`:

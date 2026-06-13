@@ -72,6 +72,28 @@ Match the cheat sheet. Inside a frame named for the component (e.g.
 `FleetHealthBand / census / nominal.text`. Tokens and text are read from the
 layer itself — the name only has to map it to a binding.
 
+## Drawing glyphs — `scrape glyphs` (round 48)
+
+The icon library is a separate scrape target. Workflow:
+
+1. In Figma, name a frame **`glyph/{name}`** for the icon you drew — exactly the
+   atlas glyph name (`glyph/wind`, `glyph/route`, `glyph/calendar`, …). The full
+   list with ✓ = already drawn is the **Glyph library** section of
+   `docs/LAYER_ATLAS_FIGMA.md` (mirrors `GlyphName`/`PATHS` in `Glyph.tsx`).
+2. Ping **`scrape glyphs`**. Claude Code reads the file, finds every frame whose
+   name matches a `glyph/{name}` atlas path, extracts the SVG, **normalizes** it
+   (viewBox → `0 0 24 24`, hex strokes/fills → `currentColor` preserving
+   stroke-width, strips Figma cruft/unused clipPaths/default attrs), and writes
+   `docs/glyphs-import/{name}.svg`.
+3. The build's `scripts/glyphs.ts` (prebuild) folds the import into
+   `glyphs.generated.ts`; the `Glyph` primitive prefers it over the placeholder.
+   **No code change** — the glyph just appears everywhere it's used.
+4. The scrape reports matched/normalized/written and lists the still-placeholder
+   names. Repeat as more glyphs are drawn.
+
+Export specs (so size + tint inherit): 24px artboard, `currentColor`, ~1.5px
+stroke — see `docs/glyphs-import/README.md`.
+
 ## Scope guardrails
 
 - **Read-only.** Tools used: `get_metadata`, `get_design_context`,

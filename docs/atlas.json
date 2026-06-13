@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T18:25:34.457Z",
+  "generated": "2026-06-13T18:36:53.625Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1225,6 +1225,158 @@
       "tokens": "type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal",
       "binds": "{derived.trend_30d} %/30d — the primary board signal (ruling 13)",
       "file": "src/components/VesselTile.tsx"
+    }
+  ],
+  "glyphLibrary": [
+    {
+      "component": "glyph/vessel",
+      "name": "vessel",
+      "importFile": "vessel.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/engine",
+      "name": "engine",
+      "importFile": "engine.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/tank",
+      "name": "tank",
+      "importFile": "tank.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/fuel-drop",
+      "name": "fuel-drop",
+      "importFile": "fuel-drop.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/wind",
+      "name": "wind",
+      "importFile": "wind.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/wave",
+      "name": "wave",
+      "importFile": "wave.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/anchor",
+      "name": "anchor",
+      "importFile": "anchor.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/route",
+      "name": "route",
+      "importFile": "route.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/crew",
+      "name": "crew",
+      "importFile": "crew.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/clock",
+      "name": "clock",
+      "importFile": "clock.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/alert-triangle",
+      "name": "alert-triangle",
+      "importFile": "alert-triangle.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/datalink",
+      "name": "datalink",
+      "importFile": "datalink.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/gauge",
+      "name": "gauge",
+      "importFile": "gauge.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/chart",
+      "name": "chart",
+      "importFile": "chart.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/expand",
+      "name": "expand",
+      "importFile": "expand.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/collapse",
+      "name": "collapse",
+      "importFile": "collapse.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/crosshair",
+      "name": "crosshair",
+      "importFile": "crosshair.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/dots",
+      "name": "dots",
+      "importFile": "dots.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/vesselMarker",
+      "name": "vesselMarker",
+      "importFile": "vesselMarker.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/delta",
+      "name": "delta",
+      "importFile": "delta.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/chart.fleet",
+      "name": "chart.fleet",
+      "importFile": "chart.fleet.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/chart.trend",
+      "name": "chart.trend",
+      "importFile": "chart.trend.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/chart.efficiency",
+      "name": "chart.efficiency",
+      "importFile": "chart.efficiency.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/back",
+      "name": "back",
+      "importFile": "back.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/calendar",
+      "name": "calendar",
+      "importFile": "calendar.svg",
+      "drawn": false
     }
   ]
 }

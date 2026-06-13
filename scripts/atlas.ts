@@ -5,7 +5,7 @@
 // the full layer tree with tokens + bindings, exactly as the learn-mode
 // hover cards report them.
 
-import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync } from 'fs';
+import { readdirSync, readFileSync, statSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const ROOT = join(__dirname, '..');
@@ -34,6 +34,23 @@ for (const file of walk(SRC)) {
     leaves.push({ path: m[1], tokens: m[2], binds: m[3], file: file.slice(ROOT.length + 1) });
   }
 }
+
+// ---- round 49: glyph library registry ----
+// The PATHS keys in Glyph.tsx ARE the icon library. Emit them as glyph.{name}
+// library entries so the scrape-glyphs command knows which components to pull
+// and the cheat sheet lists the nameable icons. `drawn` = an SVG already
+// exists in docs/glyphs-import/ (Glyph prefers it over the placeholder).
+const glyphSrc = readFileSync(join(SRC, 'components', 'Glyph.tsx'), 'utf8');
+const pathsBlock = glyphSrc.slice(glyphSrc.indexOf('const PATHS'), glyphSrc.indexOf('};', glyphSrc.indexOf('const PATHS')));
+const glyphNames = [...pathsBlock.matchAll(/^\s*'?([a-zA-Z][\w.-]*)'?\s*:/gm)].map((m) => m[1]).filter((n) => n !== 'PATHS');
+const importDir = join(ROOT, 'docs', 'glyphs-import');
+const drawn = new Set(
+  (existsSync(importDir) ? readdirSync(importDir) : []).filter((f) => f.endsWith('.svg')).map((f) => f.slice(0, -4)),
+);
+// Figma frame name uses the slash namespace (glyph/wind); code GlyphName is
+// the bare {name}; import file is {name}.svg — the three align so a pulled
+// SVG wires automatically.
+const glyphLibrary = glyphNames.map((name) => ({ component: `glyph/${name}`, name, importFile: `${name}.svg`, drawn: drawn.has(name) }));
 
 // group by component (first path segment), de-dup identical paths
 const byComponent = new Map<string, Leaf[]>();
@@ -108,7 +125,14 @@ for (const comp of [...byComponent.keys()].sort()) {
   }
   fig.push('');
 }
-fig.push(`*${leaves.length} leaves · ${byComponent.size} components · generated ${new Date().toISOString()}*`, '');
+// round 48: glyph library section — name a Figma frame `glyph/{name}` and
+// `scrape glyphs` pulls it to docs/glyphs-import/{name}.svg
+fig.push('## Glyph library (icon components)', '',
+  '  Name a Figma frame for the matching path; `scrape glyphs` pulls + normalizes it.',
+  '  ✓ = a drawn SVG is already in docs/glyphs-import/ (else placeholder pictogram).', '');
+for (const g of glyphLibrary) fig.push(`    ${g.drawn ? '✓' : '·'} ${g.component}  → ${g.importFile}`);
+fig.push('');
+fig.push(`*${leaves.length} leaves · ${byComponent.size} components · ${glyphLibrary.length} glyphs (${glyphLibrary.filter((g) => g.drawn).length} drawn) · generated ${new Date().toISOString()}*`, '');
 writeFileSync(OUT_FIGMA, fig.join('\n'));
 
 // ---- round 40: machine-readable index the scrape matches layer names against --
@@ -127,7 +151,9 @@ const index = {
       file: l.file,
     })),
   ),
+  // round 48: the icon library — scrape-glyphs targets (glyph/{name})
+  glyphLibrary,
 };
 writeFileSync(OUT_JSON, JSON.stringify(index, null, 2) + '\n');
 
-console.log(`LAYER_ATLAS.md + LAYER_ATLAS_FIGMA.md + atlas.json: ${byComponent.size} components, ${leaves.length} leaves`);
+console.log(`atlas: ${byComponent.size} components, ${leaves.length} leaves, ${glyphLibrary.length} glyphs (${glyphLibrary.filter((g) => g.drawn).length} drawn)`);

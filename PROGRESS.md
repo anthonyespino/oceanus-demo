@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-13 (Session 44: ROUNDS 48 + 49 — glyph scrape pipeline + VesselTile glyph relationships)
+
+*(Anthony meant 48 before 49; folded together since 49 builds on 48. Prep + diff reports only — the VesselTile visual apply is gated on his approval per 49 §5.)*
+
+## Done (prep — no visual apply)
+
+1. **Naming convention** (FIGMA_STANDARD §4b): `{role}.glyph` = a SLOT on a component (where + what data); `glyph/{name}` = a library ICON component (what the shape is); a slot CONTAINS a `glyph/{name}` instance. Canonical VesselTile wiring: trend.glyph→glyph/calendar, now.glyph→glyph/clock, endurance.glyph→glyph/wave. (Reconciled 49's `glyph.{name}` dot-form to 48's `glyph/{name}` slash-form — the slash is the Figma frame name the scrape matches.)
+2. **Atlas glyph library** — `atlas.ts` now emits a `glyphLibrary` registry (25 `glyph/{name}` entries from `Glyph.tsx` PATHS keys, each with importFile + `drawn` flag) into `atlas.json` and a "Glyph library" section in the cheat sheet. Added `glyph/calendar` (placeholder) for the trend slot.
+3. **`scrape glyphs` workflow** documented in FIGMA_MCP.md: name a frame `glyph/{name}`, ping `scrape glyphs` → read file, match glyph paths, extract + normalize SVG (viewBox 24, hex→currentColor, strip cruft) → `docs/glyphs-import/{name}.svg`. Auto-wire already exists (round 47): `Glyph` prefers a drawn SVG, no code change when glyphs land.
+
+## Reports (read-only)
+
+**`scrape glyphs` first run:** **0 `glyph/{name}` library frames found** in Anthony's file — the icon library isn't drawn as `glyph/*` components yet. The slot frames hold inline art, not library instances. All 25 glyphs remain placeholder. To pull: draw/name `glyph/{name}` frames.
+
+**`scrape VesselTile` diff** (frame 11:68):
+- **role.glyph slots wired (3/3):** `endurance.glyph` (17:2), `now.glyph` (17:3 — renamed from "Frame 1" since round 47 ✓), `trend.glyph` (17:4). All match.
+- **Text/chart/shape leaves:** bg.shape, name.text, trend.value.text, spark.container, spark.chart, spark.baseline.line, endurance.value.text, now.value.text — all bind.
+- **glyph/{name} pulled:** none (library not drawn).
+- **Unmatched:** `status.line` (10:4) — build has `status.dot` (a colored dot); his design is a divider line under the name.
+- **Visible design diff (apply on approval):** status dot → line; trend icon chart.trend → **glyph/calendar**; now icon delta → **glyph/clock**; endurance icon fuel-drop → **glyph/wave**; add the under-name divider line.
+
+## Held for approval (49 §5)
+
+The VesselTile visual changes above — status line, the three glyph swaps, the divider — are NOT applied. On your "approved," I wire the slots to calendar/clock/wave, switch status to a line, and add the divider, then push.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 43: ROUND 47 — VesselTile inference + glyph import)
 
 ## Done
