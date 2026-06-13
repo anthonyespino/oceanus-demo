@@ -24,9 +24,19 @@ import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
 import { StatusHeader } from './AlertSheet';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
+import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 type TrendRange = 30 | 90 | 365;
 const H = 110;
+
+// Round 41: census leaves as static literals so the atlas generator
+// enumerates all three (a templated path wouldn't be captured); the runtime
+// spreads the matching one onto each count button.
+const CENSUS_LAYER: Record<StatusLevel, Record<string, string>> = {
+  degraded: layer('FleetHealthBand / census / degraded.status', 'STATUS_COLOR.degraded (red) · count · click filters board', '{# vessels degraded}'),
+  watch: layer('FleetHealthBand / census / watch.status', 'STATUS_COLOR.watch (amber) · count · click filters board', '{# vessels watch}'),
+  nominal: layer('FleetHealthBand / census / nominal.status', 'green (automotive) | ink/secondary (quiet) · count · click filters board', '{# vessels nominal}'),
+};
 
 function rollingMean(xs: number[], window = 7): number[] {
   return xs.map((_, i) => {
@@ -108,6 +118,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
           {(['degraded', 'watch', 'nominal'] as StatusLevel[]).map((cls) => (
             <button
               key={cls}
+              {...CENSUS_LAYER[cls]}
               onClick={() => pickCensus(cls)}
               style={{
                 background: censusFilter === cls ? ACCENT.wash : 'none',
@@ -131,11 +142,13 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
               ...(ikbBand ? { background: ACCENT.primary, borderRadius: RADIUS, padding: '8px 12px' } : {}),
             }}
           >
-            <Stat label="30d fleet mean" value={fmtPct(mean30)} size={ikbBand ? 26 : 30} onFill={ikbBand} />
+            <span {...layer('FleetHealthBand / mean / value.text', 'type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)', '{30d fleet mean delta %}')}>
+              <Stat label="30d fleet mean" value={fmtPct(mean30)} size={ikbBand ? 26 : 30} onFill={ikbBand} />
+            </span>
             <Field level="fleet" field="fleet_total_daily_spend" />
             {/* ⚖ #4 spend slot: renders only if/when ruled in (Field → null while UNDEFINED) */}
           </div>
-          <div ref={wrapRef} style={{ flex: 1, minWidth: 80 }}>
+          <div ref={wrapRef} style={{ flex: 1, minWidth: 80 }} {...layer('FleetHealthBand / mean / trend.chart', 'ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)', '{rolling-mean daily fleet delta over range} + {p10/p90 envelope}')}>
             <svg width={w} height={H} style={{ display: 'block', border: '1px solid var(--color-line-subtle)', background: 'var(--color-surface-base)' }}>
               <rect x={0} y={y(p90)} width={w} height={Math.max(0, y(p10) - y(p90))} fill="var(--color-surface-overlay)" />
               <line x1={0} y1={y(0)} x2={w} y2={y(0)} stroke="var(--color-line-strong)" strokeWidth={1} />
@@ -148,13 +161,19 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         </div>
         {/* CELL 3 — fleet burn now */}
         <div style={{ ...cell, flexShrink: 0 }}>
-          <Stat label="fleet burn" value={`${burnNow.toLocaleString()} gph`} size={26} />
-          <Sparkline values={burn24} width={120} height={24} zeroBaseline={false} />
+          <span {...layer('FleetHealthBand / burn / value.text', 'type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)', '{sum of live fleet burn} gph')}>
+            <Stat label="fleet burn" value={`${burnNow.toLocaleString()} gph`} size={26} />
+          </span>
+          <span {...layer('FleetHealthBand / burn / spark.chart', 'ink/secondary 1px · auto-ranged (never approaches 0)', '{fleet total burn, 24h hourly}')}>
+            <Sparkline values={burn24} width={120} height={24} zeroBaseline={false} />
+          </span>
         </div>
         {/* CELL 4 — next 24h: arrivals + bunker flags, linking to the board */}
         <a href="#port-calls" style={{ ...cell, flexShrink: 0, textDecoration: 'none', color: NEUTRAL.ink, cursor: 'pointer' }}>
-          <Stat label="arrivals 24h" value={arrivals} size={26} />
-          <span style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
+          <span {...layer('FleetHealthBand / arrivals / value.text', 'type/hero · font/data tabular · ink/primary · links to #port-calls', '{# port calls in next 24h}')}>
+            <Stat label="arrivals 24h" value={arrivals} size={26} />
+          </span>
+          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)', '{# bunker-flagged calls in next 24h}')} style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
             {bunkers} BUNKER {bunkers === 1 ? 'flag' : 'flags'}
           </span>
         </a>

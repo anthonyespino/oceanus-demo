@@ -103,6 +103,38 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — gb.label micro-caps · ink/muted
   - BINDS — E2 VS E1 EGT (static)
 
+## FleetHealthBand
+
+*source: src/components/FleetHealthBand.tsx*
+
+- `arrivals / bunker.text`
+  - TOKENS — font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)
+  - BINDS — {# bunker-flagged calls in next 24h}
+- `arrivals / value.text`
+  - TOKENS — type/hero · font/data tabular · ink/primary · links to #port-calls
+  - BINDS — {# port calls in next 24h}
+- `burn / spark.chart`
+  - TOKENS — ink/secondary 1px · auto-ranged (never approaches 0)
+  - BINDS — {fleet total burn, 24h hourly}
+- `burn / value.text`
+  - TOKENS — type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)
+  - BINDS — {sum of live fleet burn} gph
+- `census / degraded.status`
+  - TOKENS — STATUS_COLOR.degraded (red) · count · click filters board
+  - BINDS — {# vessels degraded}
+- `census / nominal.status`
+  - TOKENS — green (automotive) | ink/secondary (quiet) · count · click filters board
+  - BINDS — {# vessels nominal}
+- `census / watch.status`
+  - TOKENS — STATUS_COLOR.watch (amber) · count · click filters board
+  - BINDS — {# vessels watch}
+- `mean / trend.chart`
+  - TOKENS — ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)
+  - BINDS — {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
+- `mean / value.text`
+  - TOKENS — type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)
+  - BINDS — {30d fleet mean delta %}
+
 ## FleetRail
 
 *source: src/components/FleetRail.tsx*
@@ -368,4 +400,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*99 instrumented leaves · 13 components · generated 2026-06-13T16:51:26.274Z*
+*108 instrumented leaves · 14 components · generated 2026-06-13T17:01:47.301Z*

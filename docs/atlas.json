@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T16:51:26.275Z",
+  "generated": "2026-06-13T17:01:47.302Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -253,6 +253,87 @@
       "tokens": "gb.label micro-caps · ink/muted",
       "binds": "E2 VS E1 EGT (static)",
       "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "FleetHealthBand / arrivals / bunker.text",
+      "component": "FleetHealthBand",
+      "region": "arrivals",
+      "leaf": "bunker.text",
+      "tokens": "font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)",
+      "binds": "{# bunker-flagged calls in next 24h}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / arrivals / value.text",
+      "component": "FleetHealthBand",
+      "region": "arrivals",
+      "leaf": "value.text",
+      "tokens": "type/hero · font/data tabular · ink/primary · links to #port-calls",
+      "binds": "{# port calls in next 24h}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / burn / spark.chart",
+      "component": "FleetHealthBand",
+      "region": "burn",
+      "leaf": "spark.chart",
+      "tokens": "ink/secondary 1px · auto-ranged (never approaches 0)",
+      "binds": "{fleet total burn, 24h hourly}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / burn / value.text",
+      "component": "FleetHealthBand",
+      "region": "burn",
+      "leaf": "value.text",
+      "tokens": "type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)",
+      "binds": "{sum of live fleet burn} gph",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / census / degraded.status",
+      "component": "FleetHealthBand",
+      "region": "census",
+      "leaf": "degraded.status",
+      "tokens": "STATUS_COLOR.degraded (red) · count · click filters board",
+      "binds": "{# vessels degraded}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / census / nominal.status",
+      "component": "FleetHealthBand",
+      "region": "census",
+      "leaf": "nominal.status",
+      "tokens": "green (automotive) | ink/secondary (quiet) · count · click filters board",
+      "binds": "{# vessels nominal}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / census / watch.status",
+      "component": "FleetHealthBand",
+      "region": "census",
+      "leaf": "watch.status",
+      "tokens": "STATUS_COLOR.watch (amber) · count · click filters board",
+      "binds": "{# vessels watch}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / mean / trend.chart",
+      "component": "FleetHealthBand",
+      "region": "mean",
+      "leaf": "trend.chart",
+      "tokens": "ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)",
+      "binds": "{rolling-mean daily fleet delta over range} + {p10/p90 envelope}",
+      "file": "src/components/FleetHealthBand.tsx"
+    },
+    {
+      "path": "FleetHealthBand / mean / value.text",
+      "component": "FleetHealthBand",
+      "region": "mean",
+      "leaf": "value.text",
+      "tokens": "type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)",
+      "binds": "{30d fleet mean delta %}",
+      "file": "src/components/FleetHealthBand.tsx"
     },
     {
       "path": "FleetRail / row / dot.status",

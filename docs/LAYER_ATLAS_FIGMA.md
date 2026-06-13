@@ -55,6 +55,22 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • gap.text  → type/hero · font/data tabular — largest type in the section · {E2.egt − E1.egt} now, both running
     • label.text  → gb.label micro-caps · ink/muted · E2 VS E1 EGT (static)
 
+## FleetHealthBand
+
+  Region: arrivals
+    • bunker.text  → font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity) · {# bunker-flagged calls in next 24h}
+    • value.text  → type/hero · font/data tabular · ink/primary · links to #port-calls · {# port calls in next 24h}
+  Region: burn
+    • spark.chart  → ink/secondary 1px · auto-ranged (never approaches 0) · {fleet total burn, 24h hourly}
+    • value.text  → type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here) · {sum of live fleet burn} gph
+  Region: census
+    • degraded.status  → STATUS_COLOR.degraded (red) · count · click filters board · {# vessels degraded}
+    • nominal.status  → green (automotive) | ink/secondary (quiet) · count · click filters board · {# vessels nominal}
+    • watch.status  → STATUS_COLOR.watch (amber) · count · click filters board · {# vessels watch}
+  Region: mean
+    • trend.chart  → ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule) · {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
+    • value.text  → type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle) · {30d fleet mean delta %}
+
 ## FleetRail
 
   Region: row
@@ -181,4 +197,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
 
-*99 leaves · 13 components · generated 2026-06-13T16:51:26.275Z*
+*108 leaves · 14 components · generated 2026-06-13T17:01:47.302Z*

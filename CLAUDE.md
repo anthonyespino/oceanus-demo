@@ -12,6 +12,11 @@ The Figma Dev Mode MCP server is connected and authenticates via OAuth on Anthon
 
 **`scrape {frame name}` workflow:** read that frame's layer tree → match each *named* layer against `docs/atlas.json` (exact path, or `region / role.kind` inside a component-named frame) → report a translation diff **without applying** (recognized+changed / recognized+unchanged / unrecognized = "noted, no binding yet") → Anthony approves → apply to `layout-probe`, verify, push. Unnamed layers are ignored; unrecognized names never block. `docs/LAYER_ATLAS_FIGMA.md` is his "what can I name today" cheat sheet.
 
+**Stale-sketch rule (round 41):** a sketch frame may contain pre-ruling exploration that contradicts a shipped decision. Flag such a divergence from current rulings **once**, then treat it as STALE — do not re-surface it as a proposed change on later scrapes unless Anthony explicitly re-opens it. Standing STALE dispositions (round 40 first scrape, confirmed round 41):
+- **Census / nominal colors** — automotive is canonical (green nominal, amber watch, red degraded, ruling 14 + round 38). Sketch frames showing white/amber-only census are stale, not a revert.
+- **Inter font** — sketch placeholder; the faces are D-DIN / IBM Plex Mono / Barlow (round 26/22). Never a token change.
+- **Borderless fills** — already shipped (round 37); a sketch confirming it is agreement, not a change to apply.
+
 ## Component naming rule
 
 UI component names exactly match Anthony's Figma component names (e.g. `VesselCard`, `EngineTwinPanel`, `TankSchematic`, `FleetMap`, `AlertRail`). Never rename, "improve," or alias them.

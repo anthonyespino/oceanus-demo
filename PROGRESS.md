@@ -1,3 +1,14 @@
+# PROGRESS — 2026-06-13 (Session 38: ROUND 41 — instrument FleetHealthBand + stale-sketch rule)
+
+## Done
+
+1. **FleetHealthBand instrumented** — 9 `layer()` leaves on the region/role.kind convention: `census / {degraded,watch,nominal}.status`, `mean / value.text`, `mean / trend.chart`, `burn / value.text`, `burn / spark.chart`, `arrivals / value.text`, `arrivals / bunker.text`. Census leaves are a static-literal lookup (`CENSUS_LAYER`) so the atlas regex enumerates all three rather than seeing one templated path. Atlas now 14 components / 108 leaves; the cheat sheet lists every nameable path for this band.
+2. **Diff held — nothing applied** (per brief): census colors STALE (automotive canonical), Inter STALE (placeholder), borderless fills ALREADY SHIPPED (round 37, sketch confirms).
+3. **Stale-sketch rule documented in CLAUDE.md**: a divergence from a shipped ruling is flagged once, then STALE — never re-surfaced on later scrapes unless Anthony re-opens. The three round-40 items recorded as standing STALE dispositions.
+4. Next: Anthony renames his Figma layers (rename list + cheat sheet); the next `scrape FleetHealthBand` should auto-bind every named leaf.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 38: ROUND 40 — Figma MCP bridge)
 
 ## Done
