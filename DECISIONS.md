@@ -99,6 +99,30 @@ originals.*
   idle-dimmed) is the round-21 `compareVessels` comparator and has been in the
   branch since then. Round 60 (a re-spec) never landed as a commit, but the
   feature is live; Meridian sorts first by the comparator, not incidentally.
+- **Consequence sort COMPLETED (round 71–72)**: the round-21 comparator pinned
+  the right TIERS (alert → active → idle) but its within-tier tiebreaker used the
+  HIDDEN `sustained_deviation` weighted score — which diverges from the tile's
+  displayed hero number, so the active tier looked unsorted (Calcasieu −1.2
+  outranked Marlin Ridge +2.8 because its weighted score was marginally larger).
+  **Fixed: the tiebreaker is now `|trend_30d|`** — the displayed hero (the
+  "primary fleet signal" and what "ranked by sustained deviation" means), so the
+  rendered order matches what the operator reads. Final behavior, three tiers:
+  **T1 ALERTED** (CAUTION+), pinned top, worst severity first then |deviation|;
+  **T2 ACTIVE** (underway), by |deviation| worst-first; **T3 IDLE** (port/standby),
+  dimmed, bottom, by |deviation|. **Tiebreaker is ABSOLUTE** (round 72): magnitude
+  is the consequence (a +3% and a −3% both warrant a look), sign is the diagnosis.
+  **ETA rejected** as a sort key, as are alphabetical and data order — the deck is
+  banked by consequence, not arrival or activity. Stable within tier (vessel-id
+  final tiebreak → no jitter on refresh). The internal `sustained_deviation` field
+  is retired as the sort key (DEV DECISION; it stays computed but unused for
+  ranking). Verified in the running build: demo seed Meridian → Terrebonne (−3.0,
+  worst active) → Marlin Ridge (+2.8) → … → idle dimmed at bottom; MULTI-CASUALTY
+  (degraded above watch, worst-first), PORT-WEEKEND (most vessels dimmed bottom),
+  ALL-NOMINAL (no T1, idle last) all sort correctly.
+- **Glass / card shadow CUT for scope (rounds 59/65, confirmed permanent round
+  71–72)**: not building it. No glass scaffolding existed in the branch to remove
+  (verified). A judge-on-pixels nicety, not load-bearing — cut to protect the
+  four-day runway. Cards stay flat-matte, borderless, fill-only.
 - **CommandBand center stack is full-glyph in DEFAULT mode (round 52)**: category
   words drop wherever a glyph carries the category — master line = `crew.glyph` +
   name (no "master" word), place line = `anchor.glyph` + place. Clock stays text

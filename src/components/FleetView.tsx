@@ -1,7 +1,8 @@
 'use client';
 // LAYOUT PROBE (branch: layout-probe — disposable, do not merge): FleetView
-// as a responsive grid of vessel tiles. Still ranked by sustained_deviation
-// (v2 trend board); center-aligned grid per the alignment probe. Compression
+// as a responsive grid of vessel tiles. Ranked by the consequence comparator
+// (round 71-72): alert → active → idle tiers, |trend_30d| worst-first within
+// each (the displayed hero). Center-aligned grid per the alignment probe. Compression
 // row suspended: 15 tiles fit one glanceable screen, which is what the probe
 // is testing.
 

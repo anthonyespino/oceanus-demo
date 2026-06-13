@@ -27,7 +27,7 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'vessel_name', level: 'fleet', disposition: 'VISIBLE' },
   { field: 'mode', level: 'fleet', disposition: 'VISIBLE', note: 'mode chip on card/row; reported via §3.4 status feed (v2)' },
   { field: 'efficiency_delta', level: 'fleet', disposition: 'VISIBLE', note: 'context number in v2; trend is the primary signal' },
-  { field: 'sustained_deviation', level: 'fleet', disposition: 'HIDDEN', note: 'sort key (v2 §4); rank-order-only display is a DEV DECISION pending Anthony (verdict 12), not part of ruling 11' },
+  { field: 'sustained_deviation', level: 'fleet', disposition: 'HIDDEN', note: 'v2 §4 weighted score; RETIRED as the sort key (round 71-72) — board/rail now rank by |trend_30d| (the displayed hero) so the order matches what is shown. Still computed, no longer drives ranking' },
   { field: 'trend_30d', level: 'fleet', disposition: 'VISIBLE', note: 'primary fleet-level signal (v2, ruling 13)' },
   { field: 'trend_90d', level: 'fleet', disposition: 'VISIBLE', note: 'primary per-vessel graphic incl. 90d trend sparkline (v2, ruling 13)' },
   { field: 'fleet_trend_1y', level: 'fleet', disposition: 'VISIBLE', note: 'whole-fleet trajectory strip (v2 §8, ruling 12)' },

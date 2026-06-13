@@ -1,3 +1,43 @@
+# PROGRESS — 2026-06-13 (Session 60: ROUND 71 / 72-A — consequence sort completed)
+
+## Audit (round-21 comparator, before changing)
+It pinned the right TIERS (status → active → idle) and DID sort the active tier —
+but by `|sustained_deviation|`, the HIDDEN v2-§4 weighted score. That score
+diverges from the tile's displayed hero number (`trend_30d`), so the active tier
+looked unsorted: e.g. Calcasieu (trend −1.2, weighted −1.21) outranked Marlin
+Ridge (trend +2.8, weighted +1.19). Both FleetView AND FleetRail render via this
+one comparator (confirmed). So: it existed and was applied, but ranked by the
+wrong (invisible) metric — answer to "is the in-transit tier sorting by
+|deviation| worst-first?": **NO** (it sorted by a different, hidden score).
+
+## Fix (completing round 71)
+Rewrote `compareVessels` (built on round 21, not duplicated): three explicit
+tiers, within-tier tiebreaker now **`|trend_30d|`** (the displayed hero), ABSOLUTE
+(round 72 — magnitude is consequence, sign is diagnosis). ETA/alphabetical/data
+order rejected. Stable vessel-id final tiebreak (no refresh jitter).
+
+## Verified in the RUNNING build (rendered tile order, not just data)
+demo seed: **1 MERIDIAN** (alert) · **2 TERREBONNE** (−3.0, worst active) ·
+**3 MARLIN RIDGE** (+2.8) · 4 Cormorant (2.4) · 5 Sabine (1.5) · **6 CALCASIEU**
+(1.2) · … · 13–15 BAYOU RUNNER / ALBATROSS / GULF HARRIER (idle, dimmed, bottom).
+**Marlin Ridge now outranks Calcasieu** (the exact inversion flagged) and the
+active tier descends by magnitude. NOTE: **Terrebonne (−3.0%) sits directly under
+Meridian**, not Marlin — it's the largest active deviation, so the rule puts it
+#2 (Anthony's Part-A example omitted Terrebonne, which was buried at row 11 under
+the old weighted sort). Marlin is #3. Scenarios verified: MULTI-CASUALTY (degraded
+above watch, worst-first), PORT-WEEKEND (most vessels dimmed bottom), ALL-NOMINAL
+(no T1, idle last) — all correct.
+
+## Glass — CUT
+Confirmed no glass scaffolding exists in the branch (nothing to remove). Logged as
+permanently cut for scope in DECISIONS. Cards stay flat-matte.
+
+## Verify
+TSC-OK · `npm run verify` ALL CHECKS PASSED · offline build clean. Commit hash in
+the commit message; rendered order confirmed above on that build.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 59: ROUND 70 — VesselTile, remove header band, separate by spacing)
 
 ## Done
