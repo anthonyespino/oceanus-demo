@@ -23,48 +23,38 @@ import { waterScope, waterInputs } from './ambientReadout';
 const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`;
 
 // Receding plane: depth grows toward the top (horizonless); wavelength
-// compresses and amplitude decays with depth. ROUND 62 — PRESENCE RAISED.
-// The old [0.066,0.085] luminance floor (kept below surface/raised #181818 =
-// 0.094) made the layer effectively invisible; an ambient layer that can't be
-// seen is a failure, not subordination. New band: trough ~0.07, crests bleed
-// to ~0.24 (grey/white light bleed permitted; R=G=B, ZERO chroma — navy stays
-// chart-only). The old "dimmer than all UI" rule is replaced by SEVERITY MUST
-// OUT-READ THE WAVES: greyscale crests never compete with a chromatic alert
-// color. Texture: two-octave value-noise grain gives resolved, granular,
-// visibly-moving point structure (not a vague gradient), depth-compressed so
-// detail recedes. Motion: drift doubled (0.25 → 0.5) so movement is obvious,
-// not subliminal — amplitude/cadence still bound to the dataset (round 50).
-// Premultiplied alpha; the layer dissolves upward.
+// compresses and amplitude decays with depth. ROUND 67 — SMOOTH GRADIENT
+// REBUILD. The round-62 value-noise grain read as low-res/pixelated; it is
+// removed entirely (no per-pixel noise texture). What stays is the DEPTH
+// GRADIENT — the valued element — a vertical falloff from darker near the
+// bottom easing up into a lighter haze band, with smooth sinuous luminance
+// WAVES riding within it: layered sine bands with soft (gaussian-like)
+// falloff, no edges to alias. A sub-LSB ordered dither (±1/255 — invisible as
+// texture, NOT grain) breaks up 8-bit gradient banding so the falloff stays
+// smooth on high-DPI with no stair-stepping. Greyscale only (R=G=B, zero
+// chroma — navy stays chart-only); crests ~0.24 so SEVERITY STILL OUT-READS.
+// Amplitude/cadence still bound to the dataset (round 50). Premultiplied alpha.
 const FRAG = `precision mediump float;
 uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
-float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
-float vnoise(vec2 p){
-  vec2 i = floor(p); vec2 f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  float a = hash(i), b = hash(i + vec2(1.0,0.0)), c = hash(i + vec2(0.0,1.0)), d = hash(i + vec2(1.0,1.0));
-  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
-}
 void main(){
   vec2 uv = gl_FragCoord.xy / u_res.xy;
   float v = uv.y;
   float depth = v / max(0.04, 1.04 - v);
-  float drift = u_time * 0.5;
-  // long swells — dataset-bound amplitude/frequency (round 50 binding holds)
-  float w = sin(depth * (5.0 + 7.0*u_freq) + uv.x*2.2 - drift);
-  w += 0.55 * sin(depth * (9.0 + 12.0*u_freq) - uv.x*4.5 - drift*1.7);
-  w += 0.30 * sin(depth * 3.0 + uv.x*1.1 + drift*0.6);
-  float amp = u_amp * exp(-depth * 0.30);
-  float swell = clamp(0.5 + 0.5 * w * amp, 0.0, 1.0);
-  // granular point structure: two octaves of drifting value-noise, sharpened,
-  // depth-compressed so the field reads as resolved water near the bottom and
-  // dissolves with distance — texture, not a gradient.
-  vec2 gp = vec2(uv.x * 64.0, depth * 30.0 + drift * 1.3);
-  float grain = vnoise(gp) * 0.6 + vnoise(gp * 2.3 - drift * 0.8) * 0.4;
-  grain = pow(grain, 1.5);
-  float grainAmt = exp(-depth * 0.5) * 0.55;
-  float shade = clamp(swell * 0.7 + grain * grainAmt + swell * grain * grainAmt * 0.7, 0.0, 1.0);
-  vec3 col = mix(vec3(0.07), vec3(0.24), shade); // pure grey, raised band
-  float alpha = smoothstep(0.95, 0.28, v);
+  float drift = u_time * 0.45;
+  // smooth sinuous swell — three sine octaves, dataset-bound amp/freq (round 50)
+  float w = sin(depth * (4.0 + 6.0*u_freq) + uv.x*2.0 - drift);
+  w += 0.50 * sin(depth * (7.0 + 9.0*u_freq) - uv.x*3.4 - drift*1.6);
+  w += 0.28 * sin(depth * 2.4 + uv.x*1.0 + drift*0.55);
+  float amp = u_amp * exp(-depth * 0.32); // waves decay with depth (recede)
+  float wave = 0.5 * w * amp;             // smooth ripple around 0
+  // depth gradient floor: darker near the bottom → lighter haze higher up
+  float depthLum = mix(0.05, 0.17, smoothstep(0.0, 0.92, v));
+  float lum = depthLum + wave * 0.20;
+  // sub-LSB ordered dither — defeats 8-bit gradient banding, no visible texture
+  float dith = (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
+  lum = clamp(lum + dith, 0.0, 1.0);
+  vec3 col = vec3(lum); // pure grey
+  float alpha = smoothstep(0.96, 0.26, v);
   gl_FragColor = vec4(col * alpha, alpha);
 }`;
 

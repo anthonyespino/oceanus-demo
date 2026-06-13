@@ -71,6 +71,15 @@ originals.*
     grey/white light bleed permitted) and severity-dominance.** Justified because
     the layer is operator-dismissible (toggle / expert-off / reduced-motion all
     intact) — agency licenses the increased presence. Binding (round 50) unchanged.
+  - **Texture changed grain → smooth gradient bands (round 67)**: the round-62
+    value-noise grain read as low-resolution/pixelated, so the per-pixel noise is
+    REMOVED. Reasoning: the grain was not the valued element — the **depth
+    gradient** (darker near the bottom easing up into the lighter haze band) is,
+    and it stays. Waves are rebuilt as smooth sinuous luminance bands (layered
+    sine octaves with soft falloff, no edges to alias). A sub-LSB ordered dither
+    (±1/255 — invisible, NOT grain) prevents 8-bit gradient banding on high-DPI.
+    Crests still ~0.24 grey (severity out-reads); greyscale + round-50 binding
+    intact; cheaper than the noise field (sustained ~97 fps, no regression).
 - **CommandBand center stack is full-glyph in DEFAULT mode (round 52)**: category
   words drop wherever a glyph carries the category — master line = `crew.glyph` +
   name (no "master" word), place line = `anchor.glyph` + place. Clock stays text

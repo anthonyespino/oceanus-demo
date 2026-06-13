@@ -1,3 +1,39 @@
+# PROGRESS — 2026-06-13 (Session 56: ROUND 67 — Calm Sea, smooth gradient bands, drop grain)
+
+## Done
+- **Value-noise grain REMOVED** (round 62's `hash`/`vnoise` and the grain term)
+  — it read as low-res/pixelated. No per-pixel noise texture remains.
+- **Depth gradient RETAINED** (the valued element): a vertical falloff from
+  darker near the bottom easing up into the lighter haze band (`depthLum =
+  mix(0.05, 0.17, smoothstep(0,0.92,v))`).
+- **Waves rebuilt as smooth gradient bands**: three layered sine octaves with
+  soft falloff riding within the gradient — sinuous, sleek, no edges to alias.
+- **Anti-banding**: a sub-LSB ordered dither (±1/255 — invisible as texture, NOT
+  grain) breaks up 8-bit gradient stair-stepping on high-DPI. Inspected a 2x-DSF
+  margin crop (`docs/screens/r67-sea-crop.png`): smooth falloff, no banding, no
+  jaggies on the wave edges.
+
+## Verify / reported
+- No grain; depth gradient retained; waves smooth/crisp; greyscale only (R=G=B);
+  round-50 binding intact (amp/freq untouched); reduced-motion fallback is a
+  smooth static CSS gradient (unchanged, no grain).
+- **Severity still dominates**: on the board the gold MERIDIAN + amber census
+  clearly out-read the smooth grey waves (`docs/screens/r67-sea-fleet.png`).
+- **Framerate: sustained ~97 fps** (4 samples 95–98; worst frame ~18 ms = an
+  occasional single-frame hitch, no sustained drop) — well above 60. The shader
+  is objectively **cheaper** than the round-62 noise field (removed two
+  value-noise lookups + their 8 hash evaluations per pixel, added one dither
+  hash). The absolute rAF number vs the earlier 120 sample is harness/vsync
+  scheduling variance, not the effect getting more expensive — no regression.
+- **Glass**: round 65 (glass) never landed on this branch — `grep glass` in src
+  returns nothing — so there is no glass interaction to test. (Rounds 59/60/64/65
+  remain absent; see round-62 flag.)
+
+## Scope held
+Only `AmbientSea.tsx` touched.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 55: ROUND 66 — resolve severity to STRIP, drop card border + name divider)
 
 ## UNMISSABILITY GATE — PASS (run on the actual 15-tile board, demo seed)
