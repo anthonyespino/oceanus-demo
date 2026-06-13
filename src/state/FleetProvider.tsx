@@ -77,23 +77,25 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [live, setLive] = useState(false);
   const [speed, setSpeed] = useState<TickSpeed>(60);
   const [density, setDensity] = useState<TileDensity>('standard');
-  // Round 38 verdict: automotive (green-on-nominal) is the DEFAULT; the
-  // quiet-nominal variant stays behind the dev toggle until Figma tokens
-  // lock, then dies.
-  const [treatment, setTreatment] = useState<ColorTreatment>('automotive');
+  // Round 44: startup defaults set from Anthony's dev-panel screenshot.
+  // COLOR → quiet (dark-cockpit): this supersedes round 38's automotive
+  // default as the boot treatment; automotive stays available behind the
+  // toggle. (The "dies at token lock" framing no longer applies — quiet is
+  // now the chosen look.)
+  const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
   const [motion, setMotion] = useState<MotionVariant>('off');
   const [layoutVariant, setLayoutVariant] = useState<LayoutVariant>('board-first');
   const [ikbBand, setIkbBand] = useState(false);
-  const [chartTop, setChartTop] = useState(false);
-  const [bearingLine, setBearingLine] = useState(true);
+  const [chartTop, setChartTop] = useState(true); // round 44: chart on top
+  const [bearingLine, setBearingLine] = useState(false); // round 44: voyage card only
   const [railMode, setRailMode] = useState<RailMode>('glyph');
   const [autoPromote, setAutoPromote] = useState(false);
-  const [stateMarks, setStateMarks] = useState(false);
+  const [stateMarks, setStateMarks] = useState(true); // round 44: state marks on
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [stress, setStress] = useState(false);
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
-  const [revealStyle, setRevealStyle] = useState<RevealStyle>('chevron');
+  const [revealStyle, setRevealStyle] = useState<RevealStyle>('meter'); // round 44: meter strip
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
   const [crossings, setCrossings] = useState<Record<string, number>>({});

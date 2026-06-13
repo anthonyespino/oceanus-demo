@@ -96,7 +96,7 @@ export function DevPanel() {
       <Row label="density" value={f.density} onPick={f.setDensity}
         options={[{ v: 'minimal' as const, text: 'minimal' }, { v: 'standard' as const, text: 'standard' }]} />
       <Row label="color" value={f.treatment} onPick={f.setTreatment}
-        options={[{ v: 'automotive' as const, text: 'A automotive (default)' }, { v: 'dark-cockpit' as const, text: 'B quiet (dies at token lock)' }]} />
+        options={[{ v: 'automotive' as const, text: 'A automotive' }, { v: 'dark-cockpit' as const, text: 'B quiet (default)' }]} />
       <Row label="motion" value={f.motion} onPick={f.setMotion}
         options={[{ v: 'off' as const, text: 'off' }, { v: 'ripple' as const, text: 'ripple' }, { v: 'breathe' as const, text: 'breathe' }]} />
       <Row label="layout" value={f.layoutVariant} onPick={f.setLayoutVariant}

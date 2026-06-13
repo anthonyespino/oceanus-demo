@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-13 (Session 39: ROUND 44 — startup defaults from the panel)
+
+## Done
+
+Set the dev-panel `useState` initials (= boot defaults) to match Anthony's screenshot. Five differed from prior defaults:
+
+| toggle | was | now |
+|---|---|---|
+| COLOR | automotive | **quiet (dark-cockpit)** |
+| CHART POS | below board | top |
+| STATE MARKS | off | on |
+| BEARING | BRG ray | voyage card only |
+| REVEAL | chevron | meter strip |
+
+(density standard, motion off, layout board-first, ikb off, learn off, rail glyph, auto-2x off, stress off, live off / 60x — all already matched.)
+
+Dev-panel COLOR labels updated: "A automotive" / "B quiet (default)" (the round-38 "dies at token lock" framing removed).
+
+## Flag
+
+**COLOR = quiet supersedes round 38's automotive default** as the boot treatment — done per Anthony's explicit "make these the startup defaults" + the panel showing B quiet selected. Automotive stays available behind the toggle. The board now boots with no green confirmation (nominal = grey dots/numerals, watch = cooled amber, degraded = red). If that reversal wasn't intended (e.g. the panel caught a comparison toggle), it's a one-line revert of the `treatment` initial back to `'automotive'`.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 39: ROUND 42 — tank matrix grid discipline)
 
 ## Done
