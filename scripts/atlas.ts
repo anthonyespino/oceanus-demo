@@ -44,8 +44,12 @@ const glyphSrc = readFileSync(join(SRC, 'components', 'Glyph.tsx'), 'utf8');
 const pathsBlock = glyphSrc.slice(glyphSrc.indexOf('const PATHS'), glyphSrc.indexOf('};', glyphSrc.indexOf('const PATHS')));
 const glyphNames = [...pathsBlock.matchAll(/^\s*'?([a-zA-Z][\w.-]*)'?\s*:/gm)].map((m) => m[1]).filter((n) => n !== 'PATHS');
 const importDir = join(ROOT, 'docs', 'glyphs-import');
+// mirror scripts/glyphs.ts keyFromFile: strip .svg + leading glyph. prefix so
+// glyph.calendar.svg → calendar (matches the bare GlyphName)
 const drawn = new Set(
-  (existsSync(importDir) ? readdirSync(importDir) : []).filter((f) => f.endsWith('.svg')).map((f) => f.slice(0, -4)),
+  (existsSync(importDir) ? readdirSync(importDir) : [])
+    .filter((f) => f.endsWith('.svg'))
+    .map((f) => f.replace(/\.svg$/i, '').replace(/^glyph[./]/, '')),
 );
 // Figma frame name uses the slash namespace (glyph/wind); code GlyphName is
 // the bare {name}; import file is {name}.svg — the three align so a pulled

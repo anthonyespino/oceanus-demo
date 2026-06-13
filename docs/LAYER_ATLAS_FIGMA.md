@@ -263,11 +263,11 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/tank  → tank.svg
     · glyph/fuel-drop  → fuel-drop.svg
     · glyph/wind  → wind.svg
-    · glyph/wave  → wave.svg
+    ✓ glyph/wave  → wave.svg
     · glyph/anchor  → anchor.svg
     · glyph/route  → route.svg
     · glyph/crew  → crew.svg
-    · glyph/clock  → clock.svg
+    ✓ glyph/clock  → clock.svg
     · glyph/alert-triangle  → alert-triangle.svg
     · glyph/datalink  → datalink.svg
     · glyph/gauge  → gauge.svg
@@ -282,6 +282,6 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/chart.trend  → chart.trend.svg
     · glyph/chart.efficiency  → chart.efficiency.svg
     · glyph/back  → back.svg
-    · glyph/calendar  → calendar.svg
+    ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (0 drawn) · generated 2026-06-13T19:26:55.083Z*
+*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T19:29:15.256Z*
