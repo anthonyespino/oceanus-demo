@@ -151,13 +151,16 @@ export function DevPanel() {
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
         <Row label="water mode" value={f.waterMode} onPick={f.setWaterMode}
-          options={[{ v: 'gradient' as const, text: 'gradient' }, { v: 'particle' as const, text: 'particle' }]} />
+          options={[{ v: 'gradient' as const, text: 'gradient' }, { v: 'particle' as const, text: 'particle' }, { v: 'matrix' as const, text: 'dot matrix' }]} />
         <Row label="texture" value={f.shimmer} onPick={f.setShimmer}
           options={[{ v: true, text: 'on (default)' }, { v: false, text: 'off' }]} />
         {/* round 74: live Calm Sea tuning — turn these knobs on the running build */}
         <Slider label="wave amp" value={f.waveAmp} min={0.05} max={0.7} step={0.01} onChange={f.setWaveAmp} />
         <Slider label="tex dens" value={f.texDens} min={0} max={1} step={0.05} onChange={f.setTexDens} />
         <Slider label="tex bright" value={f.texBright} min={0} max={0.25} step={0.01} onChange={f.setTexBright} />
+        {/* round 76: dot-matrix lattice controls */}
+        <Slider label="dot size" value={f.dotSize} min={1} max={7} step={0.5} onChange={f.setDotSize} />
+        <Slider label="dot space" value={f.dotSpace} min={10} max={44} step={1} onChange={f.setDotSpace} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs
             feeding the shader (dev only; no on-screen label in default mode) */}
         <div style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>

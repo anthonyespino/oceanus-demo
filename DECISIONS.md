@@ -125,6 +125,22 @@ originals.*
     thesis. Severity dominance held (Meridian gold). Perf: GPU-only fragment field
     (no per-node DOM/SVG, no per-frame allocation); sustained ~70 fps on the board
     (gate 60) — headroom above the floor; density tunable via the slider.
+  - **Fourth treatment — DOT MATRIX added (round 76)**: a regular receding lattice
+    of small WHITE dots. The lattice placement is FIXED; the WAVE is the vertical
+    DISPLACEMENT of the dots (crests push them up + brighter, troughs settle), so
+    the pattern emerges from the grid deforming, not from dot placement.
+    Perspective recession — larger/sparser dots in the foreground, smaller/denser
+    toward the back — but NO horizon line and NO sky: the lattice dissolves into
+    haze at the top (depth, not seascape — same rule as the gradient). White/low-
+    opacity = a faint MEASURED lattice, kept SUBORDINATE (severity out-reads;
+    deliberately quieter than the blue reference). Wave FREQUENCY is bound to the
+    fleet/vessel delta (u_freq, round 50) — more delta = different cadence
+    rippling through the grid; greyscale, so the data shows in motion not colour.
+    Dev sliders reused + dot-size / dot-spacing controls added. Reasoning: a
+    regular sampled lattice reads as the sea being measured at fixed points — the
+    strongest expression of "the instrument reports the calm," the waves literally
+    displacing the samples. Perf: GPU-only (neighbor-searched rows, no per-node
+    DOM), sustained ~71 fps on the board (gate 60); density tunable via sliders.
 - **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
   and the layout-mode toggle retired. Audit found there were never two structural
   layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its

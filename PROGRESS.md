@@ -1,3 +1,36 @@
+# PROGRESS — 2026-06-13 (Session 65: ROUND 76 — Calm Sea DOT MATRIX (fourth mode))
+
+## Done
+- **DOT MATRIX** added as a fourth selectable WATER MODE (gradient | particle |
+  dot matrix) — not a replacement.
+- A regular receding lattice of small WHITE dots. **Waves = vertical DISPLACEMENT
+  of the dots** (crests push up + brighter, troughs settle); the lattice placement
+  is fixed, the wave is the deformation. **Perspective recession** — larger/sparser
+  dots foreground, smaller/denser toward the back — with **NO horizon line and NO
+  sky**: fades into haze at the top (depth, not seascape). Rows neighbor-searched
+  so displaced dots still draw.
+- **White + subtle** (low opacity), kept in the subordinate band — quieter than
+  the blue reference, severity out-reads.
+- **Wave FREQUENCY bound to fleet/vessel delta** (`u_freq` in the phase, round 50)
+  — more delta → different cadence; greyscale, so the data shows in motion.
+- Dev sliders reused + **dot size** and **dot spacing** sliders added.
+
+## Verify (running build, `docs/screens/r76-matrix-board.png`)
+- Fourth selectable mode; white greyscale subtle lattice; waves from dot
+  displacement not placement; recession present with no horizon/no sky (haze fade).
+- Severity dominates (Meridian gold over the faint lattice).
+- **FPS ~71** on the board (gate 60) — GPU-only fragment lattice (no thousands of
+  DOM/SVG nodes), no per-frame allocation; density tunable via sliders.
+- Reduced-motion freezes the lattice (canvas paints one frame; canvas key includes
+  waterMode so the mode mounts a fresh ctx); expert-off + toggle-off inherit
+  governance. Background z-order/scope unchanged; cards untouched (glass/shadow cut).
+
+## Note
+The lattice is intentionally subtle per the brief; the dot-size/spacing/brightness
+sliders let it be dialed louder on pixels without another round.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 64: ROUND 75 — Calm Sea PARTICLE FIELD (third mode))
 
 ## Held (pending Anthony)
