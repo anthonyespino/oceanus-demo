@@ -135,6 +135,8 @@ export function DevPanel() {
           options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
+        <Row label="shimmer" value={f.shimmer} onPick={f.setShimmer}
+          options={[{ v: false, text: 'off (default)' }, { v: true, text: 'on' }]} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs
             feeding the shader (dev only; no on-screen label in default mode) */}
         <div style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>

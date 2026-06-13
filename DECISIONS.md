@@ -80,6 +80,20 @@ originals.*
     (±1/255 — invisible, NOT grain) prevents 8-bit gradient banding on high-DPI.
     Crests still ~0.24 grey (severity out-reads); greyscale + round-50 binding
     intact; cheaper than the noise field (sustained ~97 fps, no regression).
+  - **Fine particle shimmer added as an OPTIONAL toggle (round 72)**: a dev-panel
+    toggle SHIMMER OFF (default) / ON. This is NOT the retired round-62 coarse
+    grain — it is FINE: value-noise sampled in SCREEN space at ~2.4px cells
+    (sub-pixel-scale at 1×, smoothly interpolated so no blocks/aliasing), drifting
+    so it twinkles like light on water, hard-gated to sparse glints that ride the
+    wave crests and concentrate in the near foreground. It rides ON the round-67
+    gradient (added to luminance, never replaces it). Greyscale only; low
+    amplitude so it stays in the wave luminance band (severity still out-reads);
+    intensity dataset-bound to the same delta as the waves (fleet-mean /
+    single-vessel, round 50). Off by default so the smooth version is the
+    baseline. Perf: a uniform-coherent branch (free when off); sustained ~120 fps
+    in BOTH states on the board (gate was 60), no particle reduction needed.
+    Reduced-motion and expert-off kill it with the waves (it only runs inside the
+    live shader). Cards untouched (flat-matte; glass/shadow permanently cut).
 - **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
   and the layout-mode toggle retired. Audit found there were never two structural
   layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its

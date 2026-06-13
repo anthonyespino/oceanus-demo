@@ -36,6 +36,14 @@ const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`
 // Amplitude/cadence still bound to the dataset (round 50). Premultiplied alpha.
 const FRAG = `precision mediump float;
 uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
+uniform float u_shimmer; // round 72: 0 = smooth gradient only · 1 = + fine shimmer
+float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float vnoise(vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash(i), b = hash(i + vec2(1.0,0.0)), c = hash(i + vec2(0.0,1.0)), d = hash(i + vec2(1.0,1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
 void main(){
   vec2 uv = gl_FragCoord.xy / u_res.xy;
   float v = uv.y;
@@ -50,6 +58,23 @@ void main(){
   // depth gradient floor: darker near the bottom → lighter haze higher up
   float depthLum = mix(0.05, 0.17, smoothstep(0.0, 0.92, v));
   float lum = depthLum + wave * 0.20;
+  // ROUND 72 — optional FINE particle shimmer (off by default). Rides ON the
+  // gradient (added to lum, never replaces it). FINE, not the coarse round-62
+  // grain: value-noise sampled in SCREEN space at ~2.4px cells (sub-pixel-scale
+  // at 1×, smoothly interpolated so no blocks/aliasing), drifting so it twinkles
+  // like light catching the water. Two soft octaves, hard-gated to sparse glints
+  // that ride the wave CRESTS and concentrate in the near foreground; intensity
+  // is dataset-bound (u_amp) so it expresses the same signal at finer grain.
+  // Low amplitude — stays in the wave luminance band so severity out-reads it.
+  if (u_shimmer > 0.5) {
+    vec2 sp = gl_FragCoord.xy / 2.4;
+    float sh = vnoise(sp + vec2(drift * 2.0, u_time * 0.9)) * 0.55
+             + vnoise(sp * 1.9 - u_time * 0.7) * 0.45;
+    float crest = smoothstep(-0.02, 0.12, wave);            // light on the wave tops
+    float near  = exp(-depth * 0.45);                        // denser in the foreground
+    float bind  = 0.45 + 0.55 * clamp(u_amp / 1.3, 0.0, 1.0); // same signal as the waves
+    lum += smoothstep(0.66, 0.97, sh) * crest * near * bind * 0.06;
+  }
   // sub-LSB ordered dither — defeats 8-bit gradient banding, no visible texture
   float dith = (fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
   lum = clamp(lum + dith, 0.0, 1.0);
@@ -67,7 +92,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export function AmbientSea() {
-  const { fleet, ambientSea } = useFleet();
+  const { fleet, ambientSea, shimmer } = useFleet();
   const { expertOn } = useLearn();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -75,10 +100,10 @@ export function AmbientSea() {
   const [reduced, setReduced] = useState(false);
 
   // live inputs in a ref so the rAF loop reads them without re-subscribing
-  const inputs = useRef({ amp: 0.4, freq: 1 });
+  const inputs = useRef({ amp: 0.4, freq: 1, shimmer: 0 });
   const { scope, vesselId } = waterScope(pathname);
   const target = waterInputs(fleet ?? null, scope, vesselId);
-  useEffect(() => { inputs.current = { amp: target.amp, freq: target.freq }; }, [target.amp, target.freq]);
+  useEffect(() => { inputs.current = { amp: target.amp, freq: target.freq, shimmer: shimmer ? 1 : 0 }; }, [target.amp, target.freq, shimmer]);
 
   const on = ambientSea && !expertOn;
 
@@ -117,6 +142,7 @@ export function AmbientSea() {
     const uTime = gl.getUniformLocation(prog, 'u_time');
     const uAmp = gl.getUniformLocation(prog, 'u_amp');
     const uFreq = gl.getUniformLocation(prog, 'u_freq');
+    const uShimmer = gl.getUniformLocation(prog, 'u_shimmer');
 
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const resize = () => {
@@ -143,6 +169,7 @@ export function AmbientSea() {
       gl.uniform1f(uTime, (performance.now() - t0) / 1000);
       gl.uniform1f(uAmp, amp);
       gl.uniform1f(uFreq, freq);
+      gl.uniform1f(uShimmer, inputs.current.shimmer); // round 72: toggle (uniform branch, cheap when off)
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       raf = requestAnimationFrame(frame);
     };

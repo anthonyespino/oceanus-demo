@@ -58,6 +58,8 @@ interface FleetContextValue {
   setScenario: (id: string) => void;
   ambientSea: boolean; // round 46: Calm Sea ambient wave (default on)
   setAmbientSea: (b: boolean) => void;
+  shimmer: boolean; // round 72: fine particle shimmer over the waves (default OFF)
+  setShimmer: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -91,6 +93,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [scenario, setScenario] = useState('demo');
   const [ambientSea, setAmbientSea] = useState(true); // round 46: default on
+  const [shimmer, setShimmer] = useState(false); // round 72: fine shimmer, OFF by default
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -143,7 +146,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         ikbBand, setIkbBand,
         stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
-        collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
+        collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}

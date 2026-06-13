@@ -1,3 +1,36 @@
+# PROGRESS — 2026-06-13 (Session 61: ROUND 72-B — Calm Sea fine particle shimmer (toggle))
+
+## Done
+- **Fine shimmer added behind a dev toggle: SHIMMER OFF (default) / ON.** Rides
+  ON the round-67 smooth gradient (added to luminance, gradient stays underneath).
+- **FINE, not the round-62 coarse grain:** value-noise in SCREEN space at ~2.4px
+  cells (sub-pixel-scale at 1×, smoothly interpolated → no blocks/aliasing), two
+  soft octaves drifting so it twinkles, hard-gated (`smoothstep 0.66–0.97`) to
+  sparse glints that ride the wave crests and concentrate in the near foreground.
+- **Greyscale**, low amplitude (max +0.06 lum) so it stays in the wave band —
+  severity still out-reads. **Dataset-bound**: intensity scales with `u_amp` (the
+  same fleet-mean / single-vessel delta the waves use, round 50).
+- GPU-only, no per-frame allocations; the toggle is a uniform-coherent branch
+  (free when off, keeps the round-67 baseline intact).
+
+## Verify (running build)
+- Toggle present, **OFF by default** (confirmed: default load is the smooth
+  gradient). Off vs on crops differ — shimmer engages: `docs/screens/r72-shimmer-
+  off.png` (smooth) vs `r72-shimmer-on.png` (fine speckle on the gradient).
+- **Reads fine, not chunky at 1×** (sparse grey glints, not blocks).
+- **FPS — both states well above the 60 gate:** OFF ~121 (121/121/121), ON ~120
+  (120/121/121). No particle reduction needed.
+- Greyscale; severity (gold Meridian) dominates; rides on the gradient (doesn't
+  replace it). Reduced-motion → static still (no shimmer, frozen); expert-off →
+  canvas null (shimmer dies with the waves) — both by construction (shimmer only
+  runs inside the live shader). Cards untouched (flat-matte; glass/shadow cut).
+
+## Scope
+`AmbientSea.tsx` (shader + uniform), `FleetProvider.tsx` (shimmer state),
+`DevPanel.tsx` (toggle row). No card treatment touched.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 60: ROUND 71 / 72-A — consequence sort completed)
 
 ## Audit (round-21 comparator, before changing)
