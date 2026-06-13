@@ -473,22 +473,22 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary line · zero axis
   - BINDS — {daily_delta_1y[-30d]}
 - `endurance.glyph`
-  - TOKENS — slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance
+  - TOKENS — glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance
   - BINDS — endurance
 - `endurance.value.text`
-  - TOKENS — font/data 12 tabular · right-aligned
+  - TOKENS — font/data 14 tabular · ink/primary · centered under its glyph (round 63)
   - BINDS — {derived.endurance_hours} h
 - `footer / deviation.fill`
   - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
   - BINDS — {|derived.efficiency_delta_pct|}
 - `name.text`
-  - TOKENS — type/name · font/display caps · status tint when alerted (earned)
+  - TOKENS — type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63)
   - BINDS — {vessel.static.name}
 - `now.glyph`
-  - TOKENS — slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline
+  - TOKENS — glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline
   - BINDS — now vs mode baseline
 - `now.value.text`
-  - TOKENS — font/data 12 tabular · right-aligned
+  - TOKENS — font/data 14 tabular · ink/primary · centered under its glyph (round 63)
   - BINDS — {derived.efficiency_delta_pct} vs mode baseline
 - `spark.baseline.line`
   - TOKENS — line/subtle 1px · zero axis
@@ -497,16 +497,16 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary 1px polyline · the 24h signature
   - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
 - `spark.container`
-  - TOKENS — full card width, fixed height, every size — the 24h signature dock (round 39)
+  - TOKENS — full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63)
   - BINDS — —
 - `status.line`
-  - TOKENS — severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot)
+  - TOKENS — severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57)
   - BINDS — {vesselStatus(alerts)}
 - `trend.glyph`
-  - TOKENS — slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend
+  - TOKENS — glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend
   - BINDS — 30d trend
 - `trend.value.text`
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T20:03:24.899Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T20:12:15.900Z*

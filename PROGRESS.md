@@ -1,3 +1,49 @@
+# PROGRESS — 2026-06-13 (Session 54: ROUND 63 — VesselTile, match Figma layout, rulings held)
+
+Pulled Anthony's Figma VesselTile (node 11:68, 511×533) via the read-only bridge
+(`get_metadata` for coords + `get_screenshot` for the render, saved
+`docs/screens/r63-figma-mock.png`) and matched the layout.
+
+## Done — layout/structure only
+- **Three fill regions, separated by borderless fill-STEPS (no strokes):** a
+  lighter HEADER band (name, generous air above/below), the darker BODY (tile
+  base), and a lighter SPARK band. Header + spark = `surface/overlay` (#232323);
+  body = `surface/raised` (#181818). The header/body seam is the fill step; the
+  round-57/61 `status.line` rides that seam as the severity edge (untouched).
+- **Primary value:** category glyph (calendar) centered ABOVE the deviation %,
+  established value anatomy (tinted only when alert-backed, ✓ on nominal automotive).
+- **Footer is now TWO-COLUMN** (was right-stacked): endurance glyph + hours LEFT,
+  clock glyph + now-% RIGHT, glyph-above-value, even baseline, balanced gutters.
+- **Sparkline full-width in its own fill band, NO stroke frame.** Added an opt-in
+  `framed` prop to `Sparkline` (defaults true → every other caller unchanged); the
+  tile passes `framed={false}` so separation is the fill band alone, not a border.
+- **Glyphs sized to the mock** (calendar 26 / wave 24 / clock 22, up from ~13 —
+  the "too small" complaint) and **neutral-inked** (white UI ink, not dim grey);
+  glyphs are not status carriers here.
+
+## Two mock properties deliberately NOT replicated (logged in DECISIONS)
+1. **Rounded corners** — RADIUS stays 1px (round 36 sharp-corners holds).
+2. **Divider / frame strokes** — converted to fill-step separation (round 37
+   outlines-reserved-for-severity holds).
+Principle logged: Figma is layout authority; standing rulings override individual
+mock choices that conflict.
+
+## Verify
+TSC-OK · LINT-CLEAN · `npm run verify` ALL CHECKS PASSED · offline build compiled
+(atlas 137 leaves / 25 glyphs / 3 drawn — names unchanged). Screenshots:
+`docs/screens/r63-tile-standard.png` (standard tile = faithful to the mock),
+`r63-tile.png` (expanded), `r63-board.png` (15-tile board). Header has air;
+header/body + spark separated by fill-steps not strokes; value+glyph centered;
+footer two-column (endurance left / clock right); spark full-width in its own fill
+region, no frame; corners 1px sharp; glyphs legible + neutral.
+
+## Scope held
+Touched only `VesselTile.tsx` and an additive `framed` prop on `Sparkline.tsx`
+(default preserves all other callers). Did NOT touch the round-61 meter strip
+behavior or severity-placement toggle, Calm Sea (round 62), or any sort.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 53: ROUND 62 — Calm Sea, raise presence: light + texture + motion)
 
 ## Done

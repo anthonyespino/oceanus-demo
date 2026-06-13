@@ -6,6 +6,7 @@ export function Sparkline({
   width = 120,
   height = 24,
   zeroBaseline = true, // false: auto-range for series that never approach 0 (e.g. EGT)
+  framed = true, // round 63: VesselTile drops the svg frame — separation is a fill band, not a stroke
   layerSvg, // round 47: optional layer() leaf for the svg (e.g. VesselTile spark.chart)
   layerBaseline, // round 47: optional layer() leaf for the zero baseline line
 }: {
@@ -13,6 +14,7 @@ export function Sparkline({
   width?: number;
   height?: number;
   zeroBaseline?: boolean;
+  framed?: boolean;
   layerSvg?: Record<string, string>;
   layerBaseline?: Record<string, string>;
 }) {
@@ -24,7 +26,7 @@ export function Sparkline({
   const y = (v: number) => height - ((v - min) / span) * height;
   const points = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   return (
-    <svg {...layerSvg} width={width} height={height} style={{ border: '1px solid var(--color-line-subtle)', verticalAlign: 'middle' }}>
+    <svg {...layerSvg} width={width} height={height} style={{ border: framed ? '1px solid var(--color-line-subtle)' : 'none', verticalAlign: 'middle' }}>
       {zeroBaseline && <line {...layerBaseline} x1={0} y1={y(0)} x2={width} y2={y(0)} stroke="var(--color-line-subtle)" strokeWidth={1} />}
       <polyline points={points} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1} />
     </svg>

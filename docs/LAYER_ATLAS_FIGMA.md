@@ -238,19 +238,19 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: body
     • trendChart.chart  → ink/secondary line · zero axis · {daily_delta_1y[-30d]}
   Region: (root)
-    • endurance.glyph  → slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance · endurance
-    • endurance.value.text  → font/data 12 tabular · right-aligned · {derived.endurance_hours} h
+    • endurance.glyph  → glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance · endurance
+    • endurance.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.endurance_hours} h
   Region: footer
     • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
   Region: (root)
-    • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
-    • now.glyph  → slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline · now vs mode baseline
-    • now.value.text  → font/data 12 tabular · right-aligned · {derived.efficiency_delta_pct} vs mode baseline
+    • name.text  → type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63) · {vessel.static.name}
+    • now.glyph  → glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline · now vs mode baseline
+    • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
     • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
-    • spark.container  → full card width, fixed height, every size — the 24h signature dock (round 39) · —
-    • status.line  → severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot) · {vesselStatus(alerts)}
-    • trend.glyph  → slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend · 30d trend
+    • spark.container  → full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63) · —
+    • status.line  → severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57) · {vesselStatus(alerts)}
+    • trend.glyph  → glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend · 30d trend
     • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
 ## Glyph library (icon components)
@@ -284,4 +284,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:03:24.900Z*
+*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:12:15.901Z*

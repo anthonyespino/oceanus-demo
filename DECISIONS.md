@@ -116,6 +116,24 @@ originals.*
   that is a failure of the state, flagged in PROGRESS, not a preference. Nominal
   shows no color anywhere in any state (the automotive nominal affirmation lives
   on the trend ✓, ruling unaffected).
+- **VesselTile layout matched to the Figma mock (round 63)**: header gets
+  generous air; primary value carries its category glyph (calendar) centered
+  above it; the footer is two-column (endurance glyph + hours LEFT, clock glyph +
+  now-% RIGHT, glyph-above-value, even baseline) replacing the old right-stacked
+  rows; the sparkline docks full-width in its own fill region. Glyphs sized to the
+  mock (calendar 26 / wave 24 / clock 22, up from ~13) and **neutral-inked**
+  (white UI ink, not the dim placeholder grey) — glyphs are not status carriers
+  here. **Two mock properties deliberately NOT replicated, by ruling:**
+  - **Rounded corners → NOT replicated.** RADIUS stays 1px (round 36 sharp-corners
+    holds; not defensible to overturn for one mock).
+  - **Divider / frame strokes → converted to filled-surface separation.** The
+    header/body seam and the sparkline frame are rendered as borderless fill-STEPS
+    (header + spark bands step one surface value lighter than the body), never
+    drawn lines — outlines-reserved-for-severity (round 37) holds. The round-57/61
+    `status.line` still rides the header/body seam as the severity edge (its
+    behavior untouched).
+  - **Principle:** Figma is the design authority for LAYOUT; standing rulings
+    override individual mock choices that conflict with them.
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

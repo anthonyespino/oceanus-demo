@@ -94,8 +94,8 @@ export function VesselTile({
         color: NEUTRAL.ink,
         border: `1px solid ${borderColor}`,
         borderRadius: RADIUS,
-        background: NEUTRAL.surface,
-        padding: 'var(--pad-card)',
+        background: NEUTRAL.surface, // body fill; header + spark bands step lighter
+        padding: 0, // round 63: per-region padding so header/spark bands full-bleed
         height: '100%',
         boxSizing: 'border-box',
         position: 'relative',
@@ -120,91 +120,96 @@ export function VesselTile({
           </button>
         </span>
       )}
-      {/* header block: fixed. Round 47: trend is glyph + value (the "30D
-          TREND" text label dropped, matching the round-39 endurance/now
-          treatment — glyph carries identity, title teaches it). */}
-      {/* round 57: status.dot → status.line (Figma source of truth). Severity
-          as an integrated edge line under the name — annunciator-strip read,
-          unifying the status border and indicator into one gesture. Mode chip
-          dropped from the tile (no mode.glyph here anymore). trend/now/
-          endurance slots wired to their library glyphs (calendar/clock/wave),
-          rendering placeholder until the drawn SVGs import. */}
-      <div style={{ textAlign: 'center' }}>
-        <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned)', '{vessel.static.name}')} style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
-        <div {...layer('VesselTile / status.line', 'severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot)', '{vesselStatus(alerts)}')} style={{ height: 2, width: '100%', background: edgeColor, margin: '8px 0' }} />
-        <div title="30-day trend" style={{ marginTop: 6, display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
-          <span {...layer('VesselTile / trend.glyph', 'slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="calendar" size={14} /></span>
-          <span {...layer('VesselTile / trend.value.text', 'type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: mini ? 24 : 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-            {fmtPct(d.trend_30d)}
-            {treatment === 'automotive' && status === 'nominal' && (
-              <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>
-            )}
-          </span>
+      {/* ROUND 63 — layout matched to Anthony's Figma VesselTile. THREE fill
+          regions separated by borderless fill-STEPS, never strokes (outlines
+          stay reserved for severity): a lighter HEADER band (name, generous
+          air), the darker BODY (centered glyph-above-value + two-column
+          footer), and a lighter SPARK band (24h signature in its own region).
+          status.line is BOTH the header/body seam and the round-57/61 severity
+          edge. Rounded corners in the mock are NOT replicated — RADIUS stays
+          1px (round 36). Glyphs sized to the mock and neutral-inked (white). */}
+      {/* HEADER band — lighter fill-step, name with room above and below */}
+      <div style={{ background: 'var(--color-surface-overlay)', padding: mini ? '12px 14px' : '20px 14px', textAlign: 'center' }}>
+        <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63)', '{vessel.static.name}')} style={{ ...TYPE.name, fontSize: mini ? 18 : 24, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+      </div>
+      {/* SEAM = the fill step above; this full-bleed line is the round-57/61
+          severity edge (behavior untouched, governed by severity placement) */}
+      <div {...layer('VesselTile / status.line', 'severity as an integrated edge line + header/body seam · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57)', '{vesselStatus(alerts)}')} style={{ height: 2, width: '100%', background: edgeColor }} />
+      {/* BODY — darker fill (tile base shows through); centered glyph-above-
+          value at top, two-column footer pinned to the base (round 63 mock) */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, padding: mini ? '10px 14px' : '16px 14px' }}>
+        {/* primary value: category glyph (calendar) centered ABOVE the value */}
+        <div style={{ textAlign: 'center' }}>
+          <div title="30-day trend" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
+            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={mini ? 20 : 26} /></span>
+            <span {...layer('VesselTile / trend.value.text', 'type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: mini ? 24 : 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+              {fmtPct(d.trend_30d)}
+              {treatment === 'automotive' && status === 'nominal' && (
+                <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>
+              )}
+            </span>
+          </div>
+        </div>
+        {/* round 33: the alert badge concept is retired — border + name tint
+            ARE the badge; full alert lines appear only at 2x */}
+        {/* expanded: the chart absorbs the void — flex-grow, plot scales */}
+        {tier === 2 && (
+          <div {...layer('VesselTile / body / trendChart.chart', 'ink/secondary line · zero axis', '{daily_delta_1y[-30d]}')} style={{ flex: 1, minHeight: 96, marginTop: 12 }}>
+            <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
+          </div>
+        )}
+        {/* 2x: alerts in full text — the tile's reason for being big */}
+        {tier === 2 && fullAlerts.length > 0 && (
+          <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 11, lineHeight: 1.6 }}>
+            {fullAlerts.map((a, i) => (
+              <div key={i} {...layer('VesselTile / alert.line', 'tag = severity color · message ink/secondary (round 33 grammar) · 2x only', '{alerts[] level + message}')} style={{ color: NEUTRAL.inkSecondary }}>
+                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
+              </div>
+            ))}
+          </div>
+        )}
+        {tier === 2 && (
+          <div style={{ marginTop: 12, display: 'flex', gap: 24, justifyContent: 'center', textAlign: 'left' }}>
+            <Stat label="endurance" value={`${d.endurance_hours} h`} />
+            <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
+          </div>
+        )}
+        {tier === 2 && (
+          <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkSecondary }}>
+            <Field level="fleet" field="burn_rate_gph" revealed>
+              <span>burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}</span>
+            </Field>
+          </div>
+        )}
+        {/* TWO-COLUMN footer (standard only): endurance LEFT, now RIGHT — glyph
+            ABOVE value, centered columns, even baseline, balanced gutters,
+            pinned to the body's base (round 63, replaces the right-stacked rows) */}
+        {tier === 1 && !mini && (
+          <div style={{ marginTop: 'auto', paddingTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <span {...layer('VesselTile / endurance.glyph', 'glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance', 'endurance')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="wave" size={24} /></span>
+              <span {...layer('VesselTile / endurance.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.endurance_hours} h')} style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <span {...layer('VesselTile / now.glyph', 'glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline', 'now vs mode baseline')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="clock" size={22} /></span>
+              <span {...layer('VesselTile / now.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* deviation meter strip (round 61 — behavior UNTOUCHED): sits just above
+          the spark band, padded so it never reads as part of that fill band */}
+      <div {...layer('VesselTile / footer / deviation.fill', 'meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance', '{|derived.efficiency_delta_pct|}')} style={{ padding: '0 14px 6px' }}>
+        <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
+          <div style={{ height: '100%', width: `${Math.round(devFrac * 100)}%`, background: stripFill, borderRadius: RADIUS }} />
         </div>
       </div>
-      {/* round 33: the alert badge concept is retired — border + dot + name
-          tint ARE the badge; full alert lines appear only at 2x */}
-      {/* expanded: the chart absorbs the void — flex-grow, plot scales */}
-      {tier === 2 && (
-        <div {...layer('VesselTile / body / trendChart.chart', 'ink/secondary line · zero axis', '{daily_delta_1y[-30d]}')} style={{ flex: 1, minHeight: 96, marginTop: 10 }}>
-          <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
-        </div>
-      )}
-      {/* 2x: alerts in full text — the tile's reason for being big */}
-      {tier === 2 && fullAlerts.length > 0 && (
-        <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 11, lineHeight: 1.6 }}>
-          {/* round 33 grammar: one severity voice per line — the tag */}
-          {fullAlerts.map((a, i) => (
-            <div key={i} {...layer('VesselTile / alert.line', 'tag = severity color · message ink/secondary (round 33 grammar) · 2x only', '{alerts[] level + message}')} style={{ color: NEUTRAL.inkSecondary }}>
-              <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
-            </div>
-          ))}
-        </div>
-      )}
-      {tier === 2 && (
-        <div style={{ marginTop: 10, display: 'flex', gap: 24, justifyContent: 'center', textAlign: 'left' }}>
-          <Stat label="endurance" value={`${d.endurance_hours} h`} />
-          <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
-        </div>
-      )}
-      {tier === 2 && (
-        <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkSecondary }}>
-          <Field level="fleet" field="burn_rate_gph" revealed>
-            <span>burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}</span>
-          </Field>
-        </div>
-      )}
-      {/* round 39 label diet: glyph + numeral, fixed glyph column so the
-          numerals align down the board */}
-      {tier === 1 && !mini && (
-        <div style={{ marginTop: 10, textAlign: 'left' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-            <span {...layer('VesselTile / endurance.glyph', 'slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance', 'endurance')} style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="wave" size={13} /></span>
-            <span {...layer('VesselTile / endurance.value.text', 'font/data 12 tabular · right-aligned', '{derived.endurance_hours} h')} style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginTop: 2 }}>
-            <span {...layer('VesselTile / now.glyph', 'slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline', 'now vs mode baseline')} style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="clock" size={13} /></span>
-            <span {...layer('VesselTile / now.value.text', 'font/data 12 tabular · right-aligned', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
-          </div>
-        </div>
-      )}
-      {/* round 39: the 24h signature docks at the bottom edge — full card
-          width, fixed height, every size; the 2x trend chart stays the
-          elastic element */}
-      <div style={{ marginTop: 'auto', paddingTop: 8 }}>
-        {/* round 61: the meter strip is the SOLE expand affordance (⚖14) — it
-            carries affordance AND information (a chevron carries only
-            affordance). It meters efficiency-deviation magnitude (fill ∝ |Δ|)
-            at every size, and tints with status color only when alert-backed
-            AND severity placement routes color to the strip; neutral otherwise. */}
-        <div {...layer('VesselTile / footer / deviation.fill', 'meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance', '{|derived.efficiency_delta_pct|}')} style={{ paddingBottom: 6 }}>
-          <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
-            <div style={{ height: '100%', width: `${Math.round(devFrac * 100)}%`, background: stripFill, borderRadius: RADIUS }} />
-          </div>
-        </div>
-        <div ref={sparkRef} {...layer('VesselTile / spark.container', 'full card width, fixed height, every size — the 24h signature dock (round 39)', '—')}>
+      {/* SPARK band — its OWN lighter fill-step region, NO stroke frame (round
+          63 mock item 6); the 24h signature docks full-width, every size */}
+      <div style={{ background: 'var(--color-surface-overlay)', padding: '6px 10px' }}>
+        <div ref={sparkRef} {...layer('VesselTile / spark.container', 'full card width in its own lighter fill band (no stroke frame) — the 24h signature dock (round 39 / round 63)', '—')}>
           <Sparkline
-            values={d.sparkline_24h} width={sparkW} height={20}
+            values={d.sparkline_24h} width={sparkW} height={20} framed={false}
             layerSvg={layer('VesselTile / spark.chart', 'ink/secondary 1px polyline · the 24h signature', '{derived.sparkline_24h — hourly efficiency_delta}')}
             layerBaseline={layer('VesselTile / spark.baseline.line', 'line/subtle 1px · zero axis', 'y = 0')}
           />
