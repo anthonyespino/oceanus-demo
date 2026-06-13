@@ -56,6 +56,21 @@ originals.*
     under prefers-reduced-motion and on WebGL fallback (never the old paper-wave),
     paused when hidden, settings toggle (default on). DEMO MERIDIAN seed
     untouched; the scenario library drives the deltas, this changes expression.
+  - **Subordinate-luminance rule REVISED (round 62)**: the round-50 rule
+    "brightest water below the dimmest UI surface" was too conservative — it made
+    the layer effectively invisible. **An ambient layer that can't be seen is a
+    failure, not subordination.** The rule is replaced by **"severity must
+    out-read the waves"**: water luminance, texture, and motion are raised (crests
+    now bleed to ~0.24 grey, two-octave value-noise grain, drift doubled) until
+    the field is unmistakably present and moving — but an alerted element's status
+    color must remain the most attention-commanding thing on screen. Verified: on
+    the 15-tile board with one CAUTION vessel, Meridian's gold border + name + the
+    amber census still dominate the brighter waves by a wide margin (crests at
+    0.24 grey vs a chromatic alert color — no pullback needed; ceiling not
+    reached). **Retained hard constraints: greyscale only (R=G=B, zero chroma,
+    grey/white light bleed permitted) and severity-dominance.** Justified because
+    the layer is operator-dismissible (toggle / expert-off / reduced-motion all
+    intact) — agency licenses the increased presence. Binding (round 50) unchanged.
 - **CommandBand center stack is full-glyph in DEFAULT mode (round 52)**: category
   words drop wherever a glyph carries the category — master line = `crew.glyph` +
   name (no "master" word), place line = `anchor.glyph` + place. Clock stays text

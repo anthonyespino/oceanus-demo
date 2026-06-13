@@ -1,3 +1,58 @@
+# PROGRESS — 2026-06-13 (Session 53: ROUND 62 — Calm Sea, raise presence: light + texture + motion)
+
+## Done
+- **Luminance raised.** The old [0.066, 0.085] floor (held below surface/raised
+  #181818) made the layer invisible. New band: trough ~0.07, crests bleed to
+  ~0.24 grey. Greyscale only (R=G=B), grey/white light bleed permitted, zero
+  chroma — navy stays chart-only.
+- **Texture added.** Two-octave value-noise grain (hash-based, drifting,
+  sharpened with `pow`, depth-compressed via `exp(-depth*0.5)`) gives resolved,
+  granular, visibly-moving point structure instead of a vague gradient. Reads as
+  detailed water near the bottom, dissolving with distance.
+- **Motion legibility up.** Drift doubled (0.25 → 0.5) and the grain animates, so
+  movement is obvious at a glance, not subliminal. Amplitude/cadence still bound
+  to the dataset (round 50 binding untouched — only the visible expression changed).
+- Static-still fallback (reduced-motion / no-WebGL) luminance raised to match
+  (0.07/0.03 → 0.18/0.09 grey), still greyscale, no layout shift.
+
+## Verify / reported numbers
+- **Visible + moving in default state: YES** (`docs/screens/r62-sea-fleet.png`,
+  `r62-sea-vessel.png`) — granular grey water clearly present in the margins.
+- **Greyscale only, no chroma in the field: YES** (mix of pure greys 0.07→0.24).
+- **Severity still out-reads — ceiling reported:** crests land at **0.24 grey**.
+  On the 15-tile board with one CAUTION vessel, Meridian's gold border + gold
+  name + the amber "2 CAUTION" census dominate the brighter waves by a wide
+  margin (greyscale vs chromatic). **No pullback required; the ceiling was not
+  reached** — could go brighter, 0.24 chosen as a comfortable presence/dominance
+  balance.
+- **Framerate: 120 fps** (measured over 2s, fullscreen triangle, dpr capped 1.5).
+  The grain is two cheap hash-noise octaves per pixel — no meaningful cost.
+- **Off-ramps intact (unchanged):** operator toggle (default on), off in expert
+  mode (E), frozen static still under prefers-reduced-motion, paused when hidden.
+- **Per-context binding intact:** fleet → |mean delta|; vessel page rebinds to
+  the inspected vessel (verified on Meridian, larger swells).
+
+## ⚠ FLAG — the brief's "three water treatments" and "glass" do not exist in this branch
+The brief asked to raise "across all three water treatments (SUBORDINATE / MID /
+REFERENCE)" and referenced a "glass toggle (round 59 amendment)." **Neither
+exists in the code on `layout-probe`.** There is ONE Calm Sea shader, no
+treatment selector, no glass surface. Checked: **git log goes 58 → 61 → 62 — and
+rounds 59 and 60 never landed on this branch** (no glass, no round-60 work
+committed; the "ranked by sustained deviation" label predates round 60). I raised
+the single existing Calm Sea layer (the actual complaint — it was invisible) and
+did NOT invent a 3-treatment system or a glass surface, since that would be
+building ahead of briefs (59/60) I haven't received. **Questions for Anthony:**
+(1) Do rounds 59 (glass) and 60 (consequence sort) still need building, and in
+what order? (2) Should SUBORDINATE / MID / REFERENCE become a real water-treatment
+toggle, or were those conceptual luminance tiers for this single layer? Until
+then, "brighter waves through glass" could not be tested — no glass to test.
+
+## Scope held
+Only `AmbientSea.tsx` touched. No VesselTile / meter-strip / severity-placement /
+scenario / sort changes.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 52: ROUND 61 — VesselTile, resolve ⚖14 to meter strip + severity placement toggle)
 
 ## Done
