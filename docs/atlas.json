@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T18:14:27.130Z",
+  "generated": "2026-06-13T18:25:34.457Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1083,30 +1083,21 @@
       "file": "src/components/VesselSynoptic.tsx"
     },
     {
-      "path": "VesselTile / body / alert.text",
+      "path": "VesselTile / alert.line",
       "component": "VesselTile",
-      "region": "body",
-      "leaf": "alert.text",
-      "tokens": "tag = severity color · message ink/secondary (round 33 grammar)",
+      "region": "(root)",
+      "leaf": "alert.line",
+      "tokens": "tag = severity color · message ink/secondary (round 33 grammar) · 2x only",
       "binds": "{alerts[] level + message}",
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / body / delta.glyph",
+      "path": "VesselTile / bg.shape",
       "component": "VesselTile",
-      "region": "body",
-      "leaf": "delta.glyph",
-      "tokens": "glyph/delta 13px ink/muted left · numeral tabular right (label died round 39)",
-      "binds": "{derived.efficiency_delta_pct} vs mode baseline",
-      "file": "src/components/VesselTile.tsx"
-    },
-    {
-      "path": "VesselTile / body / endurance.glyph",
-      "component": "VesselTile",
-      "region": "body",
-      "leaf": "endurance.glyph",
-      "tokens": "glyph/fuel-drop 13px ink/muted left · numeral tabular right (label died round 39)",
-      "binds": "{derived.endurance_hours} h",
+      "region": "(root)",
+      "leaf": "bg.shape",
+      "tokens": "surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal",
+      "binds": "{vesselStatus(alerts)} drives border tint · {derived.mode}",
       "file": "src/components/VesselTile.tsx"
     },
     {
@@ -1119,6 +1110,24 @@
       "file": "src/components/VesselTile.tsx"
     },
     {
+      "path": "VesselTile / endurance.glyph",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "endurance.glyph",
+      "tokens": "glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39)",
+      "binds": "endurance",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / endurance.value.text",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "endurance.value.text",
+      "tokens": "font/data 12 tabular · right-aligned",
+      "binds": "{derived.endurance_hours} h",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
       "path": "VesselTile / footer / fuel.fill",
       "component": "VesselTile",
       "region": "footer",
@@ -1128,57 +1137,93 @@
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / footer / spark24.chart",
+      "path": "VesselTile / mode.glyph",
       "component": "VesselTile",
-      "region": "footer",
-      "leaf": "spark24.chart",
-      "tokens": "ink/secondary 1px · zero axis · full card width, fixed 20px — the 24h signature (round 39)",
-      "binds": "{derived.sparkline_24h — hourly efficiency_delta}",
-      "file": "src/components/VesselTile.tsx"
-    },
-    {
-      "path": "VesselTile / frame / border.status",
-      "component": "VesselTile",
-      "region": "frame",
-      "leaf": "border.status",
-      "tokens": "hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar)",
-      "binds": "{vesselStatus(alerts)} · {derived.mode}",
-      "file": "src/components/VesselTile.tsx"
-    },
-    {
-      "path": "VesselTile / header / dot.status",
-      "component": "VesselTile",
-      "region": "header",
-      "leaf": "dot.status",
-      "tokens": "status color | ink/muted when nominal (treatment B)",
-      "binds": "{vesselStatus(alerts)}",
-      "file": "src/components/VesselTile.tsx"
-    },
-    {
-      "path": "VesselTile / header / mode.glyph",
-      "component": "VesselTile",
-      "region": "header",
+      "region": "(root)",
       "leaf": "mode.glyph",
       "tokens": "line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name",
       "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / header / name.text",
+      "path": "VesselTile / name.text",
       "component": "VesselTile",
-      "region": "header",
+      "region": "(root)",
       "leaf": "name.text",
       "tokens": "type/name · font/display caps · status tint when alerted (earned)",
       "binds": "{vessel.static.name}",
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / header / trend.text",
+      "path": "VesselTile / now.glyph",
       "component": "VesselTile",
-      "region": "header",
-      "leaf": "trend.text",
-      "tokens": "type/hero · font/data tabular · status tint (earned)",
-      "binds": "{derived.trend_30d} %/30d",
+      "region": "(root)",
+      "leaf": "now.glyph",
+      "tokens": "glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39)",
+      "binds": "now vs mode baseline",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / now.value.text",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "now.value.text",
+      "tokens": "font/data 12 tabular · right-aligned",
+      "binds": "{derived.efficiency_delta_pct} vs mode baseline",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / spark.baseline.line",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "spark.baseline.line",
+      "tokens": "line/subtle 1px · zero axis",
+      "binds": "y = 0",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / spark.chart",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "spark.chart",
+      "tokens": "ink/secondary 1px polyline · the 24h signature",
+      "binds": "{derived.sparkline_24h — hourly efficiency_delta}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / spark.container",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "spark.container",
+      "tokens": "full card width, fixed height, every size — the 24h signature dock (round 39)",
+      "binds": "—",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / status.dot",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "status.dot",
+      "tokens": "status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile",
+      "binds": "{vesselStatus(alerts)}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / trend.glyph",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "trend.glyph",
+      "tokens": "glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped)",
+      "binds": "30d trend",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / trend.value.text",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "trend.value.text",
+      "tokens": "type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal",
+      "binds": "{derived.trend_30d} %/30d — the primary board signal (ruling 13)",
       "file": "src/components/VesselTile.tsx"
     }
   ]

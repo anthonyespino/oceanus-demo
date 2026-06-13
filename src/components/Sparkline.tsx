@@ -6,11 +6,15 @@ export function Sparkline({
   width = 120,
   height = 24,
   zeroBaseline = true, // false: auto-range for series that never approach 0 (e.g. EGT)
+  layerSvg, // round 47: optional layer() leaf for the svg (e.g. VesselTile spark.chart)
+  layerBaseline, // round 47: optional layer() leaf for the zero baseline line
 }: {
   values: number[];
   width?: number;
   height?: number;
   zeroBaseline?: boolean;
+  layerSvg?: Record<string, string>;
+  layerBaseline?: Record<string, string>;
 }) {
   if (values.length < 2) return null;
   const min = zeroBaseline ? Math.min(...values, 0) : Math.min(...values);
@@ -20,8 +24,8 @@ export function Sparkline({
   const y = (v: number) => height - ((v - min) / span) * height;
   const points = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   return (
-    <svg width={width} height={height} style={{ border: '1px solid var(--color-line-subtle)', verticalAlign: 'middle' }}>
-      {zeroBaseline && <line x1={0} y1={y(0)} x2={width} y2={y(0)} stroke="var(--color-line-subtle)" strokeWidth={1} />}
+    <svg {...layerSvg} width={width} height={height} style={{ border: '1px solid var(--color-line-subtle)', verticalAlign: 'middle' }}>
+      {zeroBaseline && <line {...layerBaseline} x1={0} y1={y(0)} x2={width} y2={y(0)} stroke="var(--color-line-subtle)" strokeWidth={1} />}
       <polyline points={points} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1} />
     </svg>
   );

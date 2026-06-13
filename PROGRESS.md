@@ -1,3 +1,34 @@
+# PROGRESS — 2026-06-13 (Session 43: ROUND 47 — VesselTile inference + glyph import)
+
+## Done
+
+1. **VesselTile fully instrumented** to Anthony's flat rename list: `bg.shape`, `status.dot`, `name.text`, `trend.glyph`, `trend.value.text`, `mode.glyph`, `endurance.glyph`, `endurance.value.text`, `now.glyph`, `now.value.text`, `spark.container`, `spark.chart`, `spark.baseline.line`, `alert.line` (+ secondary `body/trendChart.chart`, `footer/fuel.fill` for 2x/meter). Trend became glyph + value (the "30D TREND" text label dropped — matches round 39's endurance/now treatment; `chart.trend` glyph + title carries identity). Endurance/now rows split into glyph + value leaves. Sparkline gained `layerSvg`/`layerBaseline` props so the tile's `spark.chart` + `spark.baseline.line` bind without polluting the shared primitive. 136 leaves.
+2. **Borderless discipline confirmed** (round 37): `bg.shape` has no border at rest, status border only for watch/degraded. Verified in `r47-tile.png` — Meridian's amber border is the only outline.
+3. **Glyph import pipeline**: `docs/glyphs-import/{name}.svg` → `scripts/glyphs.ts` (prebuild, before atlas) → `src/components/glyphs.generated.ts`; the `Glyph` primitive prefers a drawn glyph over its placeholder, drop-in (names already match, no atlas regen). Folder README + CLAUDE.md documented. Currently 0 imported (placeholders in use).
+4. **Inference mode** documented in CLAUDE.md: one VesselTile instance = canonical; the build already maps it over 15 vessels + size variants from the data layer.
+
+## First real round-trip — `scrape VesselTile` (read-only, nothing applied)
+
+Anthony has renamed his Figma layers to the atlas convention. VesselTile frame `11:68`:
+
+**Auto-binds (10/14 core leaves):** `bg.shape`, `name.text`, `trend.value.text`, `trend.glyph`, `endurance.glyph`, `endurance.value.text`, `now.value.text`, `spark.container`, `spark.chart`, `spark.baseline.line` — exact name matches.
+
+**Unrecognized (2):**
+- `Frame 1` (17:3) — default name, sits exactly where `now.glyph` belongs (x≈384, y≈355). Rename to `now.glyph` → binds.
+- `status.line` (10:4) — a 0-height divider under the name; no atlas leaf by that name. Noted, no binding yet (see design question below).
+
+**In the atlas, absent from his tile:** `status.dot` (he drew `status.line`, a divider, instead of a dot) and `mode.glyph` (no mode chip in his instance). Design questions, not errors.
+
+**Bonus:** his `FleetHealthBand` (11:195) and `header` (10:5) frames are also renamed toward the atlas — though FleetHealthBand uses flat `degraded.value.text` / `burn.value.text` etc. where the atlas has `census / degraded.status` / `burn / value.text`. Slight divergence; FleetHealthBand wasn't this round's scrape target.
+
+## Questions for Anthony
+
+- **Status indicator:** your tile has `status.line` (a divider under the name) where the build has `status.dot` (a colored dot). Is status meant to read via the name tint + `bg.shape` border alone (drop the dot), or do you want the dot? If the divider is intentional, I'll add a `status.line` leaf.
+- **Mode glyph:** your VesselTile has no `mode.glyph` — drop the mode chip from the tile, or is it just not drawn yet?
+- One unnamed layer: rename `Frame 1` → `now.glyph` and the tile binds 11/14.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 42: ROUND 46 — Calm Sea)
 
 ## Done

@@ -457,38 +457,53 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 *source: src/components/VesselTile.tsx*
 
-- `body / alert.text`
-  - TOKENS — tag = severity color · message ink/secondary (round 33 grammar)
+- `alert.line`
+  - TOKENS — tag = severity color · message ink/secondary (round 33 grammar) · 2x only
   - BINDS — {alerts[] level + message}
-- `body / delta.glyph`
-  - TOKENS — glyph/delta 13px ink/muted left · numeral tabular right (label died round 39)
-  - BINDS — {derived.efficiency_delta_pct} vs mode baseline
-- `body / endurance.glyph`
-  - TOKENS — glyph/fuel-drop 13px ink/muted left · numeral tabular right (label died round 39)
-  - BINDS — {derived.endurance_hours} h
+- `bg.shape`
+  - TOKENS — surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal
+  - BINDS — {vesselStatus(alerts)} drives border tint · {derived.mode}
 - `body / trendChart.chart`
   - TOKENS — ink/secondary line · zero axis
   - BINDS — {daily_delta_1y[-30d]}
+- `endurance.glyph`
+  - TOKENS — glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39)
+  - BINDS — endurance
+- `endurance.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned
+  - BINDS — {derived.endurance_hours} h
 - `footer / fuel.fill`
   - TOKENS — ink/muted fill | alert color when endurance-backed · surface/overlay track
   - BINDS — {Σ tank level / Σ capacity}
-- `footer / spark24.chart`
-  - TOKENS — ink/secondary 1px · zero axis · full card width, fixed 20px — the 24h signature (round 39)
-  - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
-- `frame / border.status`
-  - TOKENS — hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar)
-  - BINDS — {vesselStatus(alerts)} · {derived.mode}
-- `header / dot.status`
-  - TOKENS — status color | ink/muted when nominal (treatment B)
-  - BINDS — {vesselStatus(alerts)}
-- `header / mode.glyph`
+- `mode.glyph`
   - TOKENS — line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name
   - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
-- `header / name.text`
+- `name.text`
   - TOKENS — type/name · font/display caps · status tint when alerted (earned)
   - BINDS — {vessel.static.name}
-- `header / trend.text`
-  - TOKENS — type/hero · font/data tabular · status tint (earned)
-  - BINDS — {derived.trend_30d} %/30d
+- `now.glyph`
+  - TOKENS — glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39)
+  - BINDS — now vs mode baseline
+- `now.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned
+  - BINDS — {derived.efficiency_delta_pct} vs mode baseline
+- `spark.baseline.line`
+  - TOKENS — line/subtle 1px · zero axis
+  - BINDS — y = 0
+- `spark.chart`
+  - TOKENS — ink/secondary 1px polyline · the 24h signature
+  - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
+- `spark.container`
+  - TOKENS — full card width, fixed height, every size — the 24h signature dock (round 39)
+  - BINDS — —
+- `status.dot`
+  - TOKENS — status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile
+  - BINDS — {vesselStatus(alerts)}
+- `trend.glyph`
+  - TOKENS — glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped)
+  - BINDS — 30d trend
+- `trend.value.text`
+  - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
+  - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*131 instrumented leaves · 19 components · generated 2026-06-13T18:14:27.129Z*
+*136 instrumented leaves · 19 components · generated 2026-06-13T18:25:34.456Z*

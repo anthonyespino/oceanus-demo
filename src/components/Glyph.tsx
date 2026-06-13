@@ -7,6 +7,7 @@
 
 import { gb } from './gb';
 import { useLearn } from '../learn/LearnProvider'; // LEARN/EXPERT MODE — strip before demo week
+import { IMPORTED_GLYPHS } from './glyphs.generated'; // round 47: Anthony's drawn glyphs (drop-in)
 
 export type GlyphName =
   | 'vessel' | 'engine' | 'tank' | 'fuel-drop' | 'wind' | 'wave' | 'anchor'
@@ -72,6 +73,16 @@ export const MODE_GLYPH: Record<string, GlyphName> = {
 };
 
 export function Glyph({ name, size = 14, color = 'currentColor' }: { name: GlyphName; size?: number; color?: string }) {
+  // round 47: prefer Anthony's drawn glyph (docs/glyphs-import/{name}.svg →
+  // glyphs.generated.ts) when present; else the placeholder path set. His
+  // exports should use a 24px artboard and currentColor so size/tint inherit.
+  const imported = IMPORTED_GLYPHS[name];
+  if (imported) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" style={{ verticalAlign: '-2px', flexShrink: 0, color }} aria-hidden
+        dangerouslySetInnerHTML={{ __html: imported }} />
+    );
+  }
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" style={{ verticalAlign: '-2px', flexShrink: 0 }} aria-hidden>
       {PATHS[name].map((d, i) => (

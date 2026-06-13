@@ -230,20 +230,26 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
 ## VesselTile
 
+  Region: (root)
+    • alert.line  → tag = severity color · message ink/secondary (round 33 grammar) · 2x only · {alerts[] level + message}
+    • bg.shape  → surface/raised fill · NO border at rest (round 37); status border ONLY for watch/degraded · 45% dim when idle nominal · {vesselStatus(alerts)} drives border tint · {derived.mode}
   Region: body
-    • alert.text  → tag = severity color · message ink/secondary (round 33 grammar) · {alerts[] level + message}
-    • delta.glyph  → glyph/delta 13px ink/muted left · numeral tabular right (label died round 39) · {derived.efficiency_delta_pct} vs mode baseline
-    • endurance.glyph  → glyph/fuel-drop 13px ink/muted left · numeral tabular right (label died round 39) · {derived.endurance_hours} h
     • trendChart.chart  → ink/secondary line · zero axis · {daily_delta_1y[-30d]}
+  Region: (root)
+    • endurance.glyph  → glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39) · endurance
+    • endurance.value.text  → font/data 12 tabular · right-aligned · {derived.endurance_hours} h
   Region: footer
     • fuel.fill  → ink/muted fill | alert color when endurance-backed · surface/overlay track · {Σ tank level / Σ capacity}
-    • spark24.chart  → ink/secondary 1px · zero axis · full card width, fixed 20px — the 24h signature (round 39) · {derived.sparkline_24h — hourly efficiency_delta}
-  Region: frame
-    • border.status  → hairline | status border when alerted · 45% dim when idle nominal (round 26 grammar) · {vesselStatus(alerts)} · {derived.mode}
-  Region: header
-    • dot.status  → status color | ink/muted when nominal (treatment B) · {vesselStatus(alerts)}
+  Region: (root)
     • mode.glyph  → line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
-    • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
+    • now.glyph  → glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39) · now vs mode baseline
+    • now.value.text  → font/data 12 tabular · right-aligned · {derived.efficiency_delta_pct} vs mode baseline
+    • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
+    • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
+    • spark.container  → full card width, fixed height, every size — the 24h signature dock (round 39) · —
+    • status.dot  → status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile · {vesselStatus(alerts)}
+    • trend.glyph  → glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped) · 30d trend
+    • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*131 leaves · 19 components · generated 2026-06-13T18:14:27.130Z*
+*136 leaves · 19 components · generated 2026-06-13T18:25:34.457Z*
