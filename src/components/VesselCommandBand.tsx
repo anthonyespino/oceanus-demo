@@ -93,10 +93,13 @@ const LOG_MAX = Math.log10(2400);
 /** Round 34: weather rides the mission clock's line — glyph + value + unit,
     no labels (they self-describe at this size). */
 function WxInline({ g, value, attrs }: { g: GlyphName; value: string; attrs?: Record<string, string> }) {
+  // round 53: bumped 14→15 for legibility WITHIN the environment-context
+  // register — still well below the clock (hero×0.6) and the gauges; not
+  // promoted to hero (wind/waves are nominal + already feed Calm Sea)
   return (
-    <span {...attrs} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-      <Glyph name={g} size={14} color={NEUTRAL.inkSecondary} />
-      <span style={{ fontFamily: FONT.data, fontSize: 14, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
+    <span {...attrs} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+      <Glyph name={g} size={15} color={NEUTRAL.inkSecondary} />
+      <span style={{ fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
     </span>
   );
 }
@@ -247,20 +250,25 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <StatusHeader />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)', flexWrap: 'wrap', marginTop: 6 }}>
-          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / speed.chart', 'Gauge primitive · 96px', '{position.speed_over_ground_kn} / max {cruise×1.35}')}>
-            <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
-          </div>
-          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / burn.chart', 'Gauge primitive · 96px', '{derived.burn_rate_gph} / max observed 1y')}>
-            <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
-              display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
+        {/* round 53: three balanced masses (left cluster · center · right
+            cluster) centered with equal gutters — clusters pulled inward, no
+            flex:1 greed, the air between them killed */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 44, flexWrap: 'wrap', marginTop: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / speed.chart', 'Gauge primitive · 96px', '{position.speed_over_ground_kn} / max {cruise×1.35}')}>
+              <Gauge size={96} label="speed" value={sog} min={0} max={speedMax} display={`${sog.toFixed(1)} kn`} vital={aliveVital} />
+            </div>
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / burn.chart', 'Gauge primitive · 96px', '{derived.burn_rate_gph} / max observed 1y')}>
+              <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
+                display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
+            </div>
           </div>
           {/* broadcast center (round 52): full-glyph default — category words
               die, glyph prefixes carry the category; text values stay. Each
               register gets its own row with breathing room (gap 12); no line
               carries a stroke (the mode chip's box is the one allowed mode
               affordance — severity is the only other outline). */}
-          <div style={{ flex: 1, minWidth: 240, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+          <div style={{ minWidth: 200, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
             <div {...layer('VesselCommandBand / centerStack / name.text', 'type/hero · font/display caps · ink/primary', '{vessel.static.name}')} style={nameStyle}>{vessel.static.name}</div>
             {/* round 52: master line — crew.glyph (slot, placeholder until drawn)
                 + name; "master" word dropped, no box, no tooltip */}
@@ -287,11 +295,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </Field>
               }
             >
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+              {/* round 53: loosen this densest line — clock dominant, wind/waves
+                  trail as context; each clears its neighbor */}
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 26, flexWrap: 'wrap' }}>
                 <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · white when still (ruling 14)', '{T−(eta−now) in transit | elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
                   {clock}
                 </span>
-                <span style={{ display: 'inline-flex', gap: 14, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
+                <span style={{ display: 'inline-flex', gap: 18, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
                   <Field level="vessel" field="weather.wind">
                     <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 14 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wind_speed_kn} kn')} />
                   </Field>
@@ -302,15 +312,17 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               </div>
             </RevealZone>
           </div>
-          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / effDelta.chart', 'Gauge primitive · caution band ≥+8 (alert-backed)', '{derived.efficiency_delta_pct} vs mode baseline')}>
-            <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
-              display={`${d.efficiency_delta_pct > 0 ? '+' : ''}${d.efficiency_delta_pct.toFixed(1)}%`} vital={effVital} minMaxLabels={['-20', '+20']}
-              band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
-          </div>
-          <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / endurance.chart', 'Gauge primitive · log dial · caution band <72h (alert-backed)', '{derived.endurance_hours}')}>
-            <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
-              display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
-              band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / effDelta.chart', 'Gauge primitive · caution band ≥+8 (alert-backed)', '{derived.efficiency_delta_pct} vs mode baseline')}>
+              <Gauge size={96} label="eff Δ" value={d.efficiency_delta_pct} min={-20} max={20}
+                display={`${d.efficiency_delta_pct > 0 ? '+' : ''}${d.efficiency_delta_pct.toFixed(1)}%`} vital={effVital} minMaxLabels={['-20', '+20']}
+                band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
+            </div>
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / endurance.chart', 'Gauge primitive · log dial · caution band <72h (alert-backed)', '{derived.endurance_hours}')}>
+              <Gauge size={96} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
+                display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
+                band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
+            </div>
           </div>
         </div>
       </section>

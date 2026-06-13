@@ -1,3 +1,20 @@
+# PROGRESS — 2026-06-13 (Session 47: ROUND 53 — CommandBand harmony, tighten + re-pad)
+
+## Done
+
+1. **Three balanced masses, equal gutters** — the center stack lost `flex:1`; speed/burn (left), center stack, effΔ/endurance (right) are wrapped clusters laid out `justifyContent:center, gap:44`, so the gutters left- and right-of-center are equal and the clusters pull inward (dead air killed) instead of pinning to the edges with a floating middle.
+2. **Clock line loosened** — gap 16→26 (clock↔weather) and 14→18 (wind↔waves); the clock stays dominant (hero×0.6), wind/waves trail as context, each clears its neighbor.
+3. **Wind/waves legibility within register** — 14→15px (glyph + value), NOT promoted to hero: nominal data that already feeds Calm Sea, so rendering large double-counts. Below the clock and far below the gauges.
+4. **Center-stack spacing held** (round 52 gap:12), centering true. Consequence hierarchy unchanged — effΔ amber arc + endurance keep weight, CAUTION header untouched, no nominal element gained weight.
+
+## Note
+
+- **Round 51 (UI-font toggle) is not in this branch** — I never received a round-51 brief, so the "four font-candidate states" can't be exercised here. The rebalanced row uses `flex` + `flexWrap` + `justifyContent:center`, which reflows gracefully and wraps rather than breaking, so it's font-width-robust at the shipped face (Barlow); flag for when the font toggle lands.
+
+Screenshot `r53-band.png` (Meridian): clusters inward, equal gutters, loosened clock line, amber effΔ intact.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 46: ROUND 52 — CommandBand center stack glyph swap + spacing)
 
 ## Done

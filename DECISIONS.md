@@ -64,6 +64,14 @@ originals.*
   fallback (drawn art arrives via the scrape). **OPEN THREAD**: Expert mode's job
   needs re-earning — it can no longer be "glyphs replace labels" alone now that
   default absorbs that. No verdict on Expert's new definition yet.
+- **CommandBand primary row rebalanced (round 53)**: the center stack lost its
+  `flex:1` greed; left cluster (speed/burn), center stack, right cluster
+  (effΔ/endurance) are three masses centered with EQUAL gutters (44px each side),
+  clusters pulled inward, dead air killed. Mission-clock line loosened (clock
+  dominant; wind/waves trail). Wind/waves held at environment-context scale
+  (15px, bumped from 14 for legibility only), NOT promoted to hero — nominal data
+  that already feeds Calm Sea, so rendering large would double-count the signal.
+  Consequence hierarchy unchanged; nothing nominal gained weight.
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was
