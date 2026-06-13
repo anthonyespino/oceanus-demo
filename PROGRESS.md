@@ -1,3 +1,48 @@
+# PROGRESS — 2026-06-13 (Session 52: ROUND 61 — VesselTile, resolve ⚖14 to meter strip + severity placement toggle)
+
+## Done
+- **⚖ #14 resolved → the micro-meter strip is the SOLE expand affordance.** The
+  `revealStyle` dev toggle (chevron / meter) and the chevron-vs-reveal options
+  are removed as artifacts. Reason logged in DECISIONS: a meter strip carries
+  affordance AND information; a chevron carries only affordance. `RevealZone`
+  (the inspector reveal primitive) keeps a plain silent chevron — the meter
+  belonged to the tile, not that primitive — and no longer depends on fleet state.
+- **The strip now meters efficiency-deviation magnitude** (fill ∝ |Δ|, full
+  scale ±20%), replacing the old fuel/endurance meter. It tints with status
+  color only when alert-backed (value-tinted-only-when-alert-backed, gauge
+  anatomy); nominal vessels show a neutral greyscale fill. The strip always
+  meters deviation regardless of where color lives — never purely decorative.
+- **New SEVERITY PLACEMENT dev toggle (D panel): edge / strip / both.** EDGE
+  (default/current): status.line edge carries severity, strip neutral/data-only.
+  STRIP: color on the strip, edge neutral. BOTH: redundant on both. Color
+  placement is the ONLY variable — status semantics and the deviation metering
+  are untouched in all three states. Atlas leaf renamed `footer/fuel.fill` →
+  `footer/deviation.fill` (regenerated; 137 leaves, 25 glyphs / 3 drawn).
+
+## Unmissability check (the gate) — PASS in all three states, STRIP-only does NOT fail
+On the 15-tile board with one CAUTION vessel (Meridian), the alerted tile
+out-reads in EDGE, STRIP, and BOTH. Verified by screenshot
+(`docs/screens/r61-severity-{edge,strip,both}.png`). **Why STRIP-only survives**
+despite the strip being thinner than the edge: the severity-placement toggle
+governs only the status.line and the strip, but the alerted tile ALSO carries
+two placement-independent severity channels — the round-37 amber tile **border**
+(outline-means-severity) and the amber **name tint**. So Meridian reads as gold
+border + gold name in every state; in STRIP mode only the under-name status.line
+goes neutral. **No ceiling reached, no pullback needed** — severity has redundant
+channels beyond the toggle. (If a future round removes the tile border or name
+tint, STRIP-only would become the at-risk state the brief anticipated.)
+
+## Verify
+TSC-OK · LINT-CLEAN · `npm run verify` ALL CHECKS PASSED · offline build compiled.
+Chevron+reveal gone; meter strip is the only affordance; strip fills by |Δ|;
+strip tints only when alert-backed; nominal shows no color in any state; toggle
+cycles edge/strip/both; color placement is the only variable changed.
+
+## Scope held
+Did not touch Calm Sea, scenario library, consequence sort, or status thresholds.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 51: ROUND 58 — bridge diagnostic, DIAGNOSIS ONLY)
 
 No styling changes, no DECISIONS change. (Repo also moved this session: `~/Documents/oceanus-demo` → `~/dev/oceanus-demo`.) Three findings:

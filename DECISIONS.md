@@ -80,6 +80,27 @@ originals.*
   keyboard +/- keep the full mini↔standard↔expanded range, auto-promotion stays
   off (round 26). Does NOT resolve **⚖ #14** (chevron vs micro-meter reveal
   affordance) — that style debate is unrelated and stays open.
+- **⚖ #14 RESOLVED — meter strip is the sole expand affordance (round 61)**:
+  the chevron and reveal-style affordance options are dropped as artifacts. The
+  micro-meter strip wins. Reasoning: **a meter strip carries affordance AND
+  information; a chevron carries only affordance.** The `revealStyle` dev toggle
+  is removed; `RevealZone` keeps a plain silent chevron for inspector reveals
+  (the meter belonged to the tile, not that primitive). The strip now **meters
+  efficiency-deviation magnitude** (fill ∝ |Δ|, ±20% full scale) and tints with
+  status color **only when alert-backed** (value-tinted-only-when-alert-backed,
+  same anatomy as the gauges); nominal vessels show a neutral greyscale fill.
+  The strip is never purely decorative — it always carries the deviation read.
+- **Severity placement (edge / strip / both) — UNDER EVALUATION (round 61), no
+  verdict**: a dev toggle moves WHERE the alert color renders. EDGE (current):
+  status.line edge carries severity, strip neutral/data-only. STRIP: color on
+  the strip, edge neutral. BOTH: redundant signal on both. **Color placement is
+  the only variable** — the strip meters deviation in all three states, and the
+  status semantics (what counts as CAUTION/alerted) are untouched. The gate is
+  **unmissability**: an alerted tile must out-read across a 15-tile board in
+  every state; if STRIP-only (the thinner surface) lets a CAUTION tile hide,
+  that is a failure of the state, flagged in PROGRESS, not a preference. Nominal
+  shows no color anywhere in any state (the automotive nominal affirmation lives
+  on the trend ✓, ruling unaffected).
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

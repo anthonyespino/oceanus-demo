@@ -241,7 +241,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • endurance.glyph  → slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance · endurance
     • endurance.value.text  → font/data 12 tabular · right-aligned · {derived.endurance_hours} h
   Region: footer
-    • fuel.fill  → ink/muted fill | alert color when endurance-backed · surface/overlay track · {Σ tank level / Σ capacity}
+    • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
   Region: (root)
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • now.glyph  → slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline · now vs mode baseline
@@ -249,7 +249,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
     • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
     • spark.container  → full card width, fixed height, every size — the 24h signature dock (round 39) · —
-    • status.line  → severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot) · {vesselStatus(alerts)}
+    • status.line  → severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot) · {vesselStatus(alerts)}
     • trend.glyph  → slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend · 30d trend
     • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
@@ -284,4 +284,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T19:29:15.256Z*
+*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T19:59:30.961Z*

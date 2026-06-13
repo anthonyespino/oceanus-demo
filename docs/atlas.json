@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T19:29:15.256Z",
+  "generated": "2026-06-13T19:59:30.961Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1146,12 +1146,12 @@
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / footer / fuel.fill",
+      "path": "VesselTile / footer / deviation.fill",
       "component": "VesselTile",
       "region": "footer",
-      "leaf": "fuel.fill",
-      "tokens": "ink/muted fill | alert color when endurance-backed · surface/overlay track",
-      "binds": "{Σ tank level / Σ capacity}",
+      "leaf": "deviation.fill",
+      "tokens": "meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance",
+      "binds": "{|derived.efficiency_delta_pct|}",
       "file": "src/components/VesselTile.tsx"
     },
     {
@@ -1213,7 +1213,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "status.line",
-      "tokens": "severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot)",
+      "tokens": "severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot)",
       "binds": "{vesselStatus(alerts)}",
       "file": "src/components/VesselTile.tsx"
     },

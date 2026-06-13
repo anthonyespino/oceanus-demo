@@ -478,9 +478,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `endurance.value.text`
   - TOKENS — font/data 12 tabular · right-aligned
   - BINDS — {derived.endurance_hours} h
-- `footer / fuel.fill`
-  - TOKENS — ink/muted fill | alert color when endurance-backed · surface/overlay track
-  - BINDS — {Σ tank level / Σ capacity}
+- `footer / deviation.fill`
+  - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
+  - BINDS — {|derived.efficiency_delta_pct|}
 - `name.text`
   - TOKENS — type/name · font/display caps · status tint when alerted (earned)
   - BINDS — {vessel.static.name}
@@ -500,7 +500,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — full card width, fixed height, every size — the 24h signature dock (round 39)
   - BINDS — —
 - `status.line`
-  - TOKENS — severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot)
+  - TOKENS — severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot)
   - BINDS — {vesselStatus(alerts)}
 - `trend.glyph`
   - TOKENS — slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend
@@ -509,4 +509,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T19:29:15.255Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T19:59:30.959Z*

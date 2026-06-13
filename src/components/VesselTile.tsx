@@ -3,9 +3,12 @@
 // the size control appearing (round 17). No hover reveals; detail access is
 // click-only via mini → standard → expanded stepping. CONTEXTUAL fields
 // (burn, next port) render inside the EXPANDED layout — the expand click IS
-// the registry's one interaction. The round 14 meter affordance survives as
-// a passive endurance strip (no trigger). Status thresholds come from
-// vesselStatus() in the data layer; this file only paints.
+// the registry's one interaction. ROUND 61: the meter strip is the SOLE
+// expand affordance (round-14 ⚖ #14 resolved — chevron/reveal dropped). It
+// meters efficiency-deviation magnitude and tints with severity only when
+// alert-backed; the severity-placement dev toggle (edge/strip/both) decides
+// whether the alert color rides the status.line edge, the strip, or both.
+// Status thresholds come from vesselStatus() in the data layer; this paints.
 
 import Link from 'next/link';
 import type { VesselState } from '../data/types';
@@ -37,7 +40,7 @@ export function VesselTile({
   onSize: (s: TileSize) => void;
 }) {
   const d = vessel.derived;
-  const { motion, crossings, revealStyle } = useFleet();
+  const { motion, crossings, severityPlacement } = useFleet();
   const [hot, setHot] = useState(false); // hover/focus-within → show controls
   const [sparkRef, sparkW] = useContentWidth(180); // round 39: full-width bottom spark
   const status = vesselStatus(vessel.alerts);
@@ -48,7 +51,6 @@ export function VesselTile({
     if (next) onSize(next);
   };
   const colored = treatment === 'automotive' || status !== 'nominal';
-  const dotColor = colored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
   // Round 26: ONE border voice — rail grammar. Round 37 (fills, not
   // fences): the nominal hairline DIES — tiles are filled surfaces, and an
   // outline on the board now means severity, nothing else.
@@ -58,12 +60,20 @@ export function VesselTile({
   const tileDim = !alerted && !active && status === 'nominal';
   const fullAlerts = vessel.alerts.filter((a) => a.level !== 'ADVISORY');
 
-  const now = vessel.history.minutes.at(-1)!;
-  const fuelFrac = now.tanks.reduce((a, t) => a + t.level_gal, 0) / now.tanks.reduce((a, t) => a + t.capacity_gal, 0);
-  const enduranceAlert = vessel.alerts.find((a) => a.code === 'ENDURANCE' || a.code === 'BUNKER_SOON');
-  const meterColor = enduranceAlert
-    ? enduranceAlert.level === 'CAUTION' ? 'var(--color-alert-caution)' : 'var(--color-alert-advisory)'
-    : undefined;
+  // ROUND 61 — severity placement (⚖14 resolved). The status.line edge and the
+  // meter strip EACH may carry the alert color; the dev toggle decides which.
+  // Nominal tiles carry no severity color anywhere (neutral edge, neutral
+  // strip) — the automotive nominal affirmation lives on the trend ✓, not here.
+  const severe = status !== 'nominal';
+  const edgeColored = severe && (severityPlacement === 'edge' || severityPlacement === 'both');
+  const stripColored = severe && (severityPlacement === 'strip' || severityPlacement === 'both');
+  const edgeColor = edgeColored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
+  // The strip ALWAYS meters efficiency-deviation magnitude (fill ∝ |Δ|, full
+  // scale = ±20%), regardless of where color lives — it is never purely
+  // decorative. It tints only when alert-backed AND placement routes color to
+  // the strip; neutral data fill otherwise (same anatomy as the gauges).
+  const devFrac = Math.min(1, Math.abs(d.efficiency_delta_pct) / 20);
+  const stripFill = stripColored ? STATUS_COLOR[status] : NEUTRAL.inkMuted;
 
   return (
     <Link
@@ -121,7 +131,7 @@ export function VesselTile({
           rendering placeholder until the drawn SVGs import. */}
       <div style={{ textAlign: 'center' }}>
         <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned)', '{vessel.static.name}')} style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
-        <div {...layer('VesselTile / status.line', 'severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot)', '{vesselStatus(alerts)}')} style={{ height: 2, width: '100%', background: dotColor, margin: '8px 0' }} />
+        <div {...layer('VesselTile / status.line', 'severity as an integrated edge line · status color when alert-backed + placement=edge/both, else ink/muted neutral (round 61) — the in-card status indicator (round 57, replaces the dot)', '{vesselStatus(alerts)}')} style={{ height: 2, width: '100%', background: edgeColor, margin: '8px 0' }} />
         <div title="30-day trend" style={{ marginTop: 6, display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
           <span {...layer('VesselTile / trend.glyph', 'slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="calendar" size={14} /></span>
           <span {...layer('VesselTile / trend.value.text', 'type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: mini ? 24 : 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
@@ -182,15 +192,16 @@ export function VesselTile({
           width, fixed height, every size; the 2x trend chart stays the
           elastic element */}
       <div style={{ marginTop: 'auto', paddingTop: 8 }}>
-        {/* round 18: passive endurance strip (meter variant) — indicator
-            only, not a trigger */}
-        {revealStyle === 'meter' && (
-          <div {...layer('VesselTile / footer / fuel.fill', 'ink/muted fill | alert color when endurance-backed · surface/overlay track', '{Σ tank level / Σ capacity}')} style={{ paddingBottom: 6 }}>
-            <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
-              <div style={{ height: '100%', width: `${Math.round(fuelFrac * 100)}%`, background: meterColor ?? 'var(--color-ink-muted)', borderRadius: RADIUS }} />
-            </div>
+        {/* round 61: the meter strip is the SOLE expand affordance (⚖14) — it
+            carries affordance AND information (a chevron carries only
+            affordance). It meters efficiency-deviation magnitude (fill ∝ |Δ|)
+            at every size, and tints with status color only when alert-backed
+            AND severity placement routes color to the strip; neutral otherwise. */}
+        <div {...layer('VesselTile / footer / deviation.fill', 'meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance', '{|derived.efficiency_delta_pct|}')} style={{ paddingBottom: 6 }}>
+          <div style={{ height: 3, background: 'var(--color-surface-overlay)', borderRadius: RADIUS }}>
+            <div style={{ height: '100%', width: `${Math.round(devFrac * 100)}%`, background: stripFill, borderRadius: RADIUS }} />
           </div>
-        )}
+        </div>
         <div ref={sparkRef} {...layer('VesselTile / spark.container', 'full card width, fixed height, every size — the 24h signature dock (round 39)', '—')}>
           <Sparkline
             values={d.sparkline_24h} width={sparkW} height={20}
