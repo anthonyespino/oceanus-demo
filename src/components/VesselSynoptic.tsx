@@ -91,6 +91,23 @@ function engineTint(v: VesselState, engineId: string): string | null {
   return null;
 }
 
+// Round 42: per-tank value leaves as static literals so the atlas enumerates
+// each (a templated path wouldn't be captured). Named per the brief's
+// `tanks / {ID}.{pct|gal}.value.text`; the component stays VesselSynoptic to
+// match the barrel — the fuel card's frame in Figma can carry the same paths.
+// (Anthony's brief shorthand "FuelCard" → flag if the component should rename.)
+const TANK_LEAF: Record<string, { pct: Record<string, string>; gal: Record<string, string> }> = {
+  ST1: { pct: layer('VesselSynoptic / tanks / ST1.pct.value.text', 'font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint', '{ST1 level_pct}%'), gal: layer('VesselSynoptic / tanks / ST1.gal.value.text', 'font/data 12 tabular · ink/secondary · right-aligned subcolumn', '{ST1 level_gal} gal') },
+  ST2: { pct: layer('VesselSynoptic / tanks / ST2.pct.value.text', 'font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint', '{ST2 level_pct}%'), gal: layer('VesselSynoptic / tanks / ST2.gal.value.text', 'font/data 12 tabular · ink/secondary · right-aligned subcolumn', '{ST2 level_gal} gal') },
+  FD1: { pct: layer('VesselSynoptic / tanks / FD1.pct.value.text', 'font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint', '{FD1 level_pct}%'), gal: layer('VesselSynoptic / tanks / FD1.gal.value.text', 'font/data 12 tabular · ink/secondary · right-aligned subcolumn', '{FD1 level_gal} gal') },
+  FD2: { pct: layer('VesselSynoptic / tanks / FD2.pct.value.text', 'font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint', '{FD2 level_pct}%'), gal: layer('VesselSynoptic / tanks / FD2.gal.value.text', 'font/data 12 tabular · ink/secondary · right-aligned subcolumn', '{FD2 level_gal} gal') },
+};
+// fixed cell + subcolumn widths — sized from the worst case "100.0% · 99,999
+// gal" at this scale so cells never resize to their content
+const TANK_PCT_W = 52;
+const TANK_GAL_W = 84;
+const TANK_CELL_W = TANK_PCT_W + TANK_GAL_W + 16; // + separator/padding
+
 export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
   const [wrapRef, w] = useContentWidth(720);
   const h = (w * VB.h) / VB.w;
@@ -220,30 +237,38 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
             );
           })}
         </svg>
-        {/* round 30 composition (⚖ #11): dot-matrix tank quartet beneath the
-            synoptic — ST1 ST2 FD1 FD2, % + gal under each. Round 32:
-            centered, equal gutters — same width discipline as the cluster */}
-        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', marginTop: 'var(--pad-section)', justifyContent: 'center' }}>
+        {/* round 42: fixed 4-column grid — equal cell widths from the worst
+            case, cells never resize. Dot matrix top-aligned at a fixed origin;
+            value row pinned to the bottom, pct and gal in separate fixed
+            right-aligned subcolumns so the · separator and the digits/commas
+            stack vertically across all four tanks (no jitter on value change). */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(4, ${TANK_CELL_W}px)`, gap: 24, justifyContent: 'center', marginTop: 'var(--pad-section)' }}>
           {tankGeo.map((g, i) => {
             const t = tanks[i];
             const tint = tankTint(vessel, g.id);
             return (
-              <div key={g.id} style={{ textAlign: 'left' }}>
+              <div key={g.id} style={{ display: 'flex', flexDirection: 'column', minHeight: 132 }}>
                 <Field level="vessel" field="tank.type">
-                  <div {...layer('VesselSynoptic / quartet / label.text', 'gb.label micro-caps · TANK_LOW tint (earned)', '{tank.tank_id} {tank.type}')} style={{ ...gb.label, marginBottom: 4, ...(tint ? { color: tint } : {}) }}>
+                  <div {...layer('VesselSynoptic / tanks / label.text', 'gb.label micro-caps · TANK_LOW tint (earned)', '{tank.tank_id} {tank.type}')} style={{ ...gb.label, marginBottom: 4, ...(tint ? { color: tint } : {}) }}>
                     {g.id} {t.type}
                   </div>
                 </Field>
+                {/* dot matrix — fixed grid origin (top) */}
                 <Field level="vessel" field="tank.level_pct">
-                  <div {...layer('VesselSynoptic / quartet / fill.chart', 'dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)', '{tank.level_pct → filled dots}')}>
+                  <div {...layer('VesselSynoptic / tanks / fill.chart', 'dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)', '{tank.level_pct → filled dots}')}>
                     <DotMatrix pct={t.level_pct} tint={tint} />
                   </div>
                 </Field>
-                <Field level="vessel" field="tank.level_gal">
-                  <div {...layer('VesselSynoptic / quartet / value.text', 'font/data 12 tabular · gal ink/secondary', '{tank.level_pct}% · {tank.level_gal} gal')} style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>
-                    {t.level_pct}% · <span style={{ color: NEUTRAL.inkSecondary }}>{t.level_gal.toLocaleString()} gal</span>
-                  </div>
-                </Field>
+                {/* value row — pinned to the bottom; pct · gal in fixed subcolumns */}
+                <div style={{ marginTop: 'auto', paddingTop: 6, display: 'grid', gridTemplateColumns: `${TANK_PCT_W}px 12px ${TANK_GAL_W}px`, alignItems: 'baseline', fontFamily: FONT.data, fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
+                  <span {...TANK_LEAF[g.id].pct} style={{ textAlign: 'right', color: tint ?? NEUTRAL.ink }}>{t.level_pct}%</span>
+                  <span style={{ textAlign: 'center', color: NEUTRAL.inkMuted }}>·</span>
+                  <Field level="vessel" field="tank.level_gal">
+                    <span {...TANK_LEAF[g.id].gal} style={{ textAlign: 'right', color: NEUTRAL.inkSecondary, display: 'block' }}>
+                      {t.level_gal.toLocaleString()}<span style={{ color: NEUTRAL.inkMuted }}> gal</span>
+                    </span>
+                  </Field>
+                </div>
               </div>
             );
           })}

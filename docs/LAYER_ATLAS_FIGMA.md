@@ -167,12 +167,18 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • meter.shape  → surface/overlay · line/strong · 45° diamond · flow meter node
     • recon.chip  → border + text = recon severity (OK ink/secondary · advisory · watch) · {reconciliation.status · error_pct}
     • value.text  → font/data 11 · ink/primary · {flow_gps × 3600} gph
-  Region: quartet
-    • fill.chart  → dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won) · {tank.level_pct → filled dots}
-    • label.text  → gb.label micro-caps · TANK_LOW tint (earned) · {tank.tank_id} {tank.type}
-    • value.text  → font/data 12 tabular · gal ink/secondary · {tank.level_pct}% · {tank.level_gal} gal
   Region: tanks
+    • FD1.gal.value.text  → font/data 12 tabular · ink/secondary · right-aligned subcolumn · {FD1 level_gal} gal
+    • FD1.pct.value.text  → font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint · {FD1 level_pct}%
+    • FD2.gal.value.text  → font/data 12 tabular · ink/secondary · right-aligned subcolumn · {FD2 level_gal} gal
+    • FD2.pct.value.text  → font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint · {FD2 level_pct}%
+    • fill.chart  → dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won) · {tank.level_pct → filled dots}
     • fill.shape  → fill/level · bottom-up vertical (round 20) · {tank.level_pct}
+    • label.text  → gb.label micro-caps · TANK_LOW tint (earned) · {tank.tank_id} {tank.type}
+    • ST1.gal.value.text  → font/data 12 tabular · ink/secondary · right-aligned subcolumn · {ST1 level_gal} gal
+    • ST1.pct.value.text  → font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint · {ST1 level_pct}%
+    • ST2.gal.value.text  → font/data 12 tabular · ink/secondary · right-aligned subcolumn · {ST2 level_gal} gal
+    • ST2.pct.value.text  → font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint · {ST2 level_pct}%
     • tank.shape  → surface/base · line/strong | TANK_LOW tint (own alert only, round 20) · {tank.tank_id}
     • value.text  → font/data 11 · ink/primary | tint · {tank.level_pct}%
 
@@ -194,4 +200,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
 
-*109 leaves · 13 components · generated 2026-06-13T17:19:43.368Z*
+*116 leaves · 13 components · generated 2026-06-13T17:24:46.930Z*

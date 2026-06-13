@@ -341,18 +341,39 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `meter / value.text`
   - TOKENS — font/data 11 · ink/primary
   - BINDS — {flow_gps × 3600} gph
-- `quartet / fill.chart`
+- `tanks / FD1.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {FD1 level_gal} gal
+- `tanks / FD1.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {FD1 level_pct}%
+- `tanks / FD2.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {FD2 level_gal} gal
+- `tanks / FD2.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {FD2 level_pct}%
+- `tanks / fill.chart`
   - TOKENS — dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)
   - BINDS — {tank.level_pct → filled dots}
-- `quartet / label.text`
-  - TOKENS — gb.label micro-caps · TANK_LOW tint (earned)
-  - BINDS — {tank.tank_id} {tank.type}
-- `quartet / value.text`
-  - TOKENS — font/data 12 tabular · gal ink/secondary
-  - BINDS — {tank.level_pct}% · {tank.level_gal} gal
 - `tanks / fill.shape`
   - TOKENS — fill/level · bottom-up vertical (round 20)
   - BINDS — {tank.level_pct}
+- `tanks / label.text`
+  - TOKENS — gb.label micro-caps · TANK_LOW tint (earned)
+  - BINDS — {tank.tank_id} {tank.type}
+- `tanks / ST1.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {ST1 level_gal} gal
+- `tanks / ST1.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {ST1 level_pct}%
+- `tanks / ST2.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {ST2 level_gal} gal
+- `tanks / ST2.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {ST2 level_pct}%
 - `tanks / tank.shape`
   - TOKENS — surface/base · line/strong | TANK_LOW tint (own alert only, round 20)
   - BINDS — {tank.tank_id}
@@ -398,4 +419,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*109 instrumented leaves · 13 components · generated 2026-06-13T17:19:43.367Z*
+*116 instrumented leaves · 13 components · generated 2026-06-13T17:24:46.929Z*

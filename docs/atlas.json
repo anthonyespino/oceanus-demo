@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T17:19:43.368Z",
+  "generated": "2026-06-13T17:24:46.930Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -840,30 +840,48 @@
       "file": "src/components/VesselSynoptic.tsx"
     },
     {
-      "path": "VesselSynoptic / quartet / fill.chart",
+      "path": "VesselSynoptic / tanks / FD1.gal.value.text",
       "component": "VesselSynoptic",
-      "region": "quartet",
+      "region": "tanks",
+      "leaf": "FD1.gal.value.text",
+      "tokens": "font/data 12 tabular · ink/secondary · right-aligned subcolumn",
+      "binds": "{FD1 level_gal} gal",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / FD1.pct.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "FD1.pct.value.text",
+      "tokens": "font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint",
+      "binds": "{FD1 level_pct}%",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / FD2.gal.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "FD2.gal.value.text",
+      "tokens": "font/data 12 tabular · ink/secondary · right-aligned subcolumn",
+      "binds": "{FD2 level_gal} gal",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / FD2.pct.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "FD2.pct.value.text",
+      "tokens": "font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint",
+      "binds": "{FD2 level_pct}%",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / fill.chart",
+      "component": "VesselSynoptic",
+      "region": "tanks",
       "leaf": "fill.chart",
       "tokens": "dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)",
       "binds": "{tank.level_pct → filled dots}",
-      "file": "src/components/VesselSynoptic.tsx"
-    },
-    {
-      "path": "VesselSynoptic / quartet / label.text",
-      "component": "VesselSynoptic",
-      "region": "quartet",
-      "leaf": "label.text",
-      "tokens": "gb.label micro-caps · TANK_LOW tint (earned)",
-      "binds": "{tank.tank_id} {tank.type}",
-      "file": "src/components/VesselSynoptic.tsx"
-    },
-    {
-      "path": "VesselSynoptic / quartet / value.text",
-      "component": "VesselSynoptic",
-      "region": "quartet",
-      "leaf": "value.text",
-      "tokens": "font/data 12 tabular · gal ink/secondary",
-      "binds": "{tank.level_pct}% · {tank.level_gal} gal",
       "file": "src/components/VesselSynoptic.tsx"
     },
     {
@@ -873,6 +891,51 @@
       "leaf": "fill.shape",
       "tokens": "fill/level · bottom-up vertical (round 20)",
       "binds": "{tank.level_pct}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / label.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "label.text",
+      "tokens": "gb.label micro-caps · TANK_LOW tint (earned)",
+      "binds": "{tank.tank_id} {tank.type}",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / ST1.gal.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "ST1.gal.value.text",
+      "tokens": "font/data 12 tabular · ink/secondary · right-aligned subcolumn",
+      "binds": "{ST1 level_gal} gal",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / ST1.pct.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "ST1.pct.value.text",
+      "tokens": "font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint",
+      "binds": "{ST1 level_pct}%",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / ST2.gal.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "ST2.gal.value.text",
+      "tokens": "font/data 12 tabular · ink/secondary · right-aligned subcolumn",
+      "binds": "{ST2 level_gal} gal",
+      "file": "src/components/VesselSynoptic.tsx"
+    },
+    {
+      "path": "VesselSynoptic / tanks / ST2.pct.value.text",
+      "component": "VesselSynoptic",
+      "region": "tanks",
+      "leaf": "ST2.pct.value.text",
+      "tokens": "font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint",
+      "binds": "{ST2 level_pct}%",
       "file": "src/components/VesselSynoptic.tsx"
     },
     {

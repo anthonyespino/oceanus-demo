@@ -1,3 +1,17 @@
+# PROGRESS — 2026-06-13 (Session 39: ROUND 42 — tank matrix grid discipline)
+
+## Done
+
+1. **Fixed 4-column grid** — the tank quartet is now `repeat(4, 152px)` (cell width sized from the worst case "100.0% · 99,999 gal" + padding), centered, equal gutters. Cells never resize to their content.
+2. **Cell internals** — dot matrix top-aligned at a fixed grid origin; value row pinned to the bottom edge (`margin-top:auto`). The value row is a 3-column sub-grid `[pct 52px][· 12px][gal 84px]`: pct and gal each right-aligned in their own fixed subcolumn, tabular-nums, so the `·` separator and the digits/commas stack vertically across all four tanks — no jitter when values change. Verified in the screenshot.
+3. **Atlas** — per-tank value leaves added: `VesselSynoptic / tanks / {ST1,ST2,FD1,FD2}.{pct,gal}.value.text` (8 leaves, static-literal lookup so each enumerates). 116 leaves total.
+
+## Note
+
+- Brief shorthand was "FuelCard / tanks / …"; I kept the component prefix **VesselSynoptic** to match the barrel and the card's existing leaves (FIGMA_STANDARD: atlas component names = barrel names). If the fuel card should actually rename VesselSynoptic → FuelCard, that's a deliberate barrel rename pass (both places, one sitting) — flag it and I'll do it.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 39: ROUND 43 — amber cooler + label diet + chip affordance)
 
 ## Done
