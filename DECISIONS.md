@@ -154,6 +154,30 @@ originals.*
   (15px, bumped from 14 for legibility only), NOT promoted to hero — nominal data
   that already feeds Calm Sea, so rendering large would double-count the signal.
   Consequence hierarchy unchanged; nothing nominal gained weight.
+- **CommandBand header rearranged (round 73)**: gauges now FLANK the center
+  identity stack directly — SPEED + BURN left, EFF Δ + ENDURANCE right, stack
+  between (three balanced masses, even gutters per round 53). Center stack order,
+  top→bottom: NAME · master (crew.glyph + name) · mission CLOCK · place
+  (anchor.glyph + PLACE) · wind+waves on their OWN line below place (held at
+  context-scale, NOT promoted — they feed Calm Sea, stay context; own line is a
+  layout move, not a weight change).
+  - **Mode glyph REMOVED** from the center stack; the mission clock now carries
+    mode via prefix — `T−` transit (countdown), `ON STATION`, `IN PORT`, `STANDBY`
+    (only `T−` pre-existed; the word prefixes were added so the clock alone reads
+    the mode after the glyph removal). Confirmed in the build (transit/station).
+  - **Status row SPLIT by information type.** CONSEQUENCE (CAUTION · ADVISORY
+    counts) stays at the TOP near the name as a clickable DetailChip (opens the
+    alert popover — kept clickable, not static text). Data-health (DATALINK + LAST
+    SYNC) moves to a quiet BOTTOM footer strip across the band. **Reasoning:
+    data-health is ambient ("is the feed trustworthy"); alert state is
+    consequence — they live at different weights and positions.** The footer's
+    separation from the band body is a borderless fill-STEP (recessed surface-base)
+    + spacing, never a line; DATALINK DEGRADED keeps its advisory treatment. The
+    footer lives inside the ONE sticky `<section>` — no second sticky element; the
+    DetailChip hairline affordance (round 43) is retained on the chips themselves
+    (same as the top alert chip), distinct from the borderless bar separation.
+  Severity rules unchanged (name gold when alerted, EFF Δ value tinted +
+  amber-arc only when alert-backed, white needle); gauge internals untouched.
 - **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
   separate collapse + expand corner buttons are now a single top-right button
   that shows the expand affordance when collapsed/default and the collapse

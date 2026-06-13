@@ -34,10 +34,17 @@ const LEVEL_RANK: Record<string, number> = { WARNING: 0, CAUTION: 1, ADVISORY: 2
 const item: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11, whiteSpace: 'nowrap' };
 const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 12, lineHeight: 1.8, display: 'flex', justifyContent: 'space-between', gap: 16 };
 
-export function StatusHeader() {
+// ROUND 73: the status row splits by information TYPE. `parts` lets the
+// VesselCommandBand render the ALERT counts (consequence) at the top near the
+// name and the DATALINK/SYNC chips (ambient data-health) in a bottom footer —
+// different weights, different positions. Default 'all' keeps every other call
+// site (FleetHealthBand) unchanged.
+export function StatusHeader({ parts = 'all' }: { parts?: 'all' | 'alerts' | 'health' }) {
   const { fleet, simTime } = useFleet();
+  const showHealth = parts === 'all' || parts === 'health';
+  const showAlerts = parts === 'all' || parts === 'alerts';
   if (!fleet || simTime === null) {
-    return <span style={{ ...item, color: NEUTRAL.inkMuted }}>DATALINK —</span>;
+    return showHealth ? <span style={{ ...item, color: NEUTRAL.inkMuted }}>DATALINK —</span> : null;
   }
 
   // per-vessel stale feeds (the DATALINK popover's content)
@@ -73,7 +80,8 @@ export function StatusHeader() {
 
   return (
     <span style={{ display: 'inline-flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-      {/* DATALINK chip → per-vessel stale-feed breakdown */}
+      {/* DATALINK + LAST SYNC chips — ambient data-health (round 73 footer) */}
+      {showHealth && (<>
       <DetailChip
         label="datalink detail"
         align="left"
@@ -116,11 +124,12 @@ export function StatusHeader() {
       >
         <span style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
       </DetailChip>
+      </>)}
 
       {/* alert-count chip → the round-33 alert sheet. Round 45: hides
           entirely at zero alerts — silent absence is honest; the census
           nominal carries the all-clear. */}
-      {countParts.length > 0 && (
+      {showAlerts && countParts.length > 0 && (
       <DetailChip
         label="active alerts"
         align="right"

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T21:16:35.952Z",
+  "generated": "2026-06-13T21:37:37.919Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -664,8 +664,8 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "clock.text",
-      "tokens": "type/hero×0.6 · font/data tabular · white when still (ruling 14)",
-      "binds": "{T−(eta−now) in transit | elapsed} · countdown lives HERE only",
+      "tokens": "type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14)",
+      "binds": "{T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
@@ -718,7 +718,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "waves.text",
-      "tokens": "font/data 14 tabular · glyph ink/secondary · stale tint when WX stale",
+      "tokens": "font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)",
       "binds": "{weather.wave_height_ft} ft",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -727,7 +727,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "wind.text",
-      "tokens": "font/data 14 tabular · glyph ink/secondary · stale tint when WX stale",
+      "tokens": "font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)",
       "binds": "{weather.wind_speed_kn} kn",
       "file": "src/components/VesselCommandBand.tsx"
     },

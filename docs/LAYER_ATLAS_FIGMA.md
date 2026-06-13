@@ -164,14 +164,14 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: centerStack
     • anchor.glyph  → glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place · place
-    • clock.text  → type/hero×0.6 · font/data tabular · white when still (ruling 14) · {T−(eta−now) in transit | elapsed} · countdown lives HERE only
+    • clock.text  → type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14) · {T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only
     • crew.glyph  → glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master" · crew Master
     • location.text  → font/data 12 · ink/secondary · place as value · {destination | moored port | work site}
     • master.name.text  → font/data 12 · ink/secondary · name as value (no label, no stroke) · {crew Master.name}
     • mode.glyph  → boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/hero · font/display caps · ink/primary · {vessel.static.name}
-    • waves.text  → font/data 14 tabular · glyph ink/secondary · stale tint when WX stale · {weather.wave_height_ft} ft
-    • wind.text  → font/data 14 tabular · glyph ink/secondary · stale tint when WX stale · {weather.wind_speed_kn} kn
+    • waves.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wave_height_ft} ft
+    • wind.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wind_speed_kn} kn
   Region: factsLine
     • class.text  → font/data 12 · ink/muted · {static.length_ft} ft {static.class}
     • position.text  → font/data 12 · ink/secondary — relative reference, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
@@ -285,4 +285,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T21:16:35.951Z*
+*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T21:37:37.918Z*

@@ -123,7 +123,15 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   // 43: the location moved out to its own line under the mode glyph, so the
   // clock is just the time now — no port/state subtitle.
   const next = vessel.history.nextPortCalls[0];
-  const clock = now.mode === 'TRANSIT' && next ? `T−${hhmm(next.eta - now.t)}` : hhmm(modeElapsedMs(vessel));
+  // ROUND 73: the clock now carries MODE (the mode glyph is removed from the
+  // center stack). T− = transit countdown (lives here only); the other modes
+  // gain an explicit word prefix so the clock alone reads the mode.
+  const elapsedHHMM = hhmm(modeElapsedMs(vessel));
+  const clock =
+    now.mode === 'TRANSIT' ? (next ? `T−${hhmm(next.eta - now.t)}` : `UNDERWAY ${elapsedHHMM}`)
+    : now.mode === 'STATION' ? `ON STATION ${elapsedHHMM}`
+    : now.mode === 'PORT' ? `IN PORT ${elapsedHHMM}`
+    : `STANDBY ${elapsedHHMM}`;
 
   const master = vessel.history.crew.find((c) => c.role === 'Master');
   const nearest = PORTS.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b));
@@ -245,10 +253,12 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <button aria-label="minimize command band" style={{ ...chevronBtn, position: 'absolute', top: 8, right: 8, zIndex: 3 }} onClick={() => togglePanel(`${id}:command`)}>
           <Glyph name="collapse" size={12} />
         </button>
-        {/* round 33: the global status strip merged into the band's header
-            row — counts summon the alert sheet. Round 34: centered. */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <StatusHeader />
+        {/* ROUND 73: status row SPLIT by information type. CONSEQUENCE
+            (CAUTION · ADVISORY counts) stays at the TOP near the name — still a
+            clickable DetailChip opening the alert popover. Data-health
+            (DATALINK / LAST SYNC) moves to the bottom footer strip. */}
+        <div style={{ display: 'flex', justifyContent: 'center', minHeight: 16 }}>
+          <StatusHeader parts="alerts" />
         </div>
         {/* round 53: three balanced masses (left cluster · center · right
             cluster) centered with equal gutters — clusters pulled inward, no
@@ -276,8 +286,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               <span {...layer('VesselCommandBand / centerStack / crew.glyph', 'glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"', 'crew Master')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="crew" size={13} /></span>
               <span {...layer('VesselCommandBand / centerStack / master.name.text', 'font/data 12 · ink/secondary · name as value (no label, no stroke)', '{crew Master.name}')}>{master?.name ?? '—'}</span>
             </div>
-            {/* mode glyph (chip box = the one allowed affordance) */}
-            {modeChip}
+            {/* ROUND 73: mode glyph REMOVED — the mission clock carries mode
+                (T− transit · ON STATION · IN PORT · STANDBY). Clock sits here,
+                ABOVE the place line (round-73 order: name · master · clock ·
+                place · wind/waves). Clock stays text; white when still (ruling 14). */}
+            <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14)', '{T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
+              {clock}
+            </span>
             {/* round 52: place line — anchor.glyph (slot, placeholder) + place */}
             {locationName && (
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
@@ -285,9 +300,10 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 <span {...layer('VesselCommandBand / centerStack / location.text', 'font/data 12 · ink/secondary · place as value', '{destination | moored port | work site}')}>{locationName.toUpperCase()}</span>
               </div>
             )}
-            {/* round 34: clock + weather on one line — clock stays text (a glyph
-                makes mode state more cryptic, not less); wind/waves keep their
-                glyph prefixes. Reveal holds current/vis/precip. */}
+            {/* ROUND 73: wind + waves on their OWN line BELOW the place line —
+                held at context-scale (round 53), NOT promoted (they feed Calm
+                Sea, they stay context). The weather-detail reveal rides this
+                line now (current/visibility/precip). */}
             <RevealZone
               reveal={
                 <Field level="vessel" field="weather.current" revealed>
@@ -295,21 +311,14 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </Field>
               }
             >
-              {/* round 53: loosen this densest line — clock dominant, wind/waves
-                  trail as context; each clears its neighbor */}
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 26, flexWrap: 'wrap' }}>
-                <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · white when still (ruling 14)', '{T−(eta−now) in transit | elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
-                  {clock}
-                </span>
-                <span style={{ display: 'inline-flex', gap: 18, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
-                  <Field level="vessel" field="weather.wind">
-                    <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 14 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wind_speed_kn} kn')} />
-                  </Field>
-                  <Field level="vessel" field="weather.waves">
-                    <WxInline g="wave" value={`${wx.wave_height_ft} ft`} attrs={layer('VesselCommandBand / centerStack / waves.text', 'font/data 14 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wave_height_ft} ft')} />
-                  </Field>
-                </span>
-              </div>
+              <span style={{ display: 'inline-flex', justifyContent: 'center', gap: 18, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
+                <Field level="vessel" field="weather.wind">
+                  <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)', '{weather.wind_speed_kn} kn')} />
+                </Field>
+                <Field level="vessel" field="weather.waves">
+                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} attrs={layer('VesselCommandBand / centerStack / waves.text', 'font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)', '{weather.wave_height_ft} ft')} />
+                </Field>
+              </span>
             </RevealZone>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
@@ -324,6 +333,21 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
             </div>
           </div>
+        </div>
+        {/* ROUND 73: bottom status bar — ambient DATA-HEALTH (DATALINK + LAST
+            SYNC). A quiet footer strip across the band, de-emphasized by
+            position below the consequence counts. Separation is a fill-STEP
+            (recessed surface-base) + spacing, NO stroke (borderless). It lives
+            inside the one sticky <section> — no second sticky element is
+            introduced; it stays with the primary row on scroll. DATALINK
+            DEGRADED keeps its existing advisory treatment (inside StatusHeader). */}
+        <div style={{
+          marginTop: 12,
+          marginLeft: 'calc(var(--pad-card) * -1)', marginRight: 'calc(var(--pad-card) * -1)', marginBottom: 'calc(var(--pad-card) * -1)',
+          padding: '7px var(--pad-card)', background: 'var(--color-surface-base)',
+          display: 'flex', justifyContent: 'center',
+        }}>
+          <StatusHeader parts="health" />
         </div>
       </section>
       {/* SECONDARY — static flow, scrolls away naturally (no stuck logic);

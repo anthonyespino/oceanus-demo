@@ -1,3 +1,35 @@
+# PROGRESS — 2026-06-13 (Session 62: ROUND 73 — VesselCommandBand header rearrangement)
+
+## Done (verified on the running build, `docs/screens/r73-commandband.png`)
+- **Gauges flank the center stack**: SPEED + BURN left, EFF Δ + ENDURANCE right,
+  identity stack between — three balanced masses, even gutters (round 53 held).
+- **Center stack reordered** top→bottom: NAME (D-DIN) · master (crew.glyph + Dale
+  Calloway) · mission CLOCK · place (anchor.glyph + GALVESTON, TX) · wind+waves on
+  their OWN line below place (context-scale 15px, not promoted).
+- **Mode glyph removed**; clock carries mode. Confirmed in build: transit
+  `T−26:43`, station `ON STATION 51:00` (port/standby use the same branch — only
+  `T−` pre-existed; the word prefixes were added this round).
+- **Status row split**: CAUTION · ADVISORY counts at TOP near the name, still a
+  clickable DetailChip (alert popover intact). DATALINK + LAST SYNC moved to a
+  quiet bottom footer strip — separated from the band by a borderless fill-STEP
+  (recessed surface-base) + spacing, no line. DATALINK DEGRADED keeps its advisory
+  treatment. Reasoning: data-health is ambient, alert state is consequence.
+- **Sticky preserved**: footer lives INSIDE the one sticky `<section>` — no second
+  sticky element. Severity tints intact (MERIDIAN gold name, EFF Δ +13.7% gold
+  value + amber arc, white needle); gauge internals untouched.
+
+## Note (interpretation flagged)
+The footer "no stroke/border" is read as the BAR's separation from the band (→
+fill-step, satisfied). The DATALINK/LAST SYNC chips keep their round-43 DetailChip
+hairline affordance (they're clickable, same as the top alert chip) — if you want
+those chips themselves borderless, that's a quick follow-up.
+
+## Verify
+TSC-OK · LINT-CLEAN · offline build clean. `StatusHeader` gained a `parts`
+prop (`all`/`alerts`/`health`); FleetHealthBand still uses the default `all`.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 61: ROUND 72-B — Calm Sea fine particle shimmer (toggle))
 
 ## Done

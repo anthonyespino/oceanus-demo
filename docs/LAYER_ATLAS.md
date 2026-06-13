@@ -302,8 +302,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place
   - BINDS — place
 - `centerStack / clock.text`
-  - TOKENS — type/hero×0.6 · font/data tabular · white when still (ruling 14)
-  - BINDS — {T−(eta−now) in transit | elapsed} · countdown lives HERE only
+  - TOKENS — type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14)
+  - BINDS — {T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only
 - `centerStack / crew.glyph`
   - TOKENS — glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"
   - BINDS — crew Master
@@ -320,10 +320,10 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/display caps · ink/primary
   - BINDS — {vessel.static.name}
 - `centerStack / waves.text`
-  - TOKENS — font/data 14 tabular · glyph ink/secondary · stale tint when WX stale
+  - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
   - BINDS — {weather.wave_height_ft} ft
 - `centerStack / wind.text`
-  - TOKENS — font/data 14 tabular · glyph ink/secondary · stale tint when WX stale
+  - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
   - BINDS — {weather.wind_speed_kn} kn
 - `factsLine / class.text`
   - TOKENS — font/data 12 · ink/muted
@@ -509,4 +509,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T21:16:35.950Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T21:37:37.917Z*
