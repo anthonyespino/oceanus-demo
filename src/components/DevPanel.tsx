@@ -151,16 +151,17 @@ export function DevPanel() {
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
         <Row label="water mode" value={f.waterMode} onPick={f.setWaterMode}
-          options={[{ v: 'gradient' as const, text: 'gradient' }, { v: 'particle' as const, text: 'particle' }, { v: 'matrix' as const, text: 'dot matrix' }]} />
+          options={[{ v: 'gradient' as const, text: 'gradient' }, { v: 'particle' as const, text: 'particle' }, { v: 'matrix' as const, text: 'dot flow' }]} />
         <Row label="texture" value={f.shimmer} onPick={f.setShimmer}
           options={[{ v: true, text: 'on (default)' }, { v: false, text: 'off' }]} />
         {/* round 74: live Calm Sea tuning — turn these knobs on the running build */}
         <Slider label="wave amp" value={f.waveAmp} min={0.05} max={0.7} step={0.01} onChange={f.setWaveAmp} />
         <Slider label="tex dens" value={f.texDens} min={0} max={1} step={0.05} onChange={f.setTexDens} />
         <Slider label="tex bright" value={f.texBright} min={0} max={0.25} step={0.01} onChange={f.setTexBright} />
-        {/* round 76/77: dot-matrix lattice — density, base size, magnification */}
-        <Slider label="dot space" value={f.dotSpace} min={16} max={90} step={1} onChange={f.setDotSpace} />
-        <Slider label="dot size" value={f.dotSize} min={0.5} max={6} step={0.25} onChange={f.setDotSize} />
+        {/* round 77: dot-flow field — density, size, ridge flow, magnification */}
+        <Slider label="density" value={f.dotSpace} min={24} max={120} step={1} onChange={f.setDotSpace} />
+        <Slider label="dot size" value={f.dotSize} min={0.5} max={6} step={0.1} onChange={f.setDotSize} />
+        <Slider label="flow/ridge" value={f.flow} min={0} max={1} step={0.02} onChange={f.setFlow} />
         <Slider label="magnify" value={f.mag} min={0} max={2.5} step={0.05} onChange={f.setMag} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs
             feeding the shader (dev only; no on-screen label in default mode) */}

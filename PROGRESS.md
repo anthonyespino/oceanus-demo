@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-13 (Session 67: ROUND 77 — DOT FLOW FIELD (dense flowing dot-ridges))
+
+## Done
+- Rebuilt the dot-based water as a **FLOW FIELD** (per the envato reference, colour
+  stripped to white). Dots **concentrate on the wave crests** — brightness + size
+  pack onto the ridge (`ridge = pow(crest, 1 + flow·9)`), so crests read as bright
+  dense flowing lines of dots and troughs go dark/sparse; the ridges travel as the
+  wave drifts (the flow). Magnification on the crest kept on top.
+- **Folded into the existing dot slot** (relabeled "dot flow") — picker is
+  gradient / particle / dot flow, NOT a sixth mode.
+- **Defaults retuned to SHOW it on load** (the prior shipped near-invisible): dense
+  (72 rows, fine columns), fine dots (1.4), magnify 1.0, ridge-sharpness 0.5, with
+  a ×4 in-shader brightness boost so the shared brightness slider reads as bright
+  ridges. Verified visible on default load (`docs/screens/r77-flow-board.png` /
+  `-crop.png`) — dense flowing ridges, not a thin/invisible field.
+- New **flow/ridge** sharpness slider (the dial for lines-vs-scattered) + density /
+  dot size / magnify / wave amp / brightness.
+
+## Verify (running build)
+Dots flow along contours + pack densely on crests (reads as flowing ridges, not
+scattered points); default shows the effect on load; magnification on crests
+retained; recession + haze + no horizon/sky; **greyscale/white only, no colour**;
+frequency+amplitude delta-bound; **severity dominates** (Meridian gold over the
+thin bright ridges); sliders present; **~120 fps** in-shader (single-cell O(1) →
+density is free); reduced-motion freezes a frame (canvas one-frame paint, key
+includes mode); cards untouched (glass/shadow cut).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 66: ROUND 77 — DOT MATRIX rebuild (dense + magnification) + particle mark fix)
 
 ## Done

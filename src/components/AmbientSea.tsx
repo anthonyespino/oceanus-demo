@@ -139,53 +139,54 @@ void main(){
   gl_FragColor = vec4(vec3(lum), lum);
 }`;
 
-// ROUND 77 — DOT MATRIX REBUILT: a DENSE, FINE receding lattice of small white
-// dots, with per-dot MAGNIFICATION as the PRIMARY wave cue. As a wave crest
-// passes through the lattice the dots there SWELL and BRIGHTEN; trough dots stay
-// small and dim — so the wave reads as a travelling swell of enlarged brighter
-// dots through a fine measured field (light + depth moving across sampled
-// points). Displacement is secondary (a small vertical nudge). Perspective
-// recession kept (foreground larger/sparser, back smaller/denser, dissolving to
-// haze at the top — NO horizon, NO sky). Wave FREQUENCY bound to fleet/vessel
-// delta (u_freq, round 50). White/low-opacity, subordinate — dense is not bright,
-// magnified crest dots are the brightest points but stay below severity. A 3×3
-// cell neighborhood is searched so swollen/displaced dots render. Per-pixel work
-// is O(1) regardless of density (finer = smaller spacing, not more iterations).
-// u_dotSpace = density (rows), u_dotSize = base radius, u_mag = magnification
-// strength, u_waveAmp = displacement, u_texBright = contrast/brightness.
+// ROUND 77 — DOT FLOW FIELD (the dot-based water, rebuilt from the static lattice
+// into a FLOW FIELD per the envato reference, colour stripped to white/greyscale).
+// A DENSE, FINE field of dots whose brightness + size CONCENTRATE on the wave
+// crests: the crest ridges read as bright dense flowing lines of dots, the troughs
+// go dark and sparse — the wave FORM is described by where the dots pack, and as
+// the wave drifts the ridges travel (the "flow"). Per-dot MAGNIFICATION on the
+// crest (Anthony's keeper) compounds it: crest dots swell + brighten, trough dots
+// shrink + dim. u_flow = ridge sharpness (how tightly dots pack onto the crest).
+// Perspective recession kept (foreground looser/larger, back denser/finer,
+// dissolving to haze at top — NO horizon, NO sky). Single-cell lookup → O(1) per
+// pixel, density is FREE (finer lattices cost nothing). Greyscale/white only;
+// FREQUENCY/amplitude delta-bound (u_freq/u_amp, round 50); ridges are the
+// brightest points but the thin lit area keeps it subordinate to severity.
 const FRAG_MATRIX = `precision mediump float;
 uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
-uniform float u_waveAmp; uniform float u_texBright; uniform float u_dotSize; uniform float u_dotSpace; uniform float u_mag;
+uniform float u_waveAmp; uniform float u_texBright; uniform float u_dotSize; uniform float u_dotSpace; uniform float u_mag; uniform float u_flow;
 void main(){
   vec2 uv = gl_FragCoord.xy / u_res.xy;
   float vY = uv.y;
   float drift = u_time * 0.5;
   float P = 2.0;
   float rows = max(8.0, u_dotSpace);
-  // SINGLE-CELL lookup (O(1) per pixel — the whole point of staying in-shader):
-  // round-77 displacement is small and the magnified dot radius stays well under
-  // half a cell at every depth, so each pixel only needs its own lattice cell.
-  // Density is therefore FREE — finer lattices cost nothing extra.
   float row = floor(pow(clamp(vY, 0.0, 1.0), P) * rows);
   float rowPy = (row + 0.5) / rows;            // row center in perspective space
   float rowV = pow(rowPy, 1.0 / P);            // → screen v (rows bunch toward top)
-  float rec = mix(1.0, 0.22, rowPy);           // recession: smaller/denser toward back
-  float colStep = (1.15 / rows) * mix(1.0, 0.5, rowPy); // FINE columns, converge toward top
+  float rec = mix(1.0, 0.22, rowPy);           // recession: looser/larger front → denser/finer back
+  float colStep = (0.85 / rows) * mix(1.0, 0.5, rowPy); // FINE columns (dense), converge toward top
   float colCenter = (floor(uv.x / colStep) + 0.5) * colStep;
-  // wave at this dot; FREQUENCY driven by u_freq (delta-bound)
+  // wave at this dot; FREQUENCY/amplitude delta-bound; drift travels the ridges
   float ph = rowPy * (10.0 + 22.0 * u_freq) + colCenter * 7.0 - drift * (1.0 + u_freq);
   float wv = sin(ph);
   float crest = 0.5 + 0.5 * wv;                // 0 trough → 1 crest
-  float disp = wv * 0.006 * (u_waveAmp * 4.0 + 0.3) * (0.4 + u_amp); // displacement SECONDARY
+  // FLOW: dots concentrate on the crest ridges; sharpness packs them onto a thin
+  // band (high u_flow = tight bright ridge lines, low = broad field)
+  float ridge = pow(crest, 1.0 + u_flow * 9.0);
+  // displacement secondary — nudge dots toward the crest so ridges read as lines
+  float disp = wv * 0.006 * (u_waveAmp * 4.0 + 0.3) * (0.4 + u_amp);
   vec2 center = vec2(colCenter, rowV + disp);
   vec2 dpx = (uv - center) * u_res.xy;
-  // MAGNIFICATION PRIMARY: crest dots swell + brighten, troughs settle small/dim
+  // MAGNIFICATION on the crest (kept): swell + brighten on ridges
   float baseR = max(0.5, u_dotSize * rec);
-  float radius = baseR * (1.0 + u_mag * 2.2 * crest);
+  float radius = baseR * (1.0 + u_mag * 2.4 * crest);
   float dot = smoothstep(radius, radius - 1.2, length(dpx));
-  float bright = 0.22 + 1.0 * crest * crest;   // dim trough → bright crest (squared for travel)
-  float fade = smoothstep(0.97, 0.30, vY);     // dissolve into haze at top — no horizon/sky
-  float lum = dot * bright * u_texBright * fade;
+  float bright = 0.10 + 0.95 * ridge;          // faint sparse troughs → bright dense ridges
+  float fade = smoothstep(0.97, 0.30, vY);      // dissolve into haze at top — no horizon/sky
+  // ×4 internal boost: the shared brightness slider reads subtle for the gradient
+  // texture but must read as bright ridges here, so the flow default is visible.
+  float lum = dot * bright * u_texBright * 4.0 * fade;
   gl_FragColor = vec4(vec3(lum), lum);
 }`;
 
@@ -200,7 +201,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export function AmbientSea() {
-  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode, dotSize, dotSpace, mag } = useFleet();
+  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode, dotSize, dotSpace, mag, flow } = useFleet();
   const { expertOn } = useLearn();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -210,12 +211,12 @@ export function AmbientSea() {
   // live inputs in a ref so the rAF loop reads them without re-subscribing.
   // round 74: waveAmp/texDens/texBright are dev sliders; the shimmer toggle
   // gates the texture (off → density 0).
-  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.34, texDens: 0.7, texBright: 0.11, dotSize: 2, dotSpace: 46, mag: 0.85 });
+  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.34, texDens: 0.7, texBright: 0.11, dotSize: 1.4, dotSpace: 72, mag: 1.0, flow: 0.5 });
   const { scope, vesselId } = waterScope(pathname);
   const target = waterInputs(fleet ?? null, scope, vesselId);
   useEffect(() => {
-    inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright, dotSize, dotSpace, mag };
-  }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright, dotSize, dotSpace, mag]);
+    inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright, dotSize, dotSpace, mag, flow };
+  }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright, dotSize, dotSpace, mag, flow]);
 
   const on = ambientSea && !expertOn;
 
@@ -260,6 +261,7 @@ export function AmbientSea() {
     const uDotSize = gl.getUniformLocation(prog, 'u_dotSize');
     const uDotSpace = gl.getUniformLocation(prog, 'u_dotSpace');
     const uMag = gl.getUniformLocation(prog, 'u_mag');
+    const uFlow = gl.getUniformLocation(prog, 'u_flow');
 
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const resize = () => {
@@ -288,6 +290,7 @@ export function AmbientSea() {
       gl.uniform1f(uDotSize, inputs.current.dotSize);
       gl.uniform1f(uDotSpace, inputs.current.dotSpace);
       gl.uniform1f(uMag, inputs.current.mag);
+      gl.uniform1f(uFlow, inputs.current.flow);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 

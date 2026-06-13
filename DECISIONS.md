@@ -154,6 +154,22 @@ originals.*
     slider + density/size; greyscale, white/subtle (magnified crest dots are the
     brightest points but stay below severity — Meridian gold re-confirmed),
     frequency still delta-bound. Reduced-motion freezes the lattice mid-wave.
+  - **DOT FLOW FIELD — supersedes the dot-matrix as the dot-based water (round 77,
+    2nd pass)**: the displaced lattice still read as too sparse/static, so it is
+    rebuilt into a FLOW FIELD per the envato reference (colour stripped to white).
+    Dots CONCENTRATE on the wave crests — brightness + size pack onto the ridge
+    (`ridge = pow(crest, 1 + flow·9)`), so the crests read as bright dense flowing
+    lines of dots and troughs go dark/sparse; as the wave drifts the ridges travel
+    (the flow). Magnification on the crest is kept on top. **Defaults retuned to be
+    VISIBLE on load** (the prior near-zero brightness / too-sparse density shipped
+    invisible): dense lattice (72 rows, fine columns), fine dots (1.4), magnify 1.0,
+    ridge-sharpness 0.5, with a ×4 in-shader brightness boost so the shared
+    brightness slider reads as bright ridges here. Folded into the SAME picker slot
+    (relabeled "dot flow"); the picker is gradient / particle / dot flow — NOT a
+    sixth mode. New `flow/ridge` sharpness slider exposed (+ density / size /
+    magnify / brightness). Recession / haze / no-horizon kept; greyscale only;
+    frequency+amplitude delta-bound; single-cell O(1) → density FREE, ~120 fps;
+    severity re-confirmed dominant (thin bright ridges stay below Meridian's gold).
   - **PARTICLE FIELD mark-shape bug fixed (round 77)**: the round-75 mark was a
     point + short line that tiled into a directional chevron/fish read. Replaced
     with a simple round dot (neutral points only, no directional/symbolic shape).

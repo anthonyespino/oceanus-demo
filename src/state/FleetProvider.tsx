@@ -69,10 +69,11 @@ interface FleetContextValue {
   texBright: number; setTexBright: (n: number) => void;
   // round 75/76: Calm Sea rendering treatment selector (gradient | particle | matrix)
   waterMode: WaterMode; setWaterMode: (m: WaterMode) => void;
-  // round 76/77: dot-matrix lattice controls (dot radius + density + magnification)
+  // round 76/77: dot-flow field controls (radius + density + magnification + ridge flow)
   dotSize: number; setDotSize: (n: number) => void;
   dotSpace: number; setDotSpace: (n: number) => void;
   mag: number; setMag: (n: number) => void;
+  flow: number; setFlow: (n: number) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -111,9 +112,12 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [texDens, setTexDens] = useState(0.7); // round 74 dev slider — texture density
   const [texBright, setTexBright] = useState(0.11); // round 74 dev slider — texture brightness
   const [waterMode, setWaterMode] = useState<WaterMode>('gradient'); // round 75/76: treatment selector
-  const [dotSize, setDotSize] = useState(2); // round 77 dev slider — base dot radius (small/fine)
-  const [dotSpace, setDotSpace] = useState(46); // round 77 dev slider — lattice rows (dense)
-  const [mag, setMag] = useState(0.85); // round 77 dev slider — per-dot magnification strength
+  // round 77 dot-flow defaults — tuned to SHOW the flowing ridges on load (dense,
+  // fine, magnified, sharp ridge), not an invisible field to discover via sliders.
+  const [dotSize, setDotSize] = useState(1.4); // base dot radius (fine)
+  const [dotSpace, setDotSpace] = useState(72); // lattice rows (dense)
+  const [mag, setMag] = useState(1.0); // per-dot magnification strength
+  const [flow, setFlow] = useState(0.5); // ridge sharpness (dots pack onto crests)
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -168,7 +172,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
         waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
-        waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace, mag, setMag,
+        waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace, mag, setMag, flow, setFlow,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}
