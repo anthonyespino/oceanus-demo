@@ -69,9 +69,10 @@ interface FleetContextValue {
   texBright: number; setTexBright: (n: number) => void;
   // round 75/76: Calm Sea rendering treatment selector (gradient | particle | matrix)
   waterMode: WaterMode; setWaterMode: (m: WaterMode) => void;
-  // round 76: dot-matrix lattice controls (dot radius + spacing/density)
+  // round 76/77: dot-matrix lattice controls (dot radius + density + magnification)
   dotSize: number; setDotSize: (n: number) => void;
   dotSpace: number; setDotSpace: (n: number) => void;
+  mag: number; setMag: (n: number) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -110,8 +111,9 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [texDens, setTexDens] = useState(0.7); // round 74 dev slider — texture density
   const [texBright, setTexBright] = useState(0.11); // round 74 dev slider — texture brightness
   const [waterMode, setWaterMode] = useState<WaterMode>('gradient'); // round 75/76: treatment selector
-  const [dotSize, setDotSize] = useState(3); // round 76 dev slider — dot radius (px, foreground)
-  const [dotSpace, setDotSpace] = useState(22); // round 76 dev slider — lattice rows/density
+  const [dotSize, setDotSize] = useState(2); // round 77 dev slider — base dot radius (small/fine)
+  const [dotSpace, setDotSpace] = useState(46); // round 77 dev slider — lattice rows (dense)
+  const [mag, setMag] = useState(0.85); // round 77 dev slider — per-dot magnification strength
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -166,7 +168,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
         waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
-        waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace,
+        waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace, mag, setMag,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}

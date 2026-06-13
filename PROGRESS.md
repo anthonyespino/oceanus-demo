@@ -1,3 +1,37 @@
+# PROGRESS — 2026-06-13 (Session 66: ROUND 77 — DOT MATRIX rebuild (dense + magnification) + particle mark fix)
+
+## Done
+- **PARTICLE FIELD mark fixed**: the round-75 point+line tiled into a directional
+  chevron/fish read. Now a simple round dot (neutral points only). Verified
+  (`docs/screens/r77-particle-fixed.png`) — round dots, no glyph shape.
+- **DOT MATRIX rebuilt** (replaces the sparse round-76 one, NOT a 5th mode):
+  - DENSE + FINE lattice (small dots, dense rows; defaults dotSpace 46 / dotSize 2).
+  - **Per-dot MAGNIFICATION is the primary wave cue**: crest dots SWELL +
+    BRIGHTEN, trough dots stay small/dim → the wave reads as a travelling swell of
+    enlarged brighter dots through a fine field. Displacement secondary.
+  - Recession / haze / no-horizon / no-sky kept; frequency delta-bound (u_freq).
+  - White, subtle, subordinate — magnified crest dots are the brightest points but
+    stay below severity.
+- **New `magnify` slider** + density (dot space) + dot size; wave amp + tex bright
+  (contrast) reused. The two key dials (magnification + density) are exposed.
+
+## Performance — solved cleanly
+First pass used a 3×3 neighbor search → only ~56–61 fps (right at the floor) and,
+worse, density-INdependent so the slider couldn't relieve it. Realized round-77's
+displacement is small and the magnified dot radius stays well under half a cell at
+every depth, so a **single-cell lookup is correct** → O(1) per pixel. Result:
+**sustained ~120 fps** on the board (gate 60), and **density is FREE** (finer
+lattice costs nothing). All in-shader (no per-dot DOM/SVG, no element resizing).
+
+## Verify (running build, `docs/screens/r77-matrix-board.png` / `-crop.png`)
+Dense fine lattice clearly visible; magnification makes crest dots swell/brighten
+and troughs settle; recession + haze + no horizon retained; greyscale/white;
+severity dominates (Meridian gold); sliders present (density/size/magnify/amp/
+contrast); ~120 fps; reduced-motion freezes mid-wave (canvas one-frame paint, key
+includes mode); cards untouched (glass/shadow cut).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 65: ROUND 76 — Calm Sea DOT MATRIX (fourth mode))
 
 ## Done

@@ -128,9 +128,10 @@ void main(){
       vec2 mark = (cid + 0.5) * cell + vec2(jit.x, jit.y - disp);
       float present = step(h2, dens); // amass on crests (denser where crest high)
       vec2 dpx = gl_FragCoord.xy - mark;
-      float onPoint = step(length(dpx), 2.0);
-      float onLine = step(abs(dpx.y), 1.0) * step(abs(dpx.x), cell * 0.40);
-      acc = max(acc, max(onPoint, onLine) * present);
+      // ROUND 77: a simple round dot — NOT a point+line (the round-75 dash read as
+      // a directional chevron/fish tiled across the field). Neutral points only.
+      float dot = smoothstep(2.1, 0.7, length(dpx));
+      acc = max(acc, dot * present);
     }
   }
   float fade = smoothstep(0.98, 0.26, vY);
@@ -138,53 +139,53 @@ void main(){
   gl_FragColor = vec4(vec3(lum), lum);
 }`;
 
-// ROUND 76 — DOT MATRIX: a regular receding lattice of small white dots on a
-// ground plane. The lattice placement is FIXED; the WAVE is the vertical
-// DISPLACEMENT of the dots (crests push dots up + brighter, troughs settle), so
-// the pattern emerges from the grid deforming. Perspective recession — dots
-// larger/sparser in the foreground (bottom), smaller/denser toward the back
-// (top) — but NO horizon line and NO sky: the lattice dissolves into haze at the
-// top (depth, not seascape). White/low-opacity = a faint MEASURED lattice.
-// Wave FREQUENCY is bound to the fleet/vessel delta (u_freq, round 50). Rows are
-// neighbor-searched so a displaced dot still renders. u_dotSpace = lattice
-// density (rows), u_dotSize = dot radius, u_waveAmp = displacement, u_texBright =
-// dot luminance. Greyscale, premultiplied.
+// ROUND 77 — DOT MATRIX REBUILT: a DENSE, FINE receding lattice of small white
+// dots, with per-dot MAGNIFICATION as the PRIMARY wave cue. As a wave crest
+// passes through the lattice the dots there SWELL and BRIGHTEN; trough dots stay
+// small and dim — so the wave reads as a travelling swell of enlarged brighter
+// dots through a fine measured field (light + depth moving across sampled
+// points). Displacement is secondary (a small vertical nudge). Perspective
+// recession kept (foreground larger/sparser, back smaller/denser, dissolving to
+// haze at the top — NO horizon, NO sky). Wave FREQUENCY bound to fleet/vessel
+// delta (u_freq, round 50). White/low-opacity, subordinate — dense is not bright,
+// magnified crest dots are the brightest points but stay below severity. A 3×3
+// cell neighborhood is searched so swollen/displaced dots render. Per-pixel work
+// is O(1) regardless of density (finer = smaller spacing, not more iterations).
+// u_dotSpace = density (rows), u_dotSize = base radius, u_mag = magnification
+// strength, u_waveAmp = displacement, u_texBright = contrast/brightness.
 const FRAG_MATRIX = `precision mediump float;
 uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
-uniform float u_waveAmp; uniform float u_texBright; uniform float u_dotSize; uniform float u_dotSpace;
+uniform float u_waveAmp; uniform float u_texBright; uniform float u_dotSize; uniform float u_dotSpace; uniform float u_mag;
 void main(){
   vec2 uv = gl_FragCoord.xy / u_res.xy;
   float vY = uv.y;
   float drift = u_time * 0.5;
   float P = 2.0;
   float rows = max(8.0, u_dotSpace);
-  float pyPix = pow(clamp(vY, 0.0, 1.0), P) * rows;
-  float baseRow = floor(pyPix);
-  float acc = 0.0;
-  for (int dr = -1; dr <= 1; dr++) {
-    float row = baseRow + float(dr);
-    if (row < 0.0) continue;
-    float rowPy = (row + 0.5) / rows;          // row center in perspective space
-    float rowV = pow(rowPy, 1.0 / P);          // → screen v (rows bunch toward top)
-    float rec = mix(1.0, 0.22, rowPy);         // recession: smaller/denser toward back
-    float colStep = (1.7 / rows) * mix(1.0, 0.45, rowPy); // columns converge toward top
-    float col = floor(uv.x / colStep);
-    for (int dc = 0; dc <= 1; dc++) {
-      float colCenter = (col + float(dc) + 0.5) * colStep;
-      // wave: vertical displacement; FREQUENCY driven by u_freq (delta-bound)
-      float ph = rowPy * (10.0 + 22.0 * u_freq) + colCenter * 7.0 - drift * (1.0 + u_freq);
-      float wv = sin(ph) + 0.4 * sin(ph * 1.7 + 1.3);
-      float disp = wv * 0.014 * (u_waveAmp * 6.0 + 0.4) * (0.4 + u_amp);
-      vec2 center = vec2(colCenter, rowV + disp);
-      vec2 dpx = (uv - center) * u_res.xy;
-      float radius = max(0.6, u_dotSize * rec);
-      float dot = smoothstep(radius, radius - 1.3, length(dpx));
-      float crest = 0.5 + 0.5 * wv;            // crest dots brighter
-      acc = max(acc, dot * (0.5 + 0.65 * crest));
-    }
-  }
+  // SINGLE-CELL lookup (O(1) per pixel — the whole point of staying in-shader):
+  // round-77 displacement is small and the magnified dot radius stays well under
+  // half a cell at every depth, so each pixel only needs its own lattice cell.
+  // Density is therefore FREE — finer lattices cost nothing extra.
+  float row = floor(pow(clamp(vY, 0.0, 1.0), P) * rows);
+  float rowPy = (row + 0.5) / rows;            // row center in perspective space
+  float rowV = pow(rowPy, 1.0 / P);            // → screen v (rows bunch toward top)
+  float rec = mix(1.0, 0.22, rowPy);           // recession: smaller/denser toward back
+  float colStep = (1.15 / rows) * mix(1.0, 0.5, rowPy); // FINE columns, converge toward top
+  float colCenter = (floor(uv.x / colStep) + 0.5) * colStep;
+  // wave at this dot; FREQUENCY driven by u_freq (delta-bound)
+  float ph = rowPy * (10.0 + 22.0 * u_freq) + colCenter * 7.0 - drift * (1.0 + u_freq);
+  float wv = sin(ph);
+  float crest = 0.5 + 0.5 * wv;                // 0 trough → 1 crest
+  float disp = wv * 0.006 * (u_waveAmp * 4.0 + 0.3) * (0.4 + u_amp); // displacement SECONDARY
+  vec2 center = vec2(colCenter, rowV + disp);
+  vec2 dpx = (uv - center) * u_res.xy;
+  // MAGNIFICATION PRIMARY: crest dots swell + brighten, troughs settle small/dim
+  float baseR = max(0.5, u_dotSize * rec);
+  float radius = baseR * (1.0 + u_mag * 2.2 * crest);
+  float dot = smoothstep(radius, radius - 1.2, length(dpx));
+  float bright = 0.22 + 1.0 * crest * crest;   // dim trough → bright crest (squared for travel)
   float fade = smoothstep(0.97, 0.30, vY);     // dissolve into haze at top — no horizon/sky
-  float lum = acc * u_texBright * fade;
+  float lum = dot * bright * u_texBright * fade;
   gl_FragColor = vec4(vec3(lum), lum);
 }`;
 
@@ -199,7 +200,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export function AmbientSea() {
-  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode, dotSize, dotSpace } = useFleet();
+  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode, dotSize, dotSpace, mag } = useFleet();
   const { expertOn } = useLearn();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -209,12 +210,12 @@ export function AmbientSea() {
   // live inputs in a ref so the rAF loop reads them without re-subscribing.
   // round 74: waveAmp/texDens/texBright are dev sliders; the shimmer toggle
   // gates the texture (off → density 0).
-  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.34, texDens: 0.7, texBright: 0.11, dotSize: 3, dotSpace: 22 });
+  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.34, texDens: 0.7, texBright: 0.11, dotSize: 2, dotSpace: 46, mag: 0.85 });
   const { scope, vesselId } = waterScope(pathname);
   const target = waterInputs(fleet ?? null, scope, vesselId);
   useEffect(() => {
-    inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright, dotSize, dotSpace };
-  }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright, dotSize, dotSpace]);
+    inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright, dotSize, dotSpace, mag };
+  }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright, dotSize, dotSpace, mag]);
 
   const on = ambientSea && !expertOn;
 
@@ -258,6 +259,7 @@ export function AmbientSea() {
     const uTexBright = gl.getUniformLocation(prog, 'u_texBright');
     const uDotSize = gl.getUniformLocation(prog, 'u_dotSize');
     const uDotSpace = gl.getUniformLocation(prog, 'u_dotSpace');
+    const uMag = gl.getUniformLocation(prog, 'u_mag');
 
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const resize = () => {
@@ -285,6 +287,7 @@ export function AmbientSea() {
       gl.uniform1f(uTexBright, inputs.current.texBright);
       gl.uniform1f(uDotSize, inputs.current.dotSize);
       gl.uniform1f(uDotSpace, inputs.current.dotSpace);
+      gl.uniform1f(uMag, inputs.current.mag);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
 

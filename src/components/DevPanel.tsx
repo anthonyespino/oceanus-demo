@@ -158,9 +158,10 @@ export function DevPanel() {
         <Slider label="wave amp" value={f.waveAmp} min={0.05} max={0.7} step={0.01} onChange={f.setWaveAmp} />
         <Slider label="tex dens" value={f.texDens} min={0} max={1} step={0.05} onChange={f.setTexDens} />
         <Slider label="tex bright" value={f.texBright} min={0} max={0.25} step={0.01} onChange={f.setTexBright} />
-        {/* round 76: dot-matrix lattice controls */}
-        <Slider label="dot size" value={f.dotSize} min={1} max={7} step={0.5} onChange={f.setDotSize} />
-        <Slider label="dot space" value={f.dotSpace} min={10} max={44} step={1} onChange={f.setDotSpace} />
+        {/* round 76/77: dot-matrix lattice — density, base size, magnification */}
+        <Slider label="dot space" value={f.dotSpace} min={16} max={90} step={1} onChange={f.setDotSpace} />
+        <Slider label="dot size" value={f.dotSize} min={0.5} max={6} step={0.25} onChange={f.setDotSize} />
+        <Slider label="magnify" value={f.mag} min={0} max={2.5} step={0.05} onChange={f.setMag} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs
             feeding the shader (dev only; no on-screen label in default mode) */}
         <div style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>

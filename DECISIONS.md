@@ -141,6 +141,22 @@ originals.*
     strongest expression of "the instrument reports the calm," the waves literally
     displacing the samples. Perf: GPU-only (neighbor-searched rows, no per-node
     DOM), sustained ~71 fps on the board (gate 60); density tunable via sliders.
+  - **DOT MATRIX REBUILT — dense fine lattice + per-dot MAGNIFICATION (round 77)**:
+    the round-76 lattice was too sparse to register, so it is rebuilt (not a fifth
+    mode — replaces it). Much denser and finer (small dots, dense rows). The
+    PRIMARY wave cue is now per-dot MAGNIFICATION: as a crest passes, dots there
+    SWELL and BRIGHTEN; trough dots settle small and dim — the wave reads as a
+    travelling swell of enlarged brighter dots through a fine measured field
+    (light + depth moving across sampled points). Displacement is secondary.
+    Recession / haze / no-horizon kept. Computed entirely in-shader (radius +
+    brightness per dot), single-cell lookup → **O(1) per pixel, so density is FREE
+    and fps is density-independent: sustained ~120 fps** (gate 60). New `magnify`
+    slider + density/size; greyscale, white/subtle (magnified crest dots are the
+    brightest points but stay below severity — Meridian gold re-confirmed),
+    frequency still delta-bound. Reduced-motion freezes the lattice mid-wave.
+  - **PARTICLE FIELD mark-shape bug fixed (round 77)**: the round-75 mark was a
+    point + short line that tiled into a directional chevron/fish read. Replaced
+    with a simple round dot (neutral points only, no directional/symbolic shape).
 - **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
   and the layout-mode toggle retired. Audit found there were never two structural
   layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its
