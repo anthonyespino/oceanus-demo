@@ -134,6 +134,8 @@ export function DevPanel() {
           options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
         <Row label="reveal" value={f.revealStyle} onPick={f.setRevealStyle}
           options={[{ v: 'chevron' as const, text: 'chevron' }, { v: 'meter' as const, text: 'meter strip' }]} />
+        <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
+          options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
       </Section>
     </div>
   );

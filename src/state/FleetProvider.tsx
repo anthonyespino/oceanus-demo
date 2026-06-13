@@ -58,6 +58,8 @@ interface FleetContextValue {
   togglePanel: (key: string) => void;
   scenario: string; // round 45: scenario library — synthetic overlay id ('demo' = base seed)
   setScenario: (id: string) => void;
+  ambientSea: boolean; // round 46: Calm Sea ambient wave (default on)
+  setAmbientSea: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   revealStyle: RevealStyle;
@@ -94,6 +96,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [scenario, setScenario] = useState('demo');
+  const [ambientSea, setAmbientSea] = useState(true); // round 46: default on
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [revealStyle, setRevealStyle] = useState<RevealStyle>('meter'); // round 44: meter strip
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
@@ -148,7 +151,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         ikbBand, setIkbBand,
         chartTop, setChartTop, stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
-        collapsedPanels, togglePanel, scenario, setScenario,
+        collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,
       }}

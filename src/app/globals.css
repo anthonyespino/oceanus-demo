@@ -150,3 +150,28 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }
 }
+
+/* ROUND 46: Calm Sea — ambient wave bound to fleet metrics. Compositor-only:
+   the drift is a translateX keyframe (GPU); amplitude/frequency/tint come
+   from registered custom properties that CSS eases over 5s, so the JS layer
+   writes 3 values per tick and the SVG geometry never re-tessellates. */
+@property --wave-amp { syntax: '<number>'; initial-value: 0.5; inherits: true; }
+@property --wave-freq { syntax: '<number>'; initial-value: 1; inherits: true; }
+@property --wave-tint { syntax: '<color>'; initial-value: #2b3a44; inherits: true; }
+
+.sea {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 220px;
+  z-index: 0; pointer-events: none; overflow: hidden;
+  opacity: 0.09; mix-blend-mode: soft-light;
+  transition: --wave-amp 5s linear, --wave-freq 5s linear, --wave-tint 5s linear;
+}
+.sea-drift { position: absolute; bottom: 0; left: 0; width: 200%; height: 100%; will-change: transform; }
+.sea-drift.a { animation: sea-drift 44s linear infinite; }
+.sea-drift.b { animation: sea-drift 67s linear infinite; opacity: 0.6; }
+.sea-shape { transform-origin: bottom center; transform: scaleX(var(--wave-freq)) scaleY(var(--wave-amp)); }
+.sea-shape.b { transform: scaleX(calc(var(--wave-freq) * 0.82)) scaleY(calc(var(--wave-amp) * 1.35)); }
+@keyframes sea-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* governance: reduced-motion kills it outright; visibility pause via JS class */
+@media (prefers-reduced-motion: reduce) { .sea { display: none; } }
+.sea.paused .sea-drift { animation-play-state: paused; }

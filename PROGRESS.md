@@ -1,3 +1,21 @@
+# PROGRESS — 2026-06-13 (Session 42: ROUND 46 — Calm Sea)
+
+## Done
+
+A fleet-metric-bound ambient wave behind the fleet view (`AmbientSea`, default on).
+
+1. **Data bindings (settled values confirmed in the recordings):** amplitude = f(|fleet mean Δ|), capped — ALL NOMINAL **0.374** (flat) → ONE WATCH **0.465** → MULTI-CASUALTY **0.596** (swell). Frequency = f(avg burn fraction), subtle (~1.12). Tint = worst active severity at 9% via soft-light: nominal **#2b3a44** (neutral cool) → watch cooled amber → degraded **#f85149** (red). Velocity = constant slow drift.
+2. **Rendering — GPU/compositor only:** one static periodic SVG path (repeats every 1200u → seamless `translateX(-50%)` loop), two parallax copies on 44s/67s keyframes. Amplitude/frequency/tint ride **registered `@property` custom properties** that CSS eases over 5s, so the JS layer writes 3 values per metric change and the geometry never re-tessellates. `position:fixed`, behind content, mix-blend soft-light, opacity 0.09.
+3. **Performance — passes the gate:** main-thread frame timing over 120 frames held ~8.3ms avg / 9.3ms max with the wave on — **zero long frames**, no main-thread stalls (the drift runs on the compositor; metric eases are occasional registered-property interpolations). No impact on chart animations or scroll.
+4. **Governance:** settings-sheet "ambient sea" switch (default on); auto-off under `prefers-reduced-motion` (CSS `display:none` + JS matchMedia guard); auto-off in EXPERT mode; paused via Page Visibility API when the tab is hidden.
+5. **The line for the room** (per brief): "The fleet's baseline state is information. Every other instrument reports exceptions; this one reports the calm. It's bound to fleet mean delta and average burn, not animated for decoration — when the sea gets choppy, the fleet is drifting. It has an off switch and respects reduced-motion."
+
+## Deliverable
+
+Screen recordings (motion-only — a still doesn't convey it), committed to `docs/videos/`: `r46-calm-nominal.webm`, `r46-onewatch.webm`, `r46-multicasualty.webm`.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 41: ROUND 45 — conditional census + scenario library)
 
 ## Done
