@@ -28,6 +28,7 @@ originals.*
 | ⚖6 | 2026-06-12 | RESOLVED (round 36): `heading_deg` → VISIBLE, rendered as directional hull-marker rotation on both charts (glyph/vesselMarker), never as a numeral | Anthony, via round 36 brief ("resolves ⚖ #6: yes") | Applied S35 (`dispositions.ts`, FleetMap, InspectorChart) |
 | ⚖9 | 2026-06-12 | RESOLVED (round 30): dot-matrix wins the tank-fill verdict — the bars/row layout is deleted | Anthony, via round 30 brief | Applied S31 |
 | ⚖11 | 2026-06-12 | RESOLVED (round 30): the fuel card is VesselSynoptic — synoptic on top, dot-matrix tank quartet beneath (ST1 ST2 FD1 FD2, % + gal); TankSchematic and the round-26 view switcher retired | Anthony, via round 30 brief | Applied S31 |
+| ⚖ status | 2026-06-13 | RESOLVED (round 57): VesselTile status indicator is **status.line over status.dot** — severity as an integrated edge line (annunciator-strip read), unifying the status border and the status indicator into one gesture. Figma is the source of truth; the atlas follows it (status.dot → status.line, no Figma write-back). | Anthony, via round 57 (approving the round-49 §5 / round-55 diff) | Applied S50 (`VesselTile`, atlas) |
 
 ## Notes
 

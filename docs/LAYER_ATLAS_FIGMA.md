@@ -238,20 +238,19 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: body
     • trendChart.chart  → ink/secondary line · zero axis · {daily_delta_1y[-30d]}
   Region: (root)
-    • endurance.glyph  → glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39) · endurance
+    • endurance.glyph  → slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance · endurance
     • endurance.value.text  → font/data 12 tabular · right-aligned · {derived.endurance_hours} h
   Region: footer
     • fuel.fill  → ink/muted fill | alert color when endurance-backed · surface/overlay track · {Σ tank level / Σ capacity}
   Region: (root)
-    • mode.glyph  → line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
-    • now.glyph  → glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39) · now vs mode baseline
+    • now.glyph  → slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline · now vs mode baseline
     • now.value.text  → font/data 12 tabular · right-aligned · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
     • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
     • spark.container  → full card width, fixed height, every size — the 24h signature dock (round 39) · —
-    • status.dot  → status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile · {vesselStatus(alerts)}
-    • trend.glyph  → glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped) · 30d trend
+    • status.line  → severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot) · {vesselStatus(alerts)}
+    • trend.glyph  → slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend · 30d trend
     • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
 ## Glyph library (icon components)
@@ -285,4 +284,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     · glyph/calendar  → calendar.svg
 
-*138 leaves · 19 components · 25 glyphs (0 drawn) · generated 2026-06-13T19:03:26.272Z*
+*137 leaves · 19 components · 25 glyphs (0 drawn) · generated 2026-06-13T19:11:13.171Z*

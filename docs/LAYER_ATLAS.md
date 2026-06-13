@@ -473,7 +473,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary line · zero axis
   - BINDS — {daily_delta_1y[-30d]}
 - `endurance.glyph`
-  - TOKENS — glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39)
+  - TOKENS — slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance
   - BINDS — endurance
 - `endurance.value.text`
   - TOKENS — font/data 12 tabular · right-aligned
@@ -481,14 +481,11 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `footer / fuel.fill`
   - TOKENS — ink/muted fill | alert color when endurance-backed · surface/overlay track
   - BINDS — {Σ tank level / Σ capacity}
-- `mode.glyph`
-  - TOKENS — line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name
-  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
 - `name.text`
   - TOKENS — type/name · font/display caps · status tint when alerted (earned)
   - BINDS — {vessel.static.name}
 - `now.glyph`
-  - TOKENS — glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39)
+  - TOKENS — slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline
   - BINDS — now vs mode baseline
 - `now.value.text`
   - TOKENS — font/data 12 tabular · right-aligned
@@ -502,14 +499,14 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `spark.container`
   - TOKENS — full card width, fixed height, every size — the 24h signature dock (round 39)
   - BINDS — —
-- `status.dot`
-  - TOKENS — status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile
+- `status.line`
+  - TOKENS — severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot)
   - BINDS — {vesselStatus(alerts)}
 - `trend.glyph`
-  - TOKENS — glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped)
+  - TOKENS — slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend
   - BINDS — 30d trend
 - `trend.value.text`
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*138 instrumented leaves · 19 components · generated 2026-06-13T19:03:26.271Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T19:11:13.170Z*

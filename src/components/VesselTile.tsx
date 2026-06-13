@@ -19,14 +19,10 @@ import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT, ALERT_TEXT_COLOR } from './probeTokens';
 import { useState } from 'react';
 import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
-import { Glyph, type GlyphName } from './Glyph';
+import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
-
-const MODE_GLYPH: Record<string, GlyphName> = { TRANSIT: 'route', STATION: 'vessel', STANDBY: 'clock', PORT: 'anchor' };
-
-
 
 export function VesselTile({
   vessel,
@@ -117,21 +113,22 @@ export function VesselTile({
       {/* header block: fixed. Round 47: trend is glyph + value (the "30D
           TREND" text label dropped, matching the round-39 endurance/now
           treatment — glyph carries identity, title teaches it). */}
+      {/* round 57: status.dot → status.line (Figma source of truth). Severity
+          as an integrated edge line under the name — annunciator-strip read,
+          unifying the status border and indicator into one gesture. Mode chip
+          dropped from the tile (no mode.glyph here anymore). trend/now/
+          endurance slots wired to their library glyphs (calendar/clock/wave),
+          rendering placeholder until the drawn SVGs import. */}
       <div style={{ textAlign: 'center' }}>
-        <span {...layer('VesselTile / status.dot', 'status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile', '{vesselStatus(alerts)}')} style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: dotColor, marginBottom: 8 }} />
         <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned)', '{vessel.static.name}')} style={{ ...TYPE.name, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+        <div {...layer('VesselTile / status.line', 'severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot)', '{vesselStatus(alerts)}')} style={{ height: 2, width: '100%', background: dotColor, margin: '8px 0' }} />
         <div title="30-day trend" style={{ marginTop: 6, display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 2, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
-          <span {...layer('VesselTile / trend.glyph', 'glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped)', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="chart.trend" size={14} /></span>
+          <span {...layer('VesselTile / trend.glyph', 'slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="calendar" size={14} /></span>
           <span {...layer('VesselTile / trend.value.text', 'type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: mini ? 24 : 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
             {fmtPct(d.trend_30d)}
             {treatment === 'automotive' && status === 'nominal' && (
               <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>
             )}
-          </span>
-        </div>
-        <div style={{ marginTop: 6 }}>
-          <span {...layer('VesselTile / mode.glyph', 'line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')} title={d.mode} style={{ border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '3px 6px', color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', lineHeight: 0 }}>
-            <Glyph name={MODE_GLYPH[d.mode]} size={15} />
           </span>
         </div>
       </div>
@@ -172,11 +169,11 @@ export function VesselTile({
       {tier === 1 && !mini && (
         <div style={{ marginTop: 10, textAlign: 'left' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-            <span {...layer('VesselTile / endurance.glyph', 'glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39)', 'endurance')} style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="fuel-drop" size={13} /></span>
+            <span {...layer('VesselTile / endurance.glyph', 'slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance', 'endurance')} style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="wave" size={13} /></span>
             <span {...layer('VesselTile / endurance.value.text', 'font/data 12 tabular · right-aligned', '{derived.endurance_hours} h')} style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, marginTop: 2 }}>
-            <span {...layer('VesselTile / now.glyph', 'glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39)', 'now vs mode baseline')} style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="delta" size={13} /></span>
+            <span {...layer('VesselTile / now.glyph', 'slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline', 'now vs mode baseline')} style={{ width: 16, flexShrink: 0, color: NEUTRAL.inkMuted, lineHeight: 0 }}><Glyph name="clock" size={13} /></span>
             <span {...layer('VesselTile / now.value.text', 'font/data 12 tabular · right-aligned', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
           </div>
         </div>

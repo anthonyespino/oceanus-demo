@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T19:03:26.272Z",
+  "generated": "2026-06-13T19:11:13.172Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1132,7 +1132,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "endurance.glyph",
-      "tokens": "glyph/fuel-drop 13px · ink/muted · identifies endurance (text label dropped round 39)",
+      "tokens": "slot → glyph/wave (placeholder until SVG import) · 13px · ink/muted · identifies endurance",
       "binds": "endurance",
       "file": "src/components/VesselTile.tsx"
     },
@@ -1155,15 +1155,6 @@
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / mode.glyph",
-      "component": "VesselTile",
-      "region": "(root)",
-      "leaf": "mode.glyph",
-      "tokens": "line/strong chip · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name",
-      "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
-      "file": "src/components/VesselTile.tsx"
-    },
-    {
       "path": "VesselTile / name.text",
       "component": "VesselTile",
       "region": "(root)",
@@ -1177,7 +1168,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "now.glyph",
-      "tokens": "glyph/delta 13px · ink/muted · identifies now-vs-baseline (text label dropped round 39)",
+      "tokens": "slot → glyph/clock (placeholder until SVG import) · 13px · ink/muted · identifies now-vs-baseline",
       "binds": "now vs mode baseline",
       "file": "src/components/VesselTile.tsx"
     },
@@ -1218,11 +1209,11 @@
       "file": "src/components/VesselTile.tsx"
     },
     {
-      "path": "VesselTile / status.dot",
+      "path": "VesselTile / status.line",
       "component": "VesselTile",
       "region": "(root)",
-      "leaf": "status.dot",
-      "tokens": "status color · ink/muted when nominal (treatment B) — drives the only color on a nominal tile",
+      "leaf": "status.line",
+      "tokens": "severity as an integrated edge line · status color | ink/muted nominal (treatment B) — the in-card status indicator (round 57, replaces the dot)",
       "binds": "{vesselStatus(alerts)}",
       "file": "src/components/VesselTile.tsx"
     },
@@ -1231,7 +1222,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "trend.glyph",
-      "tokens": "glyph/chart.trend · ink/muted · identifies the 30-day trend (text label dropped)",
+      "tokens": "slot → glyph/calendar (placeholder until SVG import) · ink/muted · identifies the 30-day trend",
       "binds": "30d trend",
       "file": "src/components/VesselTile.tsx"
     },

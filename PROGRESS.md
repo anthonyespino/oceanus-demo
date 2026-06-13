@@ -1,3 +1,17 @@
+# PROGRESS — 2026-06-13 (Session 50: ROUND 57 — apply VesselTile scrape + atlas update)
+
+## Done (one-way Figma → code; no write-back to the file)
+
+1. **11 matched leaves applied** — already aligned to the renamed Figma layers; code reflects them.
+2. **status.dot → status.line** (Figma is source of truth): the tile's centered status dot is replaced by an integrated edge line under the name (annunciator-strip read), colored by status (amber/red when alerted, ink-muted nominal). Atlas updated to `status.line` in code → regenerated `atlas.json` + cheat sheet (status.line ×1, status.dot ×0). Verified: on the board, Meridian's amber line + amber border + amber name are one unified severity gesture; nominal tiles carry a neutral line.
+3. **mode.glyph dropped from the tile** — the mode chip was removed from the build to match Figma; the `VesselTile / mode.glyph` atlas leaf is gone. Confirmed the only remaining `mode.glyph` leaves are `FleetRail / row` and `VesselCommandBand / centerStack` — neither referenced the tile's.
+4. **Glyph slots wired to their library icons**: `trend.glyph → glyph.calendar`, `now.glyph → glyph.clock`, `endurance.glyph → glyph.wave`. No SVGs imported yet, so all three resolve to **placeholder pictograms** (the expected state — no error). They go live when the drawn SVGs land.
+5. **DECISIONS.md** — `⚖ status` resolved: status.line over status.dot (severity as integrated edge line, unifies status border + indicator into one gesture; atlas follows Figma).
+
+Atlas now 19 components / 137 leaves. Build clean; one-way confirmed (MCP reads only). Screenshot `r57-tiles.png`.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 49: ROUND 55 — glyph import + VesselTile scrape, DIFF ONLY)
 
 ## Glyphs imported: 0 (all 3 dropped files skipped)
