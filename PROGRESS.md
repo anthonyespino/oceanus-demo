@@ -1,3 +1,20 @@
+# PROGRESS — 2026-06-13 (Session 41: ROUND 45 — conditional census + scenario library)
+
+## Done
+
+1. **Conditional census** — FleetHealthBand presence rule: DEGRADED and WATCH cells render only when count > 0; NOMINAL always (the affirmative all-clear). At rest: "NOMINAL 15". One caution: "WATCH 1 · NOMINAL 14". Multi-casualty: full "2 · 2 · 11". The band's shape encodes severity — verified in pixels across scenarios.
+2. **Scenario library** (`src/state/scenarios.ts`) — 10 named, deterministic synthetic overlays on the base seed; demo/telemetry never mutated (only alert/derived/staleness/mode on clones). `demo` is identity (no badge); the rest badge "SCENARIO: {label} — synthetic, not the demo path". Ships: DEMO—MERIDIAN, ALL NOMINAL, ONE WATCH, MULTI-WATCH, ONE DEGRADED, MULTI-CASUALTY, DATALINK BLACKOUT, PORT WEEKEND, FUEL EMERGENCY, EFFICIENCY DRIFT. `viewFleet = scenarioById(scenario).apply(fleet)` in FleetProvider; `stress`/`applyStress`/`STRESS_MODS` retired. Adding a scenario = one array entry.
+3. **Settings sheet** — the gear (D / ⚙) now opens a three-section sheet: SCENARIO (the library chips), MODE (default/learn/expert), DEV (sim clock + verdict toggles). Replaced the flat panel-of-toggles. Atlas: `SettingsSheet / sheet / settings.sheet`, `/ scenario / scenario.chip`, `/ mode / mode.chip`.
+4. **Presence-rule audit** — status-strip alert chip hides entirely at zero alerts (silent absence; census nominal carries the all-clear); the inspector's per-vessel alerts section already collapses when empty (round 37 guard) — confirmed, no "ALERTS · (empty)". AlertRail is long dead (→ StatusHeader), N/A.
+
+19 components / 131 leaves.
+
+## Screenshots
+
+`r45-band-allnominal.png` (NOMINAL 15), `r45-band-onewatch.png` (WATCH 1 · NOMINAL 14), `r45-band-multicasualty.png` (full row), `r45-settings-sheet.png` (three sections), `r45-inspector-noalerts.png` (alerts section absent on a clean vessel).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 40: ROUND 44 EXPERT MODE)
 
 *(Anthony reused "Round 44" — this is the Expert Mode brief, distinct from the startup-defaults micro below.)*

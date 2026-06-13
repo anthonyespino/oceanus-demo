@@ -115,7 +115,10 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         {/* CELL 1 — status census (clickable filters; never separable from the mean) */}
         <div style={{ ...cell, borderLeft: 'none', paddingLeft: 0, flexDirection: 'row', gap: 18, alignItems: 'center' }}>
-          {(['degraded', 'watch', 'nominal'] as StatusLevel[]).map((cls) => (
+          {/* round 45 presence rule: degraded/watch render only when present;
+              nominal ALWAYS (the affirmative all-clear — the band's own shape
+              encodes severity). At rest: just "NOMINAL 15". */}
+          {(['degraded', 'watch', 'nominal'] as StatusLevel[]).filter((cls) => cls === 'nominal' || counts[cls] > 0).map((cls) => (
             <button
               key={cls}
               {...CENSUS_LAYER[cls]}

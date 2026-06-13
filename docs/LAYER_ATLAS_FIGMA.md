@@ -139,6 +139,15 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: header
     • header.glyph  → section header · anchor glyph · glyph-only in expert mode · PORT CALLS — 72H
 
+## SettingsSheet
+
+  Region: mode
+    • mode.chip  → mode chip · default / learn (L) / expert (E) · mutually exclusive · {ui mode}
+  Region: scenario
+    • scenario.chip  → scenario library chip · accent when active · synthetic overlay (demo = base seed) · {scenario id} → applies overlay
+  Region: sheet
+    • settings.sheet  → gear-summoned settings sheet · SCENARIO / MODE / DEV sections · —
+
 ## StatusHeader
 
   Region: alerts
@@ -237,4 +246,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • name.text  → type/name · font/display caps · status tint when alerted (earned) · {vessel.static.name}
     • trend.text  → type/hero · font/data tabular · status tint (earned) · {derived.trend_30d} %/30d
 
-*128 leaves · 18 components · generated 2026-06-13T18:01:22.407Z*
+*131 leaves · 19 components · generated 2026-06-13T18:08:43.487Z*

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T18:01:22.407Z",
+  "generated": "2026-06-13T18:08:43.487Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -109,6 +109,33 @@
       "tokens": "font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)",
       "binds": "{crew.onboard_since shared date + days}",
       "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "SettingsSheet / mode / mode.chip",
+      "component": "SettingsSheet",
+      "region": "mode",
+      "leaf": "mode.chip",
+      "tokens": "mode chip · default / learn (L) / expert (E) · mutually exclusive",
+      "binds": "{ui mode}",
+      "file": "src/components/DevPanel.tsx"
+    },
+    {
+      "path": "SettingsSheet / scenario / scenario.chip",
+      "component": "SettingsSheet",
+      "region": "scenario",
+      "leaf": "scenario.chip",
+      "tokens": "scenario library chip · accent when active · synthetic overlay (demo = base seed)",
+      "binds": "{scenario id} → applies overlay",
+      "file": "src/components/DevPanel.tsx"
+    },
+    {
+      "path": "SettingsSheet / sheet / settings.sheet",
+      "component": "SettingsSheet",
+      "region": "sheet",
+      "leaf": "settings.sheet",
+      "tokens": "gear-summoned settings sheet · SCENARIO / MODE / DEV sections",
+      "binds": "—",
+      "file": "src/components/DevPanel.tsx"
     },
     {
       "path": "EfficiencyCurve / plot / delta.text",

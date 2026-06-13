@@ -117,7 +117,10 @@ export function StatusHeader() {
         <span style={{ ...item, color: NEUTRAL.inkSecondary }}>LAST SYNC {fmtAge(simTime - oldestTs)}</span>
       </DetailChip>
 
-      {/* alert-count chip → the round-33 alert sheet */}
+      {/* alert-count chip → the round-33 alert sheet. Round 45: hides
+          entirely at zero alerts — silent absence is honest; the census
+          nominal carries the all-clear. */}
+      {countParts.length > 0 && (
       <DetailChip
         label="active alerts"
         align="right"
@@ -145,15 +148,12 @@ export function StatusHeader() {
       >
         <span style={{ ...item, color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
           <Glyph name="alert-triangle" size={12} />
-          {countParts.length === 0 ? (
-            <span style={{ color: NEUTRAL.inkMuted }}>NO ALERTS</span>
-          ) : (
-            countParts.map((l, i) => (
-              <span key={l}>{i > 0 && ' · '}<span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span></span>
-            ))
-          )}
+          {countParts.map((l, i) => (
+            <span key={l}>{i > 0 && ' · '}<span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span></span>
+          ))}
         </span>
       </DetailChip>
+      )}
     </span>
   );
 }

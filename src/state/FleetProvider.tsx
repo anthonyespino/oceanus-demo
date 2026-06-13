@@ -10,8 +10,8 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { advanceFleet, getFleet } from '../data/fleetState';
 import { vesselStatus, type StatusLevel } from '../data/alerts';
-import type { Alert } from '../data/types';
 import type { VesselState } from '../data/types';
+import { scenarioById } from './scenarios';
 
 export type TickSpeed = 1 | 60;
 // Layout-probe toggles (branch-only): tile density, status-color treatment,
@@ -56,8 +56,8 @@ interface FleetContextValue {
   /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
   collapsedPanels: Record<string, boolean>;
   togglePanel: (key: string) => void;
-  stress: boolean; // round 11: synthetic crowded-board scenario (badged STRESS)
-  setStress: (b: boolean) => void;
+  scenario: string; // round 45: scenario library — synthetic overlay id ('demo' = base seed)
+  setScenario: (id: string) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   revealStyle: RevealStyle;
@@ -93,7 +93,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [stateMarks, setStateMarks] = useState(true); // round 44: state marks on
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
-  const [stress, setStress] = useState(false);
+  const [scenario, setScenario] = useState('demo');
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [revealStyle, setRevealStyle] = useState<RevealStyle>('meter'); // round 44: meter strip
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
@@ -131,10 +131,12 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   }, [live, speed, fleet !== null]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const simTime = fleet ? fleet[0].history.minutes[fleet[0].history.minutes.length - 1].t : null;
-  // STRESS scenario (round 11): synthetic overrides so the crowded-board case
-  // can be designed against real pixels. Never the demo path; demo seed and
-  // generated data untouched — only alert/derived fields on clones.
-  const viewFleet = fleet && stress ? applyStress(fleet) : fleet;
+  // ROUND 45 scenario library: synthetic overlays so performative states can
+  // be designed/rehearsed against real pixels. Never the demo path; demo seed
+  // and generated telemetry untouched — only alert/derived/staleness/mode on
+  // clones. 'demo' = identity (the canonical Meridian story).
+  const active = scenarioById(scenario);
+  const viewFleet = fleet ? active.apply(fleet) : fleet;
 
   return (
     <FleetContext.Provider
@@ -146,42 +148,24 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         ikbBand, setIkbBand,
         chartTop, setChartTop, stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
-        collapsedPanels, togglePanel, stress, setStress,
+        collapsedPanels, togglePanel, scenario, setScenario,
         censusFilter, setCensusFilter, revealStyle, setRevealStyle,
         tileSizes, setTileSize,
       }}
     >
       {children}
-      {stress && (
+      {active.synthetic && (
         <div style={{
           position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 70,
           fontFamily: 'var(--font-data)', fontSize: 11, letterSpacing: 1.5,
           color: 'var(--color-alert-caution)', border: '1px solid var(--color-alert-caution)',
           background: 'var(--color-surface-raised)', borderRadius: 1, padding: '4px 10px', // RADIUS token value (state layer)
         }}>
-          SCENARIO: MULTI-VESSEL — synthetic
+          SCENARIO: {active.label} — synthetic, not the demo path
         </div>
       )}
     </FleetContext.Provider>
   );
-}
-
-const STRESS_MODS: Record<string, { alerts: Alert[]; sd: number; trend: number; delta: number }> = {
-  v02: { alerts: [{ level: 'WARNING', code: 'FEEDER_LOW', message: 'Feeder tanks 8% underway' }], sd: 7.4, trend: 9.2, delta: 12.8 },
-  v05: { alerts: [{ level: 'CAUTION', code: 'EFF_DELTA', message: 'Efficiency +9.6% vs mode baseline, sustained 7d' }], sd: 4.8, trend: 6.1, delta: 9.6 },
-  v08: { alerts: [{ level: 'CAUTION', code: 'EGT_DIVERGENCE', message: 'v08-E1 EGT +44°F over twin at matched load' }], sd: 3.2, trend: 4.4, delta: 7.1 },
-};
-
-function applyStress(fleet: VesselState[]): VesselState[] {
-  return fleet.map((v) => {
-    const m = STRESS_MODS[v.static.id];
-    if (!m) return v;
-    return {
-      ...v,
-      alerts: [...v.alerts, ...m.alerts],
-      derived: { ...v.derived, sustained_deviation: m.sd, trend_30d: m.trend, efficiency_delta_pct: m.delta },
-    };
-  });
 }
 
 export function useFleet(): FleetContextValue {

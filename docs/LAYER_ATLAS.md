@@ -260,6 +260,20 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — section header · anchor glyph · glyph-only in expert mode
   - BINDS — PORT CALLS — 72H
 
+## SettingsSheet
+
+*source: src/components/DevPanel.tsx*
+
+- `mode / mode.chip`
+  - TOKENS — mode chip · default / learn (L) / expert (E) · mutually exclusive
+  - BINDS — {ui mode}
+- `scenario / scenario.chip`
+  - TOKENS — scenario library chip · accent when active · synthetic overlay (demo = base seed)
+  - BINDS — {scenario id} → applies overlay
+- `sheet / settings.sheet`
+  - TOKENS — gear-summoned settings sheet · SCENARIO / MODE / DEV sections
+  - BINDS — —
+
 ## StatusHeader
 
 *source: src/components/AlertSheet.tsx*
@@ -477,4 +491,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned)
   - BINDS — {derived.trend_30d} %/30d
 
-*128 instrumented leaves · 18 components · generated 2026-06-13T18:01:22.406Z*
+*131 instrumented leaves · 19 components · generated 2026-06-13T18:08:43.486Z*
