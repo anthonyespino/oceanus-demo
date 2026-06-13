@@ -255,26 +255,31 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
             <Gauge size={96} label="burn" value={d.burn_rate_gph} min={0} max={maxObservedBurn(vessel)}
               display={`${Math.round(d.burn_rate_gph)} gph`} vital={aliveVital} />
           </div>
-          {/* broadcast center: name → master → mode glyph + location → clock → weather */}
-          <div style={{ flex: 1, minWidth: 240, textAlign: 'center' }}>
+          {/* broadcast center (round 52): full-glyph default — category words
+              die, glyph prefixes carry the category; text values stay. Each
+              register gets its own row with breathing room (gap 12); no line
+              carries a stroke (the mode chip's box is the one allowed mode
+              affordance — severity is the only other outline). */}
+          <div style={{ flex: 1, minWidth: 240, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
             <div {...layer('VesselCommandBand / centerStack / name.text', 'type/hero · font/display caps · ink/primary', '{vessel.static.name}')} style={nameStyle}>{vessel.static.name}</div>
-            {/* round 43: master prefix dies — just the name; learn/title keeps the role teachable */}
-            <div {...layer('VesselCommandBand / centerStack / master.name.text', 'font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title', 'master · {crew Master.name}')} title={master ? `master · ${master.name}` : undefined} style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary, marginTop: 2 }}>
-              {master?.name ?? '—'}
+            {/* round 52: master line — crew.glyph (slot, placeholder until drawn)
+                + name; "master" word dropped, no box, no tooltip */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
+              <span {...layer('VesselCommandBand / centerStack / crew.glyph', 'glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"', 'crew Master')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="crew" size={13} /></span>
+              <span {...layer('VesselCommandBand / centerStack / master.name.text', 'font/data 12 · ink/secondary · name as value (no label, no stroke)', '{crew Master.name}')}>{master?.name ?? '—'}</span>
             </div>
-            {/* round 43: mode glyph + location coupled — location centered on
-                the glyph, type matches the facts row (no longer demoted) */}
-            <div style={{ marginTop: 6, display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-              {modeChip}
-              {locationName && (
-                <div {...layer('VesselCommandBand / centerStack / location.text', 'font/data 12 · ink/secondary · coupled under the mode glyph (round 43)', '{destination | moored port | work site}')} style={{ fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
-                  {locationName.toUpperCase()}
-                </div>
-              )}
-            </div>
-            {/* round 34: clock + weather share one centered line — labels
-                die, the glyphs + units self-describe. Reveal holds
-                current/vis/precip. */}
+            {/* mode glyph (chip box = the one allowed affordance) */}
+            {modeChip}
+            {/* round 52: place line — anchor.glyph (slot, placeholder) + place */}
+            {locationName && (
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
+                <span {...layer('VesselCommandBand / centerStack / anchor.glyph', 'glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place', 'place')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="anchor" size={13} /></span>
+                <span {...layer('VesselCommandBand / centerStack / location.text', 'font/data 12 · ink/secondary · place as value', '{destination | moored port | work site}')}>{locationName.toUpperCase()}</span>
+              </div>
+            )}
+            {/* round 34: clock + weather on one line — clock stays text (a glyph
+                makes mode state more cryptic, not less); wind/waves keep their
+                glyph prefixes. Reveal holds current/vis/precip. */}
             <RevealZone
               reveal={
                 <Field level="vessel" field="weather.current" revealed>
@@ -282,7 +287,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </Field>
               }
             >
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 6, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                 <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · white when still (ruling 14)', '{T−(eta−now) in transit | elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
                   {clock}
                 </span>

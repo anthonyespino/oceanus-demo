@@ -161,9 +161,11 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## VesselCommandBand
 
   Region: centerStack
+    • anchor.glyph  → glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place · place
     • clock.text  → type/hero×0.6 · font/data tabular · white when still (ruling 14) · {T−(eta−now) in transit | elapsed} · countdown lives HERE only
-    • location.text  → font/data 12 · ink/secondary · coupled under the mode glyph (round 43) · {destination | moored port | work site}
-    • master.name.text  → font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title · master · {crew Master.name}
+    • crew.glyph  → glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master" · crew Master
+    • location.text  → font/data 12 · ink/secondary · place as value · {destination | moored port | work site}
+    • master.name.text  → font/data 12 · ink/secondary · name as value (no label, no stroke) · {crew Master.name}
     • mode.glyph  → boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/hero · font/display caps · ink/primary · {vessel.static.name}
     • waves.text  → font/data 14 tabular · glyph ink/secondary · stale tint when WX stale · {weather.wave_height_ft} ft
@@ -283,4 +285,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     · glyph/calendar  → calendar.svg
 
-*136 leaves · 19 components · 25 glyphs (0 drawn) · generated 2026-06-13T18:36:53.624Z*
+*138 leaves · 19 components · 25 glyphs (0 drawn) · generated 2026-06-13T18:53:14.298Z*

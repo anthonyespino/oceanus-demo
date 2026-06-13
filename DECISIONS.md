@@ -55,6 +55,15 @@ originals.*
     under prefers-reduced-motion and on WebGL fallback (never the old paper-wave),
     paused when hidden, settings toggle (default on). DEMO MERIDIAN seed
     untouched; the scenario library drives the deltas, this changes expression.
+- **CommandBand center stack is full-glyph in DEFAULT mode (round 52)**: category
+  words drop wherever a glyph carries the category — master line = `crew.glyph` +
+  name (no "master" word), place line = `anchor.glyph` + place. Clock stays text
+  (a glyph makes mode-state more cryptic). Wind/waves keep their glyph prefixes;
+  the mode chip stays. No line carries a stroke except the mode chip's box and a
+  genuine severity state. `crew.glyph`/`anchor.glyph` are slots with placeholder
+  fallback (drawn art arrives via the scrape). **OPEN THREAD**: Expert mode's job
+  needs re-earning — it can no longer be "glyphs replace labels" alone now that
+  default absorbs that. No verdict on Expert's new definition yet.
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

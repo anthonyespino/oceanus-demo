@@ -295,15 +295,21 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 *source: src/components/VesselCommandBand.tsx*
 
+- `centerStack / anchor.glyph`
+  - TOKENS — glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place
+  - BINDS — place
 - `centerStack / clock.text`
   - TOKENS — type/hero×0.6 · font/data tabular · white when still (ruling 14)
   - BINDS — {T−(eta−now) in transit | elapsed} · countdown lives HERE only
+- `centerStack / crew.glyph`
+  - TOKENS — glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"
+  - BINDS — crew Master
 - `centerStack / location.text`
-  - TOKENS — font/data 12 · ink/secondary · coupled under the mode glyph (round 43)
+  - TOKENS — font/data 12 · ink/secondary · place as value
   - BINDS — {destination | moored port | work site}
 - `centerStack / master.name.text`
-  - TOKENS — font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title
-  - BINDS — master · {crew Master.name}
+  - TOKENS — font/data 12 · ink/secondary · name as value (no label, no stroke)
+  - BINDS — {crew Master.name}
 - `centerStack / mode.glyph`
   - TOKENS — boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name
   - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
@@ -506,4 +512,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*136 instrumented leaves · 19 components · generated 2026-06-13T18:36:53.623Z*
+*138 instrumented leaves · 19 components · generated 2026-06-13T18:53:14.297Z*

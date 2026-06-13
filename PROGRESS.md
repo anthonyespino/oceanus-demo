@@ -1,3 +1,17 @@
+# PROGRESS — 2026-06-13 (Session 46: ROUND 52 — CommandBand center stack glyph swap + spacing)
+
+## Done
+
+1. **Full-glyph center stack** (default mode): master line → `crew.glyph` (slot, placeholder until drawn) + name, the word "master" dropped; place line → `anchor.glyph` + place. Clock stays text (a glyph would make mode-state cryptic). Wind/waves keep their glyph prefixes; mode chip stays.
+2. **Overlap/box artifact fixed**: the master line's `title` tooltip ("master · {name}") is removed and it's a single clean glyph + name element — no stroked box, no tooltip. Outlines reserved for severity (+ the mode chip's box, the one allowed affordance).
+3. **Spacing**: center stack is now a flex column with `gap: 12` between registers (name / crew / mode glyph / place / clock-row), each reading as its own register — replaces the cramped marginTop:2/6.
+4. **Confirmed**: no data value carries a label treatment; nothing in the stack strokes except the mode chip + severity; the DATALINK/CAUTION header row is untouched.
+5. **DECISIONS.md**: default full-glyph center stack logged; **Expert mode open thread** flagged (its job needs re-earning now that default absorbs label glyphs — no verdict yet).
+
+Screenshot `r52-band.png` (Marlin Ridge): crew glyph + Russell Babineaux, anchor glyph + FREEPORT TX, spaced registers, no box.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 45: ROUND 50 — Calm Sea depth rebuild)
 
 ## Done

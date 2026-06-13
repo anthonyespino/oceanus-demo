@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T18:36:53.625Z",
+  "generated": "2026-06-13T18:53:14.298Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -642,6 +642,15 @@
       "file": "src/components/PortCallsTimeline.tsx"
     },
     {
+      "path": "VesselCommandBand / centerStack / anchor.glyph",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "anchor.glyph",
+      "tokens": "glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place",
+      "binds": "place",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
       "path": "VesselCommandBand / centerStack / clock.text",
       "component": "VesselCommandBand",
       "region": "centerStack",
@@ -651,11 +660,20 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
+      "path": "VesselCommandBand / centerStack / crew.glyph",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "crew.glyph",
+      "tokens": "glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word \"master\"",
+      "binds": "crew Master",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
       "path": "VesselCommandBand / centerStack / location.text",
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "location.text",
-      "tokens": "font/data 12 · ink/secondary · coupled under the mode glyph (round 43)",
+      "tokens": "font/data 12 · ink/secondary · place as value",
       "binds": "{destination | moored port | work site}",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -664,8 +682,8 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "master.name.text",
-      "tokens": "font/data 12 · ink/secondary — names who you are calling; prefix dropped (round 43), role in learn/title",
-      "binds": "master · {crew Master.name}",
+      "tokens": "font/data 12 · ink/secondary · name as value (no label, no stroke)",
+      "binds": "{crew Master.name}",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
