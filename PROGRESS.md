@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-13 (Session 49: ROUND 55 — glyph import + VesselTile scrape, DIFF ONLY)
+
+## Glyphs imported: 0 (all 3 dropped files skipped)
+
+`docs/glyphs-import/` held three files — **`trend.glyph.png`, `now.glyph.png`, `endurance.glyph.png`** — all **skipped**, for two reasons:
+1. **Format**: they're PNG. The pipeline takes SVG only — a raster can't be normalized to `currentColor`/24px viewBox, and a bitmap defeats the drop-in-vector point (won't scale or inherit tint at the render sites).
+2. **Naming**: they're named after the *slot* (`{role}.glyph`), not the *library icon* (`glyph.{name}`). The trend slot's icon should export as **`glyph.calendar.svg`**, now → **`glyph.clock.svg`**, endurance → **`glyph.wave.svg`**.
+
+The importer was upgraded (round 55 spec): normalizes viewBox → `0 0 24 24` (scales the artboard if different), swaps hex fills/strokes → `currentColor` (keeps `none`), strips `glyph.` prefix from the filename to the bare `GlyphName` key, and reports skipped/off-convention files instead of dropping them silently. Ready for SVGs.
+
+## Slots: 0 live, all on placeholder
+
+No SVGs landed, so every glyph render site stays on its placeholder pictogram. `IMPORTED_GLYPHS` is empty; `Glyph` falls back for all 25 names. (The tile slots also aren't yet *wired* to calendar/clock/wave — that's the round-49 §5 hold, still pending approval.)
+
+## VesselTile scrape diff (frame 11:68 — read only, NOTHING applied)
+
+- **Matched cleanly (11):** `bg.shape`, `name.text`, `trend.value.text`, `endurance.value.text`, `now.value.text`, `spark.container`, `spark.chart`, `spark.baseline.line`, and the three glyph slots `trend.glyph` / `now.glyph` / `endurance.glyph`.
+- **Renamed in Figma, no atlas match (1):** `status.line` — the atlas has `status.dot`. Per round-55 rule this is a **rename needing an atlas update, not an error** (the round-49 §5 status-dot→line decision, still held).
+- **Atlas paths with no Figma layer:** `status.dot` (superseded by his `status.line`); `mode.glyph` (his VesselTile has no mode chip). Expected-absent on a standard instance: `alert.line`, `body/trendChart.chart`, `footer/fuel.fill` (2x / meter only).
+- **Glyph slots → library resolution:** all 3 slots present in Figma; their canonical library icons (`glyph.calendar`/`glyph.clock`/`glyph.wave`) **did not resolve** — no SVG imports landed (the dropped files were PNG + slot-named).
+
+Atlas exports regenerated (138 leaves / 25 glyphs). **Held for approval** — code stays preview, the file is source of truth, one-way only. No DECISIONS.md change (no verdict until the diff is reviewed).
+
+## To move forward (for Anthony)
+
+Re-export the three icons from Figma as **SVG**, named for the library glyph: `glyph.calendar.svg`, `glyph.clock.svg`, `glyph.wave.svg` (24px artboard, `currentColor`, ~1.5px stroke). Drop them in `docs/glyphs-import/`; next build the importer pulls + normalizes them and the placeholders go live wherever those names render.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 48: ROUND 54 — VesselTile single resize toggle)
 
 ## Done
