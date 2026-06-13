@@ -211,7 +211,7 @@ export function AmbientSea() {
   // live inputs in a ref so the rAF loop reads them without re-subscribing.
   // round 74: waveAmp/texDens/texBright are dev sliders; the shimmer toggle
   // gates the texture (off → density 0).
-  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.34, texDens: 0.7, texBright: 0.11, dotSize: 1.4, dotSpace: 72, mag: 1.0, flow: 0.5 });
+  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.08, texDens: 0.0, texBright: 0.25, dotSize: 0.5, dotSpace: 120, mag: 2.5, flow: 1.0 }); // round 80 persisted defaults
   const { scope, vesselId } = waterScope(pathname);
   const target = waterInputs(fleet ?? null, scope, vesselId);
   useEffect(() => {

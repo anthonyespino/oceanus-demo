@@ -1,3 +1,31 @@
+# PROGRESS — 2026-06-13 (Session 69: ROUND 80 — persist water defaults (all pages))
+
+## Done
+- Set the persisted Calm Sea / water defaults in FleetProvider (above the router →
+  global, every fresh load on any page): WATER MODE gradient · TEXTURE on ·
+  WAVE AMP 0.08 · TEX DENS 0.00 · TEX BRIGHT 0.25 · DENSITY 120 · DOT SIZE 0.50 ·
+  FLOW/RIDGE 1.00 · MAGNIFY 2.50. (AmbientSea inputs-ref placeholder matched too.)
+
+## Verify (running build, both pages)
+- **Sliders identical & exact on fresh load** — FleetView and VesselInspector both
+  read: wave amp=0.08, tex dens=0, tex bright=0.25, density=120, dot size=0.5,
+  flow/ridge=1, magnify=2.5; mode=gradient, texture on. No page differs.
+- **Dataset binding still dynamic (not frozen)**: the water readout shows the live
+  round-50 amp/freq per scope — FleetView `amp 0.46 · freq 1.12` (fleet mean),
+  VesselInspector v01 `amp 1.17 · freq 1.34` (single vessel). The slider values are
+  the baseline; the binding modulates amp/freq on top, confirmed per-scope.
+
+## Round-78 status (asked) — NEVER LANDED
+git log goes **77 → 79, no round 78** committed, and no round-78 brief was received
+this session. So particle + dot-flow were never cut — they remain in the picker
+(gradient | particle | dot flow). Per the brief's option and Anthony's provided
+dot-slider values, **modes RETAINED** and their values persisted. Say the word and
+I'll cut particle/dot-flow + drop the orphaned dot sliders in a follow-up.
+
+TSC-OK · LINT-CLEAN · offline build clean · verify PASSED.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 68: ROUND 79 — global status bar + CommandBand composition)
 
 ## Global status bar (all pages) — done

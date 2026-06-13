@@ -107,17 +107,21 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [scenario, setScenario] = useState('demo');
   const [ambientSea, setAmbientSea] = useState(true); // round 46: default on
-  const [shimmer, setShimmer] = useState(true); // round 74: textured water is the default look
-  const [waveAmp, setWaveAmp] = useState(0.34); // round 74 dev slider — wave amplitude/contrast
-  const [texDens, setTexDens] = useState(0.7); // round 74 dev slider — texture density
-  const [texBright, setTexBright] = useState(0.11); // round 74 dev slider — texture brightness
-  const [waterMode, setWaterMode] = useState<WaterMode>('gradient'); // round 75/76: treatment selector
-  // round 77 dot-flow defaults — tuned to SHOW the flowing ridges on load (dense,
-  // fine, magnified, sharp ridge), not an invisible field to discover via sliders.
-  const [dotSize, setDotSize] = useState(1.4); // base dot radius (fine)
-  const [dotSpace, setDotSpace] = useState(72); // lattice rows (dense)
-  const [mag, setMag] = useState(1.0); // per-dot magnification strength
-  const [flow, setFlow] = useState(0.5); // ridge sharpness (dots pack onto crests)
+  // ROUND 80: persisted water defaults — Anthony's tuned values, applied on every
+  // fresh page load (FleetProvider sits above the router, so FleetView and
+  // VesselInspector both initialize here; no page loads at different settings).
+  // The round-50 dataset binding (amp/freq from fleet/vessel delta) still
+  // modulates ON TOP of these — these are the baseline it modulates from, not a
+  // freeze.
+  const [shimmer, setShimmer] = useState(true); // TEXTURE: on
+  const [waveAmp, setWaveAmp] = useState(0.08); // WAVE AMP
+  const [texDens, setTexDens] = useState(0.0); // TEX DENS
+  const [texBright, setTexBright] = useState(0.25); // TEX BRIGHT
+  const [waterMode, setWaterMode] = useState<WaterMode>('gradient'); // WATER MODE: gradient
+  const [dotSize, setDotSize] = useState(0.5); // DOT SIZE
+  const [dotSpace, setDotSpace] = useState(120); // DENSITY
+  const [mag, setMag] = useState(2.5); // MAGNIFY
+  const [flow, setFlow] = useState(1.0); // FLOW/RIDGE
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;

@@ -173,6 +173,17 @@ originals.*
   - **PARTICLE FIELD mark-shape bug fixed (round 77)**: the round-75 mark was a
     point + short line that tiled into a directional chevron/fish read. Replaced
     with a simple round dot (neutral points only, no directional/symbolic shape).
+  - **Water defaults PERSISTED globally (round 80)**: Anthony's tuned baseline,
+    initialized in FleetProvider (which sits above the router) so every fresh page
+    load — FleetView and VesselInspector alike — comes up identical: WATER MODE
+    gradient · TEXTURE on · WAVE AMP 0.08 · TEX DENS 0.00 · TEX BRIGHT 0.25 ·
+    DENSITY 120 · DOT SIZE 0.50 · FLOW/RIDGE 1.00 · MAGNIFY 2.50. The round-50
+    dataset binding (amp/freq from |fleet mean delta| / single-vessel delta) still
+    modulates dynamically ON TOP of these — verified live and per-scope (FleetView
+    amp 0.46/freq 1.12, VesselInspector v01 amp 1.17/freq 1.34), NOT frozen.
+    Particle and dot-flow modes are RETAINED (round 78, which would have cut them,
+    never landed — git goes 77 → 79, no round-78 commit/brief; their sliders are
+    persisted alongside per Anthony's provided values).
 - **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
   and the layout-mode toggle retired. Audit found there were never two structural
   layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its
