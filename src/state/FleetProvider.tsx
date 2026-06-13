@@ -26,6 +26,9 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // (edge/both retired, toggle removed). Severity now lives on the strip + name
 // tint + value tint; the tile carries no severity outline at all.
 export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator experiment
+// round 75/76: Calm Sea rendering treatments — gradient (round 67/74), particle
+// field (round 75), dot matrix (round 76); all greyscale, selectable for compare.
+export type WaterMode = 'gradient' | 'particle' | 'matrix';
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
 
 interface FleetContextValue {
@@ -64,6 +67,8 @@ interface FleetContextValue {
   waveAmp: number; setWaveAmp: (n: number) => void;
   texDens: number; setTexDens: (n: number) => void;
   texBright: number; setTexBright: (n: number) => void;
+  // round 75/76: Calm Sea rendering treatment selector (gradient | particle | matrix)
+  waterMode: WaterMode; setWaterMode: (m: WaterMode) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -101,6 +106,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [waveAmp, setWaveAmp] = useState(0.34); // round 74 dev slider — wave amplitude/contrast
   const [texDens, setTexDens] = useState(0.7); // round 74 dev slider — texture density
   const [texBright, setTexBright] = useState(0.11); // round 74 dev slider — texture brightness
+  const [waterMode, setWaterMode] = useState<WaterMode>('gradient'); // round 75/76: treatment selector
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -155,6 +161,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
         waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
+        waterMode, setWaterMode,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}

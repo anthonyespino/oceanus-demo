@@ -34,7 +34,7 @@ const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`
 // smooth on high-DPI with no stair-stepping. Greyscale only (R=G=B, zero
 // chroma — navy stays chart-only); crests ~0.24 so SEVERITY STILL OUT-READS.
 // Amplitude/cadence still bound to the dataset (round 50). Premultiplied alpha.
-const FRAG = `precision mediump float;
+const FRAG_GRADIENT = `precision mediump float;
 uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
 uniform float u_waveAmp;   // round 74: wave luminance amplitude/contrast (dev slider)
 uniform float u_texDens;   // round 74: fine-texture density, 0 = off (dev slider)
@@ -87,6 +87,59 @@ void main(){
   gl_FragColor = vec4(col * alpha, alpha);
 }`;
 
+// ROUND 75 — PARTICLE FIELD: an ENTIRELY different rendering model. The wave is
+// not painted as a gradient; it is built from DISCRETE marks (points + short
+// line segments) sampled on a screen-space lattice. Marks AMASS on the wave
+// crests (present-probability rises with crest) and are DISPLACED upward by the
+// wave, so the form emerges from the field of marks, not a luminance fade —
+// reading as measured/sampled water. Motion comes from the marks shifting
+// (jitter drift + crest displacement). Greyscale, premultiplied; recession =
+// finer cells toward the top, fading into haze. Dataset-bound via u_amp/u_freq;
+// u_texDens = mark density, u_waveAmp = displacement, u_texBright = mark luminance.
+const FRAG_PARTICLE = `precision mediump float;
+uniform vec2 u_res; uniform float u_time; uniform float u_amp; uniform float u_freq;
+uniform float u_waveAmp; uniform float u_texDens; uniform float u_texBright;
+float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+void main(){
+  vec2 uv = gl_FragCoord.xy / u_res.xy;
+  float vY = uv.y;
+  float depth = vY / max(0.04, 1.04 - vY);
+  float drift = u_time * 0.5;
+  // the wave FIELD (places + displaces the marks; never drawn directly)
+  float amp = u_amp * exp(-depth * 0.22);
+  float w = sin(depth * (4.0 + 6.0*u_freq) + uv.x*2.0 - drift)
+          + 0.5 * sin(depth * (7.0 + 9.0*u_freq) - uv.x*3.4 - drift*1.6);
+  float wave = 0.5 * w * amp;
+  float crest = smoothstep(-0.05, 0.13, wave);
+  // screen-space lattice — finer cells toward the back (recession)
+  float cell = mix(9.0, 22.0, vY);
+  vec2 gid = floor(gl_FragCoord.xy / cell);
+  float dens = (0.34 + 0.5 * crest) * clamp(u_texDens, 0.0, 1.3);
+  float disp = wave * cell * (5.0 * u_waveAmp + 0.8); // crest displacement (form)
+  // search a 3×3 cell neighborhood: marks (jittered + displaced ~a cell) and the
+  // short line segments cross cell borders, so a single-cell lookup misses them.
+  float acc = 0.0;
+  for (int dy = -1; dy <= 1; dy++) {
+    for (int dx = -1; dx <= 1; dx++) {
+      vec2 cid = gid + vec2(float(dx), float(dy));
+      float h = hash(cid), h2 = hash(cid + 7.13);
+      vec2 jit = (vec2(h, h2) - 0.5) * cell * 0.55
+               + vec2(sin(drift + h*6.28), cos(drift*0.8 + h2*6.28)) * cell * 0.13;
+      vec2 mark = (cid + 0.5) * cell + vec2(jit.x, jit.y - disp);
+      float present = step(h2, dens); // amass on crests (denser where crest high)
+      vec2 dpx = gl_FragCoord.xy - mark;
+      float onPoint = step(length(dpx), 2.0);
+      float onLine = step(abs(dpx.y), 1.0) * step(abs(dpx.x), cell * 0.40);
+      acc = max(acc, max(onPoint, onLine) * present);
+    }
+  }
+  float fade = smoothstep(0.98, 0.26, vY);
+  float lum = acc * u_texBright * 2.9 * fade * (0.6 + 0.6 * crest);
+  gl_FragColor = vec4(vec3(lum), lum);
+}`;
+
+const MODE_FRAG: Record<string, string> = { gradient: FRAG_GRADIENT, particle: FRAG_PARTICLE };
+
 function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLShader | null {
   const s = gl.createShader(type);
   if (!s) return null;
@@ -96,7 +149,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export function AmbientSea() {
-  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright } = useFleet();
+  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode } = useFleet();
   const { expertOn } = useLearn();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -130,7 +183,7 @@ export function AmbientSea() {
     if (!gl) { setFallback(true); return; }
 
     const vs = compile(gl, gl.VERTEX_SHADER, VERT);
-    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, MODE_FRAG[waterMode] ?? FRAG_GRADIENT);
     const prog = gl.createProgram();
     if (!vs || !fs || !prog) { setFallback(true); return; }
     gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
@@ -204,7 +257,7 @@ export function AmbientSea() {
     raf = requestAnimationFrame(frame);
 
     return () => { cancelAnimationFrame(raf); cleanup(); };
-  }, [on, reduced]);
+  }, [on, reduced, waterMode]);
 
   if (!on) return null;
 
@@ -221,8 +274,8 @@ export function AmbientSea() {
       <div aria-hidden style={{ ...base, background: 'linear-gradient(to top, rgba(122,124,127,0.18) 0%, rgba(122,124,127,0.09) 35%, transparent 64%)' }} />
     );
   }
-  // key per mode: switching live↔still remounts a FRESH canvas, so the prior
-  // context's loseContext() (cleanup hygiene) never leaves a dead canvas for the
-  // next getContext() — the round-74 reduced-motion frozen frame needs a live ctx.
-  return <canvas key={reduced ? 'still' : 'live'} ref={canvasRef} aria-hidden style={base} />;
+  // key per (waterMode + still/live): switching mode or reduced-motion remounts a
+  // FRESH canvas, so the prior context's loseContext() (cleanup hygiene) never
+  // leaves a dead canvas for the next getContext() (round 74/75 context-loss fix).
+  return <canvas key={`${waterMode}-${reduced ? 'still' : 'live'}`} ref={canvasRef} aria-hidden style={base} />;
 }

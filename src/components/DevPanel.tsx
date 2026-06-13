@@ -150,6 +150,8 @@ export function DevPanel() {
           options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
+        <Row label="water mode" value={f.waterMode} onPick={f.setWaterMode}
+          options={[{ v: 'gradient' as const, text: 'gradient' }, { v: 'particle' as const, text: 'particle' }]} />
         <Row label="texture" value={f.shimmer} onPick={f.setShimmer}
           options={[{ v: true, text: 'on (default)' }, { v: false, text: 'off' }]} />
         {/* round 74: live Calm Sea tuning — turn these knobs on the running build */}

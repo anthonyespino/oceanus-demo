@@ -110,6 +110,21 @@ originals.*
     fresh canvas per mode (key). Held: greyscale, round-50 binding, severity
     dominance (Meridian gold still dominates), expert-off/toggle-off. Perf:
     sustained ~120 fps on the board with texture on (gate 60), no reduction needed.
+  - **Third treatment — PARTICLE FIELD added behind a mode selector (round 75)**:
+    a dev-panel WATER MODE picker (gradient | particle) — selectable, not a
+    replacement, so the gradient modes stay for comparison. The particle field is
+    an ENTIRELY different rendering model: the wave is built from DISCRETE marks
+    (points + short line segments) sampled on a screen-space lattice; marks AMASS
+    on the crests (present-probability rises with crest) and are DISPLACED upward
+    by the wave, so the form is emergent from the field of marks, not a luminance
+    fade — reading as measured/sampled water. Motion is the marks shifting. A 3×3
+    cell neighborhood search draws marks/lines that cross cell borders. Greyscale,
+    dataset-bound (u_amp/u_freq), reuses the round-74 sliders (amplitude/density/
+    brightness). Reasoning: a sampled-point field reads as MEASURED sensor data
+    rather than a painted surface, strengthening the "instrument reports the calm"
+    thesis. Severity dominance held (Meridian gold). Perf: GPU-only fragment field
+    (no per-node DOM/SVG, no per-frame allocation); sustained ~70 fps on the board
+    (gate 60) — headroom above the floor; density tunable via the slider.
 - **FleetView resolved to chart-band ONLY (round 68)**: board-first is removed
   and the layout-mode toggle retired. Audit found there were never two structural
   layouts — `layoutVariant` only set the FleetMap height and `chartTop` set its

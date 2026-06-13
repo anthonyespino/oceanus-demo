@@ -1,3 +1,42 @@
+# PROGRESS — 2026-06-13 (Session 64: ROUND 75 — Calm Sea PARTICLE FIELD (third mode))
+
+## Held (pending Anthony)
+Sub-item 1 (persist current shimmer/wave settings as new defaults) is ON HOLD —
+the values are in a screenshot Anthony will re-send. Defaults UNCHANGED until then.
+
+## Done
+- **WATER MODE selector** added to the `D` panel (gradient | particle) — selectable,
+  not a replacement; gradient stays for comparison.
+- **PARTICLE FIELD**: a different rendering model — the wave is built from DISCRETE
+  marks (points + short line segments) on a screen-space lattice; marks AMASS on
+  crests (present-probability rises with crest) and are DISPLACED upward by the
+  wave, so the form emerges from the field of marks (not a luminance fade). Motion
+  = marks shifting. 3×3 cell neighborhood search so displaced marks + cell-crossing
+  line segments actually draw.
+- Greyscale; dataset-bound (u_amp/u_freq); reuses the round-74 sliders.
+
+## Two real bugs found + fixed
+1. Default slider values (gradient-tuned) made the marks invisible → boosted mark
+   size/density-floor/brightness so the field reads.
+2. **Canvas context-loss on mode switch**: the canvas `key` only keyed on reduced-
+   motion, so switching water mode reused the same canvas and cleanup's
+   `loseContext()` left it dead → fell to the fallback gradient (looked black).
+   Fixed: `key` now includes `waterMode` → fresh canvas per mode.
+
+## Verify (running build, `docs/screens/r75-particle-board.png` / `-crop.png`)
+- Particle field is a selectable third mode; waves built from discrete lines/points
+  amassing into form (not gradient); motion from mark displacement; greyscale.
+- Severity dominates (Meridian gold over the grey marks).
+- **FPS ~70** on the board (gate 60) — GPU-only fragment field, instanced via the
+  fullscreen-triangle + procedural lattice (no thousands of DOM/SVG nodes), no
+  per-frame allocation. Density tunable on the slider if more headroom wanted.
+- Reduced-motion freezes a particle frame (canvas paints one frame; same path as
+  round 74, and the canvas-key fix makes particle+reduced mount a fresh ctx);
+  expert-off + toggle-off inherit governance. Background z-order/scope unchanged;
+  cards untouched (flat-matte; glass/shadow cut).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 63: ROUND 74 — Calm Sea, restore wave form + dense texture + dev sliders)
 
 ## Round-73 status: LANDED (commit 28817db)
