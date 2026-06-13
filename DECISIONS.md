@@ -38,6 +38,23 @@ originals.*
   sparkline → CONTEXTUAL pending Anthony's registry ruling" clause is settled —
   `efficiency_sparkline_24h` is VISIBLE at fleet level as the tile-bottom 24h
   signature (full card width, fixed height, every tile size).
+- **Calm Sea (round 50 supersedes round 46)**: the round-46 flat SVG paper-wave
+  is replaced by a WebGL receding water plane (`src/components/AmbientSea.tsx`).
+  - **Per-context binding added**: FleetView water binds to the whole fleet's
+    |mean delta| (amplitude) + avg burn (frequency); VesselInspector rebinds the
+    same expression to the inspected vessel. Scope eases between states (the
+    canvas persists in the layout), no cut. Source signals unchanged from r46 —
+    expression only.
+  - **Horizon / sky / sun REJECTED**: no decorative chroma, top-down language
+    preserved. The plane recedes upward and dissolves into haze; no horizon line.
+  - **Desaturated grey, never navy** in the background — navy stays reserved for
+    chart water. Luminance subordinate: the brightest water point is below the
+    dimmest UI surface fill (surface/raised), so nothing in the water competes
+    with an idle tile.
+  - Governance unchanged in intent: off in expert mode, static depth-faded still
+    under prefers-reduced-motion and on WebGL fallback (never the old paper-wave),
+    paused when hidden, settings toggle (default on). DEMO MERIDIAN seed
+    untouched; the scenario library drives the deltas, this changes expression.
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

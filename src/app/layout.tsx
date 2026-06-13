@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { FleetProvider } from '../state/FleetProvider';
 import { LearnProvider } from '../learn/LearnProvider'; // LEARN MODE — strip before demo week
-import { AppHeader, DevPanel } from '../components';
+import { AppHeader, DevPanel, AmbientSea } from '../components';
 
 // Type system (round 26): Barlow = UI, IBM Plex Mono = data/numerals
 // (tabular), D-DIN = display. Self-hosted woff2 (src/fonts/, OFL licenses
@@ -42,6 +42,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <FleetProvider>
           <LearnProvider>
+            {/* round 50: Calm Sea persists across routes (scope eases fleet↔vessel) */}
+            <AmbientSea />
             <AppHeader />
             <DevPanel />
             {children}

@@ -1,3 +1,23 @@
+# PROGRESS — 2026-06-13 (Session 45: ROUND 50 — Calm Sea depth rebuild)
+
+## Done
+
+Replaced round 46's flat SVG paper-wave with a **WebGL receding water plane** (`AmbientSea.tsx`, rewritten).
+
+1. **Rendering** — one fullscreen-triangle fragment shader, single canvas. The wave math runs per-pixel; JS writes ~3 uniforms/frame (time + eased amp/freq) and one `drawArrays`. No per-frame allocation, no textures. `low-power` context, dpr capped at 1.5. No horizon/sky/sun: the plane recedes upward (wavelength compresses + amplitude decays with depth) and dissolves into haze. Pure grey (R=G=B), luminance held in [0.066, 0.085] — below surface/raised (0.094), so the brightest water is dimmer than an idle tile fill. **No navy** (reserved for chart water).
+2. **Persistent + per-context** — mounted in the layout (z-index −1, above body bg / below content), so it survives fleet↔vessel navigation and **eases** scope (no cut). FleetView binds amplitude to |fleet mean Δ| + frequency to avg burn; VesselInspector rebinds to the inspected vessel. Same signals as round 46, expression only.
+3. **Governance** — off in expert; static depth-faded CSS-gradient still under prefers-reduced-motion and on WebGL fallback (`getContext` null or context lost) — never the old paper-wave, no layout shift; paused when hidden; settings toggle (default on).
+4. **Dev readout** — 'D' panel shows `water · {scope} · amp · freq` (the inputs feeding the shader; `ambientReadout.ts` shared by the shader + the readout). No on-screen label in default mode.
+
+## Verify (all pass)
+
+- Normal: canvas present, no old `.sea` wave. Reduced-motion: still present, no canvas. Forced WebGL-null fallback: still present, no old wave. Expert: nothing (canvas + still both absent).
+- **Meridian inspector measurably more agitated than fleet** (dev readout): vessel amp **1.17** vs fleet **0.46** (freq 1.34 vs 1.12).
+- No navy in background (shader is pure grey by construction; confirmed in screenshots — the only navy is the position chart's own water). Brightest water (lum ≤ 0.085) below surface fill (0.094).
+- DEMO MERIDIAN seed untouched; the scenario library drives the deltas, this changes expression. DECISIONS.md updated (r46 superseded, per-context binding, horizon/sky rejected).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 44: ROUNDS 48 + 49 — glyph scrape pipeline + VesselTile glyph relationships)
 
 *(Anthony meant 48 before 49; folded together since 49 builds on 48. Prep + diff reports only — the VesselTile visual apply is gated on his approval per 49 §5.)*

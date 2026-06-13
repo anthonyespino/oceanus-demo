@@ -5,9 +5,11 @@
 // clock + the verdict toggles). Cleaner than the flat panel-of-toggles.
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { useFleet } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // LEARN/EXPERT MODE — strip before demo week
 import { SCENARIOS } from '../state/scenarios';
+import { waterScope, waterInputs } from './ambientReadout';
 import { LiveControls } from './LiveControls';
 import { NEUTRAL, RADIUS, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -38,6 +40,9 @@ export function DevPanel() {
   const [open, setOpen] = useState(false);
   const f = useFleet();
   const { mode, setMode } = useLearn();
+  const pathname = usePathname();
+  const { scope, vesselId } = waterScope(pathname);
+  const water = waterInputs(f.fleet ?? null, scope, vesselId); // round 50 dev readout
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -136,6 +141,11 @@ export function DevPanel() {
           options={[{ v: 'chevron' as const, text: 'chevron' }, { v: 'meter' as const, text: 'meter strip' }]} />
         <Row label="ambient sea" value={f.ambientSea} onPick={f.setAmbientSea}
           options={[{ v: true, text: 'on' }, { v: false, text: 'off' }]} />
+        {/* round 50: water readout — scope + the amplitude/frequency inputs
+            feeding the shader (dev only; no on-screen label in default mode) */}
+        <div style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>
+          water · {water.scope}{scope === 'vessel' ? ` ${vesselId}` : ''} · amp {water.amp.toFixed(2)} · freq {water.freq.toFixed(2)}
+        </div>
       </Section>
     </div>
   );

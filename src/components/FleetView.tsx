@@ -12,7 +12,6 @@ import { useFleet } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
 import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
-import { AmbientSea } from './AmbientSea';
 import { FleetHealthBand } from './FleetHealthBand';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
@@ -34,9 +33,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
   );
 
   return (
+    // round 50: Calm Sea lives in the layout now (persistent across routes so
+    // the scope change eases); board content sits above it (z-index:1)
     <main style={{ padding: 20, maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-      {/* round 46: Calm Sea — fixed behind everything (z-index:0), board content sits above (z-index:1) */}
-      <AmbientSea />
       {expertOn ? (
         <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
           <Glyph name="chart.trend" size={20} />
