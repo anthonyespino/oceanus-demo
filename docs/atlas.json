@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T20:42:00.353Z",
+  "generated": "2026-06-13T20:57:59.816Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1168,7 +1168,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "name.text",
-      "tokens": "type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63)",
+      "tokens": "type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed)",
       "binds": "{vessel.static.name}",
       "file": "src/components/VesselTile.tsx"
     },

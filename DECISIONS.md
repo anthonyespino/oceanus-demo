@@ -179,6 +179,17 @@ originals.*
     behavior untouched).
   - **Principle:** Figma is the design authority for LAYOUT; standing rulings
     override individual mock choices that conflict with them.
+- **VesselTile HEADER BAND removed — header separated by spacing alone (round
+  70)**: the round-63 grey header fill-step is removed. The vessel name sits
+  directly on the tile's base fill (no band, no container, no stroke);
+  separation from the body is a generous vertical gap (whitespace), not a
+  fill-step and not a divider line (outlines stay severity-reserved). Reasoning:
+  the band read as functionless chrome and competed with the name for focus, and
+  severity already lives on the name/value/strip (round 66), so the header needs
+  no container — the tile now reads as one unified surface with content floating
+  on it. **The SPARK fill band (round 63) is RETAINED** (it groups the 24h
+  signature as a distinct data region). Name position/size (D-DIN)/tint
+  unchanged; RADIUS stays 1px.
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

@@ -112,24 +112,20 @@ export function VesselTile({
           </button>
         </span>
       )}
-      {/* ROUND 63 — layout matched to Anthony's Figma VesselTile. THREE fill
-          regions separated by borderless fill-STEPS, never strokes (outlines
-          stay reserved for severity): a lighter HEADER band (name, generous
-          air), the darker BODY (centered glyph-above-value + two-column
-          footer), and a lighter SPARK band (24h signature in its own region).
-          status.line is BOTH the header/body seam and the round-57/61 severity
-          edge. Rounded corners in the mock are NOT replicated — RADIUS stays
-          1px (round 36). Glyphs sized to the mock and neutral-inked (white). */}
-      {/* HEADER band — lighter fill-step (round 66: delta widened to #2b2b2b so
-          the seam separates header/body WITHOUT a stroke; body stays #181818 to
-          keep the borderless tile contrasting against the page bg) */}
-      <div style={{ background: '#2b2b2b', padding: mini ? '12px 14px' : '20px 14px', textAlign: 'center' }}>
-        <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63)', '{vessel.static.name}')} style={{ ...TYPE.name, fontSize: mini ? 18 : 24, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+      {/* ROUND 70 — HEADER BAND REMOVED. The name sits directly on the tile's
+          base fill (no grey band, no container, no stroke). The round-63 header
+          fill-step read as functionless chrome and competed with the name for
+          focus; severity already lives on the name/value/strip (round 66), so
+          the header needs no container. Separation from the body is now SPACING
+          ALONE — a generous vertical gap (header bottom-pad + body top-pad), no
+          fill-step and no divider line (outlines reserved for severity). The
+          tile reads as one unified surface with content floating on it. The
+          SPARK fill band (round 63) is retained — it groups a distinct data
+          region. Name position/size (D-DIN)/tint (gold when alerted, neutral
+          nominal) unchanged. RADIUS stays 1px (round 36). */}
+      <div style={{ padding: mini ? '14px 14px 18px' : '22px 14px 26px', textAlign: 'center' }}>
+        <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed)', '{vessel.static.name}')} style={{ ...TYPE.name, fontSize: mini ? 18 : 24, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
       </div>
-      {/* ROUND 66: the name-divider status.line stroke is REMOVED. Header/body
-          separation is carried by the fill-STEP alone (lighter header band over
-          the darker body) — no drawn line. status.line is gone from the tile
-          (severity now lives on the strip + name/value tint, not an edge). */}
       {/* BODY — darker fill (tile base shows through); centered glyph-above-
           value at top, two-column footer pinned to the base (round 63 mock) */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, padding: mini ? '10px 14px' : '16px 14px' }}>

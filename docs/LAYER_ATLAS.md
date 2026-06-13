@@ -485,7 +485,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
   - BINDS — {|derived.efficiency_delta_pct|}
 - `name.text`
-  - TOKENS — type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63)
+  - TOKENS — type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed)
   - BINDS — {vessel.static.name}
 - `now.glyph`
   - TOKENS — glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline
@@ -509,4 +509,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*137 instrumented leaves · 19 components · generated 2026-06-13T20:42:00.350Z*
+*137 instrumented leaves · 19 components · generated 2026-06-13T20:57:59.815Z*

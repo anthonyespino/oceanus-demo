@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-13 (Session 59: ROUND 70 — VesselTile, remove header band, separate by spacing)
+
+## Done
+- **Header grey band removed.** Dropped the round-63 `#2b2b2b` fill-step behind
+  the vessel name; the name now sits directly on the tile base fill (#181818).
+- **Separation is spacing alone** — generous vertical gap (header bottom-pad 26 +
+  body top-pad 16 ≈ 42px on standard tiles), no fill-step, no divider stroke.
+- **Sparkline fill band RETAINED** (round 63) — only the TOP band was removed;
+  the bottom spark band still groups the 24h signature as a distinct data region.
+- Name position/size (D-DIN)/tint (gold alerted, neutral nominal) unchanged.
+  Maximize/resize control (tile top-right) untouched. RADIUS 1px held.
+
+## Verify
+Confirmed on fresh build (commit below): `docs/screens/r70-calcasieu.png`
+(nominal — neutral name on base fill, no band) and `docs/screens/r70-meridian.png`
+(alerted — gold name on base fill, no band). Both read as ONE unified surface,
+content floating; header/body separated by whitespace only (no line, no box);
+spark band present at the bottom. TSC-OK, offline build clean.
+
+## Scope
+Only the VesselTile header region. Body/footer/strip/spark-band/value untouched.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 58: ROUND 69 — footer glyph squeeze, root-cause fix)
 
 ## Bug fix (no ruling)

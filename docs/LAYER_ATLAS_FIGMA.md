@@ -245,7 +245,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: footer
     • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
   Region: (root)
-    • name.text  → type/name · font/display caps · status tint when alerted (earned) · header band (lighter fill-step, round 63) · {vessel.static.name}
+    • name.text  → type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed) · {vessel.static.name}
     • now.glyph  → glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline · now vs mode baseline
     • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
@@ -285,4 +285,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:42:00.352Z*
+*137 leaves · 19 components · 25 glyphs (3 drawn) · generated 2026-06-13T20:57:59.816Z*
