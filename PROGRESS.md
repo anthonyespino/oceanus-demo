@@ -1,3 +1,11 @@
+# PROGRESS — 2026-06-13 (Session 48: ROUND 54 — VesselTile single resize toggle)
+
+## Done
+
+The tile's two corner resize buttons (separate collapse + expand) collapse to **one state-aware toggle**: expand affordance when collapsed/default, collapse affordance when expanded. Anchored top-right, no drift. Verified: exactly 1 resize button per hovered tile; resize behavior unchanged (keyboard +/- keep the full mini↔standard↔expanded range, auto-promotion stays off per round 26); status dot unaffected. ⚖ #14 (chevron vs micro-meter affordance) untouched — still open. DECISIONS.md updated. Screenshot `r54-tile.png`.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 47: ROUND 53 — CommandBand harmony, tighten + re-pad)
 
 ## Done

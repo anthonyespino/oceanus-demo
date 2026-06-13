@@ -72,6 +72,13 @@ originals.*
   (15px, bumped from 14 for legibility only), NOT promoted to hero — nominal data
   that already feeds Calm Sea, so rendering large would double-count the signal.
   Consequence hierarchy unchanged; nothing nominal gained weight.
+- **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
+  separate collapse + expand corner buttons are now a single top-right button
+  that shows the expand affordance when collapsed/default and the collapse
+  affordance when expanded. Control-count change only — same resize behavior,
+  keyboard +/- keep the full mini↔standard↔expanded range, auto-promotion stays
+  off (round 26). Does NOT resolve **⚖ #14** (chevron vs micro-meter reveal
+  affordance) — that style debate is unrelated and stays open.
 
 
 - DATA_MODEL.md v2 arrived during Session 3 as `DATA_MODEL_v2.md` and was

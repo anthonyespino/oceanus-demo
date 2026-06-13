@@ -99,27 +99,19 @@ export function VesselTile({
       {motion === 'ripple' && crossings[vessel.static.id] && (
         <span key={crossings[vessel.static.id]} className="probe-ripple" style={{ borderColor: STATUS_COLOR[status] }} />
       )}
-      {/* round 17: size control — one click, instant, no navigation */}
+      {/* round 54: ONE state-aware resize toggle (was two buttons) — shows the
+          collapse affordance when expanded, the expand affordance otherwise.
+          One control, anchored top-right, no drift. Keyboard +/- keep the full
+          mini↔standard↔expanded range; auto-promotion stays off (round 26). */}
       {hot && (
-        <span style={{ position: 'absolute', top: 4, right: 4, display: 'inline-flex', gap: 2, zIndex: 2 }}>
-          {size !== 'mini' && (
-            <button
-              aria-label="collapse tile"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); step(-1); }}
-              style={{ background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)', borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0 }}
-            >
-              <Glyph name="collapse" size={12} />
-            </button>
-          )}
-          {size !== 'expanded' && (
-            <button
-              aria-label="expand tile"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); step(1); }}
-              style={{ background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)', borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0 }}
-            >
-              <Glyph name="expand" size={12} />
-            </button>
-          )}
+        <span style={{ position: 'absolute', top: 4, right: 4, zIndex: 2 }}>
+          <button
+            aria-label={size === 'expanded' ? 'collapse tile' : 'expand tile'}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); step(size === 'expanded' ? -1 : 1); }}
+            style={{ background: NEUTRAL.surfaceDim, border: '1px solid var(--color-line-strong)', borderRadius: RADIUS, padding: 2, cursor: 'pointer', color: NEUTRAL.inkSecondary, lineHeight: 0 }}
+          >
+            <Glyph name={size === 'expanded' ? 'collapse' : 'expand'} size={12} />
+          </button>
         </span>
       )}
       {/* header block: fixed. Round 47: trend is glyph + value (the "30D
