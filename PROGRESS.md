@@ -1,3 +1,36 @@
+# PROGRESS — 2026-06-13 (Session 38: ROUND 40 — Figma MCP bridge)
+
+## Done
+
+1. **Bridge connected + verified.** Figma Dev Mode MCP authenticates via OAuth on Anthony's own account (`whoami` → Anthony Espino). Round-trip against `8AyEt8kSSo2jlS7Tt3ej2W` (Oceanus Sketchpad) reads clean: page → frames → per-layer geometry/fills/fonts/text.
+2. **No PAT, nothing in `.env` (deliberate deviation from the brief).** OAuth already authenticates the server, and this is a public repo — a Figma token in the tree is the exact secret-leak risk the project guards against. `.env*` stays gitignored; nothing Figma goes in it. Logged for Anthony to override.
+3. **Atlas export (item 4):** `atlas.ts` now emits `docs/LAYER_ATLAS_FIGMA.md` (the component→region→leaf cheat sheet) and `docs/atlas.json` (machine-readable scrape index) alongside `LAYER_ATLAS.md`, all on the prebuild hook.
+4. **Workflow + scope documented:** `docs/FIGMA_MCP.md` + a CLAUDE.md section — the `scrape {frame}` flow and the one-way, read-only, approval-gated, probe-only guardrails. Bridge never writes back to the file.
+
+## First scrape (item 5): `fleet-trend-bar-index` — read clean, nothing applied
+
+- **No auto-binding, two reasons:** FleetHealthBand has **zero instrumented `layer()` leaves** (round 35 skipped it); and Anthony's layer names use his own scheme, not `region / role.kind`. Both surfaced honestly rather than faked.
+- **Recognized by meaning:** census 0/1/14, 30D mean +0.3%, fleet burn 1,580 gph, arrivals 4, trend curve + IQR band — all match the current build; borderless fills confirm round 37.
+- **Flagged divergences (not applied), sharpened by Anthony's two screenshots of the full frame:**
+  - **The board is monochrome white + a single amber accent — no green anywhere.** Census reads `0`(white) `1`(muted amber #6c5224) `14`(white); mean/burn/arrivals all white. This isn't just the census — it reads as a whole-board treatment that does NOT use round 38's green-on-nominal default. Likely a partial revert of round 38.
+  - **Vessel-card glyph reassignments vs round 39:** sketch uses calendar→30d-trend (new — round 39 left the trend hero glyphless), waves→endurance (round 39 = fuel-drop), clock→now (round 39 = delta). His MERIDIAN card.
+  - **Card appears bordered with a header divider** under the name — possible round-37 divergence (borderless fills), or just a drawn frame outline. Ambiguous from a static sketch.
+  - Values are placeholders (−7.6% / 175h vs build's +7.6% / 179h); font Inter = sketch placeholder; scale artboard-relative (2851w), px not literal.
+
+## Questions for Anthony
+
+- **DOMINANT: is the board going monochrome-white + amber-only (no green)?** The screenshots show zero green — this would partially revert round 38 and change how every future scrape translates. Subsumes the census-color question.
+- **Vessel-card glyphs:** adopt his calendar/waves/clock assignments, or keep round 39's fuel-drop/delta? (His waves-for-endurance is semantically odd; worth a beat.)
+- **Card border + header divider:** intentional, or sketch frame artifact? (round 37 made nominal cards borderless.)
+- **Naming contract:** rename Figma layers to `region / role.kind`, or maintain an alias map from his names to atlas paths?
+- **Next step:** instrument FleetHealthBand leaves so this frame binds automatically (round 40 was verify-only).
+
+## Ops
+
+Killed the self-healing tunnel watchdog — Cloudflare was rate-limiting quick tunnels under restart pressure, thrashing a new URL every ~2 min. One unwatched tunnel up; GitHub screenshots + the Figma bridge are the review surfaces now. Demo day is localhost.
+
+---
+
 # PROGRESS — 2026-06-12 (Session 37: ROUND 39 — tile label diet + full-width spark)
 
 ## Done
