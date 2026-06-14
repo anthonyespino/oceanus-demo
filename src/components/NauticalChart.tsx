@@ -148,11 +148,19 @@ export function NauticalChart({
   frame,
   width,
   height,
+  land = true,
   children,
 }: {
   frame: ChartFrame;
   width: number;
   height: number;
+  /** ROUND 84: draw the coastline fill. The shared LAND polygon (src/data/coast)
+      is a coarse approximation — fine at the full-Gulf FleetMap zoom, but at the
+      zoomed InspectorChart extent its Mississippi-delta bird's-foot renders as a
+      sharp filled wedge in nominally open water. Per the substantiation ruling
+      ("better no coastline than a fake one"), the inspector omits it (land=false).
+      Geometry is NOT changed (it still backs land-avoidance + verify). */
+  land?: boolean;
   children: (px: (lon: number) => number, py: (lat: number) => number) => React.ReactNode;
 }) {
   const px = (lon: number) => ((lon - frame.lonMin) / (frame.lonMax - frame.lonMin)) * width;
@@ -167,7 +175,7 @@ export function NauticalChart({
 
   return (
     <svg {...layer('NauticalChart / base / water.shape', 'chart/water #0d1924 — the ONLY navy (round 23)', '{chart frame}')} width={width} height={height} style={{ display: 'block', background: 'var(--color-chart-water)' /* blue's only job */ }}>
-      <path {...layer('NauticalChart / base / land.shape', 'chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23)', '{LAND polygon from src/data/coast.ts}')} d={landD} fill="var(--color-chart-land)" stroke="var(--color-line-hairline)" strokeWidth={1} />
+      {land && <path {...layer('NauticalChart / base / land.shape', 'chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23) · omitted at zoomed inspector extent (round 84)', '{LAND polygon from src/data/coast.ts}')} d={landD} fill="var(--color-chart-land)" stroke="var(--color-line-hairline)" strokeWidth={1} />}
       {/* sea-area label: chart furniture, very low contrast (round 4) */}
       {frame.lonMax - frame.lonMin > 6 && (
         <text

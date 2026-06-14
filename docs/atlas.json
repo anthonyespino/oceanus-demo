@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T00:49:50.150Z",
+  "generated": "2026-06-14T00:55:47.785Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -592,7 +592,7 @@
       "component": "NauticalChart",
       "region": "base",
       "leaf": "land.shape",
-      "tokens": "chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23)",
+      "tokens": "chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23) · omitted at zoomed inspector extent (round 84)",
       "binds": "{LAND polygon from src/data/coast.ts}",
       "file": "src/components/NauticalChart.tsx"
     },

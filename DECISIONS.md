@@ -350,6 +350,22 @@ originals.*
     ANY non-`none` fill/stroke → `currentColor`; regenerated `glyphs.generated.ts`;
     the wave (passed ink/muted) now renders dim grey, matching the wind glyph
     (confirmed on a 4× pixel crop). Greyscale/no-blue intact.
+- **Position chart geometry artifact fixed (round 84)**: the dark filled wedge
+  spiking to a sharp V at ~89°W/29°N (at the Meridian marker, in open water) was
+  the **coastline polygon** (`LAND`, src/data/coast) — specifically the
+  **Mississippi-delta "bird's-foot"** approximation (`…[-89.2,29.12],
+  [-88.95,28.95],[-89.25,29.35]…`), a coarse zigzag that renders as a sharp filled
+  spike. Root cause is a **data approximation rendered correctly**, not a render
+  bug: fine at the full-Gulf FleetMap zoom, but at the InspectorChart's ~2–3°
+  zoomed extent (centred on the vessel) the crude delta dominates and reads as
+  fake. The `LAND` geometry is **shared** with the schedule's land-avoidance + the
+  verify harness, so changing it would alter the deterministic fleet/seed — not
+  allowed. **Fix (render-scope, substantiation ruling "better no coastline than a
+  fake one"):** the InspectorChart omits the landmass (`land={false}`); the
+  FleetMap keeps the full-Gulf coastline. Geometry untouched (verify still PASSES
+  → schedule/seed intact). The position chart now shows only substantiated
+  geometry (water, graticule, compass, scale, marker, real track). Verified on the
+  demo seed (Meridian) + a spot-check (Frigate Bird) — spike gone, not seed-specific.
 - **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
   separate collapse + expand corner buttons are now a single top-right button
   that shows the expand affordance when collapsed/default and the collapse

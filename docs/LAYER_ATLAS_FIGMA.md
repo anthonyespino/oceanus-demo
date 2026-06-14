@@ -131,7 +131,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## NauticalChart
 
   Region: base
-    • land.shape  → chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23) · {LAND polygon from src/data/coast.ts}
+    • land.shape  → chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23) · omitted at zoomed inspector extent (round 84) · {LAND polygon from src/data/coast.ts}
     • seaLabel.text  → font/ui letterspaced · near-water contrast — furniture, not data · GULF OF MEXICO (static)
     • water.shape  → chart/water #0d1924 — the ONLY navy (round 23) · {chart frame}
   Region: furniture
@@ -293,4 +293,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*139 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T00:49:50.150Z*
+*139 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T00:55:47.784Z*

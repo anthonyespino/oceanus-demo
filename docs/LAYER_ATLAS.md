@@ -242,7 +242,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/NauticalChart.tsx*
 
 - `base / land.shape`
-  - TOKENS — chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23)
+  - TOKENS — chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23) · omitted at zoomed inspector extent (round 84)
   - BINDS — {LAND polygon from src/data/coast.ts}
 - `base / seaLabel.text`
   - TOKENS — font/ui letterspaced · near-water contrast — furniture, not data
@@ -520,4 +520,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*139 instrumented leaves · 20 components · generated 2026-06-14T00:49:50.149Z*
+*139 instrumented leaves · 20 components · generated 2026-06-14T00:55:47.783Z*

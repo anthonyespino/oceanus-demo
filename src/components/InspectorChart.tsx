@@ -110,7 +110,7 @@ export function InspectorChart({
   const body = (
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <div ref={wheelRef} {...handlers} style={{ cursor: following ? 'default' : 'grab' }}>
-        <NauticalChart frame={frame} width={w} height={height}>
+        <NauticalChart frame={frame} width={w} height={height} land={false}>
           {() => (
             <>
               {ghostClusters.map((c, i) =>

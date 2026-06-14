@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-13 (Session 73: ROUND 84 — position chart, fix unrealistic geometry spike)
+
+## Diagnosis (reported before fixing)
+The dark filled wedge spiking to a V at ~89°W/29°N (at the Meridian marker, open
+water) is the **coastline polygon** (`LAND`, src/data/coast.ts) drawn by
+NauticalChart — specifically the **Mississippi-delta bird's-foot** points
+(`[-89.2,29.12],[-88.95,28.95],[-89.25,29.35]`), a coarse zigzag.
+**Data approximation rendered correctly**, not a render bug / unclosed path: it's
+fine at the full-Gulf FleetMap zoom, but the InspectorChart frames a ~2–3° window
+centred on the vessel, so the crude delta fills a sharp wedge right at the marker.
+
+## Fix (render-scope; geometry NOT touched)
+`LAND` is shared with the schedule's land-avoidance + the verify harness — editing
+it would alter the deterministic seed. So, per the substantiation ruling ("better
+no coastline than a fake one"), the **InspectorChart omits the landmass**
+(`NauticalChart land={false}`); the FleetMap keeps the full-Gulf coastline.
+Geometry untouched → `npm run verify` still PASSES (schedule/seed intact).
+
+## Verify
+- Demo seed (Meridian, v01): position chart clean — water + graticule + compass +
+  scale + marker + smooth dashed track, NO wedge (`docs/screens/r84-pos-v01.png`).
+- Spot-check (Frigate Bird, v04): clean too — not seed-specific
+  (`docs/screens/r84-pos-v04.png`).
+- Scope held: FOLLOW, compass rose, scale bar, vessel marker, dashed track all
+  unchanged. Only the land fill is omitted at the inspector zoom.
+TSC-OK · LINT-CLEAN · verify PASSED · offline build clean.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 72: ROUND 83 — voyage bar collapsible endpoints, progress %, type unify, wave-glyph re-fix)
 
 ## Done (verified on running build)
