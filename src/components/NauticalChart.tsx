@@ -24,6 +24,7 @@ const GRID = '#262626'; // graticule: faint, neutral
 // — the same polygon renders here, steers the schedule's land avoidance,
 // and backs the verify no-trail-on-land case.
 import { LAND } from '../data/coast';
+import { Glyph } from './Glyph'; // round 88: FOLLOW chip → bullseye/crosshair glyph
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 function gridStep(span: number): number {
@@ -127,19 +128,22 @@ export function usePanZoom(followFrame: ChartFrame, w: number, h: number) {
   return { frame, following: view === null, follow: () => setView(null), handlers, wheelRef };
 }
 
-/** FOLLOW chip — accent: interaction/identity, never status. */
+/** ROUND 88: FOLLOW control — a bullseye/crosshair GLYPH (center-on-vessel),
+    neutral ink, replacing the "⌖ FOLLOW" text button. Same function + state
+    (shown only when panned off-follow; click re-centers). */
 export function FollowChip({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
+      aria-label="follow vessel"
+      title="follow (re-center on vessel)"
       style={{
         position: 'absolute', top: 8, right: 8, zIndex: 4,
-        fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1,
-        color: 'var(--color-accent-bright)', border: '1px solid var(--color-accent-bright)',
-        background: 'var(--color-surface-raised)', borderRadius: 1, padding: '2px 8px', cursor: 'pointer', // RADIUS token value
+        color: 'var(--color-ink-secondary)', border: '1px solid var(--color-line-strong)',
+        background: 'var(--color-surface-raised)', borderRadius: 1, padding: 3, cursor: 'pointer', lineHeight: 0,
       }}
     >
-      ⌖ FOLLOW
+      <Glyph name="crosshair" size={15} />
     </button>
   );
 }

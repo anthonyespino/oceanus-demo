@@ -501,3 +501,54 @@ originals.*
   (2026-06-11) — daily-mean EGT, 30d, on each engine card's contextual layer.
   Demo step 3 material: Engine 2's line visibly climbs while Engine 1's stays
   flat.
+
+- **DEV DECISIONS (pending Anthony) — ROUND 88 UI polish batch (10 items)**.
+  Each holds the standing rulings (greyscale + earned color, severity unmissable,
+  no orphan type sizes, maximize/minimize = click, chart/FOLLOW = hover control
+  affordance not data-reveal):
+  1. **OCEANUS FLEET wordmark** reverted from DISPLAY to PRIMARY tier
+     (`--type-primary` 16, font/display 700, letter-spacing 2). The wordmark is
+     identity chrome, not a hero datum — DISPLAY is reserved for the largest
+     in-view value. No new orphan size (reuses PRIMARY).
+  2. **Global status cluster** (DATALINK + LAST SYNC + CAUTION·ADVISORY) moved
+     out of the AppHeader to a CENTERED row below the fleet-plot map and directly
+     above the vessel thumbcards, promoted to PRIMARY (`StatusHeader prominent`:
+     font 16, weight 600, glyphs 12→15). CAUTION·ADVISORY remain clickable
+     DetailChips. The **round-79 DATALINK breath binding survived the move** —
+     `.datalink-breath` applies only when `datalink === 'FRESH'`; verified 0
+     breath elements in the DEGRADED demo seed (static, correct).
+  3. **Redundant location/section headers** ("FLEET PLOT — GULF OF MEXICO",
+     "PORT CALLS — 72H") gated to the Learn (L) hover layer (`learnOn`) — hidden
+     by default, the map watermark + the +72H axis/chips self-identify those
+     regions. The **"TREND BOARD — ranked by sustained deviation" subtitle is
+     KEPT visible** (it explains the consequence sort, not a redundant locator).
+  4. **Fleet chart-band maximize button** shows on HOVER only (`chartHot`) — a
+     control affordance, consistent with the hover ruling (which governs data
+     reveal; controls may also hide until hover so they don't sit as persistent
+     chrome). Click still toggles the transient 240↔520 resize.
+  5. **Zulu master clock** promoted to HERO (`--type-hero` 20, weight 600) — the
+     shore-side time reference is a first-class readout, not chrome.
+  6. **Port-call timeline right-edge bleed FIXED**: late-arrival chips near +72H
+     were left-anchored with `minWidth:96`, overflowing the grid. Fix: when a
+     chip's ETA position is within ~100px of the right edge, RIGHT-anchor it at
+     its ETA so it grows leftward and stays inside the lane. Verified: 0 chips
+     overflow their lane right edge.
+  7. **Trip summary bar**: the two round-83 endpoint chevrons collapsed into ONE
+     maximize/minimize button (same affordance as the chart expand), default
+     collapsed; click reveals BOTH endpoint detail columns. **%/destination
+     overlap FIXED**: near 100% progress the `%` and current-position labels are
+     anchored at the marker and collided with the destination text; now when
+     `frac > 0.82` the marker labels FLIP to the left of the marker. Verified at
+     the seed's transit fractions 6% / 48% / 86% (95/100% don't occur in the
+     fixed DEMO_EPOCH seed; 86% exercises the flip).
+  8. **FOLLOW control** changed from the "⌖ FOLLOW" text button to a
+     bullseye/crosshair library Glyph (neutral ink, `ink/secondary`); function +
+     state unchanged (rendered only when panned off-follow, click re-centers).
+  9. **Fuel-twin (VesselSynoptic) type audit** — collapsed onto the unified
+     scale: tank %/gph → `--type-context` (was 11), node labels/small marks →
+     `--type-micro` (was 8/9/10), RECON OK → `--type-context` (keeps reconColor).
+     Off-scale sizes removed; no orphan sizes remain.
+  10. **ALERTS bar tightened** (VesselInspector): section vertical padding
+      16→6px, alert lines pinned to `--type-context` with lineHeight 1.45. The
+      substantive `[CAUTION] …` anomaly-evidence text is KEPT — only wasted
+      vertical space was removed.

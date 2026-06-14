@@ -82,7 +82,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## FleetMap
 
   Region: header
-    • header.glyph  → section header · chart.fleet (scatter motif) · glyph-only in expert mode · FLEET PLOT — GULF OF MEXICO
+    • header.glyph  → section header · chart.fleet · round 88: LEARN-ONLY (redundant location restatement; the map self-identifies + carries the GULF OF MEXICO furniture label) · FLEET PLOT — GULF OF MEXICO
 
 ## FleetRail
 
@@ -96,7 +96,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## FleetView
 
   Region: chartBand
-    • maximize.glyph  → transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted · {chartMax} toggle
+    • maximize.glyph  → transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted · {chartMax} toggle
   Region: header
     • header.glyph  → page header · chart.trend (sorted-bars motif) · glyph-only in expert mode · TREND BOARD — RANKED BY SUSTAINED DEVIATION
 
@@ -146,7 +146,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## PortCallsTimeline
 
   Region: header
-    • header.glyph  → section header · anchor glyph · glyph-only in expert mode · PORT CALLS — 72H
+    • header.glyph  → section header · anchor glyph · round 88: LEARN-ONLY (the +72H axis + chips self-identify the timeline) · PORT CALLS — 72H
 
 ## SettingsSheet
 
@@ -180,7 +180,6 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • waves.text  → font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line · {weather.wave_height_ft} ft
     • wind.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wind_speed_kn} kn
   Region: destCol
-    • dest.toggle  → endpoint label = click toggle (chevron affordance) for the arrival detail column · collapsed default · click-only (hover ruling) · {next_port_calls[0].port} → expand ETA/NM-to-go
     • eta.text  → font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE · {next_port_calls[0].eta}
     • toGo.text  → font/data 15 · ink/muted · context · distance remaining · {nm to destination}
   Region: gaugeRail
@@ -189,16 +188,19 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • endurance.chart  → Gauge primitive · log dial · caution band <72h (alert-backed) · {derived.endurance_hours}
     • speed.chart  → Gauge primitive · 116px (round 79) · {position.speed_over_ground_kn} / max {cruise×1.35}
   Region: marker
-    • position.text  → font/data 15 · ink/muted · current-position reference (nearest port NOW) anchored below the marker — relative, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
-    • progress.text  → font/data 15 · ink/muted · progress % anchored ABOVE the marker — bound to real voyage progress (round 83) · {round(frac*100)}%
+    • position.text  → font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
+    • progress.text  → font/data 15 · ink/muted · progress % anchored above the marker (flips left near 100% so it never overlaps the destination, round 88) — bound to real voyage progress · {round(frac*100)}%
   Region: originCol
-    • origin.toggle  → endpoint label = click toggle (chevron affordance) for the origin detail column · collapsed default · click-only (hover ruling) · {transit-run start} → expand spec/speed
-    • spec.text  → font/data 15 (wind/waves scale) · ink/muted · context (no tint) · {static.length_ft} ft {static.class}
+    • spec.text  → font/data 15 · ink/muted · context (no tint) · {static.length_ft} ft {static.class}
     • speed.text  → font/data 15 · ink/muted · context · {position.speed_over_ground_kn} kn
   Region: profile
+    • destination.text  → font/data 15 · ink/secondary · endpoint label (name once) · {next_port_calls[0].port}
     • fill.line  → ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed) · {distance covered fraction}
+    • origin.text  → font/data 15 · ink/secondary · endpoint label (name once) · {transit-run start}
     • track.line  → line/strong 2px · GREY = distance remaining (ahead of marker) · {origin→destination, remaining}
     • vessel.glyph  → glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track · {live position on track}
+  Region: voyage
+    • detail.toggle  → single maximize/minimize — reveals/hides BOTH endpoint detail columns (origin spec/speed · dest ETA/NM-to-go) · default collapsed · click (round 88, replaces the two chevrons) · {detailOpen} toggle
 
 ## VesselInspector
 
@@ -295,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T01:43:08.150Z*
+*141 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T05:13:14.195Z*

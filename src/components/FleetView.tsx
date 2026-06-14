@@ -15,6 +15,7 @@ import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip befo
 import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { FleetHealthBand } from './FleetHealthBand';
+import { StatusHeader } from './AlertSheet';
 import { VesselTile } from './VesselTile';
 import { FleetMap } from './FleetMap';
 import { PortCallsTimeline } from './PortCallsTimeline';
@@ -27,6 +28,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
   // ROUND 68: chart-band maximize — a TRANSIENT resize, local to the view (not a
   // persisted layout mode). Default load is always the standard band size.
   const [chartMax, setChartMax] = useState(false);
+  const [chartHot, setChartHot] = useState(false); // round 88: maximize button shows on hover only
 
   // Round 21 A1: shared activity-aware comparator (board + rail)
   const ranked = [...fleet].sort(compareVessels);
@@ -63,18 +65,31 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           visible and simply reflow down. One-elastic-element: ONLY the band
           flexes (240 → 520); tiles hold their size. Not persisted. */}
       <Annotated name="NauticalChart">
-        <div style={{ position: 'relative' }}>
+        {/* round 88: maximize button shows on HOVER only (control affordance, not
+            a data reveal — consistent with the hover ruling) */}
+        <div style={{ position: 'relative' }} onMouseEnter={() => setChartHot(true)} onMouseLeave={() => setChartHot(false)}>
           <FleetMap fleet={fleet} treatment={treatment} width={1240} height={chartMax ? 520 : 240} />
-          <button
-            {...layer('FleetView / chartBand / maximize.glyph', 'transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted', '{chartMax} toggle')}
-            aria-label={chartMax ? 'restore chart band' : 'maximize chart band'}
-            onClick={() => setChartMax((m) => !m)}
-            style={{ position: 'absolute', top: 6, right: 6, zIndex: 2, background: 'var(--color-surface-overlay)', border: '1px solid var(--color-line-strong)', borderRadius: 1, padding: 3, cursor: 'pointer', color: 'var(--color-ink-secondary)', lineHeight: 0 }}
-          >
-            <Glyph name={chartMax ? 'collapse' : 'expand'} size={14} />
-          </button>
+          {chartHot && (
+            <button
+              {...layer('FleetView / chartBand / maximize.glyph', 'transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted', '{chartMax} toggle')}
+              aria-label={chartMax ? 'restore chart band' : 'maximize chart band'}
+              onClick={() => setChartMax((m) => !m)}
+              style={{ position: 'absolute', top: 6, right: 6, zIndex: 2, background: 'var(--color-surface-overlay)', border: '1px solid var(--color-line-strong)', borderRadius: 1, padding: 3, cursor: 'pointer', color: 'var(--color-ink-secondary)', lineHeight: 0 }}
+            >
+              <Glyph name={chartMax ? 'collapse' : 'expand'} size={14} />
+            </button>
+          )}
         </div>
       </Annotated>
+
+      {/* ROUND 88: global STATUS CLUSTER relocated here — centered, below the
+          fleet-plot map and directly above the thumbcards, bolder (prominent →
+          PRIMARY tier). DATALINK/SYNC + CAUTION·ADVISORY; the round-79 breath
+          binding rides along (still breathes only when LIVE, static in the
+          DEGRADED demo seed). CAUTION·ADVISORY stay clickable DetailChips. */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0 18px' }}>
+        <StatusHeader prominent />
+      </div>
 
       <div
         style={{

@@ -16,6 +16,7 @@ import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR, RADIUS } from './probeTokens';
 import { gb, fmtPct } from './gb';
 import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
+import { useLearn } from '../learn/LearnProvider'; // round 88: redundant header → Learn-only
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
@@ -43,6 +44,7 @@ export function FleetMap({
 }) {
   const router = useRouter();
   const { motion } = useFleet();
+  const { learnOn } = useLearn(); // round 88: "FLEET PLOT — GULF OF MEXICO" is a redundant location restatement — Learn-only docent
   const [wrapRef, w] = useContentWidth(width);
   const [hoverId, setHoverId] = useState<string | null>(null);
   // round 18: tooltips are the legitimate hover use, but debounced so a
@@ -86,7 +88,7 @@ export function FleetMap({
     // round 37: header floats above the fill — type owns hierarchy,
     // the fill owns grouping
     <div style={{ marginBottom: 8 }}>
-      <Label g="chart.fleet" headerAttrs={layer('FleetMap / header / header.glyph', 'section header · chart.fleet (scatter motif) · glyph-only in expert mode', 'FLEET PLOT — GULF OF MEXICO')} style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>
+      {learnOn && <Label g="chart.fleet" headerAttrs={layer('FleetMap / header / header.glyph', 'section header · chart.fleet · round 88: LEARN-ONLY (redundant location restatement; the map self-identifies + carries the GULF OF MEXICO furniture label)', 'FLEET PLOT — GULF OF MEXICO')} style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>}
       <section style={{ ...gb.box, borderRadius: RADIUS }}>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>

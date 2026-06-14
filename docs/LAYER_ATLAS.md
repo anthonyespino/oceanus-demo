@@ -152,7 +152,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/FleetMap.tsx*
 
 - `header / header.glyph`
-  - TOKENS — section header · chart.fleet (scatter motif) · glyph-only in expert mode
+  - TOKENS — section header · chart.fleet · round 88: LEARN-ONLY (redundant location restatement; the map self-identifies + carries the GULF OF MEXICO furniture label)
   - BINDS — FLEET PLOT — GULF OF MEXICO
 
 ## FleetRail
@@ -177,7 +177,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/FleetView.tsx*
 
 - `chartBand / maximize.glyph`
-  - TOKENS — transient resize — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted
+  - TOKENS — transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted
   - BINDS — {chartMax} toggle
 - `header / header.glyph`
   - TOKENS — page header · chart.trend (sorted-bars motif) · glyph-only in expert mode
@@ -271,7 +271,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/PortCallsTimeline.tsx*
 
 - `header / header.glyph`
-  - TOKENS — section header · anchor glyph · glyph-only in expert mode
+  - TOKENS — section header · anchor glyph · round 88: LEARN-ONLY (the +72H axis + chips self-identify the timeline)
   - BINDS — PORT CALLS — 72H
 
 ## SettingsSheet
@@ -336,9 +336,6 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `centerStack / wind.text`
   - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
   - BINDS — {weather.wind_speed_kn} kn
-- `destCol / dest.toggle`
-  - TOKENS — endpoint label = click toggle (chevron affordance) for the arrival detail column · collapsed default · click-only (hover ruling)
-  - BINDS — {next_port_calls[0].port} → expand ETA/NM-to-go
 - `destCol / eta.text`
   - TOKENS — font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE
   - BINDS — {next_port_calls[0].eta}
@@ -358,29 +355,35 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — Gauge primitive · 116px (round 79)
   - BINDS — {position.speed_over_ground_kn} / max {cruise×1.35}
 - `marker / position.text`
-  - TOKENS — font/data 15 · ink/muted · current-position reference (nearest port NOW) anchored below the marker — relative, never raw lat/lon (ruling 6)
+  - TOKENS — font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6)
   - BINDS — {nm from nearest port | alongside}
 - `marker / progress.text`
-  - TOKENS — font/data 15 · ink/muted · progress % anchored ABOVE the marker — bound to real voyage progress (round 83)
+  - TOKENS — font/data 15 · ink/muted · progress % anchored above the marker (flips left near 100% so it never overlaps the destination, round 88) — bound to real voyage progress
   - BINDS — {round(frac*100)}%
-- `originCol / origin.toggle`
-  - TOKENS — endpoint label = click toggle (chevron affordance) for the origin detail column · collapsed default · click-only (hover ruling)
-  - BINDS — {transit-run start} → expand spec/speed
 - `originCol / spec.text`
-  - TOKENS — font/data 15 (wind/waves scale) · ink/muted · context (no tint)
+  - TOKENS — font/data 15 · ink/muted · context (no tint)
   - BINDS — {static.length_ft} ft {static.class}
 - `originCol / speed.text`
   - TOKENS — font/data 15 · ink/muted · context
   - BINDS — {position.speed_over_ground_kn} kn
+- `profile / destination.text`
+  - TOKENS — font/data 15 · ink/secondary · endpoint label (name once)
+  - BINDS — {next_port_calls[0].port}
 - `profile / fill.line`
   - TOKENS — ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)
   - BINDS — {distance covered fraction}
+- `profile / origin.text`
+  - TOKENS — font/data 15 · ink/secondary · endpoint label (name once)
+  - BINDS — {transit-run start}
 - `profile / track.line`
   - TOKENS — line/strong 2px · GREY = distance remaining (ahead of marker)
   - BINDS — {origin→destination, remaining}
 - `profile / vessel.glyph`
   - TOKENS — glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track
   - BINDS — {live position on track}
+- `voyage / detail.toggle`
+  - TOKENS — single maximize/minimize — reveals/hides BOTH endpoint detail columns (origin spec/speed · dest ETA/NM-to-go) · default collapsed · click (round 88, replaces the two chevrons)
+  - BINDS — {detailOpen} toggle
 
 ## VesselInspector
 
@@ -523,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-14T01:43:08.148Z*
+*141 instrumented leaves · 20 components · generated 2026-06-14T05:13:14.193Z*

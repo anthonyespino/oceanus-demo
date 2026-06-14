@@ -14,6 +14,7 @@ import { Field } from './Field';
 import { ACCENT, FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
 import { Glyph, Label } from './Glyph';
+import { useLearn } from '../learn/LearnProvider'; // round 88: header → Learn-only
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 
 const WINDOW_H = 72;
@@ -52,6 +53,7 @@ function nearestPortName(pos: { lat: number; lon: number }): string {
 }
 
 export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
+  const { learnOn } = useLearn(); // round 88: "PORT CALLS — 72H" header → Learn-only
   const [wrapRef, w] = useContentWidth(1100);
   const now = fleet[0].history.minutes.at(-1)!.t;
   const blocks = collectBlocks(fleet, now);
@@ -74,7 +76,7 @@ export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
   return (
     // round 37: header floats above the fill
     <div id="port-calls" style={{ marginBottom: 8 }}>
-      <Label g="anchor" headerAttrs={layer('PortCallsTimeline / header / header.glyph', 'section header · anchor glyph · glyph-only in expert mode', 'PORT CALLS — 72H')} style={{ marginBottom: 4 }}>port calls — 72h</Label>
+      {learnOn && <Label g="anchor" headerAttrs={layer('PortCallsTimeline / header / header.glyph', 'section header · anchor glyph · round 88: LEARN-ONLY (the +72H axis + chips self-identify the timeline)', 'PORT CALLS — 72H')} style={{ marginBottom: 4 }}>port calls — 72h</Label>}
       <section style={gb.box}>
       <Field level="fleet" field="port_calls_timeline">
         <div ref={wrapRef} style={{ position: 'relative' }}>
@@ -111,11 +113,18 @@ export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
                   // ONLY — nominal time-span edges stay neutral in BOTH treatments
                   const edge = status !== 'nominal' ? STATUS_COLOR[status] : 'var(--color-line-strong)';
                   const left = b.etaMs === null ? 2 : x(b.etaMs);
+                  // ROUND 88: late-arrival chips near +72H were left-anchored with a
+                  // minWidth of 96, so they overflowed the right edge (SAN…/BAY…/
+                  // ALB… bled out). Fix: when a chip would clip, RIGHT-anchor it at
+                  // its ETA position so it grows leftward and stays inside the grid.
+                  const nearRight = left > plotW - 100;
+                  const pos: React.CSSProperties = nearRight
+                    ? { right: Math.max(2, plotW - left), left: 'auto' }
+                    : { left, maxWidth: plotW - left - 4 };
                   return (
                     <Link key={`${b.vessel.static.id}-${lane}`} href={`/vessel/${b.vessel.static.id}`}
                       style={{
-                        position: 'absolute', top: lane * LANE_H + 3, left,
-                        maxWidth: plotW - left - 4,
+                        position: 'absolute', top: lane * LANE_H + 3, ...pos,
                         minWidth: 96, // chips never collapse below a readable block
                         display: 'inline-flex', gap: 6, alignItems: 'baseline',
                         background: NEUTRAL.surface,

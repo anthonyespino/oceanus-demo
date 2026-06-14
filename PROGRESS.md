@@ -1,3 +1,53 @@
+# PROGRESS — 2026-06-13 (Session 77: ROUND 88 — UI polish batch, 10 items)
+
+## Done (verified — screenshots in docs/screens/r88-*.png)
+1. **OCEANUS FLEET wordmark** → PRIMARY tier (16, font/display 700) — no longer
+   DISPLAY. Identity chrome, not a hero datum.
+2. **Global status cluster relocated** to a centered row BELOW the fleet-plot map
+   and directly ABOVE the thumbcards, promoted to PRIMARY (`StatusHeader
+   prominent`). CAUTION·ADVISORY still clickable DetailChips. **Round-79 DATALINK
+   breath binding SURVIVED the move** — verified 0 breath elements in the DEGRADED
+   seed (breathes only when FRESH; static here, correct).
+3. **Redundant headers** "FLEET PLOT — GULF OF MEXICO" + "PORT CALLS — 72H" gated
+   to Learn-only (`learnOn`). **"TREND BOARD — ranked by sustained deviation"
+   subtitle KEPT** (explains the consequence sort).
+4. **Fleet chart maximize** shows on hover only (`chartHot`) — verified
+   default:0 / hover:1 / leave:0. Click still toggles 240↔520.
+5. **Zulu master clock** → HERO tier (20, weight 600).
+6. **Port-call right-edge bleed FIXED** — chips within ~100px of the right edge
+   right-anchor at their ETA and grow leftward. Verified: 0 chips overflow their
+   lane. PORT CALLS header now Learn-only; all chips contained.
+7. **Trip summary bar** → ONE maximize/minimize button (replaces the two round-83
+   chevrons), default collapsed; click reveals BOTH detail columns. **%/dest
+   overlap FIXED**: marker labels flip left when `frac > 0.82`. Verified at seed
+   fractions 6% (v01) / 48% (v13) / 86% (v09 — exercises the flip) + expanded
+   state. (95/100% don't occur in the fixed DEMO_EPOCH seed.)
+8. **FOLLOW** → bullseye/crosshair Glyph (neutral ink); function/state unchanged.
+   Verified: appears on pan with the crosshair svg (docs/screens/r88-follow.png).
+9. **Fuel-twin (VesselSynoptic) type audit** → unified scale: tank %/gph →
+   context, node/small marks → micro, RECON OK → context (keeps reconColor). No
+   orphan sizes.
+10. **ALERTS bar tightened** (VesselInspector) — padding 16→6px, lines at context
+    + lineHeight 1.45. The two `[CAUTION]` anomaly-evidence lines KEPT (this is
+    also why the global cluster reads "2 CAUTION" — Meridian's two caution alerts,
+    still one CAUTION vessel).
+
+## Rulings held
+Greyscale + earned color · severity unmissable · no orphan type sizes (every
+change reuses an existing tier) · maximize/minimize = click · chart + FOLLOW
+controls = hover (control affordance, not data-reveal). DEMO_EPOCH/LAND geometry
+untouched.
+
+## Checks
+TSC-OK · LINT-CLEAN · `npm run verify` PASSED · offline build compiled.
+
+## Next session
+Awaiting PM review of the polish batch. The two dev-decisions worth a flag:
+hover-hiding the chart maximize (item 4) and the marker-label flip threshold 0.82
+(item 7) — both verified but logged as DEV DECISIONS (pending Anthony).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 76: ROUND 87 — position track: distinguish history from projection)
 
 ## Done (verified `docs/screens/r87-pos-v01.png`, `r87-marker-zoom.png`)

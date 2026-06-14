@@ -66,10 +66,12 @@ export function VesselInspector({
         {vessel.alerts.length > 0 && (
           <div style={{ marginBottom: 8 }}>
             <Label g="alert-triangle" headerAttrs={layer('VesselInspector / alerts / header.glyph', 'section header · alert-triangle glyph · glyph-only in expert mode', 'ALERTS')} style={{ marginBottom: 4 }}>alerts</Label>
-            <section style={gb.box}>
+            {/* ROUND 88: tightened — reduced vertical padding + line-height; the
+                substantive [CAUTION] alert TEXT (the anomaly evidence) is KEPT. */}
+            <section style={{ ...gb.box, padding: '6px var(--pad-card)' }}>
               {/* round 33 grammar: one severity voice per line — the tag */}
               {vessel.alerts.map((a, i) => (
-                <div key={i} style={{ color: NEUTRAL.inkSecondary }}>
+                <div key={i} style={{ color: NEUTRAL.inkSecondary, fontSize: 'var(--type-context)', lineHeight: 1.45 }}>
                   <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
                 </div>
               ))}

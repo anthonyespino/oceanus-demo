@@ -31,7 +31,7 @@ const FEED_ABBREV: Record<string, string> = {
 };
 
 const LEVEL_RANK: Record<string, number> = { WARNING: 0, CAUTION: 1, ADVISORY: 2 };
-const item: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', whiteSpace: 'nowrap' };
+const itemBase: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', whiteSpace: 'nowrap' };
 const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', lineHeight: 1.8, display: 'flex', justifyContent: 'space-between', gap: 16 };
 
 // ROUND 73: the status row splits by information TYPE. `parts` lets the
@@ -39,8 +39,12 @@ const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--ty
 // name and the DATALINK/SYNC chips (ambient data-health) in a bottom footer —
 // different weights, different positions. Default 'all' keeps every other call
 // site (FleetHealthBand) unchanged.
-export function StatusHeader({ parts = 'all' }: { parts?: 'all' | 'alerts' | 'health' }) {
+export function StatusHeader({ parts = 'all', prominent = false }: { parts?: 'all' | 'alerts' | 'health'; prominent?: boolean }) {
   const { fleet, simTime } = useFleet();
+  // ROUND 88: `prominent` bumps the cluster to PRIMARY tier + bolder for the
+  // FleetView placement below the map (reads as present system status above the cards).
+  const item: React.CSSProperties = prominent ? { ...itemBase, fontSize: 'var(--type-primary)', fontWeight: 600 } : itemBase;
+  const gsz = prominent ? 15 : 12;
   const showHealth = parts === 'all' || parts === 'health';
   const showAlerts = parts === 'all' || parts === 'alerts';
   if (!fleet || simTime === null) {
@@ -110,7 +114,7 @@ export function StatusHeader({ parts = 'all' }: { parts?: 'all' | 'alerts' | 'he
           className={datalink === 'FRESH' ? 'datalink-breath' : undefined}
           style={{ ...item, color: datalinkColor, display: 'inline-flex', alignItems: 'center', gap: 5 }}
         >
-          <Glyph name="datalink" size={12} />DATALINK {datalink}
+          <Glyph name="datalink" size={gsz} />DATALINK {datalink}
         </span>
       </DetailChip>
 
@@ -164,7 +168,7 @@ export function StatusHeader({ parts = 'all' }: { parts?: 'all' | 'alerts' | 'he
         }
       >
         <span style={{ ...item, color: NEUTRAL.inkSecondary, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-          <Glyph name="alert-triangle" size={12} />
+          <Glyph name="alert-triangle" size={gsz} />
           {countParts.map((l, i) => (
             <span key={l}>{i > 0 && ' · '}<span style={{ color: ALERT_TEXT_COLOR[l] }}>{counts[l]} {l}</span></span>
           ))}

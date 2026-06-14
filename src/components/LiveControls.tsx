@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
 import { toggleStyle } from './probeTokens';
 import { fmtTime } from './gb';
-import { StatusHeader } from './AlertSheet';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -31,7 +30,7 @@ function MasterClock() {
     <span
       {...layer('AppHeader / clock / master.clock.text', 'global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock', 'system UTC now')}
       title="global UTC (Zulu) — system wall clock"
-      style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: 'var(--color-ink-secondary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
+      style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-hero)', fontWeight: 600, color: 'var(--color-ink-secondary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
     >
       {z}
     </span>
@@ -60,37 +59,27 @@ export function LiveControls() {
   );
 }
 
-// ROUND 79: the header is the GLOBAL STATUS BAR (all pages, app-level). Three
-// masses: wordmark + DATALINK/LAST SYNC (data-health) on the LEFT, CAUTION ·
-// ADVISORY counts (consequence, clickable) CENTER, the global UTC master clock
-// RIGHT. This supersedes the round-73 split (data-health was an ambient footer
-// in the CommandBand) and the per-page status strips — one system-state line
-// above all vessel content. (Round 33 had dissolved status into per-page header
-// rows; round 79 re-consolidates it globally.)
+// ROUND 88: the global bar is now just WORDMARK (left, primary tier — pulled back
+// from the round-86 display size) and the Zulu MASTER CLOCK (right, promoted to
+// hero + bold). The status cluster (DATALINK/SYNC + CAUTION·ADVISORY) moved DOWN
+// to FleetView, centered below the fleet-plot map and above the thumbcards
+// (round 88 item 2); the DATALINK breath binding rides along with StatusHeader.
 export function AppHeader() {
   return (
     <header
       style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto 1fr',
+        display: 'flex',
         alignItems: 'center',
+        justifyContent: 'space-between',
         gap: 16,
         borderBottom: '1px solid var(--color-line-subtle)',
         padding: '6px 12px',
       }}
     >
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18, minWidth: 0 }}>
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--type-display)', letterSpacing: 2, whiteSpace: 'nowrap' }}>
-          OCEANUS FLEET
-        </span>
-        <StatusHeader parts="health" />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <StatusHeader parts="alerts" />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <MasterClock />
-      </div>
+      <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--type-primary)', fontWeight: 700, letterSpacing: 2, whiteSpace: 'nowrap' }}>
+        OCEANUS FLEET
+      </span>
+      <MasterClock />
     </header>
   );
 }
