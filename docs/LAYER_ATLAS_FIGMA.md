@@ -120,6 +120,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: header
     • header.glyph  → section header · route glyph · glyph-only in expert mode · POSITION
+  Region: track
+    • projection.line  → forward projection — dim/sparse/fading, heading+speed-bounded (~3h), honestly an estimate (round 87) · {pos.heading_deg + speed_over_ground_kn → short extrapolation}
 
 ## InstrumentCluster
 
@@ -293,4 +295,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*139 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T01:34:49.104Z*
+*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T01:43:08.150Z*

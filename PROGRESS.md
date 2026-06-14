@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-13 (Session 76: ROUND 87 — position track: distinguish history from projection)
+
+## Done (verified `docs/screens/r87-pos-v01.png`, `r87-marker-zoom.png`)
+- **Recorded history** = SOLID, confident, higher-opacity (ink/secondary) — was a
+  thin dashed `3 3` `#7a7a7a` that read as ambiguous. The real course bend is
+  preserved (not smoothed/straightened).
+- **Forward projection** ADDED = dim, sparse-dashed (`1.5 5`), FADING via an
+  opacity gradient to 0. Heading + speed bounded: ~3h extrapolation along
+  `heading_deg` at `speed_over_ground_kn`. Speed-scaled and short — no long
+  confident forward line.
+- **Marker is the clean past/future boundary**: solid history ends at the stern,
+  dim projection begins at the marker heading-forward. At the zoom: solid (east,
+  where Meridian came from) vs dim-dashed (west, heading 260° forward) — instantly
+  legible past vs future. The "returning from open water" misread is gone.
+- **Substantiation confirmed**: projection only where data justifies — Meridian
+  (transit, 12 kn) draws it; Frigate Bird (on station, ~0 kn) draws NONE (verified
+  projection-line count: 1 vs 0). No fake forecast for a holding vessel.
+- Greyscale throughout (history + projection neutral grey, projection dimmer);
+  marker keeps alerted-gold. The other plot dots are real other-vessel positions
+  (`ghosts` from the fleet) — confirmed real, not artifacts.
+
+## Scope held
+Only the track render in InspectorChart. FOLLOW/compass/scale/marker/ghosts/
+coastline-omission (round 84) untouched. TSC-OK · LINT-CLEAN · verify PASSED.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 75: ROUND 86 — APPLY UNIFIED TYPE SCALE (global, single source))
 
 ## Single source established

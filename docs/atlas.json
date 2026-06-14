@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T01:34:49.104Z",
+  "generated": "2026-06-14T01:43:08.150Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -558,6 +558,15 @@
       "leaf": "header.glyph",
       "tokens": "section header · route glyph · glyph-only in expert mode",
       "binds": "POSITION",
+      "file": "src/components/InspectorChart.tsx"
+    },
+    {
+      "path": "InspectorChart / track / projection.line",
+      "component": "InspectorChart",
+      "region": "track",
+      "leaf": "projection.line",
+      "tokens": "forward projection — dim/sparse/fading, heading+speed-bounded (~3h), honestly an estimate (round 87)",
+      "binds": "{pos.heading_deg + speed_over_ground_kn → short extrapolation}",
       "file": "src/components/InspectorChart.tsx"
     },
     {

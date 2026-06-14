@@ -383,6 +383,25 @@ originals.*
     `var(--type-context)`. Every component migrated to tokens; the only remaining
     hardcoded size is that ✓ checkmark (plus the computed responsive "GULF OF
     MEXICO" furniture label, intentionally left). No element on the old 30.
+- **Position track distinguishes HISTORY from PROJECTION (round 87)**: the
+  recorded trail and any forward path were one dashed style, so the historical
+  course bend misread as the vessel "returning" from open water. Now:
+  - **Recorded history** (behind the marker) = SOLID, confident, higher-opacity
+    line (ink/secondary). It is real data and may legitimately bend (OSV courses
+    divert around weather/traffic/lease blocks/holds) — NOT smoothed or
+    straightened. A bending recorded track is correct/substantiated.
+  - **Forward projection** (ahead of the marker) = DIM, sparse-dashed, FADING
+    (opacity gradient to nothing) — reads as an estimate, not a fact. **Bounded by
+    REAL heading + speed**: a ~3h extrapolation along `heading_deg` at
+    `speed_over_ground_kn`, so it's speed-scaled and short — a moored/holding
+    vessel (≈0 kn) projects nothing (verified: Meridian/transit draws it,
+    Frigate Bird/on-station does not). No confident long forward line (no-fake-
+    forecasts); length is data-bounded, not a fixed visual.
+  - The **marker is the legible past/future boundary** (solid history terminates
+    at it; dim projection begins at it, heading-forward). Greyscale throughout
+    (history + projection neutral grey, projection dimmer); the marker keeps its
+    alerted-gold (substantiated severity). The other plot dots are real
+    other-vessel positions (`ghosts` from the fleet), not artifacts — left as-is.
 - **Position chart geometry artifact fixed (round 84)**: the dark filled wedge
   spiking to a sharp V at ~89°W/29°N (at the Meridian marker, in open water) was
   the **coastline polygon** (`LAND`, src/data/coast) — specifically the

@@ -225,6 +225,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `header / header.glyph`
   - TOKENS — section header · route glyph · glyph-only in expert mode
   - BINDS — POSITION
+- `track / projection.line`
+  - TOKENS — forward projection — dim/sparse/fading, heading+speed-bounded (~3h), honestly an estimate (round 87)
+  - BINDS — {pos.heading_deg + speed_over_ground_kn → short extrapolation}
 
 ## InstrumentCluster
 
@@ -520,4 +523,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*139 instrumented leaves · 20 components · generated 2026-06-14T01:34:49.103Z*
+*140 instrumented leaves · 20 components · generated 2026-06-14T01:43:08.148Z*

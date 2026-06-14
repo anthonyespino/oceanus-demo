@@ -134,11 +134,40 @@ export function InspectorChart({
                   </g>
                 ),
               )}
-              {/* round 36: trail tucks into the stern (marker has a bow) */}
+              {/* ROUND 87: RECORDED HISTORY — solid, confident, higher-opacity
+                  line (real data; it may legitimately bend around weather/traffic/
+                  lease blocks — NOT smoothed). Terminates at the stern; the marker
+                  is the past/future boundary. Greyscale (ink/secondary). */}
               <polyline
                 points={trail.map((p) => `${px(p.lon).toFixed(1)},${py(p.lat).toFixed(1)}`).join(' ')
                   + (() => { const s = sternPoint(px(pos.lon), py(pos.lat), pos.heading_deg, 1.3); return ` ${s.x.toFixed(1)},${s.y.toFixed(1)}`; })()}
-                fill="none" stroke="#7a7a7a" strokeWidth={1} strokeDasharray="3 3" />
+                fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
+              {/* ROUND 87: FORWARD PROJECTION — dim, sparse-dashed, FADING; an
+                  estimate, not a recorded fact. Bounded by REAL heading + speed (a
+                  short ~3h extrapolation, so a moored vessel projects ~nothing and
+                  no confident long forward line is drawn — no-fake-forecasts).
+                  Begins at the marker, fades to nothing. Greyscale. */}
+              {pos.speed_over_ground_kn > 0.4 && (() => {
+                const hdg = (pos.heading_deg * Math.PI) / 180;
+                const nm = pos.speed_over_ground_kn * 3; // 3h heading extrapolation (speed-bounded)
+                const projLat = pos.lat + (nm * Math.cos(hdg)) / 60;
+                const projLon = pos.lon + (nm * Math.sin(hdg)) / (60 * Math.cos((pos.lat * Math.PI) / 180));
+                const mx = px(pos.lon), my = py(pos.lat);
+                const ex = px(projLon), ey = py(projLat);
+                const gid = `projfade-${vessel.static.id}`;
+                return (
+                  <g>
+                    <defs>
+                      <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={mx} y1={my} x2={ex} y2={ey}>
+                        <stop offset="0" stopColor="#9a9a9a" stopOpacity={0.5} />
+                        <stop offset="1" stopColor="#9a9a9a" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <line {...layer('InspectorChart / track / projection.line', 'forward projection — dim/sparse/fading, heading+speed-bounded (~3h), honestly an estimate (round 87)', '{pos.heading_deg + speed_over_ground_kn → short extrapolation}')}
+                      x1={mx} y1={my} x2={ex} y2={ey} stroke={`url(#${gid})`} strokeWidth={1} strokeDasharray="1.5 5" strokeLinecap="round" />
+                  </g>
+                );
+              })()}
               {/* round 23: NOT a route — a dashed bearing ray, clipped at the
                   chart edge, labeled BRG; the voyage card carries the real
                   destination. Behind the dev toggle (Anthony judges). */}
