@@ -257,6 +257,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: footer
     • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
   Region: (root)
+    • mode.glyph  → MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70) · {vessel.static.name}
     • now.glyph  → glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline · now vs mode baseline
     • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
@@ -297,4 +298,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T18:25:59.497Z*
+*141 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T20:25:30.367Z*

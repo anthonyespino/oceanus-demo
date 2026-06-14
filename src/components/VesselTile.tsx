@@ -22,7 +22,7 @@ import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, FONT, ALERT_TEXT_COLOR } from './probeTokens';
 import { useState } from 'react';
 import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
-import { Glyph } from './Glyph';
+import { Glyph, MODE_GLYPH } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
@@ -127,7 +127,20 @@ export function VesselTile({
           SPARK fill band (round 63) is retained — it groups a distinct data
           region. Name position/size (D-DIN)/tint (gold when alerted, neutral
           nominal) unchanged. RADIUS stays 1px (round 36). */}
-      <div style={{ padding: mini ? '14px 14px 14px' : '20px 14px 16px', textAlign: 'center' }}>
+      {/* ROUND 102: mode glyph ABOVE the name — the EXACT same MODE_GLYPH map and
+          single source (vessel.derived.mode) as the FleetRail, so card and rail can
+          never disagree. Quiet: ink/muted, rail scale (15), context register — a
+          state label, NOT a hero; it must not compete with the deviation value or
+          the name. Greyscale (mode is state, not severity). Learn/title = mode name
+          (matches the rail's title approach). */}
+      <div style={{ padding: mini ? '12px 14px 14px' : '16px 14px 16px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+        <span
+          {...layer('VesselTile / mode.glyph', 'MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')}
+          title={d.mode}
+          style={{ color: NEUTRAL.inkMuted, lineHeight: 0 }}
+        >
+          <Glyph name={MODE_GLYPH[d.mode]} size={15} />
+        </span>
         {/* ROUND 90 VALUE-FIRST REBALANCE: the name is a LABEL, not the headline.
             On the board a card is a scannable summary and the deviation value is
             what you scan for (the consequence sort ranks by it) — so the value is

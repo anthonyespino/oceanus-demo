@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T18:25:59.498Z",
+  "generated": "2026-06-14T20:25:30.367Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1197,6 +1197,15 @@
       "leaf": "deviation.fill",
       "tokens": "meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance",
       "binds": "{|derived.efficiency_delta_pct|}",
+      "file": "src/components/VesselTile.tsx"
+    },
+    {
+      "path": "VesselTile / mode.glyph",
+      "component": "VesselTile",
+      "region": "(root)",
+      "leaf": "mode.glyph",
+      "tokens": "MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name",
+      "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
       "file": "src/components/VesselTile.tsx"
     },
     {

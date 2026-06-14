@@ -501,6 +501,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `footer / deviation.fill`
   - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
   - BINDS — {|derived.efficiency_delta_pct|}
+- `mode.glyph`
+  - TOKENS — MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
 - `name.text`
   - TOKENS — type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)
   - BINDS — {vessel.static.name}
@@ -526,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-14T18:25:59.496Z*
+*141 instrumented leaves · 20 components · generated 2026-06-14T20:25:30.366Z*

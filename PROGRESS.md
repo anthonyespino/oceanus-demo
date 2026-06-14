@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-14 (Session 90: ROUND 102 — audit mode set + add mode glyph to thumbcard)
+
+## Part A — mode set audit (reported)
+- Modes (4): TRANSIT, STATION, STANDBY, PORT (Mode type, src/data/types.ts).
+- Single source: sample.mode → derived.mode = now.mode (derived.ts).
+- Glyphs (MODE_GLYPH, Glyph.tsx): TRANSIT→route, STATION→crosshair,
+  STANDBY→clock, PORT→anchor.
+- Rail glyph, CommandBand mode chip, and mission clock prefix all read the same
+  derived.mode — they AGREE (no divergence). Voyage line phrases PORT as
+  "MOORED" (label wording, same underlying mode).
+
+## Part B — mode glyph on thumbcard (done; verified docs/screens/r102-tiles.png)
+- Added mode glyph above the vessel name on each card, reusing the rail's exact
+  MODE_GLYPH + single source (derived.mode). Verified card↔rail agree for all 15
+  seed vessels.
+- Quiet: ink/muted, rail scale 15, context register, greyscale (state not
+  severity). Vertical order: mode glyph → name → calendar → deviation value →
+  footer; header top padding trimmed so it doesn't crowd.
+- Learn/title exposes the mode name (matches the rail). Meridian still alerted —
+  mode glyph neutral grey (rgb 117) while name + value stay gold (rgb 227,209,65);
+  severity undiluted.
+
+## Safety
+Sort/severity/alerts unchanged (additive). TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 89: ROUND 101 — remove glass-edge bottom divider stroke)
 
 ## Done (verified docs/screens/r101-glass-on.png, r101-float-off.png)

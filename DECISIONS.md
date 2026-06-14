@@ -828,3 +828,31 @@ originals.*
     inspector's other panels (Position, Engine Twins, Fuel, Crew) are filled
     `gb.box` cards, not glass; the engine-twin internal divider was already removed
     in round 99. Glass immersion preserved; borderless-float enforced.
+
+- **ROUND 102 PART A — VESSEL MODE SET (audit, documented)**:
+  - **Modes (4):** `TRANSIT`, `STATION`, `STANDBY`, `PORT` — the `Mode` type in
+    `src/data/types.ts`. (No moored/anchored/off variants; PORT covers moored/
+    alongside, STATION is DP/on-station, STANDBY is holding.)
+  - **Single source:** each 1-min sample carries `mode` (REPORTED via the §3.4
+    status feed); `derived.mode = now.mode` (latest sample, `src/data/derived.ts`).
+    Every mode indicator reads this one value.
+  - **Glyphs (`MODE_GLYPH`, `src/components/Glyph.tsx`):** TRANSIT → `route`,
+    STATION → `crosshair`, STANDBY → `clock`, PORT → `anchor`.
+  - **Indicators all AGREE (one source):** the FleetRail row glyph
+    (`MODE_GLYPH[derived.mode]`), the CommandBand mode chip
+    (`MODE_GLYPH[derived.mode]`), and the mission clock prefix (`now.mode` →
+    T−/UNDERWAY · ON STATION · IN PORT · STANDBY) all derive from the same mode
+    value. No divergence. (The voyage profile line phrases PORT as "MOORED" — a
+    label wording on the same underlying mode, not a separate mode.)
+
+- **ROUND 102 PART B — mode glyph added to the thumbcard (above the name)**:
+  reuses the EXACT rail `MODE_GLYPH` map and the same single source
+  (`vessel.derived.mode`), so card and rail can never disagree (verified: all 15
+  seed vessels match). Treatment: ink/muted, rail scale (15px), context register —
+  a quiet STATE label, greyscale (mode is state, not severity). Card vertical
+  order is now: mode glyph → vessel name → calendar glyph → deviation value →
+  footer (endurance / now); header top padding trimmed so the added row doesn't
+  crowd. Learn/`title` exposes the mode name (matches the rail's approach). Severity
+  undiluted — the glyph is neutral grey while Meridian's name + value stay gold
+  (mode glyph `rgb(117,117,117)` vs gold `rgb(227,209,65)`); sort/severity/alerts
+  unchanged.
