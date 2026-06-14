@@ -117,7 +117,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/FleetHealthBand.tsx*
 
 - `arrivals / bunker.text`
-  - TOKENS — glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn
+  - TOKENS — descriptor: TEXT label (default/learn) | placeholder glyph (expert), centered · count advisory tint when >0 else ink/muted · name from ia-model
   - BINDS — {# bunker-flagged calls in next 24h}
 - `arrivals / value.text`
   - TOKENS — type/hero · font/data tabular · ink/primary · links to #port-calls
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-14T17:05:48.759Z*
+*142 instrumented leaves · 20 components · generated 2026-06-14T17:17:59.249Z*

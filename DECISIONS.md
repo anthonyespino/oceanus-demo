@@ -647,3 +647,38 @@ originals.*
     off) still does nothing on its own.
   - **Source unchanged**: the Learn consumer's REVEAL behavior changed only; the
     shared ia-model content + binding (round 89) are untouched this round.
+
+- **DEV DECISION (pending Anthony) — ROUND 94: Fleet Plot + FleetHealthBand
+  FLOAT on the gradient; descriptors LABELS-in-default / GLYPHS-in-expert,
+  centered**.
+  - **Float**: the filled panel backgrounds (`gb.box` surface-raised) behind the
+    Fleet Plot (FleetMap) and the FleetHealthBand are removed — both float
+    directly on the Calm Sea gradient (the gradient shows through where the fills
+    were). The Fleet Plot's own navy chart-water (the nautical instrument) stays;
+    only the container fill goes.
+  - **Section separators = hairline dividers**: the FleetHealthBand's regions
+    (census · mean+trend · burn · arrivals) are separated by the cells' thin
+    vertical hairlines (`--color-line-hairline`, rgba ink 0.12). **Logged
+    exception**: a STRUCTURAL section-divider hairline is distinct from a severity
+    OUTLINE — outlines stay severity-reserved on interactive/status elements;
+    this is a section rule. (The two sections are stacked vertically and separated
+    by whitespace; no line between them — a vertical line between stacked sections
+    would be nonsensical, so the vertical hairlines are the within-band region
+    dividers.)
+  - **Descriptors — three states (resolves the round-52 open thread where default
+    absorbed glyphs and blurred the modes)**:
+    - DEFAULT → TEXT LABELS (WATCH / NOMINAL / 30D FLEET MEAN / FLEET BURN /
+      ARRIVALS / BUNKER), legible as before the round-90 glyph swap.
+    - EXPERT (E) → GLYPHS only (the round-90 placeholders), labels hidden. Expert
+      reclaims its original definition: glyphs replace labels.
+    - LEARN → text labels (base, same as default) PLUS the round-92 hover IA
+      callout on the band node — the "hover explanations" state, unchanged.
+    Names + glyphs both come from the shared ia-model (single source).
+  - **Centered in both modes**: census label/glyph + value centered within each
+    cell; mean/burn/arrivals descriptors centered too (`Stat` gained a `center`
+    prop; column cells get `alignItems:center`). Fixes the arbitrary-looking
+    left-aligned glyphs.
+  - **Rulings held**: greyscale; WATCH census count stays gold when >0 (severity
+    dominates against the now-visible gradient — re-confirmed); labels use their
+    existing MICRO/CONTEXT tiers (no orphan). Data, sort, and alert logic
+    unchanged (verify PASSED) — this is visual treatment + a mode assignment only.

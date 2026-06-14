@@ -13,9 +13,10 @@ export function Stat({
   size = 'var(--type-hero)' as number | string, // round 7: hero scale is a token
   face = 'data',
   onFill = false, // true when sitting on an accent/primary (IKB) fill
+  center = false, // round 94: center the descriptor (label/glyph) + value in its cell
 }: {
-  /** descriptor word — hidden when a `glyph` stands in for it (round 90),
-      passed back ONLY in Learn mode so the name surfaces from the IA source */
+  /** descriptor word — hidden when a `glyph` stands in for it (round 90/94:
+      label in default/learn, glyph in expert — the caller decides) */
   label?: string;
   /** round 90: a placeholder library glyph replaces the descriptor word in the
       label slot; greyscale/neutral, never inherits the value's status tint */
@@ -24,6 +25,7 @@ export function Stat({
   size?: number | string;
   face?: 'data' | 'display';
   onFill?: boolean;
+  center?: boolean;
 }) {
   return (
     <div>
@@ -31,6 +33,7 @@ export function Stat({
         style={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: center ? 'center' : undefined,
           gap: 5,
           fontFamily: FONT.data,
           fontSize: 'var(--type-micro)',
@@ -53,6 +56,7 @@ export function Stat({
           fontWeight: face === 'display' ? 400 : 500,
           fontVariantNumeric: 'tabular-nums',
           lineHeight: 1.05,
+          textAlign: center ? 'center' : undefined,
           color: onFill ? '#ffffff' : 'inherit', // inherits card tint (e.g. status-colored tile hero)
         }}
       >

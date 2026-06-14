@@ -13,8 +13,8 @@ import { useFleet, type ColorTreatment } from '../state/FleetProvider';
 import { NauticalChart, useContentWidth, usePanZoom, FollowChip, type ChartFrame } from './NauticalChart';
 import { clusterPoints, placeLabels, labelWidth } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
-import { STATUS_COLOR, RADIUS } from './probeTokens';
-import { gb, fmtPct } from './gb';
+import { STATUS_COLOR } from './probeTokens';
+import { fmtPct } from './gb';
 import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
 import { useLearn } from '../learn/LearnProvider'; // round 88: redundant header → Learn-only
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
@@ -89,7 +89,10 @@ export function FleetMap({
     // the fill owns grouping
     <div style={{ marginBottom: 8 }}>
       {learnOn && <Label g="chart.fleet" headerAttrs={layer('FleetMap / header / header.glyph', 'section header · chart.fleet · round 88: LEARN-ONLY (redundant location restatement; the map self-identifies + carries the GULF OF MEXICO furniture label)', 'FLEET PLOT — GULF OF MEXICO')} style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>}
-      <section style={{ ...gb.box, borderRadius: RADIUS }}>
+      {/* ROUND 94: FLOAT — the panel fill (gb.box surface-raised) is removed so
+          the Fleet Plot floats directly on the Calm Sea gradient. The chart's own
+          navy water (the nautical instrument) stays; only the container fill goes. */}
+      <section>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <div ref={wheelRef} {...handlers} style={{ cursor: following ? 'default' : 'grab' }}>

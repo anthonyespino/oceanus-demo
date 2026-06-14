@@ -64,7 +64,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## FleetHealthBand
 
   Region: arrivals
-    • bunker.text  → glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn · {# bunker-flagged calls in next 24h}
+    • bunker.text  → descriptor: TEXT label (default/learn) | placeholder glyph (expert), centered · count advisory tint when >0 else ink/muted · name from ia-model · {# bunker-flagged calls in next 24h}
     • value.text  → type/hero · font/data tabular · ink/primary · links to #port-calls · {# port calls in next 24h}
   Region: burn
     • spark.chart  → ink/secondary 1px · auto-ranged (never approaches 0) · {fleet total burn, 24h hourly}
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T17:05:48.760Z*
+*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T17:17:59.250Z*

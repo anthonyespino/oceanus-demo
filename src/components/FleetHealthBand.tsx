@@ -20,7 +20,7 @@ import { Field } from './Field';
 import { Stat } from './Stat';
 import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
-import { gb, fmtPct } from './gb';
+import { fmtPct } from './gb';
 import { Glyph, Label } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -46,12 +46,17 @@ function rollingMean(xs: number[], window = 7): number[] {
   });
 }
 
+// ROUND 94: the borderLeft is the STRUCTURAL section divider (a hairline,
+// distinct from a severity outline — outlines stay severity-reserved on
+// interactive/status elements; this is a section rule). With the panel fill
+// removed (float), these thin verticals separate the regions on the gradient.
 const cell: React.CSSProperties = {
   padding: '0 var(--pad-card)',
   borderLeft: '1px solid var(--color-line-hairline)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
+  alignItems: 'center', // round 94: center descriptor + value (column cells)
   gap: 6,
 };
 
@@ -59,12 +64,16 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   const [range, setRange] = useState<TrendRange>(90);
   const { ikbBand, treatment, censusFilter, setCensusFilter } = useFleet();
   const [wrapRef, w] = useContentWidth(560);
-  // ROUND 90: descriptors become placeholder GLYPHS; the descriptor NAME is
-  // surfaced only in Learn mode, read from the shared ia-model (single source —
-  // no separate label store). Glyphs stay neutral; values keep their treatment.
-  const { learnOn } = useLearn();
+  // ROUND 94: three descriptor states (resolves the round-52 thread where
+  // default absorbed glyphs and blurred the modes):
+  //   DEFAULT + LEARN → TEXT LABELS (legible words, centered)
+  //   EXPERT (E)      → GLYPHS only (the round-90 placeholders, centered)
+  // Learn still exposes the full IA name on hover (round 92, the band node).
+  // Names + glyphs both come from the shared ia-model (single source).
+  const { expertOn } = useLearn();
   const D = IA_BAND_DESCRIPTORS;
-  const dlabel = (id: string) => (learnOn ? D[id].name : undefined);
+  const dGlyph = (id: string) => (expertOn ? D[id].glyph : undefined);
+  const dLabel = (id: string) => (expertOn ? undefined : D[id].name);
 
   // census
   const counts: Record<StatusLevel, number> = { degraded: 0, watch: 0, nominal: 0 };
@@ -118,7 +127,11 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
           <button style={toggleStyle(range === 365)} onClick={() => setRange(365)}>1y</button>
         </span>
       </div>
-      <section style={gb.box}>
+      {/* ROUND 94: FLOAT — the panel fill (gb.box surface-raised) is removed so
+          the band floats directly on the Calm Sea gradient; the gradient shows
+          through where the fill was. Regions are separated by the cells' vertical
+          hairline dividers only (structural, not severity). */}
+      <section>
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         {/* CELL 1 — status census (clickable filters; never separable from the mean) */}
         <div style={{ ...cell, borderLeft: 'none', paddingLeft: 0, flexDirection: 'row', gap: 18, alignItems: 'center' }}>
@@ -137,10 +150,10 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
                 padding: '2px 8px',
                 cursor: 'pointer',
                 color: censusColor(cls),
-                textAlign: 'left',
+                textAlign: 'center',
               }}
             >
-              <Stat glyph={D[cls].glyph} label={dlabel(cls)} value={counts[cls]} />
+              <Stat glyph={dGlyph(cls)} label={dLabel(cls)} value={counts[cls]} center />
             </button>
           ))}
         </div>
@@ -153,7 +166,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
             }}
           >
             <span {...layer('FleetHealthBand / mean / value.text', 'type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)', '{30d fleet mean delta %}')}>
-              <Stat glyph={D['fleet-mean'].glyph} label={dlabel('fleet-mean')} value={fmtPct(mean30)} onFill={ikbBand} />
+              <Stat glyph={dGlyph('fleet-mean')} label={dLabel('fleet-mean')} value={fmtPct(mean30)} onFill={ikbBand} center />
             </span>
             <Field level="fleet" field="fleet_total_daily_spend" />
             {/* ⚖ #4 spend slot: renders only if/when ruled in (Field → null while UNDEFINED) */}
@@ -172,7 +185,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         {/* CELL 3 — fleet burn now */}
         <div style={{ ...cell, flexShrink: 0 }}>
           <span {...layer('FleetHealthBand / burn / value.text', 'type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)', '{sum of live fleet burn} gph')}>
-            <Stat glyph={D['fleet-burn'].glyph} label={dlabel('fleet-burn')} value={`${burnNow.toLocaleString()} gph`} />
+            <Stat glyph={dGlyph('fleet-burn')} label={dLabel('fleet-burn')} value={`${burnNow.toLocaleString()} gph`} center />
           </span>
           <span {...layer('FleetHealthBand / burn / spark.chart', 'ink/secondary 1px · auto-ranged (never approaches 0)', '{fleet total burn, 24h hourly}')}>
             <Sparkline values={burn24} width={120} height={24} zeroBaseline={false} />
@@ -181,14 +194,15 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         {/* CELL 4 — next 24h: arrivals + bunker flags, linking to the board */}
         <a href="#port-calls" style={{ ...cell, flexShrink: 0, textDecoration: 'none', color: NEUTRAL.ink, cursor: 'pointer' }}>
           <span {...layer('FleetHealthBand / arrivals / value.text', 'type/hero · font/data tabular · ink/primary · links to #port-calls', '{# port calls in next 24h}')}>
-            <Stat glyph={D['arrivals'].glyph} label={dlabel('arrivals')} value={arrivals} />
+            <Stat glyph={dGlyph('arrivals')} label={dLabel('arrivals')} value={arrivals} center />
           </span>
-          {/* ROUND 90: the BUNKER descriptor word → placeholder glyph (neutral);
-              count keeps its advisory tint; the name surfaces only in Learn mode */}
-          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn', '{# bunker-flagged calls in next 24h}')} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)' }}>
-            <span style={{ lineHeight: 0, color: NEUTRAL.inkMuted, flexShrink: 0 }}><Glyph name={D['bunker'].glyph} size={14} /></span>
+          {/* ROUND 94: BUNKER descriptor — TEXT in default/learn, GLYPH in expert
+              (centered); count keeps its advisory tint (advisory is informational,
+              not severity). Name from the shared ia-model. */}
+          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'descriptor: TEXT label (default/learn) | placeholder glyph (expert), centered · count advisory tint when >0 else ink/muted · name from ia-model', '{# bunker-flagged calls in next 24h}')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)' }}>
+            {expertOn && <span style={{ lineHeight: 0, color: NEUTRAL.inkMuted, flexShrink: 0 }}><Glyph name={D['bunker'].glyph} size={14} /></span>}
             <span style={{ color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
-              {bunkers}{learnOn ? ` ${D['bunker'].name}` : ''} {bunkers === 1 ? 'flag' : 'flags'}
+              {bunkers}{!expertOn ? ` ${D['bunker'].name}` : ''} {bunkers === 1 ? 'flag' : 'flags'}
             </span>
           </span>
         </a>

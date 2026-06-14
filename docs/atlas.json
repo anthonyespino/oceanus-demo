@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T17:05:48.760Z",
+  "generated": "2026-06-14T17:17:59.250Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -322,7 +322,7 @@
       "component": "FleetHealthBand",
       "region": "arrivals",
       "leaf": "bunker.text",
-      "tokens": "glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn",
+      "tokens": "descriptor: TEXT label (default/learn) | placeholder glyph (expert), centered · count advisory tint when >0 else ink/muted · name from ia-model",
       "binds": "{# bunker-flagged calls in next 24h}",
       "file": "src/components/FleetHealthBand.tsx"
     },

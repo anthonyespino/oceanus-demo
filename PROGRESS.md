@@ -1,3 +1,31 @@
+# PROGRESS — 2026-06-14 (Session 82: ROUND 94 — float fleet sections + labels-default/glyphs-expert)
+
+## Done (verified docs/screens/r94-*.png)
+### Float
+- Fleet Plot (FleetMap) + FleetHealthBand panel fills (gb.box surface-raised)
+  REMOVED — both float on the Calm Sea gradient. The chart's navy water stays
+  (the instrument); only the container fill goes. Pruned now-unused gb/RADIUS
+  imports.
+- Structural separators = the band cells' thin vertical hairlines
+  (--color-line-hairline). Logged as a section rule, distinct from severity
+  outlines (which stay severity-reserved).
+
+### Descriptors — three states (resolves round-52 thread)
+- DEFAULT → text labels (WATCH/NOMINAL/30D FLEET MEAN/FLEET BURN/ARRIVALS 24H/
+  BUNKER). Verified all present.
+- EXPERT (E) → glyphs only, labels hidden. Verified: 0 label words in expert.
+- LEARN → labels + round-92 hover IA callout (verified 1 callout on band hover).
+- Names + glyphs both from the shared ia-model (single source).
+- Centered in BOTH modes (Stat gained `center` prop; column cells alignItems
+  center). Fixes arbitrary left-aligned glyphs.
+
+## Rulings / safety (verified)
+- WATCH census count stays gold when >0 (rgb 227,209,65) — severity dominates
+  against the now-visible gradient. Labels use existing MICRO/CONTEXT tiers (no
+  orphan). Data/sort/alert unchanged. TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 81: ROUND 92 — Learn mode: hover-gated reveal + de-dup)
 
 ## Done (verified docs/screens/r92-hover-tile.png)
