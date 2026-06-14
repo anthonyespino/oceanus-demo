@@ -148,6 +148,8 @@ export function DevPanel() {
 
       <Section title="dev">
         <div style={{ marginBottom: 8 }}><LiveControls /></div>
+        <Row label="status type" value={f.clusterType} onPick={f.setClusterType}
+          options={[{ v: 'primary' as const, text: 'A primary 16' }, { v: 'context' as const, text: 'B context 13' }]} />
         <Row label="density" value={f.density} onPick={f.setDensity}
           options={[{ v: 'minimal' as const, text: 'minimal' }, { v: 'standard' as const, text: 'standard' }]} />
         <Row label="color" value={f.treatment} onPick={f.setTreatment}

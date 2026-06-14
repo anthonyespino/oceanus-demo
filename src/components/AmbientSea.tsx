@@ -9,7 +9,8 @@
 //
 // GPU-only: the wave math runs per-pixel in the shader; JS writes ~3 uniforms
 // per frame (time + eased amp/freq) and issues one drawArrays — no per-frame
-// allocation, no textures. Governance: off in expert mode and when toggled
+// allocation, no textures. Governance (round 95: persists in Expert — the
+// background is structural after the round-94 float): off only when toggled
 // off; static depth-faded still under prefers-reduced-motion; paused when the
 // tab is hidden; static still fallback if WebGL is unavailable or the context
 // fails (never the old paper-wave; no layout shift).
@@ -17,7 +18,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useFleet } from '../state/FleetProvider';
-import { useLearn } from '../learn/LearnProvider';
 import { waterScope, waterInputs } from './ambientReadout';
 
 const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`;
@@ -202,7 +202,6 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 
 export function AmbientSea() {
   const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode, dotSize, dotSpace, mag, flow } = useFleet();
-  const { expertOn } = useLearn();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fallback, setFallback] = useState(false); // no WebGL / context fail → static still
@@ -218,7 +217,13 @@ export function AmbientSea() {
     inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright, dotSize, dotSpace, mag, flow };
   }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright, dotSize, dotSpace, mag, flow]);
 
-  const on = ambientSea && !expertOn;
+  // ROUND 95: Calm Sea persists in EXPERT mode (the round-46 expert-off is
+  // reversed). After round 94 floated the Fleet Plot + FleetHealthBand directly
+  // on the gradient, the background is STRUCTURAL (the surface sections float on
+  // it), not decoration — stripping it in Expert left sections on black, which
+  // read broken. Other off-ramps unchanged: manual toggle (ambientSea) still
+  // turns it off; prefers-reduced-motion still freezes to a still (below).
+  const on = ambientSea;
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');

@@ -682,3 +682,27 @@ originals.*
     dominates against the now-visible gradient — re-confirmed); labels use their
     existing MICRO/CONTEXT tiers (no orphan). Data, sort, and alert logic
     unchanged (verify PASSED) — this is visual treatment + a mode assignment only.
+
+- **Calm Sea now PERSISTS in Expert mode (round-46 Expert-off REVERSED) — round
+  95**: round 46 turned the ambient gradient off in Expert (decoration the
+  trained eye doesn't need). Round 94 changed its status: floating the Fleet Plot
+  + FleetHealthBand directly on the gradient made the background STRUCTURAL (the
+  surface sections float on it), not decoration. Stripping it in Expert left the
+  sections on black, which reads broken. So Calm Sea now renders in BOTH default
+  and Expert. The OTHER off-ramps are unchanged: the manual `ambientSea` toggle
+  still turns it off, and `prefers-reduced-motion` still freezes it to a static
+  still. Expert still strips what it should — labels→glyphs, docent affordances
+  off — just not the background. (Reasoning: a ruling that was right when the
+  background was decoration became wrong once the background became structure;
+  reversed deliberately, not drift.)
+
+- **DEV DECISION (pending Anthony) — Status cluster type under evaluation (round
+  95)**: the round-88 prominent bump to PRIMARY 16 reads too big for some eyes.
+  A dev toggle ('D' panel → "status type": A primary 16 / B context 13) lets the
+  two tiers be compared on pixels (FleetProvider `clusterType`, default
+  **PRIMARY 16**). Both options hold the bold weight (600) and the cluster's
+  centered position above the cards; CAUTION·ADVISORY stay clickable DetailChips
+  and the DATALINK breath binding is intact in both. Both are existing type tiers
+  (no orphan). Verdict pending Anthony's pixels; then lock one and retire the
+  toggle. (Greyscale + earned color held: DATALINK degraded-blue and CAUTION gold
+  unchanged.)

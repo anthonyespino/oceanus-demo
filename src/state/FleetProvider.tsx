@@ -30,6 +30,8 @@ export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator exper
 // field (round 75), dot matrix (round 76); all greyscale, selectable for compare.
 export type WaterMode = 'gradient' | 'particle' | 'matrix';
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
+// round 95: status-cluster type-size under evaluation — PRIMARY 16 vs CONTEXT 13
+export type ClusterType = 'primary' | 'context';
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -74,6 +76,9 @@ interface FleetContextValue {
   dotSpace: number; setDotSpace: (n: number) => void;
   mag: number; setMag: (n: number) => void;
   flow: number; setFlow: (n: number) => void;
+  // round 95: global status-cluster type-size toggle (PRIMARY 16 vs CONTEXT 13),
+  // default PRIMARY — pending Anthony's pixel verdict
+  clusterType: ClusterType; setClusterType: (t: ClusterType) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -122,6 +127,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [dotSpace, setDotSpace] = useState(120); // DENSITY
   const [mag, setMag] = useState(2.5); // MAGNIFY
   const [flow, setFlow] = useState(1.0); // FLOW/RIDGE
+  const [clusterType, setClusterType] = useState<ClusterType>('primary'); // round 95: default PRIMARY 16
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -177,6 +183,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
         waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
         waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace, mag, setMag, flow, setFlow,
+        clusterType, setClusterType,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}

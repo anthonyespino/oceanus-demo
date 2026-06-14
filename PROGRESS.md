@@ -1,3 +1,34 @@
+# PROGRESS — 2026-06-14 (Session 83: ROUND 95 — Calm Sea in Expert + status cluster type toggle)
+
+## Done (verified docs/screens/r95-*.png)
+### Calm Sea persists in Expert (round-46 Expert-off reversed)
+- Removed the `!expertOn` gate in AmbientSea — the gradient now renders in BOTH
+  default and Expert. Rationale: round 94 floated the Fleet Plot + FleetHealthBand
+  on the gradient, making the background STRUCTURAL; stripping it in Expert left
+  sections on black (broken). Verified: canvas present in Expert.
+- Other off-ramps intact: manual `ambientSea` toggle still off; prefers-
+  reduced-motion still freezes to a still. Expert still strips labels→glyphs +
+  docent (verified: 0 band label words in Expert) — just not the background.
+- Pruned the now-unused useLearn import from AmbientSea.
+
+### Status cluster type toggle (dev, pending verdict)
+- New FleetProvider `clusterType` ('primary' | 'context'), default **primary**.
+  D-panel "status type" row: A primary 16 / B context 13. StatusHeader prominent
+  reads it.
+- Verified: PRIMARY = 16px/600, CONTEXT = 13px/600 — bold weight kept in both,
+  cycles cleanly, centered position held. CAUTION clickable + datalink-breath
+  binding intact (0 breath nodes in DEGRADED seed = correct static).
+- DATALINK degraded-blue + CAUTION gold unchanged (severity intact). Both tiers
+  existing (no orphan).
+
+## Safety
+Data/sort/alert unchanged. TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+## Next
+Anthony judges 16 vs 13 on pixels → lock one, retire the toggle.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 82: ROUND 94 — float fleet sections + labels-default/glyphs-expert)
 
 ## Done (verified docs/screens/r94-*.png)

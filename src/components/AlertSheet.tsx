@@ -40,11 +40,14 @@ const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--ty
 // different weights, different positions. Default 'all' keeps every other call
 // site (FleetHealthBand) unchanged.
 export function StatusHeader({ parts = 'all', prominent = false }: { parts?: 'all' | 'alerts' | 'health'; prominent?: boolean }) {
-  const { fleet, simTime } = useFleet();
+  const { fleet, simTime, clusterType } = useFleet();
   // ROUND 88: `prominent` bumps the cluster to PRIMARY tier + bolder for the
   // FleetView placement below the map (reads as present system status above the cards).
-  const item: React.CSSProperties = prominent ? { ...itemBase, fontSize: 'var(--type-primary)', fontWeight: 600 } : itemBase;
-  const gsz = prominent ? 15 : 12;
+  // ROUND 95: the prominent tier is under evaluation via a dev toggle —
+  // PRIMARY 16 (default) vs CONTEXT 13; bold weight + position held in both.
+  const promSize = clusterType === 'context' ? 'var(--type-context)' : 'var(--type-primary)';
+  const item: React.CSSProperties = prominent ? { ...itemBase, fontSize: promSize, fontWeight: 600 } : itemBase;
+  const gsz = prominent ? (clusterType === 'context' ? 13 : 15) : 12;
   const showHealth = parts === 'all' || parts === 'health';
   const showAlerts = parts === 'all' || parts === 'alerts';
   if (!fleet || simTime === null) {
