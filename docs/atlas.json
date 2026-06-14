@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T00:25:27.697Z",
+  "generated": "2026-06-14T00:36:24.026Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -741,12 +741,21 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
-      "path": "VesselCommandBand / etaLine / eta.text",
+      "path": "VesselCommandBand / destCol / eta.text",
       "component": "VesselCommandBand",
-      "region": "etaLine",
+      "region": "destCol",
       "leaf": "eta.text",
-      "tokens": "font/data 12 · ink/muted · centered context — {destination} ◇ ETA {timestamp}, no tint/weight (reference data)",
-      "binds": "{next_port_calls[0].port} ETA {next_port_calls[0].eta}",
+      "tokens": "font/data 11 · ink/muted · context (no tint) — absolute ETA + Z lives HERE",
+      "binds": "{next_port_calls[0].eta}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / destCol / toGo.text",
+      "component": "VesselCommandBand",
+      "region": "destCol",
+      "leaf": "toGo.text",
+      "tokens": "font/data 11 · ink/muted · context · distance remaining",
+      "binds": "{nm to destination}",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
@@ -786,11 +795,38 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
+      "path": "VesselCommandBand / marker / position.text",
+      "component": "VesselCommandBand",
+      "region": "marker",
+      "leaf": "position.text",
+      "tokens": "font/data 11 · ink/muted · current-position reference (nearest port NOW) anchored to the marker — relative, never raw lat/lon (ruling 6)",
+      "binds": "{nm from nearest port | alongside}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / originCol / spec.text",
+      "component": "VesselCommandBand",
+      "region": "originCol",
+      "leaf": "spec.text",
+      "tokens": "font/data 11 · ink/muted · context (no tint)",
+      "binds": "{static.length_ft} ft {static.class}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / originCol / speed.text",
+      "component": "VesselCommandBand",
+      "region": "originCol",
+      "leaf": "speed.text",
+      "tokens": "font/data 11 · ink/muted · context",
+      "binds": "{position.speed_over_ground_kn} kn",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
       "path": "VesselCommandBand / profile / destination.text",
       "component": "VesselCommandBand",
       "region": "profile",
       "leaf": "destination.text",
-      "tokens": "font/data 11 · ink/primary",
+      "tokens": "font/data 11 · ink/primary · endpoint label (name appears once)",
       "binds": "{next_port_calls[0].port}",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -808,17 +844,8 @@
       "component": "VesselCommandBand",
       "region": "profile",
       "leaf": "origin.text",
-      "tokens": "font/data 11 · ink/secondary",
+      "tokens": "font/data 11 · ink/secondary · endpoint label (name appears once)",
       "binds": "{transit-run start: nearest port <5nm | nearest site}",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
-      "path": "VesselCommandBand / profile / toGo.text",
-      "component": "VesselCommandBand",
-      "region": "profile",
-      "leaf": "toGo.text",
-      "tokens": "font/data 10 · ink/muted · right-aligned",
-      "binds": "{pct covered} · {nm to destination} — distance-to-go lives HERE only",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
@@ -837,33 +864,6 @@
       "leaf": "vessel.glyph",
       "tokens": "glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track",
       "binds": "{live position on track}",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
-      "path": "VesselCommandBand / specLine / class.text",
-      "component": "VesselCommandBand",
-      "region": "specLine",
-      "leaf": "class.text",
-      "tokens": "font/data 12 · ink/muted · context",
-      "binds": "{static.length_ft} ft {static.class}",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
-      "path": "VesselCommandBand / specLine / position.text",
-      "component": "VesselCommandBand",
-      "region": "specLine",
-      "leaf": "position.text",
-      "tokens": "font/data 12 · ink/muted — relative reference, never raw lat/lon (ruling 6)",
-      "binds": "{nm from nearest port | alongside}",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
-      "path": "VesselCommandBand / specLine / speed.text",
-      "component": "VesselCommandBand",
-      "region": "specLine",
-      "leaf": "speed.text",
-      "tokens": "font/data 12 · ink/muted",
-      "binds": "{position.speed_over_ground_kn} kn",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {

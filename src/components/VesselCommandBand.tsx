@@ -197,15 +197,25 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   // automotive trip canvas; absolute ETA + Z and distance-to-go live HERE
   let profile: React.ReactNode;
   const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
+  // context detail style — neutral/dimmed, no tint/weight (reference data)
+  const colItem: React.CSSProperties = { ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap' };
+  // current-position reference (Venice = nearest port to where the vessel is NOW)
+  const posRef = nearestNm < 3 ? `alongside ${nearest.name}` : `${nearestNm.toFixed(0)} nm from ${nearest.name}`;
   if (now.mode === 'PORT' || now.mode === 'STATION' || now.mode === 'STANDBY') {
-    // honest variants — no fake progress
+    // honest variants — no fake progress; no route, so no endpoint columns —
+    // keep a single centered context line (spec · position · speed)
     const at = now.mode === 'PORT' ? nearest.name
       : SITES.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b)).name;
     profile = (
-      <div style={mono}>
-        {now.mode === 'PORT' ? 'MOORED' : now.mode === 'STATION' ? 'ON STATION' : 'STANDBY'} — {at}
-        {now.mode === 'PORT' && <StateMark port={at} />}
-        {next && <span style={{ color: NEUTRAL.inkMuted }}> · next call {next.port} ETA {fmtTime(next.eta)}</span>}
+      <div>
+        <div style={{ ...mono, textAlign: 'center' }}>
+          {now.mode === 'PORT' ? 'MOORED' : now.mode === 'STATION' ? 'ON STATION' : 'STANDBY'} — {at}
+          {now.mode === 'PORT' && <StateMark port={at} />}
+          {next && <span style={{ color: NEUTRAL.inkMuted }}> · next call {next.port} ETA {fmtTime(next.eta)}</span>}
+        </div>
+        <div style={{ ...colItem, textAlign: 'center', marginTop: 'var(--pad-section)' }}>
+          {vessel.static.length_ft} ft {vessel.static.class} · {posRef} · {sog.toFixed(1)} kn
+        </div>
       </div>
     );
   } else {
@@ -214,38 +224,51 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
     const frac = origin && next
       ? Math.min(1, Math.max(0, distanceNm(origin.pos, now.position) / Math.max(1, distanceNm(origin.pos, place(next.port)))))
       : null;
-    const pctStr = frac !== null ? `${Math.round(frac * 100)}%` : null;
+    const fracPct = frac !== null ? (frac * 100).toFixed(1) : null;
+    // ROUND 82: ENDPOINT-ANCHORED detail columns. Origin detail (vessel spec +
+    // speed) sits left under the origin label; arrival detail (ETA + NM to go)
+    // sits right under the destination label; the current-position reference
+    // (Venice) floats with the vessel marker. Endpoint names appear ONCE (as the
+    // labels) — no repeated location text. Bar itself unchanged (round 81).
     profile = (
-      <div>
-        {toGoNm !== null && (
-          <div {...layer('VesselCommandBand / profile / toGo.text', 'font/data 10 · ink/muted · right-aligned', '{pct covered} · {nm to destination} — distance-to-go lives HERE only')} style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginBottom: 4 }}>
-            {pctStr ? `${pctStr} · ` : ''}{toGoNm.toFixed(0)} NM TO GO
-          </div>
-        )}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(56px, auto) 1fr minmax(56px, auto)', gap: 10, alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-            <span {...layer('VesselCommandBand / profile / origin.text', 'font/data 11 · ink/secondary', '{transit-run start: nearest port <5nm | nearest site}')} style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{origin?.label ?? 'UNDERWAY'}</span>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(140px, auto) 1fr minmax(140px, auto)', gap: 14, alignItems: 'start' }}>
+        {/* ORIGIN column — label + origin/vessel detail, LEFT-aligned */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, alignItems: 'flex-start' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
+            <span {...layer('VesselCommandBand / profile / origin.text', 'font/data 11 · ink/secondary · endpoint label (name appears once)', '{transit-run start: nearest port <5nm | nearest site}')} style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{origin?.label ?? 'UNDERWAY'}</span>
             {origin?.isPort && <StateMark port={origin.label} />}
-          </div>
-          {/* ROUND 81: greyscale progress — GREY track = distance remaining
-              (ahead), WHITE overlay = distance covered (behind the marker).
-              Standard progress read (white = done, grey = to go); no blue (it
-              carried no assigned meaning — navy stays chart-water only). */}
-          <div style={{ position: 'relative', height: 16, minWidth: 80 }}>
+          </span>
+          <span {...layer('VesselCommandBand / originCol / spec.text', 'font/data 11 · ink/muted · context (no tint)', '{static.length_ft} ft {static.class}')} style={colItem}>{vessel.static.length_ft} ft {vessel.static.class}</span>
+          <span {...layer('VesselCommandBand / originCol / speed.text', 'font/data 11 · ink/muted · context', '{position.speed_over_ground_kn} kn')} style={colItem}>{sog.toFixed(1)} kn</span>
+        </div>
+        {/* CENTER — track + marker (round 81, unchanged) + Venice marker label */}
+        <div style={{ position: 'relative', minWidth: 80 }}>
+          {/* ROUND 81: greyscale progress — GREY track = remaining (ahead),
+              WHITE overlay = covered (behind the marker); no blue. */}
+          <div style={{ position: 'relative', height: 16 }}>
             <div {...layer('VesselCommandBand / profile / track.line', 'line/strong 2px · GREY = distance remaining (ahead of marker)', '{origin→destination, remaining}')} style={{ position: 'absolute', top: 7, left: 0, right: 0, height: 2, background: 'var(--color-line-strong)' }} />
             {frac !== null && (
               <>
-                <div {...layer('VesselCommandBand / profile / fill.line', 'ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)', '{distance covered fraction}')} style={{ position: 'absolute', top: 7, left: 0, width: `${(frac * 100).toFixed(1)}%`, height: 2, background: 'var(--color-ink-primary)' }} />
-                <div {...layer('VesselCommandBand / profile / vessel.glyph', 'glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track', '{live position on track}')} style={{ position: 'absolute', top: 0, left: `calc(${(frac * 100).toFixed(1)}% - 8px)`, transform: 'rotate(90deg)', filter: 'drop-shadow(0 0 1.5px var(--color-surface-base)) drop-shadow(0 0 1px var(--color-surface-base))' }}>
+                <div {...layer('VesselCommandBand / profile / fill.line', 'ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)', '{distance covered fraction}')} style={{ position: 'absolute', top: 7, left: 0, width: `${fracPct}%`, height: 2, background: 'var(--color-ink-primary)' }} />
+                <div {...layer('VesselCommandBand / profile / vessel.glyph', 'glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track', '{live position on track}')} style={{ position: 'absolute', top: 0, left: `calc(${fracPct}% - 8px)`, transform: 'rotate(90deg)', filter: 'drop-shadow(0 0 1.5px var(--color-surface-base)) drop-shadow(0 0 1px var(--color-surface-base))' }}>
                   <Glyph name="vesselMarker" size={16} color={NEUTRAL.ink} />
                 </div>
               </>
             )}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, justifyContent: 'flex-end' }}>
-            <span {...layer('VesselCommandBand / profile / destination.text', 'font/data 11 · ink/primary', '{next_port_calls[0].port}')} style={{ ...mono, minWidth: 0, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{next?.port ?? '—'}</span>
+          {/* current-position reference (round 82) — floats under the marker */}
+          {fracPct !== null && (
+            <div {...layer('VesselCommandBand / marker / position.text', 'font/data 11 · ink/muted · current-position reference (nearest port NOW) anchored to the marker — relative, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')} style={{ ...colItem, position: 'absolute', top: 18, left: `${fracPct}%`, transform: 'translateX(-50%)' }}>{posRef}</div>
+          )}
+        </div>
+        {/* DESTINATION column — label + arrival detail, RIGHT-aligned */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, alignItems: 'flex-end' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
+            <span {...layer('VesselCommandBand / profile / destination.text', 'font/data 11 · ink/primary · endpoint label (name appears once)', '{next_port_calls[0].port}')} style={{ ...mono, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{next?.port ?? '—'}</span>
             {next && <StateMark port={next.port} />}
-          </div>
+          </span>
+          {next && <span {...layer('VesselCommandBand / destCol / eta.text', 'font/data 11 · ink/muted · context (no tint) — absolute ETA + Z lives HERE', '{next_port_calls[0].eta}')} style={colItem}>◇ ETA {fmtTime(next.eta)}</span>}
+          {toGoNm !== null && <span {...layer('VesselCommandBand / destCol / toGo.text', 'font/data 11 · ink/muted · context · distance remaining', '{nm to destination}')} style={colItem}>{toGoNm.toFixed(0)} NM TO GO</span>}
         </div>
       </div>
     );
@@ -339,38 +362,19 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         {/* ROUND 79: the round-73 bottom data-health footer is REMOVED —
             DATALINK + LAST SYNC now live in the global top bar (AppHeader). */}
       </section>
-      {/* SECONDARY — static flow, scrolls away naturally. ROUND 81 vertical
-          order: ETA line (centered) → voyage bar (full-width) → spec line
-          (centered, bottom). ETA + spec are reference/context: neutral, dimmed,
-          context-scale, NO tint/weight/alert (no alert logic fires on them). */}
+      {/* SECONDARY — static flow, scrolls away naturally. ROUND 82: the ETA and
+          spec lines are absorbed into the voyage bar's ENDPOINT-ANCHORED columns
+          (origin detail left under the origin label, arrival detail right under
+          the destination label, current-position reference floating with the
+          marker). All reference/context: neutral, dimmed, context-scale, no
+          tint/weight/alert. */}
       <section style={{ ...gb.box, marginBottom: 8, borderTop: 'none', borderRadius: `0 0 ${RADIUS}px ${RADIUS}px` }}>
-        {/* ETA line — centered, dimmed; the absolute ETA + Z lives here now
-            (moved off the voyage bar's destination, round 81) */}
-        {next && (
-          <Field level="vessel" field="next_port_calls">
-            <div {...layer('VesselCommandBand / etaLine / eta.text', 'font/data 12 · ink/muted · centered context — {destination} ◇ ETA {timestamp}, no tint/weight (reference data)', '{next_port_calls[0].port} ETA {next_port_calls[0].eta}')}
-              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkMuted, marginBottom: 'var(--pad-section)' }}>
-              <span>{next.port}</span>
-              <StateMark port={next.port} />
-              <span>ETA {fmtTime(next.eta)}</span>
-            </div>
-          </Field>
-        )}
-        {/* voyage bar — full-width */}
         <Field level="vessel" field="next_port_calls">{profile}</Field>
-        {/* spec line — centered, dimmed, at the very bottom (reference/context) */}
-        <div style={{
-          marginTop: 'var(--pad-section)',
-          display: 'flex', gap: 18, flexWrap: 'wrap', justifyContent: 'center',
-          color: NEUTRAL.inkMuted, fontFamily: FONT.data, fontSize: 12,
-        }}>
-          <span {...layer('VesselCommandBand / specLine / class.text', 'font/data 12 · ink/muted · context', '{static.length_ft} ft {static.class}')}>{vessel.static.length_ft} ft {vessel.static.class}</span>
-          <Field level="vessel" field="position">
-            <span {...layer('VesselCommandBand / specLine / position.text', 'font/data 12 · ink/muted — relative reference, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')}>{nearestNm < 3 ? `alongside ${nearest.name}` : `${nearestNm.toFixed(0)} nm from ${nearest.name}`}</span>
-          </Field>
-          <span {...layer('VesselCommandBand / specLine / speed.text', 'font/data 12 · ink/muted', '{position.speed_over_ground_kn} kn')}>{sog.toFixed(1)} kn</span>
-          {wxStale && <span style={{ color: 'var(--color-data-stale)' }}>[STALE] weather last received {fmtTime(vessel.history.timestamps.weather)}</span>}
-        </div>
+        {wxStale && (
+          <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>
+            [STALE] weather last received {fmtTime(vessel.history.timestamps.weather)}
+          </div>
+        )}
       </section>
     </>
   );

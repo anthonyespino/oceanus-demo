@@ -315,6 +315,21 @@ originals.*
     position indicator with a dark drop-shadow halo so it reads clearly at the
     white/grey boundary. **Navy stays chart-water only**; blue may return to the
     bar only if it first earns a meaning (future possibility, not built).
+- **Voyage bar context → ENDPOINT-ANCHORED columns (round 82)**: the round-81
+  centered ETA + spec lines are restructured so detail sits UNDER the endpoint it
+  describes. **Origin column** (left-aligned under the origin label): vessel spec
+  (`240 ft OSV`) + speed (`12.1 kn`). **Destination column** (right-aligned under
+  the destination label): `◇ ETA {timestamp}` + `{nm} NM TO GO` (distance
+  remaining). They read as two corners of information bracketing the route.
+  **Redundant location text removed** — each place name appears ONCE as its
+  endpoint label (the repeated "Galveston, TX" on the ETA line and any repeated
+  origin name are dropped). The **current-position reference** (`49 nm from
+  Venice, LA` — nearest port to where the vessel is NOW, a third landmark
+  belonging to neither endpoint) moves to a small label floating with the
+  **vessel marker** on the bar. Reasoning: detail sits under the endpoint it
+  describes; position context anchors to the position marker. All reference/
+  context — neutral, dimmed, context-scale, no tint/weight/alert. The voyage bar
+  itself (round 81 white/grey, marker, no blue) is unchanged.
 - **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
   separate collapse + expand corner buttons are now a single top-right button
   that shows the expand affordance when collapsed/default and the collapse

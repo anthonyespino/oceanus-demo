@@ -1,3 +1,31 @@
+# PROGRESS — 2026-06-13 (Session 71: ROUND 82 — voyage bar endpoint-anchored detail columns)
+
+## Done (verified `docs/screens/r82-commandband.png`)
+- Restructured the round-81 centered ETA + spec lines into two **endpoint-anchored
+  columns** + a marker label:
+  - **Origin column** (left-aligned under `Viosca Knoll 786`): `240 ft OSV` (spec)
+    / `12.1 kn` (speed).
+  - **Destination column** (right-aligned under `Galveston, TX ◇`): `◇ ETA
+    2026-06-19 17:43Z` / `333 NM TO GO`.
+  - They bracket the route as two corners of info.
+- **Redundant location text removed**: each place name appears once as its endpoint
+  label (dropped the repeated "Galveston, TX" from the ETA line; no repeated
+  origin name).
+- **Venice reference relocated to the vessel marker**: `49 nm from Venice, LA`
+  (nearest port to the vessel's CURRENT position — neither endpoint) floats as a
+  small label at the marker's position on the bar.
+- All of it stays reference/context: neutral, dimmed (ink/muted), context-scale,
+  no tint/weight/alert.
+- **Voyage bar unchanged** (round 81): white = covered / grey = remaining, marker
+  + halo at real progress, no blue. Non-transit modes keep a centered context line
+  (no route → no columns).
+
+## Verify
+Columns bracket the route cleanly without crowding; Venice floats with the marker;
+bar greyscale/no-blue intact. TSC-OK · LINT-CLEAN · offline build clean · verify PASSED.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 70: ROUND 81 — CommandBand reorder + voyage bar greyscale progress)
 
 ## Done (verified `docs/screens/r81-commandband.png`)
