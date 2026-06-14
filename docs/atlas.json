@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T23:53:24.221Z",
+  "generated": "2026-06-14T00:25:27.697Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -741,30 +741,12 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
-      "path": "VesselCommandBand / factsLine / class.text",
+      "path": "VesselCommandBand / etaLine / eta.text",
       "component": "VesselCommandBand",
-      "region": "factsLine",
-      "leaf": "class.text",
-      "tokens": "font/data 12 · ink/muted",
-      "binds": "{static.length_ft} ft {static.class}",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
-      "path": "VesselCommandBand / factsLine / position.text",
-      "component": "VesselCommandBand",
-      "region": "factsLine",
-      "leaf": "position.text",
-      "tokens": "font/data 12 · ink/secondary — relative reference, never raw lat/lon (ruling 6)",
-      "binds": "{nm from nearest port | alongside}",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
-      "path": "VesselCommandBand / factsLine / speed.text",
-      "component": "VesselCommandBand",
-      "region": "factsLine",
-      "leaf": "speed.text",
-      "tokens": "font/data 12 · ink/secondary",
-      "binds": "{position.speed_over_ground_kn} kn",
+      "region": "etaLine",
+      "leaf": "eta.text",
+      "tokens": "font/data 12 · ink/muted · centered context — {destination} ◇ ETA {timestamp}, no tint/weight (reference data)",
+      "binds": "{next_port_calls[0].port} ETA {next_port_calls[0].eta}",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
@@ -813,20 +795,11 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
-      "path": "VesselCommandBand / profile / eta.text",
-      "component": "VesselCommandBand",
-      "region": "profile",
-      "leaf": "eta.text",
-      "tokens": "font/data 11 · ink/muted",
-      "binds": "{next_port_calls[0].eta} — absolute ETA + Z lives HERE only",
-      "file": "src/components/VesselCommandBand.tsx"
-    },
-    {
       "path": "VesselCommandBand / profile / fill.line",
       "component": "VesselCommandBand",
       "region": "profile",
       "leaf": "fill.line",
-      "tokens": "accent/primary 2px — interaction/identity voice, never severity",
+      "tokens": "ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)",
       "binds": "{distance covered fraction}",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -853,8 +826,8 @@
       "component": "VesselCommandBand",
       "region": "profile",
       "leaf": "track.line",
-      "tokens": "surface/overlay 2px",
-      "binds": "{origin→destination}",
+      "tokens": "line/strong 2px · GREY = distance remaining (ahead of marker)",
+      "binds": "{origin→destination, remaining}",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
@@ -862,8 +835,35 @@
       "component": "VesselCommandBand",
       "region": "profile",
       "leaf": "vessel.glyph",
-      "tokens": "glyph/vesselMarker 16px · ink/primary — bow along the track (round 36)",
+      "tokens": "glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track",
       "binds": "{live position on track}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / specLine / class.text",
+      "component": "VesselCommandBand",
+      "region": "specLine",
+      "leaf": "class.text",
+      "tokens": "font/data 12 · ink/muted · context",
+      "binds": "{static.length_ft} ft {static.class}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / specLine / position.text",
+      "component": "VesselCommandBand",
+      "region": "specLine",
+      "leaf": "position.text",
+      "tokens": "font/data 12 · ink/muted — relative reference, never raw lat/lon (ruling 6)",
+      "binds": "{nm from nearest port | alongside}",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
+      "path": "VesselCommandBand / specLine / speed.text",
+      "component": "VesselCommandBand",
+      "region": "specLine",
+      "leaf": "speed.text",
+      "tokens": "font/data 12 · ink/muted",
+      "binds": "{position.speed_over_ground_kn} kn",
       "file": "src/components/VesselCommandBand.tsx"
     },
     {

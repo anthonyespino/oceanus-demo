@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-13 (Session 70: ROUND 81 — CommandBand reorder + voyage bar greyscale progress)
+
+## Done (verified `docs/screens/r81-commandband.png`)
+- **Reordered the band below the instruments**: instrument row → ETA line
+  (centered) → voyage bar (full-width) → spec line (centered, bottom).
+  - ETA line: `Galveston, TX ◇ ETA 2026-06-19 17:43Z` (StateMark = the ◇),
+    ink/muted, context-scale — the absolute ETA moved off the voyage bar's
+    destination onto its own line.
+  - Spec line at the very bottom: `240 ft OSV · 49 nm from Venice, LA · 12.1 kn`,
+    ink/muted, context-scale. Both ETA + spec are neutral/dimmed, no tint/weight.
+- **Voyage bar → greyscale progress**: removed the blue fill (no assigned meaning,
+  not defensible). **WHITE = covered** (behind marker), **GREY = remaining**
+  (ahead) — standard progress read. Split bound to the real `frac` (6% · 333 NM
+  TO GO data retained), not a fixed visual. Origin/destination labels kept.
+- **Vessel marker preserved** (white outline) with a dark drop-shadow halo so it
+  reads clearly where white meets grey (Anthony's contrast preference held).
+- Navy absent from the bar (chart-water only); blue may return only if it earns a
+  meaning (logged, not built).
+
+## Composition
+Each register breathes (ETA / bar / spec spaced by --pad-section); ETA + spec
+centered, bar full-width; band stays balanced. Gauge internals/tint + severity
+treatments untouched; mission clock stays in the center stack. Removed the now-
+unused ACCENT import.
+
+TSC-OK · LINT-CLEAN · offline build clean · verify PASSED.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 69: ROUND 80 — persist water defaults (all pages))
 
 ## Done

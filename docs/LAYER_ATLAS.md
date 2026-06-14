@@ -333,15 +333,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `centerStack / wind.text`
   - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
   - BINDS — {weather.wind_speed_kn} kn
-- `factsLine / class.text`
-  - TOKENS — font/data 12 · ink/muted
-  - BINDS — {static.length_ft} ft {static.class}
-- `factsLine / position.text`
-  - TOKENS — font/data 12 · ink/secondary — relative reference, never raw lat/lon (ruling 6)
-  - BINDS — {nm from nearest port | alongside}
-- `factsLine / speed.text`
-  - TOKENS — font/data 12 · ink/secondary
-  - BINDS — {position.speed_over_ground_kn} kn
+- `etaLine / eta.text`
+  - TOKENS — font/data 12 · ink/muted · centered context — {destination} ◇ ETA {timestamp}, no tint/weight (reference data)
+  - BINDS — {next_port_calls[0].port} ETA {next_port_calls[0].eta}
 - `gaugeRail / burn.chart`
   - TOKENS — Gauge primitive · 116px (round 79)
   - BINDS — {derived.burn_rate_gph} / max observed 1y
@@ -357,11 +351,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `profile / destination.text`
   - TOKENS — font/data 11 · ink/primary
   - BINDS — {next_port_calls[0].port}
-- `profile / eta.text`
-  - TOKENS — font/data 11 · ink/muted
-  - BINDS — {next_port_calls[0].eta} — absolute ETA + Z lives HERE only
 - `profile / fill.line`
-  - TOKENS — accent/primary 2px — interaction/identity voice, never severity
+  - TOKENS — ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)
   - BINDS — {distance covered fraction}
 - `profile / origin.text`
   - TOKENS — font/data 11 · ink/secondary
@@ -370,11 +361,20 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — font/data 10 · ink/muted · right-aligned
   - BINDS — {pct covered} · {nm to destination} — distance-to-go lives HERE only
 - `profile / track.line`
-  - TOKENS — surface/overlay 2px
-  - BINDS — {origin→destination}
+  - TOKENS — line/strong 2px · GREY = distance remaining (ahead of marker)
+  - BINDS — {origin→destination, remaining}
 - `profile / vessel.glyph`
-  - TOKENS — glyph/vesselMarker 16px · ink/primary — bow along the track (round 36)
+  - TOKENS — glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track
   - BINDS — {live position on track}
+- `specLine / class.text`
+  - TOKENS — font/data 12 · ink/muted · context
+  - BINDS — {static.length_ft} ft {static.class}
+- `specLine / position.text`
+  - TOKENS — font/data 12 · ink/muted — relative reference, never raw lat/lon (ruling 6)
+  - BINDS — {nm from nearest port | alongside}
+- `specLine / speed.text`
+  - TOKENS — font/data 12 · ink/muted
+  - BINDS — {position.speed_over_ground_kn} kn
 
 ## VesselInspector
 
@@ -517,4 +517,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*138 instrumented leaves · 20 components · generated 2026-06-13T23:53:24.219Z*
+*138 instrumented leaves · 20 components · generated 2026-06-14T00:25:27.695Z*

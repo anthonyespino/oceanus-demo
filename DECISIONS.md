@@ -298,6 +298,23 @@ originals.*
   placeholder, so it drops to ink/muted to read at the same dim context weight —
   color-match only, size held). Gauge internals/anatomy/tint logic and the
   severity treatments are unchanged; the mission clock stays in the center stack.
+- **CommandBand reordered + voyage bar to greyscale progress (round 81)**:
+  - **Vertical order below the instruments**: instrument row (round 79) → ETA line
+    (centered) → voyage profile bar (full-width) → vessel spec line (centered,
+    bottom). ETA (`{destination} ◇ ETA {timestamp}`) and spec (`240 ft OSV · 49 nm
+    from Venice, LA · 12.1 kn`) are reference/context — neutral, dimmed (ink/muted),
+    context-scale, NO tint/weight/alert (no alert logic fires on them). The
+    absolute ETA moved off the voyage bar's destination onto its own line. Each
+    register gets its own spacing; ETA + spec centered, bar full-width.
+  - **Voyage bar blue REMOVED** — the accent-blue fill carried no assigned meaning,
+    and an interpreted colour with no meaning isn't defensible. Replaced with a
+    greyscale progress convention: **WHITE = distance covered** (behind the marker),
+    **GREY = distance remaining** (ahead) — standard progress read, no legend. The
+    split is bound to ACTUAL voyage progress (the same `frac` / "6% · 333 NM TO GO"
+    data), not a fixed visual. The vessel marker (white outline) is kept as the
+    position indicator with a dark drop-shadow halo so it reads clearly at the
+    white/grey boundary. **Navy stays chart-water only**; blue may return to the
+    bar only if it first earns a meaning (future possibility, not built).
 - **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
   separate collapse + expand corner buttons are now a single top-right button
   that shows the expand affordance when collapsed/default and the collapse
