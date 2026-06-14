@@ -1,3 +1,99 @@
+# PROGRESS — 2026-06-13 (Session 74: ROUND 85 — TYPE SCALE AUDIT (report only, no changes))
+
+Inventory pulled from source (CSS tokens + probeTokens/gb + every inline
+`fontSize`). NO styles changed. Scope: whole app, FleetView + VesselInspector
+called out.
+
+## A. Token-level scales (the root of the drift)
+TWO parallel, DISAGREEING scales exist:
+- **CSS** (`globals.css`): `--type-label-size 11` · `--type-hero-size 30` ·
+  `--type-data-size 13` · `--type-micro-size 11`.
+- **probeTokens `TYPE`**: `name 21` (D-DIN 700) · `hero 15` (Plex 500) ·
+  `meta 12` (Plex 400) · `micro 11`.
+- **Collisions:** "hero" is defined TWICE and 2× apart — `--type-hero-size = 30`
+  vs `TYPE.hero = 15` (the Gauge anchors off the 15). `--type-label-size` ==
+  `--type-micro-size` (both 11), so the "4-step" CSS system is really 3 distinct
+  values (11/13/30). `--type-data-size 13` ≈ `TYPE.meta 12` (1px apart, same role).
+
+## B. Every distinct size → elements (family/weight)
+- **30px** `--type-hero-size`/`gb.hero` — CommandBand vessel NAME (D-DIN 700);
+  VesselTile trend value std + expanded-tile Stat values + EngineTwin EGT-gap hero
+  (Plex 500). *(DISPLAY and HERO collide here.)*
+- **~20px** Gauge VALUES (SPEED/BURN/EFF Δ/ENDURANCE: 12.1 kn, +13.7%, …) — Plex
+  500, computed `TYPE.hero(15) × k` at gauge size 116.
+- **24px** VesselTile NAME std (D-DIN 700); VesselTile trend value mini (Plex 500).
+- **21px** `TYPE.name` token (D-DIN 700) — vestigial: VesselTile overrides it to
+  18/24, no element renders raw 21.
+- **18px** CommandBand mission CLOCK (calc 30×0.6, Plex 500); CommandBand collapsed
+  name + VesselTile name mini (D-DIN 700); AppHeader wordmark "OCEANUS FLEET" (D-DIN).
+- **16px** VesselTile automotive nominal "✓" only (orphan, decorative).
+- **15px** `TYPE.hero` — wind/waves; ALL CommandBand context (endpoint labels,
+  origin/dest detail, ETA, NM-to-go, Venice, progress %) (Plex). *(round-83 unify.)*
+- **14px** VesselTile footer values (endurance h / now %) (Plex); DevPanel/EngineTwin chrome.
+- **13px** `--type-data-size` — FleetView "TREND BOARD" page header (Plex,
+  letterspaced, gb.label+override); FleetRail vessel-name list (UI).
+- **12px** `TYPE.meta` — AlertSheet popover rows; LiveControls sim-clock; AppHeader
+  MASTER CLOCK; Contextual/DataRow/many panels; CommandBand stale-weather line (Plex/UI).
+- **11px** `--type-label-size`/`--type-micro-size`/`TYPE.micro`/`gb.label` — ALL
+  section headers (Plex, letterspaced); global-bar status chips (DATALINK/SYNC/
+  CAUTION counts); Stat labels; VesselTile alert lines; many panel labels.
+- **10px** Gauge min/max axis labels (0/17, -20/+20, 12/2.4k, Plex); NauticalChart
+  compass/scale labels; DevPanel rows; chart tick labels.
+- **9px** Gauge unit CAPTIONS (SPEED/BURN/EFF Δ/ENDURANCE, Plex caps); chart axis
+  labels (EfficiencyCurve/PortCalls/TrendChartFill/VesselSynoptic/EngineTwin).
+- **8px** EngineTwin smallest label only (orphan, MICRO floor).
+
+## C. Mapped onto the proposed five tiers (with spread)
+- **DISPLAY** (name/titles) — D-DIN 700, consistent FAMILY. Sizes: **18, 21, 24,
+  30** across ~5 elements (CommandBand name 30, tile name 24/18, collapsed 18,
+  wordmark 18, vestigial token 21). **4 sizes.**
+- **HERO DATA** (gauge values + big numbers) — Plex 500, consistent family. Sizes:
+  **~20** (gauges) · **24** (tile mini) · **30** (tile std, Stat, EGT gap). **3
+  sizes**, and **collides with DISPLAY at 30**.
+- **PRIMARY LABEL** (mission clock + section headers) — three roles lumped: section
+  headers **11**, FleetView page header **13**, mission clock **18**. **3 sizes**
+  (arguably 3 different roles, not one tier).
+- **CONTEXT** (master/place/wind-waves/endpoint labels/%/Venice/ETA/spec/tile
+  values) — Plex/UI. Sizes: **11, 12, 13, 14, 15** across ~12+ elements. **5
+  sizes — the worst spread.**
+- **MICRO** (axis ticks/captions/smallest) — Plex. Sizes: **8, 9, 10, 11**. **4 sizes.**
+
+## D. Near-duplicates flagged (≤2px, same tier drifted = the noise)
+- **CONTEXT 11/12/13/14/15** — five sizes doing one job. Biggest collapse target:
+  status chips 11, panels/popovers 12, FleetRail 13, tile footer 14, wind-waves/
+  CommandBand 15. (round 83 moved CommandBand context to 15 but tile values stayed
+  14 and chips/panels stayed 11–12.)
+- **14 vs 15** — tile footer values (14) vs the wind/waves context register (15):
+  meant to be the same CONTEXT size.
+- **9 vs 10** — gauge captions/chart-axis (9) vs gauge ticks/chart ticks (10): MICRO drift.
+- **12 vs 13** — `TYPE.meta`(12) vs `--type-data-size`(13): same role, 1px apart.
+- **20 vs 21** — gauge value (~20, Plex) vs `TYPE.name` (21, D-DIN): cross-tier
+  near-collision (different families, so reads distinct — noted, not noise).
+- **18 reused across tiers** — DISPLAY (names) and PRIMARY (mission clock) share 18px.
+
+## E. Orphans
+- **16px** — VesselTile automotive "✓" (one decorative element; genuinely special).
+- **8px** — EngineTwin smallest label (one element; MICRO floor).
+- **21px** `TYPE.name` — vestigial token, overridden everywhere; no raw render.
+- **13px** `--type-data-size` — only the TREND BOARD header + FleetRail; not a
+  general data size despite the name.
+
+## F. Section headers — CONSISTENT at 11px, ONE drift
+POSITION · ALERTS · ENGINE TWINS · FUEL · FLEET · PORT CALLS — 72H · EFFICIENCY ·
+ROUTE · MODE 24H · CREW & LOG · FLEET PLOT — all render via the `Label` component →
+`gb.label` → **11px** Plex Mono, letterSpacing 1.2. **Consistent.** The one drift:
+**FleetView "TREND BOARD — RANKED BY SUSTAINED DEVIATION"** is a raw div using
+`gb.label` **overridden to 13px** (it's the page-level header, not a section
+header). So: section headers uniform at 11; the FleetView page header sits at 13.
+
+## Bottom line for a 5-tier collapse
+Distinct sizes in play: **8, 9, 10, 11, 12, 13, 14, 15, 16, 18, ~20, 21, 24, 30**
+(~14 values) feeding 5 intended tiers. The fixable noise is CONTEXT (11–15, collapse
+to one) and MICRO (8–11, collapse to ~2). DISPLAY and HERO both anchoring to the
+same 30px token is the structural collision to resolve. No changes made this round.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 73: ROUND 84 — position chart, fix unrealistic geometry spike)
 
 ## Diagnosis (reported before fixing)
