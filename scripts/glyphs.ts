@@ -35,8 +35,11 @@ function normalize(raw: string): string {
     .replace(/<svg[^>]*>/i, '')
     .replace(/<\/svg>\s*$/i, '')
     .trim();
-  // hex fills/strokes → currentColor (preserve `none`)
-  inner = inner.replace(/(fill|stroke)\s*=\s*["']#[0-9a-fA-F]{3,8}["']/gi, '$1="currentColor"');
+  // ROUND 83: ANY fill/stroke → currentColor (preserve `none`), so a drawn glyph
+  // always inherits the `color` prop. The old regex only caught HEX, so a literal
+  // fill="white" (what these exports use) survived and the glyph rendered white
+  // regardless of color — the wave-glyph greying never took (rounds 79/81).
+  inner = inner.replace(/(fill|stroke)\s*=\s*["'](?!none["'])[^"']*["']/gi, '$1="currentColor"');
   if (vb) {
     const [, x, y, w, h] = vb.map(Number) as unknown as number[];
     if (Number(w) !== 24 || Number(h) !== 24 || Number(x) !== 0 || Number(y) !== 0) {

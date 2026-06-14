@@ -333,11 +333,14 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `centerStack / wind.text`
   - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
   - BINDS — {weather.wind_speed_kn} kn
+- `destCol / dest.toggle`
+  - TOKENS — endpoint label = click toggle (chevron affordance) for the arrival detail column · collapsed default · click-only (hover ruling)
+  - BINDS — {next_port_calls[0].port} → expand ETA/NM-to-go
 - `destCol / eta.text`
-  - TOKENS — font/data 11 · ink/muted · context (no tint) — absolute ETA + Z lives HERE
+  - TOKENS — font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE
   - BINDS — {next_port_calls[0].eta}
 - `destCol / toGo.text`
-  - TOKENS — font/data 11 · ink/muted · context · distance remaining
+  - TOKENS — font/data 15 · ink/muted · context · distance remaining
   - BINDS — {nm to destination}
 - `gaugeRail / burn.chart`
   - TOKENS — Gauge primitive · 116px (round 79)
@@ -352,23 +355,23 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — Gauge primitive · 116px (round 79)
   - BINDS — {position.speed_over_ground_kn} / max {cruise×1.35}
 - `marker / position.text`
-  - TOKENS — font/data 11 · ink/muted · current-position reference (nearest port NOW) anchored to the marker — relative, never raw lat/lon (ruling 6)
+  - TOKENS — font/data 15 · ink/muted · current-position reference (nearest port NOW) anchored below the marker — relative, never raw lat/lon (ruling 6)
   - BINDS — {nm from nearest port | alongside}
+- `marker / progress.text`
+  - TOKENS — font/data 15 · ink/muted · progress % anchored ABOVE the marker — bound to real voyage progress (round 83)
+  - BINDS — {round(frac*100)}%
+- `originCol / origin.toggle`
+  - TOKENS — endpoint label = click toggle (chevron affordance) for the origin detail column · collapsed default · click-only (hover ruling)
+  - BINDS — {transit-run start} → expand spec/speed
 - `originCol / spec.text`
-  - TOKENS — font/data 11 · ink/muted · context (no tint)
+  - TOKENS — font/data 15 (wind/waves scale) · ink/muted · context (no tint)
   - BINDS — {static.length_ft} ft {static.class}
 - `originCol / speed.text`
-  - TOKENS — font/data 11 · ink/muted · context
+  - TOKENS — font/data 15 · ink/muted · context
   - BINDS — {position.speed_over_ground_kn} kn
-- `profile / destination.text`
-  - TOKENS — font/data 11 · ink/primary · endpoint label (name appears once)
-  - BINDS — {next_port_calls[0].port}
 - `profile / fill.line`
   - TOKENS — ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)
   - BINDS — {distance covered fraction}
-- `profile / origin.text`
-  - TOKENS — font/data 11 · ink/secondary · endpoint label (name appears once)
-  - BINDS — {transit-run start: nearest port <5nm | nearest site}
 - `profile / track.line`
   - TOKENS — line/strong 2px · GREY = distance remaining (ahead of marker)
   - BINDS — {origin→destination, remaining}
@@ -517,4 +520,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*138 instrumented leaves · 20 components · generated 2026-06-14T00:36:24.023Z*
+*139 instrumented leaves · 20 components · generated 2026-06-14T00:49:50.149Z*

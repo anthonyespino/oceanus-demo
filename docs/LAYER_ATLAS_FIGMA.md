@@ -178,22 +178,23 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • waves.text  → font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line · {weather.wave_height_ft} ft
     • wind.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wind_speed_kn} kn
   Region: destCol
-    • eta.text  → font/data 11 · ink/muted · context (no tint) — absolute ETA + Z lives HERE · {next_port_calls[0].eta}
-    • toGo.text  → font/data 11 · ink/muted · context · distance remaining · {nm to destination}
+    • dest.toggle  → endpoint label = click toggle (chevron affordance) for the arrival detail column · collapsed default · click-only (hover ruling) · {next_port_calls[0].port} → expand ETA/NM-to-go
+    • eta.text  → font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE · {next_port_calls[0].eta}
+    • toGo.text  → font/data 15 · ink/muted · context · distance remaining · {nm to destination}
   Region: gaugeRail
     • burn.chart  → Gauge primitive · 116px (round 79) · {derived.burn_rate_gph} / max observed 1y
     • effDelta.chart  → Gauge primitive · caution band ≥+8 (alert-backed) · {derived.efficiency_delta_pct} vs mode baseline
     • endurance.chart  → Gauge primitive · log dial · caution band <72h (alert-backed) · {derived.endurance_hours}
     • speed.chart  → Gauge primitive · 116px (round 79) · {position.speed_over_ground_kn} / max {cruise×1.35}
   Region: marker
-    • position.text  → font/data 11 · ink/muted · current-position reference (nearest port NOW) anchored to the marker — relative, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
+    • position.text  → font/data 15 · ink/muted · current-position reference (nearest port NOW) anchored below the marker — relative, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
+    • progress.text  → font/data 15 · ink/muted · progress % anchored ABOVE the marker — bound to real voyage progress (round 83) · {round(frac*100)}%
   Region: originCol
-    • spec.text  → font/data 11 · ink/muted · context (no tint) · {static.length_ft} ft {static.class}
-    • speed.text  → font/data 11 · ink/muted · context · {position.speed_over_ground_kn} kn
+    • origin.toggle  → endpoint label = click toggle (chevron affordance) for the origin detail column · collapsed default · click-only (hover ruling) · {transit-run start} → expand spec/speed
+    • spec.text  → font/data 15 (wind/waves scale) · ink/muted · context (no tint) · {static.length_ft} ft {static.class}
+    • speed.text  → font/data 15 · ink/muted · context · {position.speed_over_ground_kn} kn
   Region: profile
-    • destination.text  → font/data 11 · ink/primary · endpoint label (name appears once) · {next_port_calls[0].port}
     • fill.line  → ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed) · {distance covered fraction}
-    • origin.text  → font/data 11 · ink/secondary · endpoint label (name appears once) · {transit-run start: nearest port <5nm | nearest site}
     • track.line  → line/strong 2px · GREY = distance remaining (ahead of marker) · {origin→destination, remaining}
     • vessel.glyph  → glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track · {live position on track}
 
@@ -292,4 +293,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*138 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T00:36:24.025Z*
+*139 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T00:49:50.150Z*

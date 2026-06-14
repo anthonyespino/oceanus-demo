@@ -15,6 +15,7 @@
 // The clock sits one type step below the name — the name is the only hero.
 // The collapse chevron reduces the primary row to a name + mode + clock line.
 
+import { useState } from 'react';
 import type { VesselState, VesselSample } from '../data/types';
 import { EFF_DELTA_CAUTION_PCT, BUNKER_SOON_H } from '../data/alerts';
 import { PORTS, SITES, distanceNm, place } from '../data/fleet';
@@ -107,10 +108,26 @@ function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary }: { g: G
   );
 }
 
+// ROUND 83: collapse affordance for the voyage endpoint labels — a small chevron
+// (down = collapsed, up = open) so the label reads as clickable WITHOUT hover.
+function ProfileChevron({ open }: { open: boolean }) {
+  return (
+    <svg width={9} height={9} viewBox="0 0 10 10" aria-hidden
+      style={{ flexShrink: 0, opacity: 0.7, transform: open ? 'rotate(180deg)' : 'none' }}>
+      <path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="var(--color-ink-muted)" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   const { collapsedPanels, togglePanel } = useFleet();
   const id = vessel.static.id;
   const min = !!collapsedPanels[`${id}:command`];
+  // ROUND 83: voyage endpoint detail columns are click-collapsible, collapsed by
+  // default, independent (origin/destination). Click-only (hover ruling: hover
+  // points, click asks). Local state → resets to collapsed on each vessel load.
+  const [originOpen, setOriginOpen] = useState(false);
+  const [destOpen, setDestOpen] = useState(false);
 
   const d = vessel.derived;
   const now = vessel.history.minutes.at(-1)!;
@@ -197,8 +214,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   // automotive trip canvas; absolute ETA + Z and distance-to-go live HERE
   let profile: React.ReactNode;
   const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
-  // context detail style — neutral/dimmed, no tint/weight (reference data)
-  const colItem: React.CSSProperties = { ...mono, color: NEUTRAL.inkMuted, whiteSpace: 'nowrap' };
+  // ROUND 83: ALL voyage context unified to the wind/waves register (the
+  // environment-context scale) — font/data 15, dimmed, no tint/weight (reference
+  // data). Endpoint labels use the same scale but ink/secondary (they're the
+  // toggle + identity). Name / gauge values / mission clock are NOT touched.
+  const colItem: React.CSSProperties = { fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.inkMuted, whiteSpace: 'nowrap' };
+  const endpointLabel: React.CSSProperties = { fontFamily: FONT.data, fontSize: 15, color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' };
+  const toggleBtn: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%', background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer', color: 'inherit', font: 'inherit' };
   // current-position reference (Venice = nearest port to where the vessel is NOW)
   const posRef = nearestNm < 3 ? `alongside ${nearest.name}` : `${nearestNm.toFixed(0)} nm from ${nearest.name}`;
   if (now.mode === 'PORT' || now.mode === 'STATION' || now.mode === 'STANDBY') {
@@ -225,24 +247,33 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
       ? Math.min(1, Math.max(0, distanceNm(origin.pos, now.position) / Math.max(1, distanceNm(origin.pos, place(next.port)))))
       : null;
     const fracPct = frac !== null ? (frac * 100).toFixed(1) : null;
-    // ROUND 82: ENDPOINT-ANCHORED detail columns. Origin detail (vessel spec +
-    // speed) sits left under the origin label; arrival detail (ETA + NM to go)
-    // sits right under the destination label; the current-position reference
-    // (Venice) floats with the vessel marker. Endpoint names appear ONCE (as the
-    // labels) — no repeated location text. Bar itself unchanged (round 81).
+    const pctLabel = frac !== null ? `${Math.round(frac * 100)}%` : null;
+    // ROUND 82/83: ENDPOINT-ANCHORED detail columns, now CLICK-COLLAPSIBLE — the
+    // endpoint label (+ chevron) is the toggle; columns collapsed by default,
+    // click-only (hover ruling), origin/destination independent. Progress % rides
+    // ABOVE the marker, the current-position reference (Venice) BELOW it. All
+    // context unified to the wind/waves scale (colItem). Bar itself = round 81.
     profile = (
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(140px, auto) 1fr minmax(140px, auto)', gap: 14, alignItems: 'start' }}>
-        {/* ORIGIN column — label + origin/vessel detail, LEFT-aligned */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, auto) 1fr minmax(150px, auto)', gap: 14, alignItems: 'start' }}>
+        {/* ORIGIN column — label(toggle)+chevron; detail collapses, LEFT-aligned */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, alignItems: 'flex-start' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
-            <span {...layer('VesselCommandBand / profile / origin.text', 'font/data 11 · ink/secondary · endpoint label (name appears once)', '{transit-run start: nearest port <5nm | nearest site}')} style={{ ...mono, color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{origin?.label ?? 'UNDERWAY'}</span>
+          <button {...layer('VesselCommandBand / originCol / origin.toggle', 'endpoint label = click toggle (chevron affordance) for the origin detail column · collapsed default · click-only (hover ruling)', '{transit-run start} → expand spec/speed')} onClick={() => setOriginOpen((o) => !o)} aria-expanded={originOpen} aria-label="origin detail" style={toggleBtn}>
+            <span style={endpointLabel}>{origin?.label ?? 'UNDERWAY'}</span>
             {origin?.isPort && <StateMark port={origin.label} />}
-          </span>
-          <span {...layer('VesselCommandBand / originCol / spec.text', 'font/data 11 · ink/muted · context (no tint)', '{static.length_ft} ft {static.class}')} style={colItem}>{vessel.static.length_ft} ft {vessel.static.class}</span>
-          <span {...layer('VesselCommandBand / originCol / speed.text', 'font/data 11 · ink/muted · context', '{position.speed_over_ground_kn} kn')} style={colItem}>{sog.toFixed(1)} kn</span>
+            <ProfileChevron open={originOpen} />
+          </button>
+          {originOpen && (
+            <>
+              <span {...layer('VesselCommandBand / originCol / spec.text', 'font/data 15 (wind/waves scale) · ink/muted · context (no tint)', '{static.length_ft} ft {static.class}')} style={colItem}>{vessel.static.length_ft} ft {vessel.static.class}</span>
+              <span {...layer('VesselCommandBand / originCol / speed.text', 'font/data 15 · ink/muted · context', '{position.speed_over_ground_kn} kn')} style={colItem}>{sog.toFixed(1)} kn</span>
+            </>
+          )}
         </div>
-        {/* CENTER — track + marker (round 81, unchanged) + Venice marker label */}
-        <div style={{ position: 'relative', minWidth: 80 }}>
+        {/* CENTER — progress % above · track + marker (round 81) · Venice below */}
+        <div style={{ position: 'relative', minWidth: 80, paddingTop: 18, paddingBottom: 18 }}>
+          {pctLabel && fracPct !== null && (
+            <div {...layer('VesselCommandBand / marker / progress.text', 'font/data 15 · ink/muted · progress % anchored ABOVE the marker — bound to real voyage progress (round 83)', '{round(frac*100)}%')} style={{ ...colItem, position: 'absolute', top: 0, left: `${fracPct}%`, transform: 'translateX(-50%)' }}>{pctLabel}</div>
+          )}
           {/* ROUND 81: greyscale progress — GREY track = remaining (ahead),
               WHITE overlay = covered (behind the marker); no blue. */}
           <div style={{ position: 'relative', height: 16 }}>
@@ -258,17 +289,22 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           </div>
           {/* current-position reference (round 82) — floats under the marker */}
           {fracPct !== null && (
-            <div {...layer('VesselCommandBand / marker / position.text', 'font/data 11 · ink/muted · current-position reference (nearest port NOW) anchored to the marker — relative, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')} style={{ ...colItem, position: 'absolute', top: 18, left: `${fracPct}%`, transform: 'translateX(-50%)' }}>{posRef}</div>
+            <div {...layer('VesselCommandBand / marker / position.text', 'font/data 15 · ink/muted · current-position reference (nearest port NOW) anchored below the marker — relative, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')} style={{ ...colItem, position: 'absolute', bottom: 0, left: `${fracPct}%`, transform: 'translateX(-50%)' }}>{posRef}</div>
           )}
         </div>
-        {/* DESTINATION column — label + arrival detail, RIGHT-aligned */}
+        {/* DESTINATION column — label(toggle)+chevron; detail collapses, RIGHT-aligned */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, alignItems: 'flex-end' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
-            <span {...layer('VesselCommandBand / profile / destination.text', 'font/data 11 · ink/primary · endpoint label (name appears once)', '{next_port_calls[0].port}')} style={{ ...mono, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{next?.port ?? '—'}</span>
+          <button {...layer('VesselCommandBand / destCol / dest.toggle', 'endpoint label = click toggle (chevron affordance) for the arrival detail column · collapsed default · click-only (hover ruling)', '{next_port_calls[0].port} → expand ETA/NM-to-go')} onClick={() => setDestOpen((o) => !o)} aria-expanded={destOpen} aria-label="arrival detail" style={{ ...toggleBtn, justifyContent: 'flex-end' }}>
+            <span style={endpointLabel}>{next?.port ?? '—'}</span>
             {next && <StateMark port={next.port} />}
-          </span>
-          {next && <span {...layer('VesselCommandBand / destCol / eta.text', 'font/data 11 · ink/muted · context (no tint) — absolute ETA + Z lives HERE', '{next_port_calls[0].eta}')} style={colItem}>◇ ETA {fmtTime(next.eta)}</span>}
-          {toGoNm !== null && <span {...layer('VesselCommandBand / destCol / toGo.text', 'font/data 11 · ink/muted · context · distance remaining', '{nm to destination}')} style={colItem}>{toGoNm.toFixed(0)} NM TO GO</span>}
+            <ProfileChevron open={destOpen} />
+          </button>
+          {destOpen && (
+            <>
+              {next && <span {...layer('VesselCommandBand / destCol / eta.text', 'font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE', '{next_port_calls[0].eta}')} style={{ ...colItem, textAlign: 'right' }}>◇ ETA {fmtTime(next.eta)}</span>}
+              {toGoNm !== null && <span {...layer('VesselCommandBand / destCol / toGo.text', 'font/data 15 · ink/muted · context · distance remaining', '{nm to destination}')} style={{ ...colItem, textAlign: 'right' }}>{toGoNm.toFixed(0)} NM TO GO</span>}
+            </>
+          )}
         </div>
       </div>
     );

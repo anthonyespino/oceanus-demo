@@ -330,6 +330,26 @@ originals.*
   describes; position context anchors to the position marker. All reference/
   context — neutral, dimmed, context-scale, no tint/weight/alert. The voyage bar
   itself (round 81 white/grey, marker, no blue) is unchanged.
+- **Voyage bar: collapsible endpoints + progress % + type unify + wave-glyph
+  re-fix (round 83)**:
+  - **Collapsible endpoint detail** — the endpoint LABEL (+ a small chevron
+    affordance) is the toggle: click expands its column (origin → spec/speed,
+    destination → ETA/NM-to-go). **Collapsed by default**, origin/destination
+    independent, **click-only** (hover ruling: hover points, click asks; the
+    chevron makes it read clickable without hovering). Collapsed still shows
+    labels + bar + marker + Venice label + progress %; only the detail columns hide.
+  - **Progress %** (e.g. `6%`) added as a label anchored ABOVE the vessel marker,
+    bound to the real `frac` (same source as the white/grey split).
+  - **Context type unified** to the wind/waves register (font/data 15) — origin
+    detail, destination detail, Venice label, progress %, endpoint labels. NOT
+    changed: vessel NAME (display), gauge values (data hero), mission clock.
+  - **Wave glyph greyed — root cause finally found**: the rounds-79/81 greying
+    never took because the imported glyphs hardcode `fill="white"` (a named colour)
+    and the importer's normalize only converted HEX → `currentColor`, so the white
+    survived and the glyph ignored the `color` prop. Fixed the normalizer to map
+    ANY non-`none` fill/stroke → `currentColor`; regenerated `glyphs.generated.ts`;
+    the wave (passed ink/muted) now renders dim grey, matching the wind glyph
+    (confirmed on a 4× pixel crop). Greyscale/no-blue intact.
 - **VesselTile resize: two buttons → one state-aware toggle (round 54)**: the
   separate collapse + expand corner buttons are now a single top-right button
   that shows the expand affordance when collapsed/default and the collapse

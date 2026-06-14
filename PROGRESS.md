@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-13 (Session 72: ROUND 83 — voyage bar collapsible endpoints, progress %, type unify, wave-glyph re-fix)
+
+## Done (verified on running build)
+- **Collapsible endpoint columns**: the endpoint label + a small chevron is the
+  toggle — click expands origin (spec/speed) or destination (ETA/NM-to-go).
+  **Collapsed by default**, independent, **click-only** (no hover). Verified:
+  `docs/screens/r83-collapsed.png` (columns hidden, chevrons ⌄ visible) vs
+  `r83-expanded.png` (clicked → columns show, chevrons ^).
+- **Progress %** (`6%`) added above the vessel marker, bound to real `frac`.
+- Collapsed band still shows labels + bar + marker + Venice (`49 nm from Venice,
+  LA`) + progress %; only the detail columns hide.
+- **Context type unified to the wind/waves scale** (font/data 15): origin/dest
+  detail, Venice, %, endpoint labels. NAME / gauge values / mission clock untouched.
+- **WAVE GLYPH GREYED — third time, root cause finally fixed.** The two prior
+  attempts (79/81) did nothing because the imported glyphs hardcode `fill="white"`
+  (a NAMED colour) and the importer's normalize only converted HEX → currentColor —
+  so white survived and the glyph ignored the `color` prop. Fixed the normalizer to
+  convert ANY non-`none` fill/stroke → currentColor; regenerated glyphs.generated.ts
+  (all 3 now `fill="currentColor"`). The wave (passed ink/muted) now renders dim
+  grey, MATCHING the wind glyph — confirmed on a 4× pixel crop
+  (`docs/screens/r83-wx-glyphs.png`): both dim grey, wave no longer white.
+
+## Held
+Voyage bar greyscale/no-blue (round 81) intact; non-transit modes keep their single
+centered context line (collapse applies only where the bar renders). TSC-OK,
+LINT-CLEAN, verify PASSED.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 71: ROUND 82 — voyage bar endpoint-anchored detail columns)
 
 ## Done (verified `docs/screens/r82-commandband.png`)
