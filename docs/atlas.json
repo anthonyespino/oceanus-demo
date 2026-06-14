@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T18:00:05.462Z",
+  "generated": "2026-06-14T18:20:56.122Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -894,12 +894,12 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
-      "path": "VesselInspector / alerts / header.glyph",
+      "path": "VesselInspector / generalAlerts / header.text",
       "component": "VesselInspector",
-      "region": "alerts",
-      "leaf": "header.glyph",
-      "tokens": "section header · alert-triangle glyph · glyph-only in expert mode",
-      "binds": "ALERTS",
+      "region": "generalAlerts",
+      "leaf": "header.text",
+      "tokens": "compact GENERAL alerts area · only unroutable alerts (no evidence panel)",
+      "binds": "GENERAL",
       "file": "src/components/VesselInspector.tsx"
     },
     {

@@ -17,6 +17,7 @@ export interface Scenario {
 
 const WARN = (code: string, message: string): Alert => ({ level: 'WARNING', code, message });
 const CAUT = (code: string, message: string): Alert => ({ level: 'CAUTION', code, message });
+const ADV = (code: string, message: string): Alert => ({ level: 'ADVISORY', code, message });
 
 /** Override one vessel's alerts (+ optional derived numbers) on a clone. */
 function set(v: VesselState, alerts: Alert[], d: Partial<VesselState['derived']> = {}): VesselState {
@@ -82,10 +83,14 @@ export const SCENARIOS: Scenario[] = [
     }) },
 
   { id: 'datalink-blackout', label: 'DATALINK BLACKOUT', synthetic: true,
-    apply: (fleet) => fleet.map((v, i) =>
-      ['v01', 'v05', 'v09', 'v13', 'v14'].includes(v.static.id)
-        ? staleStreams(clean(v), i % 2 === 0 ? ['weather', 'position'] : ['weather'])
-        : clean(allFresh(v))) },
+    apply: (fleet) => fleet.map((v, i) => {
+      if (!['v01', 'v05', 'v09', 'v13', 'v14'].includes(v.static.id)) return clean(allFresh(v));
+      const streams: (keyof StreamTimestamps)[] = i % 2 === 0 ? ['weather', 'position'] : ['weather'];
+      // ROUND 100: a stale stream raises a STALE_DATA advisory that has NO
+      // evidence panel → it routes to the compact GENERAL area (datalink/
+      // staleness has no panel home; forcing a dock would be dishonest).
+      return staleStreams(set(v, streams.map((s) => ADV('STALE_DATA', `${s} stream stale > 30 min`))), streams);
+    }) },
 
   { id: 'port-weekend', label: 'PORT WEEKEND', synthetic: true,
     apply: (fleet) => fleet.map((v) =>

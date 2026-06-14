@@ -9,7 +9,8 @@
 // died); their docent annotations are unanchored pending Anthony's copy.
 
 import { useEffect, useState } from 'react';
-import type { VesselState } from '../data/types';
+import type { VesselState, Alert } from '../data/types';
+import { alertTarget, type AlertTarget } from '../data/alerts';
 import { type ColorTreatment } from '../state/FleetProvider';
 import { envelopeDeltaPct } from '../data/curve';
 import { vesselEvents, EVENT_WINDOW_24H } from '../data/events';
@@ -21,7 +22,6 @@ import { InspectorChart } from './InspectorChart';
 import { VesselSynoptic } from './VesselSynoptic';
 import { VesselCommandBand } from './VesselCommandBand';
 import { CrewLogPanel } from './CrewLogPanel';
-import { Label } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { ALERT_TEXT_COLOR, NEUTRAL } from './probeTokens';
 import { gb, fmtPct } from './gb';
@@ -55,6 +55,13 @@ export function VesselInspector({
   const lastEvent = vesselEvents(vessel, now.t - EVENT_WINDOW_24H)[0];
   const envDelta = envelopeDeltaPct(vessel.history);
 
+  // ROUND 100: route each alert to the panel that substantiates it (its
+  // evidence), or to the compact GENERAL area when nothing does. Routing is by
+  // code (data layer), so it generalizes across scenarios; the standalone
+  // full-width ALERTS box is gone — routed alerts dock to their panels.
+  const routed: Record<AlertTarget, Alert[]> = { 'engine-twins': [], efficiency: [], fuel: [], crew: [], general: [] };
+  for (const a of vessel.alerts) routed[alertTarget(a)].push(a);
+
   return (
     <div style={{ flex: 1, minWidth: 0, position: 'relative', '--pad-card': 'var(--pad-card-dense)' } as React.CSSProperties}>
       <div style={{ position: 'relative' }}>
@@ -63,35 +70,38 @@ export function VesselInspector({
           summary={`${distanceNm(now.position, nearest).toFixed(0)} nm from ${nearest.name}`}>
           <Annotated name="NauticalChart"><InspectorChart vessel={vessel} fleet={fleet} treatment={treatment} height={canvasH} /></Annotated>
         </Collapse>
-        {vessel.alerts.length > 0 && (
-          <div style={{ marginBottom: 8 }}>
-            <Label g="alert-triangle" headerAttrs={layer('VesselInspector / alerts / header.glyph', 'section header · alert-triangle glyph · glyph-only in expert mode', 'ALERTS')} style={{ marginBottom: 4 }}>alerts</Label>
-            {/* ROUND 88: tightened — reduced vertical padding + line-height; the
-                substantive [CAUTION] alert TEXT (the anomaly evidence) is KEPT. */}
-            <section style={{ ...gb.box, padding: '6px var(--pad-card)' }}>
-              {/* round 33 grammar: one severity voice per line — the tag */}
-              {vessel.alerts.map((a, i) => (
-                <div key={i} style={{ color: NEUTRAL.inkSecondary, fontSize: 'var(--type-context)', lineHeight: 1.45 }}>
-                  <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
-                </div>
-              ))}
-            </section>
-          </div>
+        {/* ROUND 100: GENERAL alerts only — the compact fallback for alerts with
+            no evidence panel (datalink/staleness, etc.). Routed alerts dock to
+            their panels below; this renders ONLY when there are general alerts
+            (no empty box otherwise). */}
+        {routed.general.length > 0 && (
+          <section data-panel="general" style={{ ...gb.box, padding: '6px var(--pad-card)', marginBottom: 8, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span {...layer('VesselInspector / generalAlerts / header.text', 'compact GENERAL alerts area · only unroutable alerts (no evidence panel)', 'GENERAL')} style={{ ...gb.label, fontSize: 'var(--type-micro)', marginBottom: 2 }}>general</span>
+            {routed.general.map((a, i) => (
+              <div key={i} style={{ color: NEUTRAL.inkSecondary, fontSize: 'var(--type-context)', lineHeight: 1.4 }}>
+                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
+              </div>
+            ))}
+          </section>
         )}
         <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
+          alerts={routed['engine-twins']}
           summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
           <Annotated name="EngineTwinPanel" node="engine-twin"><EngineTwinPanel vessel={vessel} /></Annotated>
         </Collapse>
         {/* round 34: ONE efficiency card (burn-vs-speed merged in) */}
         <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
+          alerts={routed.efficiency}
           summary={`now ${fmtPct(d.efficiency_delta_pct)}${envDelta === null ? '' : ` · ${fmtPct(envDelta)} vs envelope`}`}>
           <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
         </Collapse>
         <Collapse k={`${id}:fuel`} glyph="tank" title="fuel"
+          alerts={routed.fuel}
           summary={`RECON ${d.reconciliation.status} · ${totalGal.toLocaleString()} gal`}>
           <Annotated name="VesselSynoptic" node="fuel-synoptic"><VesselSynoptic vessel={vessel} /></Annotated>
         </Collapse>
         <Collapse k={`${id}:crewlog`} glyph="crew" title="crew & log"
+          alerts={routed.crew}
           summary={`${vessel.history.crew.length} aboard · ${crewDays}d · ${lastEvent ? lastEvent.type : 'no events 24h'}`}>
           <CrewLogPanel vessel={vessel} />
         </Collapse>

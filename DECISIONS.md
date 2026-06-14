@@ -783,3 +783,30 @@ originals.*
     backdrop-filter blurs only what's behind); sticky diffraction persists on
     scroll (mechanism unchanged); **60fps floor HELD** — glass-off ~121 vs
     glass-on ~122, no drop. Reduced-motion: frost over the frozen static gradient.
+
+- **ROUND 100: ALERT ROUTING — alerts dock to the panel that substantiates them;
+  a compact GENERAL area is the fallback; the standalone ALERTS box is removed**.
+  Each alert routes by its `code` to the panel that shows its evidence
+  (`ALERT_TARGET` map + `alertTarget()` in `src/data/alerts.ts`) — a generalizable
+  RULE, not a demo one-off. The substantiated panel renders the alert docked to
+  its header (`Collapse alerts` prop → compact `[LEVEL] message`, earned color,
+  context tier, visible even when the panel is collapsed). The full-width ALERTS
+  box is gone; its space is reclaimed.
+  - **Routing (verified):** EGT_DIVERGENCE/OIL_PRESSURE → Engine Twins;
+    EFF_DELTA → efficiency; ENDURANCE/FEEDER_LOW/TANK_LOW/RECONCILIATION/
+    SENSOR_DISAGREE/BUNKER_SOON → fuel (synoptic); CREW_CHANGE → crew & log;
+    STALE_DATA + any unmapped code → GENERAL.
+  - **Substantiation guard (logged):** an alert docks ONLY to a panel that
+    genuinely shows its evidence. Datalink/staleness/weather have NO evidence
+    panel → they go GENERAL; forcing them onto a loosely-related panel would imply
+    a relationship the data doesn't support. The GENERAL area renders ONLY when
+    there are general alerts (compact ~70px, not a big box) — no empty container.
+  - **Generalized across scenarios (verified):** DEMO (EGT→twins, EFF→efficiency);
+    MULTI-CASUALTY (v04 EGT→twins, v01 EFF→efficiency, v02 FEEDER→fuel — each
+    vessel's alerts route independently); DATALINK BLACKOUT (STALE_DATA advisories
+    → general; the synthetic scenario now raises the advisory so the general path
+    is exercised); ALL NOMINAL (no alerts → zero docked alerts AND no general area,
+    no empty boxes anywhere).
+  - **Severity intact:** docked `[CAUTION]` keeps gold (earned color), reads
+    clearly — Meridian's two alerts dock to Engine Twins + efficiency and remain
+    unmissable. Type scale held (context tier); greyscale; no new boxes/strokes.

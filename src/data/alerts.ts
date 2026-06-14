@@ -159,3 +159,35 @@ function mean(xs: number[]): number {
 function fmtPct(x: number): string {
   return `${x > 0 ? '+' : ''}${x.toFixed(1)}%`;
 }
+
+// ROUND 100: ALERT ROUTING — each alert is substantiated by a specific panel
+// (its evidence). The UI docks the alert to that panel's header so the alert
+// lives next to the evidence that fired it; alerts with no clear evidence panel
+// fall back to a compact GENERAL area. This is a routing RULE keyed by code (not
+// a one-off for the demo seed), so it generalizes across scenarios.
+//
+// SUBSTANTIATION GUARD: a code maps to a panel ONLY where that panel genuinely
+// shows the evidence. Codes with no clear evidence home (staleness/datalink,
+// weather) are 'general' — forcing a dock would imply a relationship the data
+// does not support.
+export type AlertTarget = 'engine-twins' | 'efficiency' | 'fuel' | 'crew' | 'general';
+
+export const ALERT_TARGET: Record<string, AlertTarget> = {
+  EGT_DIVERGENCE: 'engine-twins', // EGT gap evidence lives in Engine Twins
+  OIL_PRESSURE: 'engine-twins', // engine sensor (InstrumentCluster in Engine Twins)
+  EFF_DELTA: 'efficiency', // efficiency-vs-baseline reading
+  ENDURANCE: 'fuel', // endurance = fuel ÷ burn — fuel synoptic substantiates it
+  FEEDER_LOW: 'fuel', // feeder tanks drawn in the synoptic
+  TANK_LOW: 'fuel', // tank levels in the synoptic
+  RECONCILIATION: 'fuel', // reconciliation cross-check in the synoptic
+  SENSOR_DISAGREE: 'fuel', // flow meter vs tank drawdown — synoptic
+  BUNKER_SOON: 'fuel', // bunkering = fuel margin
+  CREW_CHANGE: 'crew', // crew & log panel
+  STALE_DATA: 'general', // staleness/datalink — no single evidence panel
+};
+
+/** Round 100: the panel an alert docks to (its evidence), or 'general' when no
+    panel genuinely substantiates it. Unknown codes fall back to 'general'. */
+export function alertTarget(a: Alert): AlertTarget {
+  return ALERT_TARGET[a.code] ?? 'general';
+}

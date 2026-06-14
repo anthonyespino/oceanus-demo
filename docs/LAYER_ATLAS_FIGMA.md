@@ -204,8 +204,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
 ## VesselInspector
 
-  Region: alerts
-    • header.glyph  → section header · alert-triangle glyph · glyph-only in expert mode · ALERTS
+  Region: generalAlerts
+    • header.text  → compact GENERAL alerts area · only unroutable alerts (no evidence panel) · GENERAL
 
 ## VesselSynoptic
 
@@ -297,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T18:00:05.462Z*
+*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T18:20:56.122Z*

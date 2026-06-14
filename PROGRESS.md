@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-14 (Session 88: ROUND 100 — dock alerts to related panels + general fallback)
+
+## Done (verified docs/screens/r100-demo-v01.png, r100-general-area.png)
+- Alert routing rule established: `ALERT_TARGET` map + `alertTarget()` in
+  data/alerts.ts route each alert by code to the panel that substantiates it.
+- Collapse gained an `alerts` prop → docks the alert to the panel header
+  (compact `[LEVEL] message`, earned color, visible even when collapsed).
+- Standalone full-width ALERTS box REMOVED; space reclaimed. Compact GENERAL
+  area (~70px) renders ONLY when there are unroutable alerts.
+- Routing verified (deterministic via data-panel attr):
+  · DEMO v01: EGT→v01:twins, Efficiency→v01:efficiency
+  · MULTI-CASUALTY: v04 EGT→twins, v01 EFF→efficiency, v02 FEEDER→fuel
+  · DATALINK BLACKOUT v01: STALE_DATA advisories→general (scenario now raises
+    the advisory so the general path is exercised)
+  · ALL NOMINAL: no docked alerts, no general area (no empty boxes)
+- Substantiation guard logged: datalink/weather have no evidence panel → general;
+  no forced docks. Severity intact ([CAUTION] gold, reads clearly).
+
+## Safety
+Type scale held, greyscale, no new boxes/strokes. Demo seed alert values
+unchanged (verify PASSED). TSC-OK · LINT-CLEAN · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 87: ROUND 99 — drop engine-twin divider + improve glass fill)
 
 ## Done (verified docs/screens/r99-glass-on.png, r99-engine-twins.png)
