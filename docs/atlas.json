@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T17:41:57.382Z",
+  "generated": "2026-06-14T17:46:26.812Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -381,15 +381,6 @@
       "file": "src/components/FleetHealthBand.tsx"
     },
     {
-      "path": "FleetHealthBand / header / header.glyph",
-      "component": "FleetHealthBand",
-      "region": "header",
-      "leaf": "header.glyph",
-      "tokens": "section header · vessel glyph · glyph-only in expert mode",
-      "binds": "FLEET",
-      "file": "src/components/FleetHealthBand.tsx"
-    },
-    {
       "path": "FleetHealthBand / mean / trend.chart",
       "component": "FleetHealthBand",
       "region": "mean",
@@ -462,12 +453,12 @@
       "file": "src/components/FleetView.tsx"
     },
     {
-      "path": "FleetView / header / header.glyph",
+      "path": "FleetView / header / sort.subtitle",
       "component": "FleetView",
       "region": "header",
-      "leaf": "header.glyph",
-      "tokens": "page header · chart.trend (sorted-bars motif) · glyph-only in expert mode",
-      "binds": "TREND BOARD — RANKED BY SUSTAINED DEVIATION",
+      "leaf": "sort.subtitle",
+      "tokens": "page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped)",
+      "binds": "ranked by sustained deviation",
       "file": "src/components/FleetView.tsx"
     },
     {

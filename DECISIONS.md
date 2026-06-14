@@ -746,3 +746,16 @@ originals.*
     cue; sticky diffraction reinforces the bridge-window metaphor. The toggle
     exists to test whether bounded glass reads as instrument-diffraction (keep) or
     consumer-SaaS (cut). **No verdict locked — judge on pixels.**
+
+- **ROUND 98: dropped the "TREND BOARD" label + the "FLEET" scope glyph; kept the
+  sort subtitle**. Both were redundant noise (we know it's the fleet trend board).
+  Removed in DEFAULT and EXPERT: the FleetView page header "TREND BOARD" text +
+  its Expert `chart.trend` glyph, and the FleetHealthBand "FLEET" scope label with
+  its ship glyph (the top-left mode/scope indicator — noise in Expert too). KEPT
+  "ranked by sustained deviation" as a quiet SUBTITLE (CONTEXT 13, ink-muted/
+  dimmed, gb.label) in both modes — it is the one line that states the
+  consequence-sort thesis on screen (the demo's opening beat), so it earns its
+  place. The reclaimed space reflows cleanly: the subtitle sits where the header
+  was; the band's header row now carries only the range toggle, right-aligned —
+  no orphan gap. Label cleanup only — the sort behavior is unchanged; the subtitle
+  uses an existing tier (no orphan).

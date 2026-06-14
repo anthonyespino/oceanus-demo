@@ -11,7 +11,6 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
 import { useFleet } from '../state/FleetProvider';
-import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
 import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { FleetHealthBand } from './FleetHealthBand';
@@ -24,7 +23,6 @@ import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before d
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const { density, treatment, censusFilter, tileSizes, setTileSize, autoPromote } = useFleet();
-  const { expertOn } = useLearn();
   // ROUND 68: chart-band maximize — a TRANSIENT resize, local to the view (not a
   // persisted layout mode). Default load is always the standard band size.
   const [chartMax, setChartMax] = useState(false);
@@ -43,15 +41,15 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
     // round 50: Calm Sea lives in the layout now (persistent across routes so
     // the scope change eases); board content sits above it (z-index:1)
     <main style={{ padding: 20, maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-      {expertOn ? (
-        <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-          <Glyph name="chart.trend" size={20} />
-        </div>
-      ) : (
-        <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ ...gb.label, fontSize: 'var(--type-context)', marginBottom: 12 }}>
-          trend board — ranked by sustained deviation
-        </div>
-      )}
+      {/* ROUND 98: the "TREND BOARD" page label + its Expert chart.trend glyph are
+          REMOVED (redundant — we know it's the fleet trend board). The ONE line
+          kept is the sort thesis, as a quiet subtitle (CONTEXT, dimmed) in BOTH
+          default and Expert — the only text that explains the consequence sort, so
+          it earns its place. The reclaimed space settles naturally (marginBottom
+          held), no orphan gap. */}
+      <div {...layer('FleetView / header / sort.subtitle', 'page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped)', 'ranked by sustained deviation')} style={{ ...gb.label, fontSize: 'var(--type-context)', marginBottom: 12 }}>
+        ranked by sustained deviation
+      </div>
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
       {/* round 33: the standing ALERTS card is gone — the health band's

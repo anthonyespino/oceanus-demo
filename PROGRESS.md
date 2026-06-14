@@ -1,3 +1,23 @@
+# PROGRESS — 2026-06-14 (Session 86: ROUND 98 — drop TREND BOARD label + FLEET glyph, keep sort subtitle)
+
+## Done (verified docs/screens/r98-default-top.png, r98-expert-top.png)
+- Removed the "TREND BOARD" page label (default text + Expert chart.trend glyph)
+  and the "FLEET" scope label + ship glyph (FleetHealthBand header) — redundant
+  noise, gone in DEFAULT and EXPERT. Verified: "TREND BOARD" absent both modes.
+- Kept "ranked by sustained deviation" as a quiet SUBTITLE — CONTEXT 13px,
+  ink-muted (rgb 117) dimmed, both modes. The one line stating the consequence-
+  sort thesis (demo opening beat). Verified present both modes.
+- Reflow clean: subtitle sits where the header was; band header row now carries
+  only the range toggle, right-aligned — no orphan gap.
+- Pruned now-unused imports (useLearn/expertOn in FleetView, Label in
+  FleetHealthBand).
+
+## Safety
+Sort behavior unchanged (label cleanup only); subtitle uses existing tier (no
+orphan). TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 85: ROUND 97 — glass toggle on floating sections + CommandBand padding)
 
 ## Done (verified docs/screens/r97-glass-off.png, r97-glass-on.png)

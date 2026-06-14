@@ -21,7 +21,7 @@ import { Stat } from './Stat';
 import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
 import { fmtPct, glassFill } from './gb';
-import { Glyph, Label } from './Glyph';
+import { Glyph } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 import { useLearn } from '../learn/LearnProvider'; // round 90: Learn surfaces descriptor names
@@ -114,13 +114,10 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
     // round 37: the header row (label + status header + range) floats
     // above the fill
     <div style={{ marginBottom: 8 }}>
-      {/* round 33: the standalone status strip dissolved into this micro
-          header row — the counts summon the alert sheet */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 16, marginBottom: 4, flexWrap: 'wrap' }}>
-        <span style={{ display: 'inline-flex', gap: 20, alignItems: 'baseline', minWidth: 0 }}>
-          <Label g="vessel" headerAttrs={layer('FleetHealthBand / header / header.glyph', 'section header · vessel glyph · glyph-only in expert mode', 'FLEET')} style={{ marginBottom: 0 }}>fleet</Label>
-          {/* round 79: status moved to the GLOBAL top bar (AppHeader) */}
-        </span>
+      {/* ROUND 98: the "FLEET" scope label + its ship glyph are REMOVED (redundant
+          mode/scope noise, in default AND Expert). The header row now carries only
+          the range toggle, right-aligned; no orphan gap where the label sat. */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'baseline', gap: 16, marginBottom: 4, flexWrap: 'wrap' }}>
         <span style={{ display: 'inline-flex', gap: 4 }}>
           <button style={toggleStyle(range === 30)} onClick={() => setRange(30)}>30d</button>
           <button style={toggleStyle(range === 90)} onClick={() => setRange(90)}>90d</button>

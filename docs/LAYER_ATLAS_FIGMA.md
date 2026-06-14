@@ -73,8 +73,6 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • degraded.status  → STATUS_COLOR.degraded (red) · count · click filters board · {# vessels degraded}
     • nominal.status  → green (automotive) | ink/secondary (quiet) · count · click filters board · {# vessels nominal}
     • watch.status  → STATUS_COLOR.watch (amber) · count · click filters board · {# vessels watch}
-  Region: header
-    • header.glyph  → section header · vessel glyph · glyph-only in expert mode · FLEET
   Region: mean
     • trend.chart  → ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule) · {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
     • value.text  → type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle) · {30d fleet mean delta %}
@@ -98,7 +96,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: chartBand
     • maximize.glyph  → transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted · {chartMax} toggle
   Region: header
-    • header.glyph  → page header · chart.trend (sorted-bars motif) · glyph-only in expert mode · TREND BOARD — RANKED BY SUSTAINED DEVIATION
+    • sort.subtitle  → page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped) · ranked by sustained deviation
 
 ## Gauge
 
@@ -299,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T17:41:57.382Z*
+*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T17:46:26.811Z*

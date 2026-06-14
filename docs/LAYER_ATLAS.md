@@ -137,9 +137,6 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `census / watch.status`
   - TOKENS — STATUS_COLOR.watch (amber) · count · click filters board
   - BINDS — {# vessels watch}
-- `header / header.glyph`
-  - TOKENS — section header · vessel glyph · glyph-only in expert mode
-  - BINDS — FLEET
 - `mean / trend.chart`
   - TOKENS — ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)
   - BINDS — {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
@@ -179,9 +176,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `chartBand / maximize.glyph`
   - TOKENS — transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted
   - BINDS — {chartMax} toggle
-- `header / header.glyph`
-  - TOKENS — page header · chart.trend (sorted-bars motif) · glyph-only in expert mode
-  - BINDS — TREND BOARD — RANKED BY SUSTAINED DEVIATION
+- `header / sort.subtitle`
+  - TOKENS — page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped)
+  - BINDS — ranked by sustained deviation
 
 ## Gauge
 
@@ -529,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-14T17:41:57.380Z*
+*140 instrumented leaves · 20 components · generated 2026-06-14T17:46:26.810Z*
