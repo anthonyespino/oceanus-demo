@@ -19,7 +19,7 @@ function Row<T extends string | boolean>({ label, options, value, onPick }: {
 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-      <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: NEUTRAL.inkMuted, width: 80 }}>{label}</span>
+      <span style={{ fontSize: 'var(--type-micro)', textTransform: 'uppercase', letterSpacing: 1, color: NEUTRAL.inkMuted, width: 80 }}>{label}</span>
       {options.map((o) => (
         <button key={o.text} onClick={() => onPick(o.v)} style={toggleStyle(o.v === value)}>{o.text}</button>
       ))}
@@ -33,11 +33,11 @@ function Slider({ label, value, min, max, step, onChange }: {
 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-      <span style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: NEUTRAL.inkMuted, width: 80 }}>{label}</span>
+      <span style={{ fontSize: 'var(--type-micro)', textTransform: 'uppercase', letterSpacing: 1, color: NEUTRAL.inkMuted, width: 80 }}>{label}</span>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         style={{ flex: 1, accentColor: 'var(--color-accent-bright)' }} />
-      <span style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkSecondary, width: 32, textAlign: 'right' }}>{value.toFixed(2)}</span>
+      <span style={{ fontSize: 'var(--type-micro)', fontFamily: 'var(--font-data)', color: NEUTRAL.inkSecondary, width: 32, textAlign: 'right' }}>{value.toFixed(2)}</span>
     </div>
   );
 }
@@ -45,7 +45,7 @@ function Slider({ label, value, min, max, step, onChange }: {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ fontSize: 9, letterSpacing: 1.4, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 6, borderTop: '1px solid var(--color-line-subtle)', paddingTop: 8 }}>{title}</div>
+      <div style={{ fontSize: 'var(--type-micro)', letterSpacing: 1.4, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 6, borderTop: '1px solid var(--color-line-subtle)', paddingTop: 8 }}>{title}</div>
       {children}
     </div>
   );
@@ -78,7 +78,7 @@ export function DevPanel() {
           position: 'fixed', bottom: 12, right: 12, zIndex: 50,
           width: 30, height: 30, borderRadius: RADIUS,
           border: `1px solid ${NEUTRAL.border}`, background: NEUTRAL.surfaceDim,
-          color: NEUTRAL.inkSecondary, fontSize: 14, cursor: 'pointer',
+          color: NEUTRAL.inkSecondary, fontSize: 'var(--type-context)', cursor: 'pointer',
         }}
       >
         ⚙
@@ -95,9 +95,9 @@ export function DevPanel() {
         borderRadius: RADIUS, padding: 12,
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 10, letterSpacing: 1.2, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 4 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 'var(--type-micro)', letterSpacing: 1.2, textTransform: 'uppercase', color: NEUTRAL.inkMuted, marginBottom: 4 }}>
         <span>settings (D or ⚙)</span>
-        <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: NEUTRAL.inkSecondary, cursor: 'pointer', fontSize: 12 }}>✕</button>
+        <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: NEUTRAL.inkSecondary, cursor: 'pointer', fontSize: 'var(--type-context)' }}>✕</button>
       </div>
 
       <Section title="scenario">
@@ -107,7 +107,7 @@ export function DevPanel() {
               key={s.id}
               {...layer('SettingsSheet / scenario / scenario.chip', 'scenario library chip · accent when active · synthetic overlay (demo = base seed)', '{scenario id} → applies overlay')}
               onClick={() => f.setScenario(s.id)}
-              style={{ ...toggleStyle(f.scenario === s.id), fontSize: 10 }}
+              style={{ ...toggleStyle(f.scenario === s.id), fontSize: 'var(--type-micro)' }}
             >
               {s.label}
             </button>
@@ -165,7 +165,7 @@ export function DevPanel() {
         <Slider label="magnify" value={f.mag} min={0} max={2.5} step={0.05} onChange={f.setMag} />
         {/* round 50: water readout — scope + the amplitude/frequency inputs
             feeding the shader (dev only; no on-screen label in default mode) */}
-        <div style={{ fontSize: 10, fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>
+        <div style={{ fontSize: 'var(--type-micro)', fontFamily: 'var(--font-data)', color: NEUTRAL.inkMuted, marginBottom: 6, marginLeft: 86 }}>
           water · {water.scope}{scope === 'vessel' ? ` ${vesselId}` : ''} · amp {water.amp.toFixed(2)} · freq {water.freq.toFixed(2)}
         </div>
       </Section>

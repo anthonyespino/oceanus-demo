@@ -55,7 +55,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
     color: active ? NEUTRAL.ink : NEUTRAL.inkMuted,
     borderRadius: RADIUS,
     padding: '0 6px',
-    fontSize: 10,
+    fontSize: 'var(--type-micro)',
     fontFamily: FONT.data,
     cursor: 'pointer',
   });
@@ -91,7 +91,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
           </table>
           {shared !== null && (
             <Field level="vessel" field="crew.onboard_since">
-              <div {...layer('CrewLogPanel / roster / since.text', 'font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)', '{crew.onboard_since shared date + days}')} style={{ marginTop: 6, fontFamily: 'var(--font-data)', fontSize: 12, color: 'var(--color-ink-muted)' }}>
+              <div {...layer('CrewLogPanel / roster / since.text', 'font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)', '{crew.onboard_since shared date + days}')} style={{ marginTop: 6, fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: 'var(--color-ink-muted)' }}>
                 all aboard since {fmtDay(shared)} · {Math.floor((now - shared) / 86_400_000)}d
               </div>
             </Field>
@@ -105,7 +105,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
           <div {...layer('CrewLogPanel / log / modeStrip.chart', 'MODE_COLOR segments · line/subtle dividers — recent memory, same family as the log (round 30)', '{24h minute modes → segments}')} style={{ display: 'flex', width: '100%', height: 20 }}>
             {segments.map((seg, i) => (
               <div key={i} title={`${seg.mode} — ${(seg.minutes / 60).toFixed(1)} h`}
-                style={{ width: `${(seg.minutes / vessel.history.minutes.length) * 100}%`, background: MODE_COLOR[seg.mode], borderRight: '1px solid var(--color-line-subtle)', overflow: 'hidden', fontSize: 9, textAlign: 'center', lineHeight: '20px', whiteSpace: 'nowrap', fontFamily: FONT.data }}>
+                style={{ width: `${(seg.minutes / vessel.history.minutes.length) * 100}%`, background: MODE_COLOR[seg.mode], borderRight: '1px solid var(--color-line-subtle)', overflow: 'hidden', fontSize: 'var(--type-micro)', textAlign: 'center', lineHeight: '20px', whiteSpace: 'nowrap', fontFamily: FONT.data }}>
                 {seg.minutes > 120 ? seg.mode : ''}
               </div>
             ))}
@@ -123,7 +123,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
               ))}
             </span>
           </div>
-          <div style={{ fontFamily: FONT.data, fontSize: 12, marginTop: 6, lineHeight: 1.7 }}>
+          <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', marginTop: 6, lineHeight: 1.7 }}>
             {events.length === 0 && <div style={{ color: NEUTRAL.inkMuted }}>no events in window</div>}
             {events.map((e, i) => (
               <div key={i} {...layer('CrewLogPanel / log / entry.text', 'font/data 12 terminal grammar · alert lines tint by level (advisory muted, A6)', '{stamp · type · text} newest first')} style={{ color: e.level ? LEVEL_COLOR[e.level] : NEUTRAL.inkSecondary, whiteSpace: 'pre' }}>

@@ -31,7 +31,7 @@ function MasterClock() {
     <span
       {...layer('AppHeader / clock / master.clock.text', 'global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock', 'system UTC now')}
       title="global UTC (Zulu) — system wall clock"
-      style={{ fontFamily: 'var(--font-data)', fontSize: 12, color: 'var(--color-ink-secondary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
+      style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: 'var(--color-ink-secondary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
     >
       {z}
     </span>
@@ -44,7 +44,7 @@ export function LiveControls() {
   return (
     <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
       {live && <span className="live-dot" title="live ticks running" />}
-      <span style={{ fontSize: 12, color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>
+      <span style={{ fontSize: 'var(--type-context)', color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>
         sim clock {simTime ? fmtTime(simTime) : '—'}
       </span>
       <button style={btn(live)} onClick={() => setLive(!live)}>
@@ -80,7 +80,7 @@ export function AppHeader() {
       }}
     >
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18, minWidth: 0 }}>
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: 18, letterSpacing: 2, whiteSpace: 'nowrap' }}>
+        <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--type-display)', letterSpacing: 2, whiteSpace: 'nowrap' }}>
           OCEANUS FLEET
         </span>
         <StatusHeader parts="health" />

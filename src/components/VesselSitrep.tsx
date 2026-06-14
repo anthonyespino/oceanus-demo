@@ -15,7 +15,7 @@ export function VesselSitrep() {
         padding: 'var(--pad-section)',
         marginBottom: 8,
         fontFamily: FONT.data,
-        fontSize: 12,
+        fontSize: 'var(--type-context)',
         color: NEUTRAL.inkMuted,
       }}
     >

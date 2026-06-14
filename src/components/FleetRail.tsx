@@ -19,7 +19,7 @@ import { compareVessels } from '../data/fleetState';
 import { useFleet, type ColorTreatment } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
 import { Glyph, MODE_GLYPH } from './Glyph';
-import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, TYPE, selectionBorder } from './probeTokens';
+import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, FONT, selectionBorder } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const ACTIVE_MODES = new Set(['TRANSIT', 'STATION']);
@@ -62,7 +62,7 @@ export function FleetRail({
         style={{
           display: expertOn ? 'flex' : 'block',
           justifyContent: expertOn ? 'center' : undefined,
-          ...TYPE.meta,
+          fontFamily: FONT.data, fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums',
           color: NEUTRAL.inkSecondary,
           textDecoration: expertOn ? 'none' : 'underline',
           padding: '4px 8px',
@@ -99,7 +99,7 @@ export function FleetRail({
               textDecoration: 'none',
               color: alerted && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink,
               fontWeight: selected ? 700 : 400,
-              fontSize: 13,
+              fontSize: 'var(--type-context)',
               opacity: dim ? 0.45 : 1,
             }}
           >

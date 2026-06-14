@@ -13,8 +13,8 @@ export function DataRow({ label, value }: { label: React.ReactNode; value: React
   const { expertOn } = useLearn();
   return (
     <div style={{ display: 'flex', justifyContent: expertOn ? 'flex-end' : 'space-between', alignItems: 'baseline', gap: 12 }}>
-      {!expertOn && <span style={{ textAlign: 'left', fontSize: 12, color: NEUTRAL.inkMuted }}>{label}</span>}
-      <span style={{ textAlign: 'right', fontSize: 12, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink }}>
+      {!expertOn && <span style={{ textAlign: 'left', fontSize: 'var(--type-context)', color: NEUTRAL.inkMuted }}>{label}</span>}
+      <span style={{ textAlign: 'right', fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink }}>
         {value}
       </span>
     </div>

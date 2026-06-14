@@ -26,7 +26,7 @@ function lastPort(vessel: VesselState): string | null {
   return null;
 }
 
-const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
+const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)' };
 const node: React.CSSProperties = { width: 7, height: 7, background: NEUTRAL.inkSecondary, flexShrink: 0 };
 
 export function RoutePanel({ vessel }: { vessel: VesselState }) {
@@ -65,7 +65,7 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
       <div>
         {/* distance-to-go: a real text slot, right-aligned above the strip */}
         {toGoNm !== null && (
-          <div style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginBottom: 4 }}>
+          <div style={{ ...mono, fontSize: 'var(--type-micro)', color: NEUTRAL.inkMuted, textAlign: 'right', marginBottom: 4 }}>
             {toGoNm.toFixed(0)} NM TO GO
           </div>
         )}
@@ -94,7 +94,7 @@ export function RoutePanel({ vessel }: { vessel: VesselState }) {
           </div>
         </div>
         {calls[1] && (
-          <div style={{ ...mono, fontSize: 10, color: NEUTRAL.inkMuted, textAlign: 'right', marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div style={{ ...mono, fontSize: 'var(--type-micro)', color: NEUTRAL.inkMuted, textAlign: 'right', marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             then {calls[1].port}
           </div>
         )}

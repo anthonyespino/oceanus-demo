@@ -69,7 +69,7 @@ export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
 
   const plotW = Math.max(100, w - LABEL_W);
   const x = (t: number) => Math.min(0.97, Math.max(0, (t - now) / (WINDOW_H * HOUR_MS))) * plotW;
-  const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
+  const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)' };
 
   return (
     // round 37: header floats above the fill
@@ -81,7 +81,7 @@ export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
           {/* axis header */}
           <div style={{ display: 'flex', marginLeft: LABEL_W, position: 'relative', height: 16 }}>
             {[12, 24, 36, 48, 60, 72].map((h) => (
-              <span key={h} style={{ ...mono, fontSize: 9, color: NEUTRAL.inkMuted, position: 'absolute', left: x(now + h * HOUR_MS) - 10 }}>
+              <span key={h} style={{ ...mono, fontSize: 'var(--type-micro)', color: NEUTRAL.inkMuted, position: 'absolute', left: x(now + h * HOUR_MS) - 10 }}>
                 +{h}H
               </span>
             ))}
@@ -130,11 +130,11 @@ export function PortCallsTimeline({ fleet }: { fleet: VesselState[] }) {
                       <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {b.vessel.static.name.toUpperCase()}
                       </span>
-                      <span style={{ color: NEUTRAL.inkMuted, fontSize: 10, flexShrink: 0 }}>
+                      <span style={{ color: NEUTRAL.inkMuted, fontSize: 'var(--type-micro)', flexShrink: 0 }}>
                         {b.etaMs === null ? 'IN PORT' : new Date(b.etaMs).toISOString().slice(11, 16) + 'Z'}
                       </span>
                       {b.bunker && (
-                        <span style={{ fontSize: 9, color: 'var(--color-alert-advisory)', border: '1px solid var(--color-alert-advisory)', borderRadius: RADIUS, padding: '0 4px' }}>
+                        <span style={{ fontSize: 'var(--type-micro)', color: 'var(--color-alert-advisory)', border: '1px solid var(--color-alert-advisory)', borderRadius: RADIUS, padding: '0 4px' }}>
                           BUNKER
                         </span>
                       )}

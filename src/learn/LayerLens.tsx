@@ -94,12 +94,12 @@ export function LayerLens() {
           zIndex: 66, pointerEvents: 'none',
           background: 'var(--color-surface-overlay)', border: '1px solid var(--color-accent-bright)',
           borderRadius: 1, padding: '8px 10px', // RADIUS token value
-          fontFamily: 'var(--font-data)', fontSize: 11, lineHeight: 1.6,
+          fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', lineHeight: 1.6,
         }}>
           {row('LAYER', info.path)}
           {info.tokens && row('TOKENS', info.tokens)}
           {info.binds && row('BINDS', info.binds)}
-          <div style={{ color: 'var(--color-ink-muted)', marginTop: 2, fontSize: 10 }}>click — copy layer path</div>
+          <div style={{ color: 'var(--color-ink-muted)', marginTop: 2, fontSize: 'var(--type-micro)' }}>click — copy layer path</div>
         </div>
       )}
       {toast && (
@@ -107,7 +107,7 @@ export function LayerLens() {
           position: 'fixed', bottom: 48, left: '50%', transform: 'translateX(-50%)',
           zIndex: 71, background: 'var(--color-surface-overlay)',
           border: '1px solid var(--color-accent-bright)', borderRadius: 1, padding: '6px 14px', // RADIUS token value
-          fontFamily: 'var(--font-data)', fontSize: 11, color: 'var(--color-ink-primary)',
+          fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: 'var(--color-ink-primary)',
           maxWidth: '70vw', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>
           {toast}

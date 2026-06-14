@@ -1,3 +1,40 @@
+# PROGRESS — 2026-06-13 (Session 75: ROUND 86 — APPLY UNIFIED TYPE SCALE (global, single source))
+
+## Single source established
+- CSS `--type-*` tokens are now the ONLY type-size system. Defined: display 24 /
+  hero 20 / primary 16 / context 13 / micro 10 / micro-floor 8 (+ context-mono 12.5,
+  defined-but-unused). Deleted: `--type-hero-size` (30), `--type-data-size`,
+  `--type-micro-size`, and **probeTokens `TYPE`** (name/hero/meta/micro).
+- **grep-confirmed**: no component reads a type size from probeTokens; no
+  `--type-hero-size` anywhere; the only hardcoded fontSize left is the documented
+  16px "✓" checkmark orphan (+ the computed responsive GULF-OF-MEXICO furniture
+  label). `gb.big` → var(--type-hero); body base → var(--type-context).
+
+## Verified on the running build (computed sizes)
+- name **24** (display) · gauge value **20** (hero) · mission clock **16**
+  (primary) · context elements **13** · section header POSITION **11** · gauge
+  ticks/captions **10** (micro) · EngineTwin floor **8**.
+- DISPLAY/HERO collision resolved: name (24) out-ranks gauge values (20); nothing
+  on the old 30. CONTEXT collapsed 11–15 → 13 (fleet tile footer was 14 → now 13;
+  progress %/destination now 13 — the "too big" complaint solved). MICRO collapsed
+  8–11 → 10 with the 8 floor only on EngineTwin.
+- Screens: `r86-vessel.png`, `r86-fleet.png`, `r86-tile.png` (TERREBONNE 24 / −3.0%
+  20 / footer 13).
+
+## Mono/UI optical — what I landed on
+Defined `--type-context-mono: 12.5` for the case Plex (mono) reads larger than UI
+at 13. On render the single 13 read at equal rank for both (most context is Plex;
+the UI context — FleetRail names, computed 13 — matched). **Landed on a single
+`--type-context` (13)** for both families; the 12.5 mono token is defined and
+available if a later round wants the 0.5px split.
+
+## Orphans handled
+16px decorative ✓ kept (intentional); vestigial TYPE.name (21) deleted; body base
+14 → token. Section-header treatment (11, gb.label) left separate as the labeling
+style. TSC-OK · LINT-CLEAN · verify PASSED · offline build clean.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 74: ROUND 85 — TYPE SCALE AUDIT (report only, no changes))
 
 Inventory pulled from source (CSS tokens + probeTokens/gb + every inline

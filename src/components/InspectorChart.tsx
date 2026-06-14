@@ -130,7 +130,7 @@ export function InspectorChart({
                     onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSplay(splay === i ? null : i)}>
                     <rect x={c.x - 12} y={c.y - 12} width={24} height={24} fill="transparent" />
                     <circle cx={c.x} cy={c.y} r={4.5} fill="#616161" opacity={0.85} />
-                    <text x={c.x + 7} y={c.y + 3} fontSize={9} fill="#7a7a7a">{c.members.length} ▾</text>
+                    <text x={c.x + 7} y={c.y + 3} style={{ fontSize: 'var(--type-micro)' }} fill="#7a7a7a">{c.members.length} ▾</text>
                   </g>
                 ),
               )}
@@ -160,7 +160,7 @@ export function InspectorChart({
                   <g>
                     <line x1={x0} y1={y0} x2={x0 + dx * t1} y2={y0 + dy * t1}
                       stroke="#5e5e5e" strokeWidth={0.75} strokeDasharray="6 4" />
-                    <text x={lx} y={ly - 5} fontSize={9} fill={CHART_INK} textAnchor="middle">
+                    <text x={lx} y={ly - 5} style={{ fontSize: 'var(--type-micro)' }} fill={CHART_INK} textAnchor="middle">
                       BRG {next!.port.replace(',', '').toUpperCase()}
                     </text>
                     {1 <= tEdge && (
@@ -175,7 +175,7 @@ export function InspectorChart({
               <path d={VESSEL_MARKER_PATH}
                 transform={`translate(${px(pos.lon).toFixed(1)} ${py(pos.lat).toFixed(1)}) rotate(${pos.heading_deg.toFixed(0)}) scale(1.3)`}
                 fill={focusFill} stroke="#141414" strokeWidth={0.75} />
-              <text x={px(pos.lon) + 12} y={py(pos.lat) + 4} fontSize={11} fontWeight={700} fill="var(--color-ink-primary)">
+              <text x={px(pos.lon) + 12} y={py(pos.lat) + 4} style={{ fontSize: 'var(--type-context)' }} fontWeight={700} fill="var(--color-ink-primary)">
                 {vessel.static.name}
               </text>
             </>

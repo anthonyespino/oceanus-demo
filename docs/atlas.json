@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T00:55:47.785Z",
+  "generated": "2026-06-14T01:34:49.104Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -547,7 +547,7 @@
       "component": "Gauge",
       "region": "readout",
       "leaf": "value.text",
-      "tokens": "font/data tabular · type/hero×k · earned color (ruling 14)",
+      "tokens": "font/data tabular · type/HERO (var --type-hero) · earned color (ruling 14)",
       "binds": "{display ?? round(value)+unit}",
       "file": "src/components/Gauge.tsx"
     },
@@ -1186,7 +1186,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "name.text",
-      "tokens": "type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed)",
+      "tokens": "type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)",
       "binds": "{vessel.static.name}",
       "file": "src/components/VesselTile.tsx"
     },
@@ -1249,7 +1249,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "trend.value.text",
-      "tokens": "type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal",
+      "tokens": "type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal",
       "binds": "{derived.trend_30d} %/30d — the primary board signal (ruling 13)",
       "file": "src/components/VesselTile.tsx"
     }

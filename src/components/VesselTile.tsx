@@ -19,7 +19,7 @@ import { TrendChartFill } from './TrendChartFill';
 import { useContentWidth } from './NauticalChart';
 import { Stat } from './Stat';
 import { fmtPct } from './gb';
-import { RADIUS, STATUS_COLOR, NEUTRAL, TYPE, FONT, ALERT_TEXT_COLOR } from './probeTokens';
+import { RADIUS, STATUS_COLOR, NEUTRAL, FONT, ALERT_TEXT_COLOR } from './probeTokens';
 import { useState } from 'react';
 import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
 import { Glyph } from './Glyph';
@@ -124,7 +124,7 @@ export function VesselTile({
           region. Name position/size (D-DIN)/tint (gold when alerted, neutral
           nominal) unchanged. RADIUS stays 1px (round 36). */}
       <div style={{ padding: mini ? '14px 14px 18px' : '22px 14px 26px', textAlign: 'center' }}>
-        <div {...layer('VesselTile / name.text', 'type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed)', '{vessel.static.name}')} style={{ ...TYPE.name, fontSize: mini ? 18 : 24, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+        <div {...layer('VesselTile / name.text', 'type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)', '{vessel.static.name}')} style={{ fontFamily: FONT.display, fontSize: 'var(--type-display)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
       </div>
       {/* BODY — darker fill (tile base shows through); centered glyph-above-
           value at top, two-column footer pinned to the base (round 63 mock) */}
@@ -133,7 +133,7 @@ export function VesselTile({
         <div style={{ textAlign: 'center' }}>
           <div title="30-day trend" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
             <span {...layer('VesselTile / trend.glyph', 'glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={mini ? 20 : 26} /></span>
-            <span {...layer('VesselTile / trend.value.text', 'type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: mini ? 24 : 'var(--type-hero-size)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+            <span {...layer('VesselTile / trend.value.text', 'type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
               {fmtPct(d.trend_30d)}
               {treatment === 'automotive' && status === 'nominal' && (
                 <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>
@@ -151,7 +151,7 @@ export function VesselTile({
         )}
         {/* 2x: alerts in full text — the tile's reason for being big */}
         {tier === 2 && fullAlerts.length > 0 && (
-          <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 11, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 8, textAlign: 'left', fontFamily: FONT.data, fontSize: 'var(--type-context)', lineHeight: 1.6 }}>
             {fullAlerts.map((a, i) => (
               <div key={i} {...layer('VesselTile / alert.line', 'tag = severity color · message ink/secondary (round 33 grammar) · 2x only', '{alerts[] level + message}')} style={{ color: NEUTRAL.inkSecondary }}>
                 <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
@@ -166,7 +166,7 @@ export function VesselTile({
           </div>
         )}
         {tier === 2 && (
-          <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkSecondary }}>
+          <div style={{ marginTop: 6, textAlign: 'center', fontFamily: FONT.data, fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary }}>
             <Field level="fleet" field="burn_rate_gph" revealed>
               <span>burn {d.burn_rate_gph} gph · next {vessel.history.nextPortCalls[0]?.port ?? '—'}</span>
             </Field>
@@ -179,11 +179,11 @@ export function VesselTile({
           <div style={{ marginTop: 'auto', paddingTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
               <span {...layer('VesselTile / endurance.glyph', 'glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance', 'endurance')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="wave" size={24} /></span>
-              <span {...layer('VesselTile / endurance.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.endurance_hours} h')} style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
+              <span {...layer('VesselTile / endurance.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.endurance_hours} h')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <span {...layer('VesselTile / now.glyph', 'glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline', 'now vs mode baseline')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="clock" size={22} /></span>
-              <span {...layer('VesselTile / now.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
+              <span {...layer('VesselTile / now.glyph', 'glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline', 'now vs mode baseline')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="clock" /></span>
+              <span {...layer('VesselTile / now.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
             </div>
           </div>
         )}

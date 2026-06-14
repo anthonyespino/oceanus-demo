@@ -46,7 +46,7 @@ export function Annotated({
           borderRadius: 1, // RADIUS token value
           padding: '10px 12px',
           fontFamily: 'var(--font-data)',
-          fontSize: 12,
+          fontSize: 'var(--type-context)',
           lineHeight: 1.5,
         }}
       >

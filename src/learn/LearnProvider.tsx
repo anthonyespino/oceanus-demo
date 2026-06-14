@@ -37,7 +37,7 @@ export function useLearn() {
 
 const badge: React.CSSProperties = {
   position: 'fixed', bottom: 12, zIndex: 70,
-  fontFamily: 'var(--font-data)', fontSize: 11, letterSpacing: 1.5,
+  fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', letterSpacing: 1.5,
   color: 'var(--color-accent-bright)', border: '1px solid var(--color-accent-bright)',
   background: 'var(--color-surface-raised)', borderRadius: 1, padding: '4px 10px',
 };

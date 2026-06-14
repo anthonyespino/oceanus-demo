@@ -39,11 +39,20 @@
   /* color/data */
   --color-data-nominal: #3fb950;
   --color-data-stale: #5e5e5e;
-  /* round 7 — card grammar tokens. Anthony retunes the scale here. */
-  --type-label-size: 11px; /* labels whisper */
-  --type-hero-size: 30px; /* values shout — ≈2.7x label */
-  --type-data-size: 13px;
-  --type-micro-size: 11px;
+  /* ROUND 86 — THE unified five-tier type scale (single source of truth; the
+     probeTokens TYPE sizes are deleted so nothing anchors off a second system).
+     Base 13, ~1.2 ratio, snapped to clean px. */
+  --type-display: 24px; /* D-DIN 700 — vessel name, page titles */
+  --type-hero: 20px; /* Plex 500 — gauge values + big data numbers */
+  --type-primary: 16px; /* Plex — mission clock + between hero and context */
+  --type-context: 13px; /* Plex/UI — ALL reference text */
+  --type-context-mono: 12.5px; /* round 86 optical: Plex (mono) reads larger than
+     UI at equal px, so mono context drops 0.5px to read as the same visual rank */
+  --type-micro: 10px; /* Plex — gauge ticks, axis labels */
+  --type-micro-floor: 8px; /* used ONLY where genuinely required (smallest EngineTwin label) */
+  /* section-header LABEL treatment (all-caps letterspaced) — its own role, NOT a
+     tier-scale size (audit confirmed uniform). Kept separate. */
+  --type-label-size: 11px;
   --pad-card: 16px; /* generous air — err roomy */
   --pad-card-dense: 12px; /* round 15: inspector density step */
   --gap-card: 8px; /* round 21 B5: the one gap between cards */
@@ -66,7 +75,7 @@ body {
   background: var(--color-surface-base);
   color: var(--color-ink-primary);
   font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
-  font-size: 14px;
+  font-size: var(--type-context); /* round 86: document base = context tier (was hardcoded 14) */
   /* ROUND 64 (landed round 68): the dashboard is a control surface, not a
      document — click/drag must not leave a blue text-selection smear across
      tiles, gauges, labels. Disable selection app-wide; re-enable only where

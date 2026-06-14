@@ -46,7 +46,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           <Glyph name="chart.trend" size={20} />
         </div>
       ) : (
-        <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ ...gb.label, fontSize: 13, marginBottom: 12 }}>
+        <div {...layer('FleetView / header / header.glyph', 'page header · chart.trend (sorted-bars motif) · glyph-only in expert mode', 'TREND BOARD — RANKED BY SUSTAINED DEVIATION')} style={{ ...gb.label, fontSize: 'var(--type-context)', marginBottom: 12 }}>
           trend board — ranked by sustained deviation
         </div>
       )}

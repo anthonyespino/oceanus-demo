@@ -31,8 +31,8 @@ const FEED_ABBREV: Record<string, string> = {
 };
 
 const LEVEL_RANK: Record<string, number> = { WARNING: 0, CAUTION: 1, ADVISORY: 2 };
-const item: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11, whiteSpace: 'nowrap' };
-const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 12, lineHeight: 1.8, display: 'flex', justifyContent: 'space-between', gap: 16 };
+const item: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', whiteSpace: 'nowrap' };
+const popRow: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', lineHeight: 1.8, display: 'flex', justifyContent: 'space-between', gap: 16 };
 
 // ROUND 73: the status row splits by information TYPE. `parts` lets the
 // VesselCommandBand render the ALERT counts (consequence) at the top near the
@@ -152,7 +152,7 @@ export function StatusHeader({ parts = 'all' }: { parts?: 'all' | 'alerts' | 'he
                   key={`${v.static.id}-${a.code}-${i}`}
                   {...layer('StatusHeader / alerts / line.text', 'round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary', '{alert.level · vessel.name → /vessel/id · alert.message}')}
                   href={`/vessel/${v.static.id}`}
-                  style={{ display: 'block', textDecoration: 'none', fontFamily: FONT.data, fontSize: 12, lineHeight: 1.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  style={{ display: 'block', textDecoration: 'none', fontFamily: FONT.data, fontSize: 'var(--type-context)', lineHeight: 1.9, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                 >
                   <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span>{' '}
                   <span style={{ color: 'var(--color-accent-bright)', textDecoration: 'underline' }}>{v.static.name}</span>{' '}

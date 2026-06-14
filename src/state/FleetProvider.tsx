@@ -185,7 +185,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
       {active.synthetic && (
         <div style={{
           position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 70,
-          fontFamily: 'var(--font-data)', fontSize: 11, letterSpacing: 1.5,
+          fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', letterSpacing: 1.5,
           color: 'var(--color-alert-caution)', border: '1px solid var(--color-alert-caution)',
           background: 'var(--color-surface-raised)', borderRadius: 1, padding: '4px 10px', // RADIUS token value (state layer)
         }}>

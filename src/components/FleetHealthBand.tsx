@@ -132,7 +132,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
                 textAlign: 'left',
               }}
             >
-              <Stat label={cls} value={counts[cls]} size={26} />
+              <Stat label={cls} value={counts[cls]} />
             </button>
           ))}
         </div>
@@ -145,7 +145,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
             }}
           >
             <span {...layer('FleetHealthBand / mean / value.text', 'type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)', '{30d fleet mean delta %}')}>
-              <Stat label="30d fleet mean" value={fmtPct(mean30)} size={ikbBand ? 26 : 30} onFill={ikbBand} />
+              <Stat label="30d fleet mean" value={fmtPct(mean30)} onFill={ikbBand} />
             </span>
             <Field level="fleet" field="fleet_total_daily_spend" />
             {/* ⚖ #4 spend slot: renders only if/when ruled in (Field → null while UNDEFINED) */}
@@ -164,7 +164,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         {/* CELL 3 — fleet burn now */}
         <div style={{ ...cell, flexShrink: 0 }}>
           <span {...layer('FleetHealthBand / burn / value.text', 'type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)', '{sum of live fleet burn} gph')}>
-            <Stat label="fleet burn" value={`${burnNow.toLocaleString()} gph`} size={26} />
+            <Stat label="fleet burn" value={`${burnNow.toLocaleString()} gph`} />
           </span>
           <span {...layer('FleetHealthBand / burn / spark.chart', 'ink/secondary 1px · auto-ranged (never approaches 0)', '{fleet total burn, 24h hourly}')}>
             <Sparkline values={burn24} width={120} height={24} zeroBaseline={false} />
@@ -173,9 +173,9 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         {/* CELL 4 — next 24h: arrivals + bunker flags, linking to the board */}
         <a href="#port-calls" style={{ ...cell, flexShrink: 0, textDecoration: 'none', color: NEUTRAL.ink, cursor: 'pointer' }}>
           <span {...layer('FleetHealthBand / arrivals / value.text', 'type/hero · font/data tabular · ink/primary · links to #port-calls', '{# port calls in next 24h}')}>
-            <Stat label="arrivals 24h" value={arrivals} size={26} />
+            <Stat label="arrivals 24h" value={arrivals} />
           </span>
-          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)', '{# bunker-flagged calls in next 24h}')} style={{ fontFamily: 'var(--font-data)', fontSize: 11, color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
+          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)', '{# bunker-flagged calls in next 24h}')} style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
             {bunkers} BUNKER {bunkers === 1 ? 'flag' : 'flags'}
           </span>
         </a>

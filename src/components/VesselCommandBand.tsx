@@ -103,7 +103,7 @@ function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary }: { g: G
   return (
     <span {...attrs} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
       <Glyph name={g} size={15} color={glyphColor} />
-      <span style={{ fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
+      <span style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
     </span>
   );
 }
@@ -181,7 +181,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
     </Field>
   );
   const nameStyle: React.CSSProperties = {
-    fontFamily: FONT.display, fontSize: 'var(--type-hero-size)', fontWeight: 700,
+    fontFamily: FONT.display, fontSize: 'var(--type-display)', fontWeight: 700,
     textTransform: 'uppercase', letterSpacing: 1, lineHeight: 1.1,
   };
   // Round 34: ONE visual frame — the primary row and the profile/facts
@@ -198,9 +198,9 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   if (min) {
     return (
       <section style={{ ...sticky, marginBottom: 8, borderRadius: RADIUS, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
-        <span style={{ ...nameStyle, fontSize: 18 }}>{vessel.static.name}</span>
+        <span style={{ ...nameStyle, fontSize: 'var(--type-display)' }}>{vessel.static.name}</span>
         {modeChip}
-        <span style={{ fontFamily: FONT.data, fontSize: 14, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
+        <span style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
           {locationName ? `${locationName.toUpperCase()} · ` : ''}{clock}
         </span>
         <button aria-label="expand command band" style={{ ...chevronBtn, position: 'absolute', top: 8, right: 8 }} onClick={() => togglePanel(`${id}:command`)}>
@@ -213,13 +213,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   // voyage profile strip (round 32, replaces the round-30 route row) —
   // automotive trip canvas; absolute ETA + Z and distance-to-go live HERE
   let profile: React.ReactNode;
-  const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 11 };
+  const mono: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)' };
   // ROUND 83: ALL voyage context unified to the wind/waves register (the
   // environment-context scale) — font/data 15, dimmed, no tint/weight (reference
   // data). Endpoint labels use the same scale but ink/secondary (they're the
   // toggle + identity). Name / gauge values / mission clock are NOT touched.
-  const colItem: React.CSSProperties = { fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.inkMuted, whiteSpace: 'nowrap' };
-  const endpointLabel: React.CSSProperties = { fontFamily: FONT.data, fontSize: 15, color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' };
+  const colItem: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: NEUTRAL.inkMuted, whiteSpace: 'nowrap' };
+  const endpointLabel: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' };
   const toggleBtn: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%', background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer', color: 'inherit', font: 'inherit' };
   // current-position reference (Venice = nearest port to where the vessel is NOW)
   const posRef = nearestNm < 3 ? `alongside ${nearest.name}` : `${nearestNm.toFixed(0)} nm from ${nearest.name}`;
@@ -343,7 +343,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
             <div {...layer('VesselCommandBand / centerStack / name.text', 'type/hero · font/display caps · ink/primary', '{vessel.static.name}')} style={nameStyle}>{vessel.static.name}</div>
             {/* round 52: master line — crew.glyph (slot, placeholder until drawn)
                 + name; "master" word dropped, no box, no tooltip */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary }}>
               <span {...layer('VesselCommandBand / centerStack / crew.glyph', 'glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"', 'crew Master')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="crew" size={13} /></span>
               <span {...layer('VesselCommandBand / centerStack / master.name.text', 'font/data 12 · ink/secondary · name as value (no label, no stroke)', '{crew Master.name}')}>{master?.name ?? '—'}</span>
             </div>
@@ -351,12 +351,12 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 (T− transit · ON STATION · IN PORT · STANDBY). Clock sits here,
                 ABOVE the place line (round-73 order: name · master · clock ·
                 place · wind/waves). Clock stays text; white when still (ruling 14). */}
-            <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14)', '{T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'calc(var(--type-hero-size) * 0.6)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
+            <span {...layer('VesselCommandBand / centerStack / clock.text', 'type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14)', '{T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-primary)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
               {clock}
             </span>
             {/* round 52: place line — anchor.glyph (slot, placeholder) + place */}
             {locationName && (
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 12, color: NEUTRAL.inkSecondary }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT.data, fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary }}>
                 <span {...layer('VesselCommandBand / centerStack / anchor.glyph', 'glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place', 'place')} style={{ lineHeight: 0, color: NEUTRAL.inkMuted }}><Glyph name="anchor" size={13} /></span>
                 <span {...layer('VesselCommandBand / centerStack / location.text', 'font/data 12 · ink/secondary · place as value', '{destination | moored port | work site}')}>{locationName.toUpperCase()}</span>
               </div>

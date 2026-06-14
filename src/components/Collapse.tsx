@@ -31,7 +31,7 @@ export function Collapse({
     return (
       <section style={{ ...gb.box, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
         <Label g={glyph} style={{ marginBottom: 0 }}>{title}</Label>
-        <span style={{ fontFamily: 'var(--font-data)', fontSize: 12, color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {summary}
         </span>
         <button aria-label={`expand ${title}`} style={btn} onClick={() => togglePanel(k)}>

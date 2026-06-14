@@ -74,7 +74,7 @@ export function ClusterSplay({
             alignItems: 'center',
             gap: 6,
             padding: '2px 6px',
-            fontSize: 12,
+            fontSize: 'var(--type-context)',
             color: NEUTRAL.ink,
             textDecoration: 'none',
           }}

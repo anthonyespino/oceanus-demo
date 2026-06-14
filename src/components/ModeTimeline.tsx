@@ -30,7 +30,7 @@ export function ModeTimeline({ vessel }: { vessel: VesselState }) {
               background: MODE_COLOR[seg.mode],
               borderRight: '1px solid var(--color-line-subtle)',
               overflow: 'hidden',
-              fontSize: 10,
+              fontSize: 'var(--type-micro)',
               textAlign: 'center',
               lineHeight: '28px',
               whiteSpace: 'nowrap',
@@ -40,7 +40,7 @@ export function ModeTimeline({ vessel }: { vessel: VesselState }) {
           </div>
         ))}
       </div>
-      <div style={{ ...gb.dim, fontSize: 11, marginTop: 2 }}>← 24 h ago · now →</div>
+      <div style={{ ...gb.dim, fontSize: 'var(--type-context)', marginTop: 2 }}>← 24 h ago · now →</div>
     </section>
   );
 }

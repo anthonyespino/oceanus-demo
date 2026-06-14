@@ -36,11 +36,11 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   const pt = liveOperatingPoint(vessel.history);
   const status = vesselStatus(vessel.alerts);
   const sparse = env.transitHours < MIN_TRANSIT_HOURS;
-  const mono = { fontFamily: FONT.data, fontSize: 9, fill: '#6e7681' };
+  const mono = { fontFamily: FONT.data, fontSize: 'var(--type-micro)', fill: '#6e7681' };
 
   if (env.bins.length < 3) {
     return (
-      <div style={{ fontFamily: FONT.data, fontSize: 11, color: NEUTRAL.inkMuted, padding: 24, textAlign: 'center' }}>
+      <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', color: NEUTRAL.inkMuted, padding: 24, textAlign: 'center' }}>
         INSUFFICIENT TRANSIT HISTORY
       </div>
     );
@@ -110,7 +110,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
           )}
           {/* on-chart micro labels (round 21 B1) */}
           {!sparse && env.bins.length > 0 && (
-            <text x={x(env.bins[0].speed) + 4} y={y(env.bins[0].p75) - 5} {...mono} fontSize={8.5}>
+            <text x={x(env.bins[0].speed) + 4} y={y(env.bins[0].p75) - 5} {...mono} style={{ fontSize: 'var(--type-micro)' }}>
               12-MO NORMAL
             </text>
           )}
@@ -128,13 +128,13 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
                 fill={status !== 'nominal' ? STATUS_COLOR[status] : 'none'}
                 stroke={ACCENT.bright} strokeWidth={2}
               />
-              <text x={x(pt.speed)} y={y(pt.galNm) - 10} textAnchor="middle" {...mono} fontSize={8.5}>NOW</text>
+              <text x={x(pt.speed)} y={y(pt.galNm) - 10} textAnchor="middle" {...mono} style={{ fontSize: 'var(--type-micro)' }}>NOW</text>
               <text
                 {...layer('EfficiencyCurve / plot / delta.text', 'font/data 10 · status tint (earned) — labeled: speed-specific, distinct from vs-baseline', '{live gal/nm / envelope median − 1} vs envelope')}
                 x={x(pt.speed) + 130 > w - M.r ? x(pt.speed) - 11 : x(pt.speed) + 11}
                 y={(y(pt.galNm) + y(medianAtPt)) / 2 + 3}
                 textAnchor={x(pt.speed) + 130 > w - M.r ? 'end' : 'start'}
-                {...mono} fontSize={10}
+                {...mono} style={{ fontSize: 'var(--type-micro)' }}
                 fill={status !== 'nominal' ? STATUS_COLOR[status] : '#a9b1ba'}
               >
                 {fmtPct(deltaPct!)} vs envelope
@@ -142,13 +142,13 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
             </g>
           )}
           {sparse && (
-            <text x={w / 2} y={H / 2} textAnchor="middle" {...mono} fontSize={11}>
+            <text x={w / 2} y={H / 2} textAnchor="middle" {...mono} style={{ fontSize: 'var(--type-context)' }}>
               INSUFFICIENT TRANSIT HISTORY
             </text>
           )}
         </svg>
       {!pt && !sparse && (
-        <div style={{ position: 'absolute', right: 10, top: 8, fontFamily: FONT.data, fontSize: 10, color: NEUTRAL.inkMuted }}>
+        <div style={{ position: 'absolute', right: 10, top: 8, fontFamily: FONT.data, fontSize: 'var(--type-micro)', color: NEUTRAL.inkMuted }}>
           NO LIVE POINT — NOT IN TRANSIT
         </div>
       )}

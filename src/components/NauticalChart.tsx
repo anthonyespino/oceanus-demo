@@ -134,7 +134,7 @@ export function FollowChip({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       style={{
         position: 'absolute', top: 8, right: 8, zIndex: 4,
-        fontFamily: 'var(--font-data)', fontSize: 10, letterSpacing: 1,
+        fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1,
         color: 'var(--color-accent-bright)', border: '1px solid var(--color-accent-bright)',
         background: 'var(--color-surface-raised)', borderRadius: 1, padding: '2px 8px', cursor: 'pointer', // RADIUS token value
       }}
@@ -196,7 +196,7 @@ export function NauticalChart({
           <line x1={px(lon)} y1={0} x2={px(lon)} y2={height} stroke={GRID} strokeWidth={0.5} />
           <line x1={px(lon)} y1={0} x2={px(lon)} y2={6} stroke={CHART_INK} strokeWidth={1.5} />
           <line x1={px(lon)} y1={height - 6} x2={px(lon)} y2={height} stroke={CHART_INK} strokeWidth={1.5} />
-          <text x={px(lon) + 3} y={14} fontSize={9} fill={CHART_INK}>{Math.abs(lon)}°W</text>
+          <text x={px(lon) + 3} y={14} style={{ fontSize: 'var(--type-micro)' }} fill={CHART_INK}>{Math.abs(lon)}°W</text>
         </g>
       ))}
       {ticks(frame.latMin, frame.latMax, latStep).map((lat) => (
@@ -204,7 +204,7 @@ export function NauticalChart({
           <line x1={0} y1={py(lat)} x2={width} y2={py(lat)} stroke={GRID} strokeWidth={0.5} />
           <line x1={0} y1={py(lat)} x2={6} y2={py(lat)} stroke={CHART_INK} strokeWidth={1.5} />
           <line x1={width - 6} y1={py(lat)} x2={width} y2={py(lat)} stroke={CHART_INK} strokeWidth={1.5} />
-          <text x={9} y={py(lat) - 3} fontSize={9} fill={CHART_INK}>{lat}°N</text>
+          <text x={9} y={py(lat) - 3} style={{ fontSize: 'var(--type-micro)' }} fill={CHART_INK}>{lat}°N</text>
         </g>
       ))}
       <g {...layer('NauticalChart / furniture / compass.glyph', 'chart ink · ring + needle + N', 'north-up (static)')} transform={`translate(${width - 46}, 52)`}>
@@ -212,14 +212,14 @@ export function NauticalChart({
         <line x1={0} y1={13} x2={0} y2={-13} stroke={CHART_INK} strokeWidth={1} />
         <line x1={-13} y1={0} x2={13} y2={0} stroke={CHART_INK} strokeWidth={0.5} />
         <polygon points="-3.5,-7 0,-16 3.5,-7" fill={CHART_INK} />
-        <text x={0} y={-21} fontSize={10} fill={CHART_INK} textAnchor="middle">N</text>
+        <text x={0} y={-21} style={{ fontSize: 'var(--type-micro)' }} fill={CHART_INK} textAnchor="middle">N</text>
       </g>
       <g {...layer('NauticalChart / furniture / scale.line', 'chart ink · end + mid ticks', '{bar length adapts: 10–200 nm at mid-latitude}')} transform={`translate(20, ${height - 18})`}>
         <line x1={0} y1={0} x2={barNm * pxPerNm} y2={0} stroke={CHART_INK} strokeWidth={1.5} />
         <line x1={0} y1={-4} x2={0} y2={4} stroke={CHART_INK} strokeWidth={1.5} />
         <line x1={(barNm / 2) * pxPerNm} y1={-3} x2={(barNm / 2) * pxPerNm} y2={3} stroke={CHART_INK} strokeWidth={1} />
         <line x1={barNm * pxPerNm} y1={-4} x2={barNm * pxPerNm} y2={4} stroke={CHART_INK} strokeWidth={1.5} />
-        <text x={barNm * pxPerNm + 6} y={3} fontSize={9} fill={CHART_INK}>{barNm} nm</text>
+        <text x={barNm * pxPerNm + 6} y={3} style={{ fontSize: 'var(--type-micro)' }} fill={CHART_INK}>{barNm} nm</text>
       </g>
       {children(px, py)}
     </svg>

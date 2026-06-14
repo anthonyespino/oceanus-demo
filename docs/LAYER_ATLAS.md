@@ -215,7 +215,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — font/data 9 caps letterspaced · ink/muted · hidden in expert mode
   - BINDS — {label}
 - `readout / value.text`
-  - TOKENS — font/data tabular · type/hero×k · earned color (ruling 14)
+  - TOKENS — font/data tabular · type/HERO (var --type-hero) · earned color (ruling 14)
   - BINDS — {display ?? round(value)+unit}
 
 ## InspectorChart
@@ -496,7 +496,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
   - BINDS — {|derived.efficiency_delta_pct|}
 - `name.text`
-  - TOKENS — type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed)
+  - TOKENS — type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)
   - BINDS — {vessel.static.name}
 - `now.glyph`
   - TOKENS — glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline
@@ -517,7 +517,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend
   - BINDS — 30d trend
 - `trend.value.text`
-  - TOKENS — type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal
+  - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*139 instrumented leaves · 20 components · generated 2026-06-14T00:55:47.783Z*
+*139 instrumented leaves · 20 components · generated 2026-06-14T01:34:49.103Z*

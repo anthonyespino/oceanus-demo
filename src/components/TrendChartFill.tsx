@@ -50,7 +50,7 @@ export function TrendChartFill({ values }: { values: number[] }) {
               <line x1={ML} y1={y(v)} x2={w - MR} y2={y(v)}
                 stroke={v === 0 ? 'var(--color-line-strong)' : 'var(--color-line-subtle)'} strokeWidth={v === 0 ? 1.25 : 0.5} />
               <text x={ML - 5} y={y(v) + 3} textAnchor="end"
-                style={{ fontFamily: FONT.data, fontSize: 9 }} fill="var(--color-ink-muted)">
+                style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro)' }} fill="var(--color-ink-muted)">
                 {v === 0 ? '0' : `${v > 0 ? '+' : ''}${v}`}
               </text>
             </g>

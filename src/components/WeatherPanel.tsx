@@ -30,13 +30,13 @@ export function WeatherPanel({ vessel }: { vessel: VesselState }) {
         <Field level="vessel" field="weather.wind">
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <Glyph name="wind" size={16} />
-            <Stat label="wind" value={`${wx.wind_speed_kn} kn`} size={22} />
+            <Stat label="wind" value={`${wx.wind_speed_kn} kn`} />
           </span>
         </Field>
         <Field level="vessel" field="weather.waves">
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <Glyph name="wave" size={16} />
-            <Stat label="waves" value={`${wx.wave_height_ft} ft`} size={22} />
+            <Stat label="waves" value={`${wx.wave_height_ft} ft`} />
           </span>
         </Field>
       </div>

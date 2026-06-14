@@ -72,15 +72,12 @@ export function toggleStyle(active: boolean): React.CSSProperties {
     color: NEUTRAL.ink,
     borderRadius: RADIUS,
     padding: '1px 8px',
-    fontSize: 11,
+    fontSize: 'var(--type-context)',
     cursor: 'pointer',
   };
 }
 
-/** type/display · type/label · type/data · type/micro — 4 steps, no more. */
-export const TYPE = {
-  name: { fontFamily: FONT.display, fontSize: 21, fontWeight: 700, letterSpacing: 0.8, textTransform: 'uppercase' } as React.CSSProperties, // round 22: D-DIN isn't caps-only — caps enforced
-  hero: { fontFamily: FONT.data, fontSize: 15, fontWeight: 500, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
-  meta: { fontFamily: FONT.data, fontSize: 12, fontWeight: 400, fontVariantNumeric: 'tabular-nums' } as React.CSSProperties,
-  micro: { fontSize: 11, fontWeight: 400, color: NEUTRAL.inkMuted } as React.CSSProperties,
-};
+// ROUND 86: the probeTokens TYPE size object is DELETED. Type sizes live in ONE
+// place — the CSS `--type-*` tokens (globals.css). Components reference those
+// tokens directly with the FONT family helpers above; nothing anchors off a
+// second numeric system. (Was: TYPE.name/hero/meta/micro = 21/15/12/11.)

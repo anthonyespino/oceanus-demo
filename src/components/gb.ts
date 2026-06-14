@@ -30,7 +30,7 @@ export const gb = {
     display: 'block',
   } as React.CSSProperties,
   big: {
-    fontSize: 'var(--type-hero-size)',
+    fontSize: 'var(--type-hero)', /* round 86: was --type-hero-size (30); HERO tier now 20 */
     fontWeight: 500,
     fontFamily: 'var(--font-data)',
     fontVariantNumeric: 'tabular-nums',

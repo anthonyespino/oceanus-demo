@@ -23,7 +23,7 @@ export function ReconChip({ vessel }: { vessel: VesselState }) {
     <Field level="vessel" field="reconciliation_status">
       <span
         style={{
-          fontFamily: FONT.data, fontSize: 11, whiteSpace: 'nowrap',
+          fontFamily: FONT.data, fontSize: 'var(--type-context)', whiteSpace: 'nowrap',
           border: `1px solid ${color}`, color, borderRadius: RADIUS, padding: '1px 8px',
         }}
         title={`tank drawdown vs flow meter, ${r.window_h} h window`}
@@ -40,7 +40,7 @@ export function FlowReconciliation({ vessel }: { vessel: VesselState }) {
     <section style={{ ...gb.box, marginBottom: 8 }}>
       <div style={gb.label}>reconciliation — tank drawdown vs flow meter</div>
       <Field level="vessel" field="reconciliation_status">
-        <Stat label="tank vs meter" value={r.status} size={22} />
+        <Stat label="tank vs meter" value={r.status} />
         {r.status === 'DISAGREE' && <span> — streams disagree; trust neither until resolved</span>}
       </Field>{' '}
       <Field level="vessel" field="reconciliation_error_magnitude" label="error magnitude">

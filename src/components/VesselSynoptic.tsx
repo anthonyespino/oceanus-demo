@@ -29,7 +29,7 @@ function DotMatrix({ pct, tint }: { pct: number; tint: string | null }) {
     return '●'.repeat(rowFilled).padStart(10, '○').split('').reverse().join('');
   });
   return (
-    <div style={{ fontFamily: FONT.data, fontSize: 10, letterSpacing: 3, lineHeight: 1.3, color: tint ?? NEUTRAL.inkSecondary }}>
+    <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro)', letterSpacing: 3, lineHeight: 1.3, color: tint ?? NEUTRAL.inkSecondary }}>
       {rows.map((row, i) => (
         <div key={i}>{row}</div>
       ))}
@@ -260,7 +260,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
                   </div>
                 </Field>
                 {/* value row — pinned to the bottom; pct · gal in fixed subcolumns */}
-                <div style={{ marginTop: 'auto', paddingTop: 6, display: 'grid', gridTemplateColumns: `${TANK_PCT_W}px 12px ${TANK_GAL_W}px`, alignItems: 'baseline', fontFamily: FONT.data, fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
+                <div style={{ marginTop: 'auto', paddingTop: 6, display: 'grid', gridTemplateColumns: `${TANK_PCT_W}px 12px ${TANK_GAL_W}px`, alignItems: 'baseline', fontFamily: FONT.data, fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums' }}>
                   <span {...TANK_LEAF[g.id].pct} style={{ textAlign: 'right', color: tint ?? NEUTRAL.ink }}>{t.level_pct}%</span>
                   <span style={{ textAlign: 'center', color: NEUTRAL.inkMuted }}>·</span>
                   <Field level="vessel" field="tank.level_gal">

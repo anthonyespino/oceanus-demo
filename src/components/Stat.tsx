@@ -8,7 +8,7 @@ import { FONT, NEUTRAL } from './probeTokens';
 export function Stat({
   label,
   value,
-  size = 'var(--type-hero-size)' as number | string, // round 7: hero scale is a token
+  size = 'var(--type-hero)' as number | string, // round 7: hero scale is a token
   face = 'data',
   onFill = false, // true when sitting on an accent/primary (IKB) fill
 }: {
@@ -23,7 +23,7 @@ export function Stat({
       <div
         style={{
           fontFamily: FONT.data,
-          fontSize: 'var(--type-label-size)',
+          fontSize: 'var(--type-micro)',
           letterSpacing: 1.2,
           textTransform: 'uppercase',
           color: onFill ? 'rgba(255,255,255,0.72)' : NEUTRAL.inkMuted,

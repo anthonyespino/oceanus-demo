@@ -114,7 +114,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: label
     • label.text  → font/data 9 caps letterspaced · ink/muted · hidden in expert mode · {label}
   Region: readout
-    • value.text  → font/data tabular · type/hero×k · earned color (ruling 14) · {display ?? round(value)+unit}
+    • value.text  → font/data tabular · type/HERO (var --type-hero) · earned color (ruling 14) · {display ?? round(value)+unit}
 
 ## InspectorChart
 
@@ -253,14 +253,14 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: footer
     • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
   Region: (root)
-    • name.text  → type/name · font/display caps · status tint when alerted (earned) · sits on the tile base fill, separated by spacing alone (round 70, header band removed) · {vessel.static.name}
+    • name.text  → type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70) · {vessel.static.name}
     • now.glyph  → glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline · now vs mode baseline
     • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
     • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
     • spark.container  → full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66) · —
     • trend.glyph  → glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend · 30d trend
-    • trend.value.text  → type/hero · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
+    • trend.value.text  → type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
 ## Glyph library (icon components)
 
@@ -293,4 +293,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*139 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T00:55:47.784Z*
+*139 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T01:34:49.104Z*

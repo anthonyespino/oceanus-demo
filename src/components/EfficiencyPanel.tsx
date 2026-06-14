@@ -64,11 +64,11 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
       </div>
       {/* footer: baseline context + 24h strip (burn gph lives in the band) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>24h</span>
+        <span style={{ fontSize: 'var(--type-micro)', letterSpacing: 1, textTransform: 'uppercase', color: 'var(--color-ink-muted)', fontFamily: 'var(--font-data)' }}>24h</span>
         <span {...layer('EfficiencyPanel / footer / spark24.chart', 'ink/secondary 1px · line/subtle frame', '{derived.sparkline_24h — hourly efficiency_delta}')}>
           <Sparkline values={d.sparkline_24h} width={140} height={20} />
         </span>
-        <span {...layer('EfficiencyPanel / footer / baseline.text', 'font/data 12 · ink/secondary', '{derived.baseline_value} {baseline_metric}')} style={{ ...gb.dim, fontSize: 12 }}>
+        <span {...layer('EfficiencyPanel / footer / baseline.text', 'font/data 12 · ink/secondary', '{derived.baseline_value} {baseline_metric}')} style={{ ...gb.dim, fontSize: 'var(--type-context)' }}>
           baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
         </span>
       </div>

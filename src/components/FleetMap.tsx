@@ -129,7 +129,7 @@ export function FleetMap({
                       <line x1={m.x} y1={m.y} x2={l.x + (l.x > m.x ? 0 : l.w)} y2={l.y + 5}
                         stroke="#4f4f4f" strokeWidth={0.5} />
                     )}
-                    <text x={l.x} y={l.y + 8} fontSize={9} fill="#909090">{m.name}</text>
+                    <text x={l.x} y={l.y + 8} style={{ fontSize: 'var(--type-micro)' }} fill="#909090">{m.name}</text>
                   </g>
                 );
               })}
@@ -160,7 +160,7 @@ export function FleetMap({
                   onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setSplay(splay === i ? null : i)}>
                   <rect x={c.x - 14} y={c.y - 14} width={28} height={28} fill="transparent" />
                   <rect x={c.x - 4.5} y={c.y - 4.5} width={9} height={9} fill="#909090" stroke="#141414" strokeWidth={0.75} />
-                  <text x={c.x + 8} y={c.y + 4} fontSize={10} fill="#a3a3a3">{c.members.length} ▾</text>
+                  <text x={c.x + 8} y={c.y + 4} style={{ fontSize: 'var(--type-micro)' }} fill="#a3a3a3">{c.members.length} ▾</text>
                 </g>
               ))}
             </>

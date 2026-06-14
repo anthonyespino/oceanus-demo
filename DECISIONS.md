@@ -350,6 +350,39 @@ originals.*
     ANY non-`none` fill/stroke → `currentColor`; regenerated `glyphs.generated.ts`;
     the wave (passed ink/muted) now renders dim grey, matching the wind glyph
     (confirmed on a 4× pixel crop). Greyscale/no-blue intact.
+- **UNIFIED FIVE-TIER TYPE SCALE — single CSS-token source (round 86)**: the
+  documented type scale. ONE source of truth: the `--type-*` CSS custom properties
+  in globals.css. **probeTokens `TYPE` (name/hero/meta/micro = 21/15/12/11) is
+  DELETED** and `--type-hero-size`/`--type-data-size`/`--type-micro-size` removed,
+  so nothing anchors off a second numeric system (grep-confirmed: no component
+  reads a type size from probeTokens). The five tiers (base 13, ~1.2 ratio):
+  - `--type-display: 24` (D-DIN 700) — vessel name, page titles.
+  - `--type-hero: 20` (Plex 500) — gauge values + big data numbers (Stat, tile
+    trend, EGT gap). **DISPLAY/HERO collision resolved**: name 24 out-ranks gauge
+    values 20 (was both anchored to the shared 30 — that anchor is gone).
+  - `--type-primary: 16` (Plex) — mission clock + the few elements between hero
+    and context.
+  - `--type-context: 13` (Plex/UI) — ALL reference text: master/place/wind-waves/
+    endpoint labels/progress %/Venice/ETA/spec/**fleet tile footer values**/panel
+    + popover text. **CONTEXT collapsed 11–15 → 13** (the round-83 leftover: tile
+    footer was stranded at 14 while CommandBand context went to 15 — both now 13;
+    progress %/destination now context-size, the standing "too big" complaint solved).
+  - `--type-micro: 10` (Plex) — gauge ticks, axis labels (collapsed 8–11 → 10),
+    with `--type-micro-floor: 8` used ONLY for the single smallest EngineTwin label.
+  - **Section-header label treatment kept SEPARATE** (`gb.label` = 11px Plex Mono,
+    all-caps letterspaced) — it's a labeling style, not a tier size. Unchanged.
+  - **Mono/UI optical**: defined `--type-context-mono: 12.5` for the case where
+    Plex (mono) reads larger than UI at equal px. On render the single 13 read at
+    equal rank for both families (most context is Plex, and the few UI elements —
+    e.g. FleetRail names at 13 — matched), so I LANDED on a single `--type-context`
+    (13) for both; the 12.5 mono token is defined and available if a future round
+    wants the split. Reported.
+  - **Orphans**: the 16px automotive "✓" is the one intentional decorative
+    exception (kept, documented); vestigial `TYPE.name` (21, never rendered raw)
+    deleted; document base `body` font-size repointed from a hardcoded 14 to
+    `var(--type-context)`. Every component migrated to tokens; the only remaining
+    hardcoded size is that ✓ checkmark (plus the computed responsive "GULF OF
+    MEXICO" furniture label, intentionally left). No element on the old 30.
 - **Position chart geometry artifact fixed (round 84)**: the dark filled wedge
   spiking to a sharp V at ~89°W/29°N (at the Meridian marker, in open water) was
   the **coastline polygon** (`LAND`, src/data/coast) — specifically the

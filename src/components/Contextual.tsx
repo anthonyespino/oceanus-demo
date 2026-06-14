@@ -32,7 +32,7 @@ export function Contextual({
       onClick={() => setPinned((p) => !p)}
       style={{ cursor: 'pointer' }}
     >
-      <span style={{ borderBottom: `1px dotted ${pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-muted)'}`, color: pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-secondary)', fontSize: 12 }}>
+      <span style={{ borderBottom: `1px dotted ${pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-muted)'}`, color: pinned ? 'var(--color-accent-bright)' : 'var(--color-ink-secondary)', fontSize: 'var(--type-context)' }}>
         {label}
         {open ? '' : ' …'}
       </span>
@@ -47,7 +47,7 @@ export function Contextual({
             background: 'var(--color-surface-overlay)',
             padding: '2px 6px',
             marginLeft: 6,
-            fontSize: 12,
+            fontSize: 'var(--type-context)',
           }}
         >
           {children}
@@ -101,7 +101,7 @@ export function RevealZone({
     >
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>{children}</div>
       {open && (
-        <div style={{ borderTop: '1px solid var(--color-line-hairline)', marginTop: 8, paddingTop: 8, fontSize: 12 }}>
+        <div style={{ borderTop: '1px solid var(--color-line-hairline)', marginTop: 8, paddingTop: 8, fontSize: 'var(--type-context)' }}>
           {reveal}
         </div>
       )}
