@@ -1,3 +1,26 @@
+# PROGRESS — 2026-06-14 (Session 89: ROUND 101 — remove glass-edge bottom divider stroke)
+
+## Done (verified docs/screens/r101-glass-on.png, r101-float-off.png)
+- Removed the CommandBand bottom seam STROKE (boxShadow 0 1px 0 line-strong) —
+  a drawn line at a glass edge contradicts the glass material + borderless-float.
+  Verified: sticky boxShadow = none.
+- Instrument row is now its own floating block (full radius); a small gap
+  (marginBottom 8) separates it from the voyage bar — gap + glass-edge/diffraction
+  do the separating, not a stroke. Voyage paddingTop returned to pad-card (the
+  seam it was airing is gone).
+- Scope = structural/decorative glass-edge strokes only. Severity outlines
+  (gauge bands, value tints) untouched — gold EFF Δ + amber arc still sharp.
+  FleetHealthBand internal cell hairlines (vertical region separators, round 94)
+  left as-is (not a glass-edge bottom stroke). Inspector Position/Engine
+  Twins/Fuel/Crew are filled gb.box cards (not glass); engine-twin divider
+  already removed round 99.
+
+## Safety
+Borderless-float enforced, greyscale, severity sharp on glass. Visual only.
+TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 88: ROUND 100 — dock alerts to related panels + general fallback)
 
 ## Done (verified docs/screens/r100-demo-v01.png, r100-general-area.png)

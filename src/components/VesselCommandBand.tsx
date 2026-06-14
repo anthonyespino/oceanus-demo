@@ -175,20 +175,19 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
     textTransform: 'uppercase', letterSpacing: 1, lineHeight: 1.1,
   };
   // ROUND 96: FLOAT — the panel fill (gb.box surface-raised) is removed; the
-  // instrument row floats directly on the Calm Sea gradient, matching the
-  // round-94 Fleet Plot / FleetHealthBand treatment. Padding + sticky mechanics
-  // (round 32) are kept; the boxShadow is RETAINED as the thin horizontal seam
-  // divider to the voyage bar below (structural separator, not severity).
-  // ROUND 97: (a) more top air above the NAME + more air ABOVE the seam divider
-  // (24/20 vs the flat pad-card) so the divider stops crowding the wind/waves
-  // line. (b) SURFACE GLASS dev toggle — near-opaque fill + subtle blur when on
-  // (glassFill spread FIRST so the seam radius/boxShadow still win); sticky, so
-  // the diffraction persists on scroll.
+  // instrument row floats directly on the Calm Sea gradient.
+  // ROUND 97: more top air above the NAME (paddingTop 24); SURFACE GLASS dev
+  // toggle (glassFill spread FIRST so the radius still wins); sticky, so the
+  // diffraction persists on scroll.
+  // ROUND 101: the bottom seam STROKE (boxShadow 0 1px 0 line-strong) is REMOVED
+  // — a drawn line at a glass edge contradicts the glass material + borderless-
+  // float. The instrument row is now its own floating block (full radius); a
+  // small GAP (marginBottom) separates it from the voyage bar — the gap +
+  // glass-edge/diffraction do the separating, not a stroke.
   const sticky: React.CSSProperties = {
     ...(surfaceGlass ? glassFill : {}),
-    padding: '24px var(--pad-card) 20px', marginBottom: 0, position: 'sticky', top: 0, zIndex: 6,
-    borderRadius: `${RADIUS}px ${RADIUS}px 0 0`,
-    boxShadow: '0 1px 0 var(--color-line-strong)',
+    padding: '24px var(--pad-card) 20px', marginBottom: 8, position: 'sticky', top: 0, zIndex: 6,
+    borderRadius: RADIUS,
   };
 
   // collapsed: name + mode + clock, one line (still sticky, still constant)
@@ -415,11 +414,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           the destination label, current-position reference floating with the
           marker). All reference/context: neutral, dimmed, context-scale, no
           tint/weight/alert. */}
-      {/* ROUND 96: FLOAT — voyage bar panel fill removed; floats on the gradient
-          (the seam divider above, on the sticky row, separates it from the
-          instruments). ROUND 97: extra top padding gives the seam divider air
-          BELOW it (so it isn't crowding the voyage labels); glass when toggled. */}
-      <section style={{ ...(surfaceGlass ? glassFill : {}), padding: '20px var(--pad-card) var(--pad-card)', marginBottom: 8 }}>
+      {/* ROUND 96: FLOAT — voyage bar panel fill removed; floats on the gradient.
+          ROUND 101: the seam divider above is gone (removed on the sticky row); a
+          small gap now separates the two floating blocks. Padding is just
+          breathing room; glass when toggled. */}
+      <section style={{ ...(surfaceGlass ? glassFill : {}), padding: 'var(--pad-card)', marginBottom: 8 }}>
         <Field level="vessel" field="next_port_calls"><Annotated name="RoutePanel" node="voyage-bar">{profile}</Annotated></Field>
         {wxStale && (
           <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>

@@ -810,3 +810,21 @@ originals.*
   - **Severity intact:** docked `[CAUTION]` keeps gold (earned color), reads
     clearly — Meridian's two alerts dock to Engine Twins + efficiency and remain
     unmissable. Type scale held (context tier); greyscale; no new boxes/strokes.
+
+- **ROUND 101: removed the bottom divider STROKE on the glass CommandBand — glass
+  edge + gap separate instead**. The instrument row carried a drawn seam at its
+  base (`boxShadow 0 1px 0 line-strong`, the round-96 seam to the voyage bar). A
+  drawn line at a glass edge contradicts the glass material and the borderless-
+  float principle — frosted surfaces end at their edge, they don't carry a stroke.
+  Removed: the instrument row is now its own floating block (full radius); a small
+  GAP (marginBottom 8) separates it from the voyage bar, so the gap + glass-edge/
+  diffraction do the separating, not a stroke (verified: sticky `boxShadow: none`).
+  - **Scope:** this targets STRUCTURAL/decorative divider strokes at glass edges,
+    NOT severity. Severity OUTLINES (status borders, gauge bands, value tints)
+    remain the one earned stroke exception — untouched (gold EFF Δ + amber arc
+    still sharp on the glass). The FleetHealthBand internal cell hairlines
+    (`borderLeft`, round 94) are vertical REGION separators within the band, not a
+    glass-edge bottom stroke — left as the round-94 structural separators. The
+    inspector's other panels (Position, Engine Twins, Fuel, Crew) are filled
+    `gb.box` cards, not glass; the engine-twin internal divider was already removed
+    in round 99. Glass immersion preserved; borderless-float enforced.
