@@ -56,7 +56,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           below; chart below the board (supersedes round 3's chart-on-top) */}
       {/* round 33: the standing ALERTS card is gone — the health band's
           count header summons the alert sheet on demand */}
-      <Annotated name="FleetHealthBand"><FleetHealthBand fleet={fleet} /></Annotated>
+      <Annotated name="FleetHealthBand" node="fleet-health-band"><FleetHealthBand fleet={fleet} /></Annotated>
       {/* ROUND 68: chart-band is the sole FleetView layout — the FleetMap is a
           shallow band on top, board directly below. board-first removed; the
           layout-mode toggle (and the chart-position toggle) are retired. A
@@ -64,7 +64,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           resize/watch) grows the band within the view; the tiles below stay
           visible and simply reflow down. One-elastic-element: ONLY the band
           flexes (240 → 520); tiles hold their size. Not persisted. */}
-      <Annotated name="NauticalChart">
+      <Annotated name="NauticalChart" node="fleet-plot">
         {/* round 88: maximize button shows on HOVER only (control affordance, not
             a data reveal — consistent with the hover ruling) */}
         <div style={{ position: 'relative' }} onMouseEnter={() => setChartHot(true)} onMouseLeave={() => setChartHot(false)}>
@@ -88,7 +88,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           binding rides along (still breathes only when LIVE, static in the
           DEGRADED demo seed). CAUTION·ADVISORY stay clickable DetailChips. */}
       <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0 18px' }}>
-        <StatusHeader prominent />
+        <Annotated name="SystemStatusStrip" node="status-cluster" inline><StatusHeader prominent /></Annotated>
       </div>
 
       <div
@@ -120,7 +120,7 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
                 opacity: censusFilter && vesselStatus(v.alerts) !== censusFilter ? 0.3 : 1,
               }}
             >
-              <Annotated name="VesselCard">
+              <Annotated name="VesselCard" node="vessel-tile">
                 <VesselTile vessel={v} size={size} treatment={treatment} onSize={(next) => setTileSize(v.static.id, next)} />
               </Annotated>
             </div>

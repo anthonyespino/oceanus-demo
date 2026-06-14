@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T05:13:14.195Z",
+  "generated": "2026-06-14T05:38:19.227Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -109,6 +109,15 @@
       "tokens": "font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)",
       "binds": "{crew.onboard_since shared date + days}",
       "file": "src/components/CrewLogPanel.tsx"
+    },
+    {
+      "path": "SettingsSheet / ia / ia.link",
+      "component": "SettingsSheet",
+      "region": "ia",
+      "leaf": "ia.link",
+      "tokens": "IA system map link · opens the shared ia-model as a navigable page",
+      "binds": "→ /ia",
+      "file": "src/components/DevPanel.tsx"
     },
     {
       "path": "SettingsSheet / mode / mode.chip",

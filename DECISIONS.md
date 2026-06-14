@@ -552,3 +552,39 @@ originals.*
       16→6px, alert lines pinned to `--type-context` with lineHeight 1.45. The
       substantive `[CAUTION] …` anomaly-evidence text is KEPT — only wasted
       vertical space was removed.
+
+- **DEV DECISION (pending Anthony) — ROUND 89: IA SYSTEM established as a live,
+  single-source instrument**. A single typed source of truth — `src/ia/ia-model.ts`
+  — feeds TWO consumers with NO IA content duplicated in either:
+  1. the **dedicated IA page** (`/ia`, rendered by `src/ia/IASystemMap.tsx`),
+     reachable from a new D-panel **"IA / SYSTEM MAP"** section and navigable back
+     to the live app ("← fleet board");
+  2. **Learn-mode live annotations** — `Annotated` gained an optional `node` prop;
+     a bound live element surfaces that node's what/why/ruling as a static callout
+     read from the same source.
+  - **Four layers modeled** in the source, plus a PROCESS layer:
+    - **NODES** — component/data inventory (id · display name · naming-convention
+      path · type tier · what · why · rulings-with-round-refs) covering VesselTile,
+      Command Gauges, Meter Strip, Fleet Health Band, Fleet Plot, Engine Twin, Fuel
+      Synoptic, Voyage Bar, Global Status Cluster, Calm Sea.
+    - **HIERARCHY** — the four-level Display IA Index as a renderable tree
+      (System → Fleet/Vessel/Ambient views → instruments → leaf, e.g. Meter Strip
+      under Vessel Tile).
+    - **PERSONAS** — primary shore-side fuel-monitoring engineer + secondary
+      ops-manager and duty-watch, each with goal + what-they-monitor.
+    - **JOURNEYS** — the anomaly-diagnosis (Meridian) walkthrough as an ordered
+      step sequence, each step referencing the node(s) involved.
+    - **PROCESS (rulings-with-receipts + tested-and-killed)** — consequence sort
+      over ETA, the within-tier sort bug, severity-on-strip, borderless fills,
+      substantiation, the type-system collapse, the Calm Sea cuts.
+  - **Why an instrument, not a document**: the IA is live, single-source, and
+    inspectable — change a node's description once and both the page and the Learn
+    annotations update. The IA page itself obeys the standing rulings (greyscale,
+    earned color, borderless fills, unified round-86 type scale) as a worked example.
+  - **Scope (this round)**: STRUCTURE + CONTENT + BINDING only. No animations,
+    hover choreography, connective lines, or reveal transitions — explicitly
+    DEFERRED to keep the round shippable. Purely additive: the live demo path
+    (FleetView / VesselInspector / Meridian seed / sort / gauges / alerts) is
+    unchanged and renders identically with Learn OFF (verified: 0 IA callouts in
+    the DOM with Learn off; 7 distinct nodes bound across both pages with Learn on).
+    `src/ia/` is permanent (survives the strip-before-demo of `src/learn/`).

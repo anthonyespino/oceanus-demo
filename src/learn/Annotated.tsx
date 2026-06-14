@@ -8,16 +8,53 @@
 import { useState } from 'react';
 import { useLearn } from './LearnProvider';
 import { ANNOTATIONS } from './annotations';
+import { IA_NODES, TIER_LABEL, type IANodeId } from '../ia/ia-model'; // round 89: shared IA source
 
 const CARD_W = 330;
 const CARD_H = 112; // estimate for clamping
 
+// ROUND 89 — Learn-mode IA binding (consumer #2 of ia-model). When an
+// annotated element declares a `node`, a SIMPLE STATIC callout surfaces that
+// node's what/why/ruling, read live from the shared source (NOT hardcoded
+// here). Structure only this round — no hover choreography, no animated
+// reveal, no connective lines (explicitly deferred). Zero cost when learn off.
+function IANodeCallout({ id }: { id: IANodeId }) {
+  const node = IA_NODES[id];
+  return (
+    <div
+      data-ia-node={id}
+      style={{
+        position: 'absolute', top: 0, left: 0, zIndex: 64, maxWidth: 260, pointerEvents: 'none',
+        background: 'var(--color-surface-overlay)', border: '1px solid var(--color-accent-bright)',
+        borderRadius: 1, padding: '6px 8px',
+        fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', lineHeight: 1.45,
+      }}
+    >
+      <div style={{ color: 'var(--color-accent-bright)', letterSpacing: 1 }}>
+        IA · {node.name} <span style={{ color: 'var(--color-ink-muted)' }}>· {node.path}</span>
+      </div>
+      <div style={{ color: 'var(--color-ink-muted)', letterSpacing: 0.5, marginTop: 1 }}>{TIER_LABEL[node.tier]}</div>
+      <div style={{ color: 'var(--color-ink-primary)', marginTop: 3 }}><span style={{ color: 'var(--color-ink-muted)' }}>what · </span>{node.what}</div>
+      <div style={{ color: 'var(--color-ink-secondary)', marginTop: 2 }}><span style={{ color: 'var(--color-ink-muted)' }}>why · </span>{node.why}</div>
+      {node.rulings[0] && (
+        <div style={{ color: 'var(--color-ink-muted)', marginTop: 2 }}>
+          <span style={{ color: 'var(--color-ink-secondary)' }}>ruling · </span>
+          {node.rulings[0].round != null ? `R${node.rulings[0].round} — ` : ''}{node.rulings[0].text}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Annotated({
   name,
+  node,
   children,
   inline = false,
 }: {
   name: string;
+  /** round 89: bind this live element to an IA node id (shared ia-model) */
+  node?: IANodeId;
   children: React.ReactNode;
   inline?: boolean;
 }) {
@@ -85,6 +122,9 @@ export function Annotated({
       }}
     >
       {children}
+      {/* round 89: static IA-node callout — proves the live element ↔ ia-model
+          binding; content read from the shared source, always-on in learn mode */}
+      {node && <IANodeCallout id={node} />}
       {card}
     </div>
   );

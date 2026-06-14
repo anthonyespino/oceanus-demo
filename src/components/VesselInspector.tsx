@@ -80,7 +80,7 @@ export function VesselInspector({
         )}
         <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
           summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
-          <Annotated name="EngineTwinPanel"><EngineTwinPanel vessel={vessel} /></Annotated>
+          <Annotated name="EngineTwinPanel" node="engine-twin"><EngineTwinPanel vessel={vessel} /></Annotated>
         </Collapse>
         {/* round 34: ONE efficiency card (burn-vs-speed merged in) */}
         <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
@@ -89,7 +89,7 @@ export function VesselInspector({
         </Collapse>
         <Collapse k={`${id}:fuel`} glyph="tank" title="fuel"
           summary={`RECON ${d.reconciliation.status} · ${totalGal.toLocaleString()} gal`}>
-          <Annotated name="VesselSynoptic"><VesselSynoptic vessel={vessel} /></Annotated>
+          <Annotated name="VesselSynoptic" node="fuel-synoptic"><VesselSynoptic vessel={vessel} /></Annotated>
         </Collapse>
         <Collapse k={`${id}:crewlog`} glyph="crew" title="crew & log"
           summary={`${vessel.history.crew.length} aboard · ${crewDays}d · ${lastEvent ? lastEvent.type : 'no events 24h'}`}>

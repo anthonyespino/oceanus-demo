@@ -1,3 +1,50 @@
+# PROGRESS — 2026-06-13 (Session 78: ROUND 89 — IA SYSTEM: shared source + dual-consumer skeleton)
+
+## Done (verified — screenshots docs/screens/r89-*.png)
+- **Single source of truth**: `src/ia/ia-model.ts` — one typed structure, four
+  layers + process. No IA content duplicated; distinctive phrases grep ONLY to
+  ia-model.ts. Both consumers `import` from it (grep-confirmed: IASystemMap +
+  Annotated).
+- **Four layers modeled**: NODES (10 instruments — VesselTile, Command Gauges,
+  Meter Strip, Fleet Health Band, Fleet Plot, Engine Twin, Fuel Synoptic, Voyage
+  Bar, Global Status Cluster, Calm Sea; each id/name/path/tier/what/why/rulings),
+  HIERARCHY (four-level renderable tree), PERSONAS (primary fuel engineer +
+  ops-manager + duty-watch), JOURNEYS (Meridian anomaly walkthrough, step→nodes).
+  Plus PROCESS layer (rulings-with-receipts + tested-and-killed).
+- **Consumer #1 — IA PAGE** (`/ia`, `src/ia/IASystemMap.tsx`): renders Hierarchy /
+  Node inventory / Personas / Journeys / Process, all from the source. Reachable
+  from a new D-panel **"IA / SYSTEM MAP"** section; "← fleet board" back-nav.
+  Unified round-86 type scale + greyscale + borderless fills (the page is itself a
+  worked example of the discipline). Verified: 5 sections render; journey +
+  sort-bug receipt present.
+- **Consumer #2 — LEARN BINDING**: `Annotated` gained an optional `node` prop;
+  bound live elements surface the node's what/why/ruling as a STATIC callout from
+  the shared source. Wired across both pages: vessel-tile, fleet-health-band,
+  fleet-plot, status-cluster (board) + engine-twin, fuel-synoptic, voyage-bar
+  (vessel) = 7 distinct nodes. Verified: Learn ON → 18 callouts on the board (4
+  nodes) + 3 on the vessel; content shows.
+
+## Demo-path safety (verified)
+- Learn OFF → **0** IA callouts in the DOM; FleetView / VesselInspector / gauges /
+  alerts / sort / Meridian seed unchanged. Annotated is a `<>{children}</>`
+  passthrough when learn is off — zero cost. No regression.
+- `src/ia/` is PERMANENT (a real feature); it survives the strip-before-demo of
+  `src/learn/` (Learn is just the second consumer).
+
+## Scope held (explicit deferrals)
+NO animations, hover choreography, connective lines, or reveal transitions — the
+Learn callouts are simple static annotations this round. Those are deferred.
+
+## Checks
+TSC-OK · LINT-CLEAN · `npm run verify` PASSED · offline build compiled (`/ia`
+route present).
+
+## Next session
+Per Anthony's roadmap: the deferred Learn-mode choreography (hover reveal,
+connective lines from live element → IA node) builds on this binding.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 77: ROUND 88 — UI polish batch, 10 items)
 
 ## Done (verified — screenshots in docs/screens/r88-*.png)

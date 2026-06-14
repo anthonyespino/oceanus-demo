@@ -28,6 +28,7 @@ import { RevealZone } from './Contextual';
 import { FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, fmtTime } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
+import { Annotated } from '../learn/Annotated'; // round 89: IA-node binding (voyage-bar)
 
 function maxObservedBurn(v: VesselState): number {
   let max = 0;
@@ -408,7 +409,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           marker). All reference/context: neutral, dimmed, context-scale, no
           tint/weight/alert. */}
       <section style={{ ...gb.box, marginBottom: 8, borderTop: 'none', borderRadius: `0 0 ${RADIUS}px ${RADIUS}px` }}>
-        <Field level="vessel" field="next_port_calls">{profile}</Field>
+        <Field level="vessel" field="next_port_calls"><Annotated name="RoutePanel" node="voyage-bar">{profile}</Annotated></Field>
         {wxStale && (
           <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>
             [STALE] weather last received {fmtTime(vessel.history.timestamps.weather)}

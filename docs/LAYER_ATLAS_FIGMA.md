@@ -150,6 +150,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
 ## SettingsSheet
 
+  Region: ia
+    • ia.link  → IA system map link · opens the shared ia-model as a navigable page · → /ia
   Region: mode
     • mode.chip  → mode chip · default / learn (L) / expert (E) · mutually exclusive · {ui mode}
   Region: scenario
@@ -297,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*141 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T05:13:14.195Z*
+*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T05:38:19.226Z*

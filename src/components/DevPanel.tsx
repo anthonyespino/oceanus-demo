@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { useFleet } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // LEARN/EXPERT MODE — strip before demo week
 import { SCENARIOS } from '../state/scenarios';
@@ -113,6 +114,21 @@ export function DevPanel() {
             </button>
           ))}
         </div>
+      </Section>
+
+      <Section title="ia / system map">
+        {/* round 89: entry to the dedicated IA page (consumer #1 of ia-model) */}
+        <Link
+          href="/ia"
+          {...layer('SettingsSheet / ia / ia.link', 'IA system map link · opens the shared ia-model as a navigable page', '→ /ia')}
+          style={{
+            display: 'inline-block', fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)',
+            color: NEUTRAL.inkSecondary, textDecoration: 'none',
+            border: `1px solid ${NEUTRAL.border}`, borderRadius: RADIUS, padding: '4px 10px',
+          }}
+        >
+          open system map →
+        </Link>
       </Section>
 
       <Section title="mode">

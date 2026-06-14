@@ -278,6 +278,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 
 *source: src/components/DevPanel.tsx*
 
+- `ia / ia.link`
+  - TOKENS — IA system map link · opens the shared ia-model as a navigable page
+  - BINDS — → /ia
 - `mode / mode.chip`
   - TOKENS — mode chip · default / learn (L) / expert (E) · mutually exclusive
   - BINDS — {ui mode}
@@ -526,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-14T05:13:14.193Z*
+*142 instrumented leaves · 20 components · generated 2026-06-14T05:38:19.225Z*
