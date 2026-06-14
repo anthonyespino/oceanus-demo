@@ -158,7 +158,7 @@ export function VesselTile({
         {/* primary value: category glyph (calendar) centered ABOVE the value */}
         <div style={{ textAlign: 'center' }}>
           <div title="30-day trend" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
-            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={CARD_GLYPH} /></span>
+            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend', '30d trend')} title={IA_GLYPH_MEANING.calendar} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={CARD_GLYPH} /></span>
             <span {...layer('VesselTile / trend.value.text', 'type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
               {fmtPct(d.trend_30d)}
               {treatment === 'automotive' && status === 'nominal' && (
@@ -208,7 +208,7 @@ export function VesselTile({
               <span {...layer('VesselTile / endurance.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.endurance_hours} h')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <span {...layer('VesselTile / now.glyph', 'glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline', 'now vs mode baseline')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="clock" size={CARD_GLYPH} /></span>
+              <span {...layer('VesselTile / now.glyph', 'glyph/pulse (round 104: was glyph/clock — a clock falsely implied time-of-day; this is the LIVE current reading) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies now-vs-baseline', 'now vs mode baseline')} title={IA_GLYPH_MEANING.pulse} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="pulse" size={CARD_GLYPH} /></span>
               <span {...layer('VesselTile / now.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
             </div>
           </div>

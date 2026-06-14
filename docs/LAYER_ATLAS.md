@@ -508,7 +508,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)
   - BINDS — {vessel.static.name}
 - `now.glyph`
-  - TOKENS — glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline
+  - TOKENS — glyph/pulse (round 104: was glyph/clock — a clock falsely implied time-of-day; this is the LIVE current reading) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies now-vs-baseline
   - BINDS — now vs mode baseline
 - `now.value.text`
   - TOKENS — font/data 14 tabular · ink/primary · centered under its glyph (round 63)
@@ -523,10 +523,10 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66)
   - BINDS — —
 - `trend.glyph`
-  - TOKENS — glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend
+  - TOKENS — glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend
   - BINDS — 30d trend
 - `trend.value.text`
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-14T20:45:05.701Z*
+*141 instrumented leaves · 20 components · generated 2026-06-14T20:51:59.381Z*

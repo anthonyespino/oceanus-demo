@@ -1,3 +1,23 @@
+# PROGRESS — 2026-06-14 (Session 92: ROUND 104 — now/baseline clock → pulse-live glyph)
+
+## Done (verified docs/screens/r104-tile-footer.png)
+- Tile now.glyph (live efficiency reading) clock → new glyph.pulse (ECG-like
+  live-indicator; placeholder until drawn, round-48 fallback). A clock falsely
+  implied time-of-day for a live value.
+- Clock freed from the now slot (grep: slot → glyph.pulse). Clock RETAINED for
+  the STANDBY mode glyph + the text mission/master clocks (untouched).
+- Calendar (30d span) + pulse (now/instant) now read as a span/instant pair —
+  same metric, two timeframes; both context, greyscale, consistent scale.
+- ia-model IA_GLYPH_MEANING: calendar = "30-day sustained trend (span)", pulse =
+  "current live reading, now (instant)" — distinct, consumed via Learn title
+  (verified now.glyph title = the pulse meaning).
+- Only the glyph changed; value tint logic unchanged. No severity color on glyph.
+
+## Safety
+Demo-path safe (glyph swap). TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 91: ROUND 103 — fix wave/endurance glyph collision)
 
 ## Done (verified docs/screens/r103-tile-footer.png)

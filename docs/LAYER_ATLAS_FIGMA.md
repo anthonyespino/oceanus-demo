@@ -259,12 +259,12 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: (root)
     • mode.glyph  → MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70) · {vessel.static.name}
-    • now.glyph  → glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline · now vs mode baseline
+    • now.glyph  → glyph/pulse (round 104: was glyph/clock — a clock falsely implied time-of-day; this is the LIVE current reading) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies now-vs-baseline · now vs mode baseline
     • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
     • spark.chart  → ink/secondary 1px polyline · the 24h signature · {derived.sparkline_24h — hourly efficiency_delta}
     • spark.container  → full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66) · —
-    • trend.glyph  → glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend · 30d trend
+    • trend.glyph  → glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend · 30d trend
     • trend.value.text  → type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal · {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
 ## Glyph library (icon components)
@@ -297,5 +297,6 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/chart.efficiency  → chart.efficiency.svg
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
+    · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T20:45:05.703Z*
+*141 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-14T20:51:59.383Z*

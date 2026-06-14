@@ -21,7 +21,8 @@ export type GlyphName =
   // icon library mirrors these names (chart.fleet / chart.trend /
   // chart.efficiency); plus a back glyph for the rail's ← fleet board
   | 'chart.fleet' | 'chart.trend' | 'chart.efficiency' | 'back'
-  | 'calendar'; // round 49: 30-day window — VesselTile trend.glyph slot's library icon
+  | 'calendar' // round 49: 30-day window — VesselTile trend.glyph slot's library icon
+  | 'pulse'; // round 104: live/current reading — VesselTile now.glyph (replaces the misleading clock)
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -50,6 +51,9 @@ const PATHS: Record<GlyphName, string[]> = {
   'chart.efficiency': ['M4 4 V20 H20', 'M6 9 C10 10 13 16 20 17'], // curve — burn vs speed
   back: ['M11 6 L5 12 L11 18', 'M5 12 H19'],
   calendar: ['M4 6 H20 V20 H4 Z', 'M4 10 H20', 'M8 3.5 V7 M16 3.5 V7', 'M8 14 V14.01 M12 14 V14.01 M16 14 V14.01 M8 17 V17.01 M12 17 V17.01'],
+  // round 104: pulse/live-indicator — a baseline with an ECG-like spike, reads as
+  // "current, live reading" (placeholder until glyph.pulse.svg is drawn/scraped).
+  pulse: ['M2 12 H8 L10 5 L13 19 L15.5 12 H22'],
 };
 
 /** Round 36 (⚖6 resolved: heading is VISIBLE as marker rotation): filled

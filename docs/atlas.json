@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T20:45:05.703Z",
+  "generated": "2026-06-14T20:51:59.383Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -1222,7 +1222,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "now.glyph",
-      "tokens": "glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline",
+      "tokens": "glyph/pulse (round 104: was glyph/clock — a clock falsely implied time-of-day; this is the LIVE current reading) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies now-vs-baseline",
       "binds": "now vs mode baseline",
       "file": "src/components/VesselTile.tsx"
     },
@@ -1267,7 +1267,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "trend.glyph",
-      "tokens": "glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend",
+      "tokens": "glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend",
       "binds": "30d trend",
       "file": "src/components/VesselTile.tsx"
     },
@@ -1431,6 +1431,12 @@
       "name": "calendar",
       "importFile": "calendar.svg",
       "drawn": true
+    },
+    {
+      "component": "glyph/pulse",
+      "name": "pulse",
+      "importFile": "pulse.svg",
+      "drawn": false
     }
   ]
 }

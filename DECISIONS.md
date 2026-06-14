@@ -877,3 +877,21 @@ originals.*
     weather), consumed via each live element's Learn `title` so the meanings read
     distinctly. (The CommandBand endurance is a Gauge with a text label — no glyph
     — so it had no collision; the only shared-glyph site was the tile.)
+
+- **ROUND 104: now/baseline glyph CLOCK → PULSE-LIVE (substantiation)**. The tile
+  `now.glyph` (current efficiency-vs-baseline reading, paired with the 30-day
+  calendar) used `glyph.clock` — a clock falsely implies time-of-day or duration,
+  but the value is the LIVE current reading, not a time. Replaced with a new
+  `glyph.pulse` (an ECG-like live-indicator mark; placeholder path until Anthony
+  draws/scrapes `glyph.pulse.svg`, round-48 fallback — not blocked on art).
+  - **Clock freed from the now slot** (grep-confirmed: the slot points at
+    `glyph.pulse`). The clock is RETAINED where it's legitimately a clock — the
+    STANDBY mode glyph (`MODE_GLYPH.STANDBY`) and the text mission/master clocks —
+    those are untouched; this round only removed it from the misleading now slot.
+  - **Calendar (30d span) + pulse (now/instant) now read as an honest timeframe
+    PAIR** — the same efficiency metric over two timeframes, span vs instant. Both
+    context register, greyscale, consistent scale, sitting together on the card.
+  - **ia-model updated** (`IA_GLYPH_MEANING`): calendar = "30-day sustained trend
+    (the span)", pulse = "current live reading, now (the instant)" — distinct, made
+    explicit, consumed via Learn `title`. Only the GLYPH changed; the value's tint
+    logic is separate and unchanged (no severity color on the glyph).

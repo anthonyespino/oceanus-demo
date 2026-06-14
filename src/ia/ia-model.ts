@@ -215,6 +215,11 @@ export function getBandDescriptor(id: string): IADescriptor | undefined {
 export const IA_GLYPH_MEANING: Partial<Record<GlyphName, string>> = {
   wave: 'Sea state — weather wave height.',
   'fuel-drop': 'Fuel endurance — hours of fuel-time remaining (not weather).',
+  // ROUND 104: calendar + pulse are a SPAN/INSTANT pair on the tile — the same
+  // efficiency metric over two timeframes. The clock (time-of-day) was misleading
+  // for a live reading; pulse depicts the current/live value honestly.
+  calendar: 'Efficiency — 30-day sustained trend (the span).',
+  pulse: 'Efficiency — current live reading, now (the instant).',
 };
 
 // ─── LAYER 2 · HIERARCHY (the Display Information Architecture Index) ─────────
