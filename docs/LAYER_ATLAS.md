@@ -331,7 +331,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/display caps · ink/primary
   - BINDS — {vessel.static.name}
 - `centerStack / waves.text`
-  - TOKENS — font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line
+  - TOKENS — glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line
   - BINDS — {weather.wave_height_ft} ft
 - `centerStack / wind.text`
   - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
@@ -493,7 +493,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary line · zero axis
   - BINDS — {daily_delta_1y[-30d]}
 - `endurance.glyph`
-  - TOKENS — glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance
+  - TOKENS — glyph/fuel-drop (round 103: was glyph/wave — endurance is fuel-time, NOT sea state; collision broken) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies endurance
   - BINDS — endurance
 - `endurance.value.text`
   - TOKENS — font/data 14 tabular · ink/primary · centered under its glyph (round 63)
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-14T20:25:30.366Z*
+*141 instrumented leaves · 20 components · generated 2026-06-14T20:45:05.701Z*

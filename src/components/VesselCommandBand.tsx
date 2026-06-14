@@ -29,6 +29,7 @@ import { FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, glassFill, fmtTime } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 import { Annotated } from '../learn/Annotated'; // round 89: IA-node binding (voyage-bar)
+import { IA_GLYPH_MEANING } from '../ia/ia-model'; // round 103: distinct glyph meaning (single source)
 
 function maxObservedBurn(v: VesselState): number {
   let max = 0;
@@ -93,7 +94,7 @@ const LOG_MAX = Math.log10(2400);
 
 /** Round 34: weather rides the mission clock's line — glyph + value + unit,
     no labels (they self-describe at this size). */
-function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary }: { g: GlyphName; value: string; attrs?: Record<string, string>; glyphColor?: string }) {
+function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary, title }: { g: GlyphName; value: string; attrs?: Record<string, string>; glyphColor?: string; title?: string }) {
   // round 53: bumped 14→15 for legibility WITHIN the environment-context
   // register — still well below the clock (hero×0.6) and the gauges; not
   // promoted to hero (wind/waves are nominal + already feed Calm Sea).
@@ -102,7 +103,7 @@ function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary }: { g: G
   // the wind glyph's perceived weight — both read as dim context ink (color-match
   // only, size held).
   return (
-    <span {...attrs} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+    <span {...attrs} title={title} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
       <Glyph name={g} size={15} color={glyphColor} />
       <span style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>{value}</span>
     </span>
@@ -387,7 +388,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                   <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)', '{weather.wind_speed_kn} kn')} />
                 </Field>
                 <Field level="vessel" field="weather.waves">
-                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} attrs={layer('VesselCommandBand / centerStack / waves.text', 'font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line', '{weather.wave_height_ft} ft')} />
+                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.wave} attrs={layer('VesselCommandBand / centerStack / waves.text', 'glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line', '{weather.wave_height_ft} ft')} />
                 </Field>
               </span>
             </RevealZone>

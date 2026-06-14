@@ -1,3 +1,24 @@
+# PROGRESS — 2026-06-14 (Session 91: ROUND 103 — fix wave/endurance glyph collision)
+
+## Done (verified docs/screens/r103-tile-footer.png)
+- wave height + endurance were sharing glyph.wave (false association, caught by
+  Learn). Separated: wave height → glyph.wave (CommandBand + WeatherPanel);
+  endurance → glyph.fuel-drop (VesselTile, placeholder until drawn, round-48
+  fallback). Grep-confirmed no endurance slot resolves to wave.
+- Endurance does NOT inherit the weather stale-tint (tile endurance glyph has no
+  stale logic). Wave keeps the round-79 weather stale-tint (correct — it's weather).
+- ia-model: new IA_GLYPH_MEANING (single source) gives wave (=sea state) and
+  fuel-drop (=fuel endurance, not weather) distinct meanings; consumed via each
+  element's Learn title. CommandBand endurance is a Gauge (text label, no glyph) —
+  no collision there; only the tile shared a glyph.
+- Both greyscale/context, no severity color. Visual: tile endurance now shows the
+  fuel droplet, no longer the wave.
+
+## Safety
+Demo-path safe (glyph swap only). TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 90: ROUND 102 — audit mode set + add mode glyph to thumbcard)
 
 ## Part A — mode set audit (reported)

@@ -23,6 +23,7 @@ import { RADIUS, STATUS_COLOR, NEUTRAL, FONT, ALERT_TEXT_COLOR } from './probeTo
 import { useState } from 'react';
 import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
 import { Glyph, MODE_GLYPH } from './Glyph';
+import { IA_GLYPH_MEANING } from '../ia/ia-model'; // round 103: distinct glyph meaning (single source)
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
@@ -203,7 +204,7 @@ export function VesselTile({
         {tier === 1 && !mini && (
           <div style={{ marginTop: 'auto', paddingTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <span {...layer('VesselTile / endurance.glyph', 'glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance', 'endurance')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="wave" size={CARD_GLYPH} /></span>
+              <span {...layer('VesselTile / endurance.glyph', 'glyph/fuel-drop (round 103: was glyph/wave — endurance is fuel-time, NOT sea state; collision broken) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies endurance', 'endurance')} title={IA_GLYPH_MEANING['fuel-drop']} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="fuel-drop" size={CARD_GLYPH} /></span>
               <span {...layer('VesselTile / endurance.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.endurance_hours} h')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>

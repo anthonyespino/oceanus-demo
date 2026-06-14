@@ -177,7 +177,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • master.name.text  → font/data 12 · ink/secondary · name as value (no label, no stroke) · {crew Master.name}
     • mode.glyph  → boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/hero · font/display caps · ink/primary · {vessel.static.name}
-    • waves.text  → font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line · {weather.wave_height_ft} ft
+    • waves.text  → glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line · {weather.wave_height_ft} ft
     • wind.text  → font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73) · {weather.wind_speed_kn} kn
   Region: destCol
     • eta.text  → font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE · {next_port_calls[0].eta}
@@ -252,7 +252,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: body
     • trendChart.chart  → ink/secondary line · zero axis · {daily_delta_1y[-30d]}
   Region: (root)
-    • endurance.glyph  → glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance · endurance
+    • endurance.glyph  → glyph/fuel-drop (round 103: was glyph/wave — endurance is fuel-time, NOT sea state; collision broken) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies endurance · endurance
     • endurance.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.endurance_hours} h
   Region: footer
     • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
@@ -298,4 +298,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*141 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T20:25:30.367Z*
+*141 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T20:45:05.703Z*

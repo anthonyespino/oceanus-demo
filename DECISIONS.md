@@ -856,3 +856,24 @@ originals.*
   undiluted — the glyph is neutral grey while Meridian's name + value stay gold
   (mode glyph `rgb(117,117,117)` vs gold `rgb(227,209,65)`); sort/severity/alerts
   unchanged.
+
+- **ROUND 103: wave/endurance glyph COLLISION fixed (substantiation)**. Wave
+  height (`weather.wave_height_ft`) and endurance (fuel-time hours) were both
+  using `glyph.wave` — a false association Learn mode caught (two unrelated
+  quantities sharing one symbol). Separated:
+  - **wave height → `glyph.wave`** (the literal wave — honest; CommandBand
+    wind/waves line + WeatherPanel). The round-79 weather stale-tint stays HERE
+    (it's weather data) and the round-99 wave-greyed-to-match-wind holds.
+  - **endurance → `glyph.fuel-drop`** (a fuel droplet; VesselTile endurance slot).
+    `fuel-drop` already exists with a placeholder path (round-48 fallback) → the
+    slot resolves to the placeholder until Anthony draws/scrapes the final art; not
+    blocked on art. Endurance does NOT inherit the weather stale-tint (the tile
+    endurance glyph has no stale logic — confirmed; inheriting it would be another
+    false association, since endurance isn't weather data).
+  - Grep-confirmed: no endurance slot resolves to `glyph.wave` anywhere; the two
+    never share a glyph. Both greyscale/context, no severity color.
+  - **ia-model updated** — new `IA_GLYPH_MEANING` (single source) gives the two
+    slots distinct meanings (wave = sea state; fuel-drop = fuel endurance, not
+    weather), consumed via each live element's Learn `title` so the meanings read
+    distinctly. (The CommandBand endurance is a Gauge with a text label — no glyph
+    — so it had no collision; the only shared-glyph site was the tile.)

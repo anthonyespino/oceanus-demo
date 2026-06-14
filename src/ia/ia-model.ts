@@ -205,6 +205,18 @@ export function getBandDescriptor(id: string): IADescriptor | undefined {
   return IA_BAND_DESCRIPTORS[id];
 }
 
+// ROUND 103: distinct glyph meanings — Learn caught wave + endurance SHARING
+// glyph.wave (a false association / substantiation violation). The two slots now
+// depict different quantities and read distinctly from this single source:
+//   · wave      = sea state (weather wave height)
+//   · fuel-drop = fuel endurance (hours of fuel-time remaining) — NOT weather
+// Consumed by the live elements' Learn `title` so the card/CommandBand expose the
+// honest meaning per glyph.
+export const IA_GLYPH_MEANING: Partial<Record<GlyphName, string>> = {
+  wave: 'Sea state — weather wave height.',
+  'fuel-drop': 'Fuel endurance — hours of fuel-time remaining (not weather).',
+};
+
 // ─── LAYER 2 · HIERARCHY (the Display Information Architecture Index) ─────────
 export interface IAHierarchyNode {
   label: string;

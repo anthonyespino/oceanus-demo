@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T20:25:30.367Z",
+  "generated": "2026-06-14T20:45:05.703Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -736,7 +736,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "waves.text",
-      "tokens": "font/data 15 tabular · glyph ink/MUTED to match the wind glyph weight (round 79: drawn fill vs stroke) · stale tint when WX stale · own line",
+      "tokens": "glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line",
       "binds": "{weather.wave_height_ft} ft",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -1177,7 +1177,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "endurance.glyph",
-      "tokens": "glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance",
+      "tokens": "glyph/fuel-drop (round 103: was glyph/wave — endurance is fuel-time, NOT sea state; collision broken) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies endurance",
       "binds": "endurance",
       "file": "src/components/VesselTile.tsx"
     },
