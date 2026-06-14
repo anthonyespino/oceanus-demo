@@ -112,8 +112,10 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
           </span>
         ))}
       </div>
-      {/* ROW 3 — sensor cluster (verdict 13: gauges won), internals ONLY */}
-      <div style={{ marginTop: 'var(--pad-section)', borderTop: '1px solid var(--color-line-hairline)', paddingTop: 'var(--pad-section)' }}>
+      {/* ROW 3 — sensor cluster (verdict 13: gauges won), internals ONLY.
+          ROUND 99: bottom divider removed — separation by spacing alone (consistent
+          with the round-94/96 divider cleanup; not a stroke). */}
+      <div style={{ marginTop: 'var(--pad-section)', paddingTop: 'var(--pad-section)' }}>
         <InstrumentCluster vessel={vessel} />
       </div>
       </section>

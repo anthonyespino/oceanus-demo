@@ -39,20 +39,27 @@ export const gb = {
   stale: { color: 'var(--color-data-stale)', background: 'var(--color-surface-overlay)' } as React.CSSProperties,
 };
 
-// ROUND 97: SURFACE GLASS (dev toggle, attempt #5) for the floating sections
+// ROUND 97/99: SURFACE GLASS (dev toggle, attempt #5) for the floating sections
 // (CommandBand, voyage bar, Fleet Plot, FleetHealthBand — backgrounds removed in
-// 94/96). HARD bounds = instrument-glass, not SaaS:
-//   · near-OPAQUE fill (0.82) — the surface reads as matter-of-fact SOLID;
-//   · VERY subtle backdrop-blur — the Calm Sea gradient diffracts through as a
-//     faint cue, never a clear translucent pane;
-//   · NO glow, NO bright edge, NO stroke (borderless-fills holds — the edge is
-//     just fill meeting blur).
+// 94/96). HARD bounds = GREYSCALE instrument-frost, NOT SaaS / Apple-lens:
+//   · reads as a SOLID frosted surface, not a clear translucent pane;
+//   · NO glow, NO bright edge, NO stroke, NO color/chroma, NO lens/light bloom
+//     (the "Apple lens" direction was considered + REJECTED — unearned chroma/
+//     light, off-thesis; fill quality improved WITHIN greyscale instead).
 // Severity stays SHARP: backdrop-filter blurs only what is BEHIND the panel,
 // never the panel's own content (gold values / arcs render full-strength on top).
+//
+// ROUND 99 fill tune — the round-97 fill (0.82 over 3px) read MUDDY (a flat grey
+// smear: too much opacity over too little blur). Rebalanced for CLEAN FROST:
+// opacity dropped + blur raised TOGETHER, so the wave motion is softly
+// perceptible THROUGH the glass instead of flattened to uniform grey. A very
+// subtle greyscale internal gradient (top slightly-less-dark → bottom darker)
+// gives a hint of glass depth — no color, no bright edge. Blur kept modest (8px)
+// for perf + subtlety: clean frost, not heavy blur.
 export const glassFill: React.CSSProperties = {
-  background: 'rgba(24, 24, 24, 0.82)', // surface-raised (#181818) near-opaque
-  backdropFilter: 'blur(3px)',
-  WebkitBackdropFilter: 'blur(3px)',
+  background: 'linear-gradient(180deg, rgba(34, 34, 34, 0.62), rgba(20, 20, 20, 0.72))',
+  backdropFilter: 'blur(8px)',
+  WebkitBackdropFilter: 'blur(8px)',
   borderRadius: RADIUS,
 };
 

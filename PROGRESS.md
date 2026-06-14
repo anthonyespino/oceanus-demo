@@ -1,3 +1,25 @@
+# PROGRESS — 2026-06-14 (Session 87: ROUND 99 — drop engine-twin divider + improve glass fill)
+
+## Done (verified docs/screens/r99-glass-on.png, r99-engine-twins.png)
+- Engine-twin BOTTOM divider removed (borderTop above the sensor cluster) —
+  separation by spacing alone (engine-row hairlines = row grammar, kept).
+- Glass FILL improved within greyscale: round-97 fill (0.82/3px) read muddy;
+  rebalanced to a 0.62→0.72 greyscale vertical gradient over blur 8px so the
+  wave motion is softly perceptible through clean frost (not flattened grey).
+  Subtle internal gradient = hint of glass depth. Blur modest (perf+subtlety).
+- "Apple lens"/color-light diffraction REJECTED (logged): no chroma/lens/bloom/
+  bright edge — unearned color/light, off-thesis. Greyscale frost only.
+
+## Constraints held (verified)
+- Reads solid; NO glow/edge/stroke. Severity SHARP (EFF Δ +13.7% gold crisp
+  under glass). Sticky diffraction persists on scroll. 60fps HELD: glass-off
+  ~121 / glass-on ~122 (no drop). Reduced-motion = frost over frozen still.
+- Toggle state CONFIRMED: surfaceGlass DEFAULT OFF (verdict still pending; not
+  made default-on — Anthony hasn't locked it).
+- TSC-OK · LINT-CLEAN · verify PASSED · build OK. Data/behavior unchanged.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 86: ROUND 98 — drop TREND BOARD label + FLEET glyph, keep sort subtitle)
 
 ## Done (verified docs/screens/r98-default-top.png, r98-expert-top.png)

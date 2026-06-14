@@ -297,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T17:46:26.811Z*
+*140 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T18:00:05.462Z*

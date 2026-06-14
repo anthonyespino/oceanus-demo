@@ -759,3 +759,27 @@ originals.*
   was; the band's header row now carries only the range toggle, right-aligned —
   no orphan gap. Label cleanup only — the sort behavior is unchanged; the subtitle
   uses an existing tier (no orphan).
+
+- **ROUND 99: engine-twin bottom divider removed + glass FILL improved (cleaner
+  greyscale frost)**.
+  - **Engine-twin bottom divider gone**: the hairline `borderTop` above the
+    EngineTwinPanel sensor cluster (ROW 3) is removed — separation by spacing
+    alone, consistent with the round-94/96 divider cleanup (the engine-ROW
+    hairlines are the row grammar, kept).
+  - **Glass fill improved WITHIN greyscale (still dev toggle, default OFF —
+    verdict pending)**: the round-97 fill (rgba 24/0.82 over blur 3px) read MUDDY
+    (a flat grey smear: too much opacity over too little blur). Rebalanced for
+    CLEAN FROST — opacity dropped + blur raised TOGETHER (now an 0.62→0.72
+    greyscale vertical gradient over blur 8px) so the wave motion is softly
+    PERCEPTIBLE through the glass instead of flattened to uniform grey. The subtle
+    top-less-dark → bottom-darker internal gradient gives a hint of glass depth.
+    Blur kept modest (8px) for perf + subtlety.
+  - **"Apple lens" / color-light diffraction explicitly REJECTED** (logged): no
+    chroma, no lens/chromatic effect, no light bloom, no bright edge — that
+    direction introduces unearned color/light, violating earned-color +
+    substantiation. Fill quality was improved within greyscale only.
+  - **Hard constraints held**: reads as a solid frosted surface; NO glow/edge/
+    stroke; severity stays SHARP (EFF Δ +13.7% gold rgb(227,209,65) crisp on top —
+    backdrop-filter blurs only what's behind); sticky diffraction persists on
+    scroll (mechanism unchanged); **60fps floor HELD** — glass-off ~121 vs
+    glass-on ~122, no drop. Reduced-motion: frost over the frozen static gradient.
