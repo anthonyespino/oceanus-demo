@@ -1,49 +1,40 @@
 'use client';
 // LEARN MODE wrapper: zero-cost passthrough when learn is off; when on, the
-// wrapped component gets a hover outline (accent/bright) and a docent card
-// (exact barrel name, disposition mark, description, "answers:" line).
+// wrapped component gets a hover outline (accent/bright) and ONE docent card.
 // Cards position fixed with viewport clamping — they never clip at edges.
 // Clicks are suppressed in capture phase; innermost hovered wrapper wins.
+//
+// ROUND 92 — HOVER-GATED REVEAL. The round-89 IA callout was always-visible,
+// so 15 VesselTiles stacked 15 identical cards. Now NOTHING shows by default:
+// hovering an annotated element reveals ONLY that element's callout, and moving
+// away hides it. Because only the hovered (innermost) wrapper anchors, callouts
+// can never stack or collide, and identical node types de-dupe naturally (you
+// learn what a VesselTile is by hovering any one — the other 14 stay quiet).
+//
+// Hover-to-TEACH is scoped to this docent layer and is NOT a violation of the
+// operational "hover points, click asks" ruling: that ruling governs DATA
+// reveals in the live interface (Learn off), which is unchanged. Learn mode is
+// a separate teaching layer where explain-on-hover is the expected convention.
 
 import { useState } from 'react';
 import { useLearn } from './LearnProvider';
 import { ANNOTATIONS } from './annotations';
 import { IA_NODES, TIER_LABEL, type IANodeId } from '../ia/ia-model'; // round 89: shared IA source
 
-const CARD_W = 330;
-const CARD_H = 112; // estimate for clamping
+type Anchor = { top: number; left: number; bottom: number };
 
-// ROUND 89 — Learn-mode IA binding (consumer #2 of ia-model). When an
-// annotated element declares a `node`, a SIMPLE STATIC callout surfaces that
-// node's what/why/ruling, read live from the shared source (NOT hardcoded
-// here). Structure only this round — no hover choreography, no animated
-// reveal, no connective lines (explicitly deferred). Zero cost when learn off.
-function IANodeCallout({ id }: { id: IANodeId }) {
-  const node = IA_NODES[id];
-  return (
-    <div
-      data-ia-node={id}
-      style={{
-        position: 'absolute', top: 0, left: 0, zIndex: 64, maxWidth: 260, pointerEvents: 'none',
-        background: 'var(--color-surface-overlay)', border: '1px solid var(--color-accent-bright)',
-        borderRadius: 1, padding: '6px 8px',
-        fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', lineHeight: 1.45,
-      }}
-    >
-      <div style={{ color: 'var(--color-accent-bright)', letterSpacing: 1 }}>
-        IA · {node.name} <span style={{ color: 'var(--color-ink-muted)' }}>· {node.path}</span>
-      </div>
-      <div style={{ color: 'var(--color-ink-muted)', letterSpacing: 0.5, marginTop: 1 }}>{TIER_LABEL[node.tier]}</div>
-      <div style={{ color: 'var(--color-ink-primary)', marginTop: 3 }}><span style={{ color: 'var(--color-ink-muted)' }}>what · </span>{node.what}</div>
-      <div style={{ color: 'var(--color-ink-secondary)', marginTop: 2 }}><span style={{ color: 'var(--color-ink-muted)' }}>why · </span>{node.why}</div>
-      {node.rulings[0] && (
-        <div style={{ color: 'var(--color-ink-muted)', marginTop: 2 }}>
-          <span style={{ color: 'var(--color-ink-secondary)' }}>ruling · </span>
-          {node.rulings[0].round != null ? `R${node.rulings[0].round} — ` : ''}{node.rulings[0].text}
-        </div>
-      )}
-    </div>
-  );
+const DOCENT_W = 330;
+const DOCENT_H = 112; // estimate for clamping
+const IA_W = 300;
+const IA_H = 170; // estimate for the taller what/why/ruling card
+
+// Fixed placement near the anchor: clamp horizontally so it never runs
+// off-screen, and flip above the element when there isn't room below.
+function place(anchor: Anchor, w: number, h: number): { left: number; top: number } {
+  const left = Math.min(Math.max(anchor.left, 8), window.innerWidth - w - 8);
+  const below = anchor.bottom + 8 + h < window.innerHeight;
+  const top = below ? anchor.bottom + 8 : Math.max(8, anchor.top - h - 8);
+  return { left, top };
 }
 
 export function Annotated({
@@ -58,38 +49,62 @@ export function Annotated({
   children: React.ReactNode;
   inline?: boolean;
 }) {
-  const { learnOn, leafActive } = useLearn();
-  const [anchor, setAnchor] = useState<{ top: number; left: number; bottom: number } | null>(null);
+  const { learnOn, leafActive, setIaHover } = useLearn();
+  const [anchor, setAnchor] = useState<Anchor | null>(null);
   if (!learnOn) return <>{children}</>;
   const a = ANNOTATIONS[name];
+  const ready = anchor && typeof window !== 'undefined';
 
-  let card: React.ReactNode = null;
-  // round 35: innermost wins — a leaf layer card suppresses the docent card
-  if (anchor && a && !leafActive && typeof window !== 'undefined') {
-    const left = Math.min(Math.max(anchor.left, 8), window.innerWidth - CARD_W - 8);
-    const below = anchor.bottom + 8 + CARD_H < window.innerHeight;
-    const top = below ? anchor.bottom + 8 : Math.max(8, anchor.top - CARD_H - 8);
-    card = (
+  // ROUND 92: the IA callout is HOVER-REVEALED (was always-on, round 89) and
+  // reads unchanged from the shared ia-model. When a node is bound it is the
+  // single card for this element — the round-8 docent card yields to it.
+  let iaCard: React.ReactNode = null;
+  if (ready && node) {
+    const n = IA_NODES[node];
+    const { left, top } = place(anchor, IA_W, IA_H);
+    iaCard = (
       <div
+        className="learn-callout"
+        data-ia-node={node}
         style={{
-          position: 'fixed',
-          left,
-          top,
-          width: CARD_W,
-          zIndex: 65,
-          pointerEvents: 'none',
-          background: 'var(--color-surface-overlay)',
-          border: '1px solid var(--color-accent-bright)',
-          borderRadius: 1, // RADIUS token value
-          padding: '10px 12px',
-          fontFamily: 'var(--font-data)',
-          fontSize: 'var(--type-context)',
-          lineHeight: 1.5,
+          position: 'fixed', left, top, width: IA_W, zIndex: 66, pointerEvents: 'none',
+          background: 'var(--color-surface-overlay)', border: '1px solid var(--color-accent-bright)',
+          borderRadius: 1, padding: '8px 10px',
+          fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', lineHeight: 1.5,
         }}
       >
         <div style={{ color: 'var(--color-accent-bright)', letterSpacing: 1 }}>
-          {a.mark} {name}
+          IA · {n.name} <span style={{ color: 'var(--color-ink-muted)' }}>· {n.path}</span>
         </div>
+        <div style={{ color: 'var(--color-ink-muted)', letterSpacing: 0.5, marginTop: 1 }}>{TIER_LABEL[n.tier]}</div>
+        <div style={{ color: 'var(--color-ink-primary)', marginTop: 3 }}><span style={{ color: 'var(--color-ink-muted)' }}>what · </span>{n.what}</div>
+        <div style={{ color: 'var(--color-ink-secondary)', marginTop: 2 }}><span style={{ color: 'var(--color-ink-muted)' }}>why · </span>{n.why}</div>
+        {n.rulings[0] && (
+          <div style={{ color: 'var(--color-ink-muted)', marginTop: 2 }}>
+            <span style={{ color: 'var(--color-ink-secondary)' }}>ruling · </span>
+            {n.rulings[0].round != null ? `R${n.rulings[0].round} — ` : ''}{n.rulings[0].text}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // round 35: innermost wins — a leaf layer card suppresses the docent card.
+  // round 92: a node-bound element shows the IA card instead (no double card).
+  let docent: React.ReactNode = null;
+  if (ready && a && !leafActive && !node) {
+    const { left, top } = place(anchor, DOCENT_W, DOCENT_H);
+    docent = (
+      <div
+        className="learn-callout"
+        style={{
+          position: 'fixed', left, top, width: DOCENT_W, zIndex: 65, pointerEvents: 'none',
+          background: 'var(--color-surface-overlay)', border: '1px solid var(--color-accent-bright)',
+          borderRadius: 1, padding: '10px 12px',
+          fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', lineHeight: 1.5,
+        }}
+      >
+        <div style={{ color: 'var(--color-accent-bright)', letterSpacing: 1 }}>{a.mark} {name}</div>
         <div style={{ color: 'var(--color-ink-primary)', marginTop: 4 }}>{a.desc}</div>
         <div style={{ color: 'var(--color-ink-secondary)', marginTop: 4 }}>
           <span style={{ color: 'var(--color-ink-muted)' }}>answers:</span> {a.answers}
@@ -111,10 +126,12 @@ export function Annotated({
         e.stopPropagation(); // innermost annotated component wins
         const r = e.currentTarget.getBoundingClientRect();
         setAnchor({ top: r.top, left: r.left, bottom: r.bottom });
+        if (node) setIaHover(true); // round 92: the layer lens yields to this card
       }}
       onMouseOut={(e) => {
         e.stopPropagation();
         setAnchor(null);
+        if (node) setIaHover(false);
       }}
       onClickCapture={(e) => {
         e.preventDefault(); // normal interactions suppressed in learn mode
@@ -122,10 +139,8 @@ export function Annotated({
       }}
     >
       {children}
-      {/* round 89: static IA-node callout — proves the live element ↔ ia-model
-          binding; content read from the shared source, always-on in learn mode */}
-      {node && <IANodeCallout id={node} />}
-      {card}
+      {iaCard}
+      {docent}
     </div>
   );
 }

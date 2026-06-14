@@ -621,3 +621,29 @@ originals.*
     (now PRIMARY, still tinted) + gold +7.6% value + gold meter strip. Demoting
     the name does NOT weaken severity; the strip + value tint carry it. Data,
     sort, meter strip, expand, and alert logic are all unchanged (verify PASSED).
+
+- **DEV DECISION (pending Anthony) — ROUND 92: Learn-mode annotations
+  ALWAYS-VISIBLE → HOVER-REVEALED (the round-89-deferred hover choreography)**.
+  The round-89 IA callouts were always-on, so 15 VesselTiles stacked 15
+  identical cards. Now Learn mode shows NO callouts by default (clean interface +
+  the mode bar); hovering an annotated element reveals ONLY that element's
+  callout, and moving away hides it. One card at a time.
+  - **De-duplication** falls out of hover-gating (option (a)): only the hovered
+    (innermost — `stopPropagation`) wrapper anchors, so identical node types never
+    show at once — you learn what a VesselTile is by hovering any ONE; the other
+    14 stay quiet. Verified: hover one tile = 1 callout; hover another = still 1.
+  - **One card, not two**: a node-bound element shows the IA callout and the
+    round-8 docent card yields; the round-35 LayerLens hover card also yields
+    (new `iaHover` context flag) while an IA callout is open — click-to-copy-path
+    still works. Cards are fixed-positioned with horizontal clamp + vertical flip
+    so they never run off-screen; subtle ≤100ms opacity fade (`.learn-callout`),
+    disabled under `prefers-reduced-motion`.
+  - **Hover-to-TEACH is scoped to Learn mode and is NOT a violation of the
+    operational "hover points, click asks" ruling** (logged intentional): that
+    ruling governs DATA reveals in the LIVE interface, which is unchanged (Learn
+    off renders identically — verified 0 callouts in the DOM). Learn mode is a
+    separate docent layer where explain-on-hover is the expected convention; the
+    mode bar's "hover anything" is now literally true. Operational hover (Learn
+    off) still does nothing on its own.
+  - **Source unchanged**: the Learn consumer's REVEAL behavior changed only; the
+    shared ia-model content + binding (round 89) are untouched this round.

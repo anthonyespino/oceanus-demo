@@ -20,6 +20,10 @@ const LearnContext = createContext<{
   /** round 35: a leaf card is showing — component docent cards yield */
   leafActive: boolean;
   setLeafActive: (b: boolean) => void;
+  /** round 92: an IA-node callout is open on hover — the layer lens yields so
+      exactly one Learn card shows at a time (no stacking/overlap) */
+  iaHover: boolean;
+  setIaHover: (b: boolean) => void;
 }>({
   mode: 'default',
   setMode: () => {},
@@ -29,6 +33,8 @@ const LearnContext = createContext<{
   setExpertOn: () => {},
   leafActive: false,
   setLeafActive: () => {},
+  iaHover: false,
+  setIaHover: () => {},
 });
 
 export function useLearn() {
@@ -45,6 +51,7 @@ const badge: React.CSSProperties = {
 export function LearnProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<UIMode>('default');
   const [leafActive, setLeafActive] = useState(false);
+  const [iaHover, setIaHover] = useState(false);
   const learnOn = mode === 'learn';
   const expertOn = mode === 'expert';
 
@@ -64,7 +71,7 @@ export function LearnProvider({ children }: { children: React.ReactNode }) {
   const setExpertOn = (b: boolean) => setMode(b ? 'expert' : 'default');
 
   return (
-    <LearnContext.Provider value={{ mode, setMode, learnOn, expertOn, setLearnOn, setExpertOn, leafActive, setLeafActive }}>
+    <LearnContext.Provider value={{ mode, setMode, learnOn, expertOn, setLearnOn, setExpertOn, leafActive, setLeafActive, iaHover, setIaHover }}>
       {children}
       <LayerLens />
       {learnOn && (

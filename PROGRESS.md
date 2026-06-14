@@ -1,3 +1,37 @@
+# PROGRESS — 2026-06-14 (Session 81: ROUND 92 — Learn mode: hover-gated reveal + de-dup)
+
+## Done (verified docs/screens/r92-hover-tile.png)
+- Learn-mode annotations changed from always-visible (round-89 foundation) to
+  **HOVER-REVEALED**. Default Learn state = clean interface + mode bar, NO
+  callouts. Verified: Learn ON + no hover = 0 callouts; mode bar present.
+- Hovering an element reveals ONLY that element's callout; moving away hides it.
+  Verified: hover tile v01 = 1 callout (vessel-tile); move away = 0.
+- **De-dup**: hover-gating solves it (option a) — only the innermost hovered
+  wrapper anchors. Verified: hover tile v03 = still 1 callout (not 15).
+- **One card at a time**: node-bound element shows the IA callout; the round-8
+  docent card yields (suppressed when node bound) and the round-35 LayerLens
+  hover card yields via a new `iaHover` context flag (click-to-copy still works).
+- Clean positioning: fixed + horizontal clamp + vertical flip — never off-screen
+  (verified an edge card stayed within the viewport). Subtle ≤100ms opacity fade
+  (`.learn-callout`), disabled under prefers-reduced-motion (matches the existing
+  reduced-motion pattern in globals.css).
+- **Hover-to-teach scoped to Learn mode** — logged as intentional, NOT a
+  violation of the operational hover-points-click-asks ruling (that governs the
+  live interface, unchanged). Mode bar's "hover anything" is now literally true.
+- **Source unchanged**: only the Learn consumer's reveal behavior changed; the
+  shared ia-model content + binding (round 89) untouched.
+
+## Demo-path safety (verified)
+- Learn OFF renders identically — 0 callouts in the DOM. Operational hover
+  behavior unchanged. TSC-OK · LINT-CLEAN · verify PASSED · offline build compiled.
+
+## Note for a later content pass
+- The vessel-tile IA node still records tier DISPLAY/24; round 90 demoted the
+  tile NAME to PRIMARY/16 (value-first). Not touched here (round 92 = no source
+  change); worth a one-line ia-model fix in a future content round.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 80: ROUND 91 — master clock, demote date below time)
 
 ## Done (verified docs/screens/r91-clock.png)

@@ -34,7 +34,7 @@ async function copyText(text: string): Promise<boolean> {
 }
 
 export function LayerLens() {
-  const { learnOn, setLeafActive } = useLearn();
+  const { learnOn, setLeafActive, iaHover } = useLearn();
   const [info, setInfo] = useState<{ path: string; tokens: string | null; binds: string | null; x: number; y: number } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -88,7 +88,9 @@ export function LayerLens() {
   );
   return (
     <>
-      {info && (
+      {/* round 92: yield to an open IA-node callout so exactly one Learn card
+          shows at a time (click-to-copy still works regardless) */}
+      {info && !iaHover && (
         <div style={{
           position: 'fixed', left: info.x, top: Math.min(info.y + 8, window.innerHeight - 110), width: CARD_W,
           zIndex: 66, pointerEvents: 'none',
