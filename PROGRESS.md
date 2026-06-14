@@ -1,3 +1,28 @@
+# PROGRESS — 2026-06-14 (Session 85: ROUND 97 — glass toggle on floating sections + CommandBand padding)
+
+## Done (verified docs/screens/r97-glass-off.png, r97-glass-on.png)
+### Padding (always on)
+- Vessel NAME top air: sticky paddingTop 16→24. Seam divider gets air both sides:
+  instrument-row paddingBottom 16→20 (above) + voyage paddingTop 16→20 (below),
+  so the divider no longer crowds the wind/waves line.
+### Surface glass (dev toggle, attempt #5, pending verdict)
+- FleetProvider `surfaceGlass` (default OFF). D-panel "surface glass" row
+  off(float)/on(glass). Applied to CommandBand, voyage bar, Fleet Plot,
+  FleetHealthBand via shared `glassFill` (gb.ts).
+- Bounded: near-opaque fill (rgba 24/0.82) + backdrop-blur(3px), NO glow/edge/
+  stroke. Verified: backdrop-blur applied; severity sharp (EFF Δ +13.7% gold
+  rgb(227,209,65) crisp under glass); sticky diffraction maintained on scroll.
+- **fps 60 floor HELD**: glass-off ~120 vs glass-on ~120 on the test display —
+  no drop. Reduced-motion: glass over the static frozen gradient (cheap).
+- No verdict — judge on pixels (prior glass attempts cut as SaaS-tells; the
+  94/96 float is the new justification).
+
+## Safety
+Greyscale, earned gold, no glow/stroke, type scale held. Data/sort/behavior
+unchanged. TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 84: ROUND 96 — float CommandBand + voyage bar)
 
 ## Done (verified docs/screens/r96-commandband-float.png)

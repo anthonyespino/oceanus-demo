@@ -26,7 +26,7 @@ import { Glyph, MODE_GLYPH, type GlyphName } from './Glyph';
 import { StateMark } from './StateMark';
 import { RevealZone } from './Contextual';
 import { FONT, NEUTRAL, RADIUS } from './probeTokens';
-import { gb, fmtTime } from './gb';
+import { gb, glassFill, fmtTime } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 import { Annotated } from '../learn/Annotated'; // round 89: IA-node binding (voyage-bar)
 
@@ -111,7 +111,7 @@ function WxInline({ g, value, attrs, glyphColor = NEUTRAL.inkSecondary }: { g: G
 
 
 export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
-  const { collapsedPanels, togglePanel } = useFleet();
+  const { collapsedPanels, togglePanel, surfaceGlass } = useFleet();
   const id = vessel.static.id;
   const min = !!collapsedPanels[`${id}:command`];
   // ROUND 88: ONE maximize/minimize control toggles BOTH endpoint detail columns
@@ -179,8 +179,14 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   // round-94 Fleet Plot / FleetHealthBand treatment. Padding + sticky mechanics
   // (round 32) are kept; the boxShadow is RETAINED as the thin horizontal seam
   // divider to the voyage bar below (structural separator, not severity).
+  // ROUND 97: (a) more top air above the NAME + more air ABOVE the seam divider
+  // (24/20 vs the flat pad-card) so the divider stops crowding the wind/waves
+  // line. (b) SURFACE GLASS dev toggle — near-opaque fill + subtle blur when on
+  // (glassFill spread FIRST so the seam radius/boxShadow still win); sticky, so
+  // the diffraction persists on scroll.
   const sticky: React.CSSProperties = {
-    padding: 'var(--pad-card)', marginBottom: 0, position: 'sticky', top: 0, zIndex: 6,
+    ...(surfaceGlass ? glassFill : {}),
+    padding: '24px var(--pad-card) 20px', marginBottom: 0, position: 'sticky', top: 0, zIndex: 6,
     borderRadius: `${RADIUS}px ${RADIUS}px 0 0`,
     boxShadow: '0 1px 0 var(--color-line-strong)',
   };
@@ -411,8 +417,9 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           tint/weight/alert. */}
       {/* ROUND 96: FLOAT — voyage bar panel fill removed; floats on the gradient
           (the seam divider above, on the sticky row, separates it from the
-          instruments). Padding kept. */}
-      <section style={{ padding: 'var(--pad-card)', marginBottom: 8 }}>
+          instruments). ROUND 97: extra top padding gives the seam divider air
+          BELOW it (so it isn't crowding the voyage labels); glass when toggled. */}
+      <section style={{ ...(surfaceGlass ? glassFill : {}), padding: '20px var(--pad-card) var(--pad-card)', marginBottom: 8 }}>
         <Field level="vessel" field="next_port_calls"><Annotated name="RoutePanel" node="voyage-bar">{profile}</Annotated></Field>
         {wxStale && (
           <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>

@@ -20,7 +20,7 @@ import { Field } from './Field';
 import { Stat } from './Stat';
 import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
-import { fmtPct } from './gb';
+import { fmtPct, glassFill } from './gb';
 import { Glyph, Label } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -62,7 +62,7 @@ const cell: React.CSSProperties = {
 
 export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   const [range, setRange] = useState<TrendRange>(90);
-  const { ikbBand, treatment, censusFilter, setCensusFilter } = useFleet();
+  const { ikbBand, treatment, censusFilter, setCensusFilter, surfaceGlass } = useFleet();
   const [wrapRef, w] = useContentWidth(560);
   // ROUND 94: three descriptor states (resolves the round-52 thread where
   // default absorbed glyphs and blurred the modes):
@@ -130,8 +130,9 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
       {/* ROUND 94: FLOAT — the panel fill (gb.box surface-raised) is removed so
           the band floats directly on the Calm Sea gradient; the gradient shows
           through where the fill was. Regions are separated by the cells' vertical
-          hairline dividers only (structural, not severity). */}
-      <section>
+          hairline dividers only (structural, not severity).
+          ROUND 97: SURFACE GLASS dev toggle — near-opaque fill + subtle blur when on. */}
+      <section style={surfaceGlass ? glassFill : undefined}>
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         {/* CELL 1 — status census (clickable filters; never separable from the mean) */}
         <div style={{ ...cell, borderLeft: 'none', paddingLeft: 0, flexDirection: 'row', gap: 18, alignItems: 'center' }}>

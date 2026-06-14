@@ -14,7 +14,7 @@ import { NauticalChart, useContentWidth, usePanZoom, FollowChip, type ChartFrame
 import { clusterPoints, placeLabels, labelWidth } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR } from './probeTokens';
-import { fmtPct } from './gb';
+import { fmtPct, glassFill } from './gb';
 import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
 import { useLearn } from '../learn/LearnProvider'; // round 88: redundant header → Learn-only
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
@@ -43,7 +43,7 @@ export function FleetMap({
   height?: number;
 }) {
   const router = useRouter();
-  const { motion } = useFleet();
+  const { motion, surfaceGlass } = useFleet();
   const { learnOn } = useLearn(); // round 88: "FLEET PLOT — GULF OF MEXICO" is a redundant location restatement — Learn-only docent
   const [wrapRef, w] = useContentWidth(width);
   const [hoverId, setHoverId] = useState<string | null>(null);
@@ -91,8 +91,10 @@ export function FleetMap({
       {learnOn && <Label g="chart.fleet" headerAttrs={layer('FleetMap / header / header.glyph', 'section header · chart.fleet · round 88: LEARN-ONLY (redundant location restatement; the map self-identifies + carries the GULF OF MEXICO furniture label)', 'FLEET PLOT — GULF OF MEXICO')} style={{ marginBottom: 4 }}>fleet plot — gulf of mexico</Label>}
       {/* ROUND 94: FLOAT — the panel fill (gb.box surface-raised) is removed so
           the Fleet Plot floats directly on the Calm Sea gradient. The chart's own
-          navy water (the nautical instrument) stays; only the container fill goes. */}
-      <section>
+          navy water (the nautical instrument) stays; only the container fill goes.
+          ROUND 97: SURFACE GLASS dev toggle — near-opaque fill + subtle blur when
+          on (mostly behind the opaque chart; applied for section consistency). */}
+      <section style={surfaceGlass ? glassFill : undefined}>
       <Annotated name="FleetMap markers/cluster chips">
       <div ref={wrapRef} style={{ position: 'relative', overflow: 'hidden' }}>
         <div ref={wheelRef} {...handlers} style={{ cursor: following ? 'default' : 'grab' }}>

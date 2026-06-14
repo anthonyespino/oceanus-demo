@@ -39,6 +39,23 @@ export const gb = {
   stale: { color: 'var(--color-data-stale)', background: 'var(--color-surface-overlay)' } as React.CSSProperties,
 };
 
+// ROUND 97: SURFACE GLASS (dev toggle, attempt #5) for the floating sections
+// (CommandBand, voyage bar, Fleet Plot, FleetHealthBand — backgrounds removed in
+// 94/96). HARD bounds = instrument-glass, not SaaS:
+//   · near-OPAQUE fill (0.82) — the surface reads as matter-of-fact SOLID;
+//   · VERY subtle backdrop-blur — the Calm Sea gradient diffracts through as a
+//     faint cue, never a clear translucent pane;
+//   · NO glow, NO bright edge, NO stroke (borderless-fills holds — the edge is
+//     just fill meeting blur).
+// Severity stays SHARP: backdrop-filter blurs only what is BEHIND the panel,
+// never the panel's own content (gold values / arcs render full-strength on top).
+export const glassFill: React.CSSProperties = {
+  background: 'rgba(24, 24, 24, 0.82)', // surface-raised (#181818) near-opaque
+  backdropFilter: 'blur(3px)',
+  WebkitBackdropFilter: 'blur(3px)',
+  borderRadius: RADIUS,
+};
+
 export function fmtPct(x: number): string {
   return `${x > 0 ? '+' : ''}${x.toFixed(1)}%`;
 }

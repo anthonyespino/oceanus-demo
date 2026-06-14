@@ -150,6 +150,8 @@ export function DevPanel() {
         <div style={{ marginBottom: 8 }}><LiveControls /></div>
         <Row label="status type" value={f.clusterType} onPick={f.setClusterType}
           options={[{ v: 'primary' as const, text: 'A primary 16' }, { v: 'context' as const, text: 'B context 13' }]} />
+        <Row label="surface glass" value={f.surfaceGlass} onPick={f.setSurfaceGlass}
+          options={[{ v: false, text: 'off (float)' }, { v: true, text: 'on (glass)' }]} />
         <Row label="density" value={f.density} onPick={f.setDensity}
           options={[{ v: 'minimal' as const, text: 'minimal' }, { v: 'standard' as const, text: 'standard' }]} />
         <Row label="color" value={f.treatment} onPick={f.setTreatment}

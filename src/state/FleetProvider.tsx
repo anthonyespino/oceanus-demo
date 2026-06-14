@@ -79,6 +79,9 @@ interface FleetContextValue {
   // round 95: global status-cluster type-size toggle (PRIMARY 16 vs CONTEXT 13),
   // default PRIMARY — pending Anthony's pixel verdict
   clusterType: ClusterType; setClusterType: (t: ClusterType) => void;
+  // round 97: SURFACE GLASS dev toggle (attempt #5) on the floating sections —
+  // default OFF (plain float on gradient); ON = near-opaque fill + subtle blur
+  surfaceGlass: boolean; setSurfaceGlass: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -128,6 +131,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [mag, setMag] = useState(2.5); // MAGNIFY
   const [flow, setFlow] = useState(1.0); // FLOW/RIDGE
   const [clusterType, setClusterType] = useState<ClusterType>('primary'); // round 95: default PRIMARY 16
+  const [surfaceGlass, setSurfaceGlass] = useState(false); // round 97: glass off by default (plain float)
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -184,6 +188,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
         waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace, mag, setMag, flow, setFlow,
         clusterType, setClusterType,
+        surfaceGlass, setSurfaceGlass,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}

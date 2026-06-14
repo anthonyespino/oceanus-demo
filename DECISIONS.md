@@ -722,3 +722,27 @@ originals.*
   + DISPLAY name + arcs crisp, dimmed context (master, place, wind/waves, voyage
   labels, gauge captions) still readable; severity dominates (gold +13.7% EFF Δ +
   amber arc unmissable); voyage bar greyscale/no-blue (round 81) intact.
+
+- **ROUND 97: CommandBand padding fixes + SURFACE GLASS dev toggle (attempt #5)**.
+  - **Padding (applied regardless of glass)**: more top air above the vessel NAME
+    (sticky paddingTop 16→24), and the horizontal seam divider gets air on BOTH
+    sides — paddingBottom 16→20 on the instrument row (above the line) + voyage
+    paddingTop 16→20 (below the line) — so the divider stops crowding the
+    wind/waves readouts.
+  - **DEV DECISION (pending Anthony) — SURFACE GLASS, glass attempt #5**: a 'D'-
+    panel toggle (`surfaceGlass`, default OFF = plain float) applies a bounded
+    glass treatment to the floating sections (CommandBand, voyage bar, Fleet Plot,
+    FleetHealthBand). HARD bounds = instrument-glass, not SaaS: near-OPAQUE fill
+    (rgba 24/0.82, reads SOLID) + a VERY subtle backdrop-blur(3px) so the gradient
+    diffracts through as a faint cue; NO glow, NO bright edge, NO stroke
+    (borderless-fills holds). **Severity stays SHARP** — backdrop-filter blurs
+    only what is BEHIND the panel, never its content (verified EFF Δ +13.7% renders
+    gold rgb(227,209,65) crisp under glass). **Sticky diffraction persists on
+    scroll** (verified). **Performance**: 60fps floor HELD — glass-off ≈ glass-on
+    (both ~120fps on the test display, no drop). Reduced-motion: glass blurs the
+    static gradient still (AmbientSea already freezes), cheap.
+  - **Justification for re-attempting glass (prior attempts cut as SaaS-tells)**:
+    rounds 94/96 removed the panel backgrounds, leaving sections needing a surface
+    cue; sticky diffraction reinforces the bridge-window metaphor. The toggle
+    exists to test whether bounded glass reads as instrument-diffraction (keep) or
+    consumer-SaaS (cut). **No verdict locked — judge on pixels.**
