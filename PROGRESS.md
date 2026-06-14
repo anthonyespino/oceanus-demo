@@ -1,3 +1,24 @@
+# PROGRESS — 2026-06-14 (Session 84: ROUND 96 — float CommandBand + voyage bar)
+
+## Done (verified docs/screens/r96-commandband-float.png)
+- VesselCommandBand instrument row (gauges + center stack) + voyage bar panel
+  fills (gb.box surface-raised) REMOVED — both float on the Calm Sea gradient,
+  extending the round-94 treatment across the inspector. Gradient is now the
+  consistent connective surface (FleetView + VesselInspector).
+- The thin horizontal seam divider between instrument row and voyage bar
+  (sticky boxShadow 0 1px 0 line-strong) RETAINED — structural, not severity.
+- Sticky mechanics, padding, gauges, clock, voyage progress, maximize button
+  unchanged (visual only).
+- Legibility verified against the gradient: HERO values + DISPLAY name + arcs
+  crisp; dimmed context (Dale Calloway, GALVESTON, 5.9 kn/2.4 ft, captions,
+  Viosca Knoll 786, 49 nm from Venice) readable; severity dominates (gold
+  +13.7% EFF Δ + amber arc); voyage bar greyscale/no-blue intact.
+
+## Safety
+Data/sort/alert/behavior unchanged. TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 83: ROUND 95 — Calm Sea in Expert + status cluster type toggle)
 
 ## Done (verified docs/screens/r95-*.png)

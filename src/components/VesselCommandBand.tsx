@@ -174,12 +174,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
     fontFamily: FONT.display, fontSize: 'var(--type-display)', fontWeight: 700,
     textTransform: 'uppercase', letterSpacing: 1, lineHeight: 1.1,
   };
-  // Round 34: ONE visual frame — the primary row and the profile/facts
-  // section share a container silhouette (radius split across the seam, no
-  // top border on the lower half). The primary row alone stays sticky
-  // (round 32 mechanics untouched).
+  // ROUND 96: FLOAT — the panel fill (gb.box surface-raised) is removed; the
+  // instrument row floats directly on the Calm Sea gradient, matching the
+  // round-94 Fleet Plot / FleetHealthBand treatment. Padding + sticky mechanics
+  // (round 32) are kept; the boxShadow is RETAINED as the thin horizontal seam
+  // divider to the voyage bar below (structural separator, not severity).
   const sticky: React.CSSProperties = {
-    ...gb.box, marginBottom: 0, position: 'sticky', top: 0, zIndex: 6,
+    padding: 'var(--pad-card)', marginBottom: 0, position: 'sticky', top: 0, zIndex: 6,
     borderRadius: `${RADIUS}px ${RADIUS}px 0 0`,
     boxShadow: '0 1px 0 var(--color-line-strong)',
   };
@@ -408,7 +409,10 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           the destination label, current-position reference floating with the
           marker). All reference/context: neutral, dimmed, context-scale, no
           tint/weight/alert. */}
-      <section style={{ ...gb.box, marginBottom: 8, borderTop: 'none', borderRadius: `0 0 ${RADIUS}px ${RADIUS}px` }}>
+      {/* ROUND 96: FLOAT — voyage bar panel fill removed; floats on the gradient
+          (the seam divider above, on the sticky row, separates it from the
+          instruments). Padding kept. */}
+      <section style={{ padding: 'var(--pad-card)', marginBottom: 8 }}>
         <Field level="vessel" field="next_port_calls"><Annotated name="RoutePanel" node="voyage-bar">{profile}</Annotated></Field>
         {wxStale && (
           <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>

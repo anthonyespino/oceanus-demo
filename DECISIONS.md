@@ -706,3 +706,19 @@ originals.*
   (no orphan). Verdict pending Anthony's pixels; then lock one and retire the
   toggle. (Greyscale + earned color held: DATALINK degraded-blue and CAUTION gold
   unchanged.)
+
+- **DEV DECISION (pending Anthony) — ROUND 96: CommandBand header + voyage bar
+  FLOAT (backgrounds removed)**. The filled panel backgrounds (`gb.box`
+  surface-raised) behind the VesselCommandBand instrument row (gauges + center
+  stack) and the voyage bar below it are removed — both float directly on the
+  Calm Sea gradient, extending the round-94 float treatment across the inspector.
+  The gradient is now the consistent connective surface across FleetView and
+  VesselInspector. The existing thin horizontal seam divider between the
+  instrument row and the voyage bar (the sticky row's `boxShadow 0 1px 0
+  line-strong`) is RETAINED — structural separator (same job as the round-94
+  section dividers), not severity. Sticky mechanics (round 32), padding, gauges,
+  mission clock, voyage progress, and the maximize button are unchanged — visual
+  treatment only. Legibility holds against the subtle gradient: HERO gauge values
+  + DISPLAY name + arcs crisp, dimmed context (master, place, wind/waves, voyage
+  labels, gauge captions) still readable; severity dominates (gold +13.7% EFF Δ +
+  amber arc unmissable); voyage bar greyscale/no-blue (round 81) intact.
