@@ -23,16 +23,25 @@ function MasterClock() {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
-  const z = now
-    ? `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}Z`
-    : '————-——-—— ——:——:——Z';
+  // ROUND 91: date + time split into two type weights — the TIME is the hero,
+  // the DATE is a quiet subordinate prefix (smaller tier + lighter weight/ink),
+  // so the long date string stops fighting the time for attention.
+  const dateStr = now
+    ? `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())}`
+    : '————-——-——';
+  const timeStr = now
+    ? `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}Z`
+    : '——:——:——Z';
   return (
     <span
-      {...layer('AppHeader / clock / master.clock.text', 'global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock', 'system UTC now')}
+      {...layer('AppHeader / clock / master.clock.text', 'global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock', 'system UTC now')}
       title="global UTC (Zulu) — system wall clock"
-      style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-hero)', fontWeight: 600, color: 'var(--color-ink-secondary)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
+      style={{ display: 'inline-flex', alignItems: 'baseline', gap: 8, fontFamily: 'var(--font-data)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
     >
-      {z}
+      {/* DATE — subordinate prefix: smaller tier + lighter weight + dimmer ink */}
+      <span style={{ fontSize: 'var(--type-context)', fontWeight: 400, color: 'var(--color-ink-muted)' }}>{dateStr}</span>
+      {/* TIME — the hero: stays on the HERO tier, bold, brighter ink */}
+      <span style={{ fontSize: 'var(--type-hero)', fontWeight: 600, color: 'var(--color-ink-secondary)' }}>{timeStr}</span>
     </span>
   );
 }

@@ -9,7 +9,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## AppHeader
 
   Region: clock
-    • master.clock.text  → global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock · system UTC now
+    • master.clock.text  → global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock · system UTC now
 
 ## CrewLogPanel
 
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T05:53:33.151Z*
+*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T16:51:57.409Z*

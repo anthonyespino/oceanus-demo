@@ -11,7 +11,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/LiveControls.tsx*
 
 - `clock / master.clock.text`
-  - TOKENS — global UTC/Zulu wall clock (system time) · font/data tabular · neutral ink · distinct from the per-vessel mission clock
+  - TOKENS — global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock
   - BINDS — system UTC now
 
 ## CrewLogPanel
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-14T05:53:33.148Z*
+*142 instrumented leaves · 20 components · generated 2026-06-14T16:51:57.407Z*

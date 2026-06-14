@@ -1,3 +1,17 @@
+# PROGRESS — 2026-06-14 (Session 80: ROUND 91 — master clock, demote date below time)
+
+## Done (verified docs/screens/r91-clock.png)
+- Global Zulu master clock split into two type weights: **TIME is the hero**
+  (HERO 20, weight 600, ink-secondary), **DATE is a subordinate prefix** (CONTEXT
+  13, weight 400, ink-muted) — pulled back on BOTH axes (smaller + lighter/dimmer)
+  so the long date string stops fighting the time.
+- Same line, date left / time right, baseline-aligned. Plex Mono, greyscale.
+- Verified: DATE 13px/400/#757575, TIME 20px/600/#b0b0b0 — both existing tiers
+  (no orphans); clock still ticks (…21Z → …22Z) and stays Zulu (Z suffix).
+- Scope: master clock only. Nothing else touched. TSC-OK · LINT-CLEAN · build OK.
+
+---
+
 # PROGRESS — 2026-06-13 (Session 79: ROUND 90 — fleet-band glyphs + thumbcard value-first rebalance)
 
 ## Done (verified — docs/screens/r90-*.png)
