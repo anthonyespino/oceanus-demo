@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T05:38:19.227Z",
+  "generated": "2026-06-14T05:53:33.151Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -322,7 +322,7 @@
       "component": "FleetHealthBand",
       "region": "arrivals",
       "leaf": "bunker.text",
-      "tokens": "font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)",
+      "tokens": "glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn",
       "binds": "{# bunker-flagged calls in next 24h}",
       "file": "src/components/FleetHealthBand.tsx"
     },
@@ -1213,7 +1213,7 @@
       "component": "VesselTile",
       "region": "(root)",
       "leaf": "name.text",
-      "tokens": "type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)",
+      "tokens": "type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)",
       "binds": "{vessel.static.name}",
       "file": "src/components/VesselTile.tsx"
     },

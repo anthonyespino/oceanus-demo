@@ -588,3 +588,36 @@ originals.*
     unchanged and renders identically with Learn OFF (verified: 0 IA callouts in
     the DOM with Learn off; 7 distinct nodes bound across both pages with Learn on).
     `src/ia/` is permanent (survives the strip-before-demo of `src/learn/`).
+
+- **DEV DECISION (pending Anthony) — ROUND 90: FleetHealthBand descriptors →
+  placeholder glyphs (Learn-exposed names); thumbcard rebalanced VALUE-FIRST**.
+  - **FleetHealthBand descriptors → placeholder glyphs.** Every descriptor word
+    (WATCH / NOMINAL / DEGRADED / 30D FLEET MEAN / FLEET BURN / ARRIVALS 24H /
+    BUNKER) is replaced by a neutral placeholder library glyph, so the band reads
+    glyph + value. The names + meanings are authored in the **shared ia-model**
+    (`IA_BAND_DESCRIPTORS`, round 89's single source) — NOT a separate label
+    store; default mode shows the glyph alone, **Learn mode surfaces the name**
+    from the model (verified: descriptor words = 0 in default; all surface in
+    Learn; names grep only to `ia-model.ts`). Glyphs are greyscale/neutral; the
+    census **values keep their treatment** (WATCH count stays gold when >0).
+    Placeholders from the drawing queue — Anthony refines which survive as glyphs
+    vs revert to labels.
+  - **Thumbcard rebalanced value-first.** On the board a card is a scannable
+    summary and the **deviation is the subject** (it is what the consequence sort
+    ranks by) — the inverse of the inspector, where the vessel IS the subject. So
+    the deviation value is the card HERO (HERO 20, tint logic unchanged — gold
+    when alert-backed) and the vessel NAME is demoted from DISPLAY 24 to **PRIMARY
+    16** (a label, not a headline; status tint kept).
+  - **Audit follow-up (the type audit missed this):** the card name sat at
+    DISPLAY 24 — inspector register — while the fleet-mean value above it was HERO
+    20, so the name out-shouted the mean and the two folds competed. Demoting the
+    name to 16 resolves the proportional mismatch; the card row and the upper fold
+    now read at one consistent summary register (murmur-then-shout → one system).
+  - **Card glyphs unified.** calendar / wave / clock were 26 / 24 / 14 (the
+    calendar oversized, competing with the value); all three now share ONE size
+    (18). (Glyph px sizing is a separate dimension from the type scale — no type
+    orphan introduced; sizes used remain tiers 16 + 20.)
+  - **Severity re-confirmed (round 66 holds):** Meridian still pops — gold name
+    (now PRIMARY, still tinted) + gold +7.6% value + gold meter strip. Demoting
+    the name does NOT weaken severity; the strip + value tint carry it. Data,
+    sort, meter strip, expand, and alert logic are all unchanged (verify PASSED).

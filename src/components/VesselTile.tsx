@@ -26,6 +26,10 @@ import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
 const SIZE_ORDER: TileSize[] = ['mini', 'standard', 'expanded'];
+// ROUND 90: all three card glyphs (calendar / wave / clock) share ONE size —
+// the calendar was oversized (26) vs the footer glyphs (wave 24, clock 14),
+// so it competed with the hero value. One modest size, consistent register.
+const CARD_GLYPH = 18;
 
 export function VesselTile({
   vessel,
@@ -123,8 +127,16 @@ export function VesselTile({
           SPARK fill band (round 63) is retained — it groups a distinct data
           region. Name position/size (D-DIN)/tint (gold when alerted, neutral
           nominal) unchanged. RADIUS stays 1px (round 36). */}
-      <div style={{ padding: mini ? '14px 14px 18px' : '22px 14px 26px', textAlign: 'center' }}>
-        <div {...layer('VesselTile / name.text', 'type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)', '{vessel.static.name}')} style={{ fontFamily: FONT.display, fontSize: 'var(--type-display)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+      <div style={{ padding: mini ? '14px 14px 14px' : '20px 14px 16px', textAlign: 'center' }}>
+        {/* ROUND 90 VALUE-FIRST REBALANCE: the name is a LABEL, not the headline.
+            On the board a card is a scannable summary and the deviation value is
+            what you scan for (the consequence sort ranks by it) — so the value is
+            the hero (HERO 20) and the name recedes to PRIMARY (16). This resolves
+            the audit-missed mismatch where the name sat at DISPLAY 24 (inspector
+            register) and out-shouted the HERO-20 fleet-mean above it. Status tint
+            on the name is KEPT (earned) — Meridian's name still goes gold, the
+            strip + value tint carry severity (round 66), so it still pops. */}
+        <div {...layer('VesselTile / name.text', 'type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)', '{vessel.static.name}')} style={{ fontFamily: FONT.display, fontSize: 'var(--type-primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
       </div>
       {/* BODY — darker fill (tile base shows through); centered glyph-above-
           value at top, two-column footer pinned to the base (round 63 mock) */}
@@ -132,7 +144,7 @@ export function VesselTile({
         {/* primary value: category glyph (calendar) centered ABOVE the value */}
         <div style={{ textAlign: 'center' }}>
           <div title="30-day trend" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
-            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={mini ? 20 : 26} /></span>
+            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar (drawn) · NEUTRAL UI ink — not a status carrier (round 63) · sized to the mock · identifies the 30-day trend', '30d trend')} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={CARD_GLYPH} /></span>
             <span {...layer('VesselTile / trend.value.text', 'type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
               {fmtPct(d.trend_30d)}
               {treatment === 'automotive' && status === 'nominal' && (
@@ -178,11 +190,11 @@ export function VesselTile({
         {tier === 1 && !mini && (
           <div style={{ marginTop: 'auto', paddingTop: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <span {...layer('VesselTile / endurance.glyph', 'glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance', 'endurance')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="wave" size={24} /></span>
+              <span {...layer('VesselTile / endurance.glyph', 'glyph/wave (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies endurance', 'endurance')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="wave" size={CARD_GLYPH} /></span>
               <span {...layer('VesselTile / endurance.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.endurance_hours} h')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{d.endurance_hours} h</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              <span {...layer('VesselTile / now.glyph', 'glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline', 'now vs mode baseline')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="clock" /></span>
+              <span {...layer('VesselTile / now.glyph', 'glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline', 'now vs mode baseline')} style={{ color: NEUTRAL.ink, lineHeight: 0 }}><Glyph name="clock" size={CARD_GLYPH} /></span>
               <span {...layer('VesselTile / now.value.text', 'font/data 14 tabular · ink/primary · centered under its glyph (round 63)', '{derived.efficiency_delta_pct} vs mode baseline')} style={{ fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: NEUTRAL.ink, fontFamily: FONT.data }}>{fmtPct(d.efficiency_delta_pct)}</span>
             </div>
           </div>

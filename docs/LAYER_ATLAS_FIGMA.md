@@ -64,7 +64,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 ## FleetHealthBand
 
   Region: arrivals
-    • bunker.text  → font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity) · {# bunker-flagged calls in next 24h}
+    • bunker.text  → glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn · {# bunker-flagged calls in next 24h}
     • value.text  → type/hero · font/data tabular · ink/primary · links to #port-calls · {# port calls in next 24h}
   Region: burn
     • spark.chart  → ink/secondary 1px · auto-ranged (never approaches 0) · {fleet total burn, 24h hourly}
@@ -259,7 +259,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: footer
     • deviation.fill  → meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance · {|derived.efficiency_delta_pct|}
   Region: (root)
-    • name.text  → type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70) · {vessel.static.name}
+    • name.text  → type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70) · {vessel.static.name}
     • now.glyph  → glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline · now vs mode baseline
     • now.value.text  → font/data 14 tabular · ink/primary · centered under its glyph (round 63) · {derived.efficiency_delta_pct} vs mode baseline
     • spark.baseline.line  → line/subtle 1px · zero axis · y = 0
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
 
-*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T05:38:19.226Z*
+*142 leaves · 20 components · 25 glyphs (3 drawn) · generated 2026-06-14T05:53:33.151Z*

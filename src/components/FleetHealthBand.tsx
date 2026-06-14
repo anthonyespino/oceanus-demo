@@ -21,9 +21,11 @@ import { Stat } from './Stat';
 import { Sparkline } from './Sparkline';
 import { useContentWidth } from './NauticalChart';
 import { gb, fmtPct } from './gb';
-import { Label } from './Glyph';
+import { Glyph, Label } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
+import { useLearn } from '../learn/LearnProvider'; // round 90: Learn surfaces descriptor names
+import { IA_BAND_DESCRIPTORS } from '../ia/ia-model'; // round 90: single source for descriptor glyph + name
 
 type TrendRange = 30 | 90 | 365;
 const H = 110;
@@ -57,6 +59,12 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   const [range, setRange] = useState<TrendRange>(90);
   const { ikbBand, treatment, censusFilter, setCensusFilter } = useFleet();
   const [wrapRef, w] = useContentWidth(560);
+  // ROUND 90: descriptors become placeholder GLYPHS; the descriptor NAME is
+  // surfaced only in Learn mode, read from the shared ia-model (single source —
+  // no separate label store). Glyphs stay neutral; values keep their treatment.
+  const { learnOn } = useLearn();
+  const D = IA_BAND_DESCRIPTORS;
+  const dlabel = (id: string) => (learnOn ? D[id].name : undefined);
 
   // census
   const counts: Record<StatusLevel, number> = { degraded: 0, watch: 0, nominal: 0 };
@@ -132,7 +140,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
                 textAlign: 'left',
               }}
             >
-              <Stat label={cls} value={counts[cls]} />
+              <Stat glyph={D[cls].glyph} label={dlabel(cls)} value={counts[cls]} />
             </button>
           ))}
         </div>
@@ -145,7 +153,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
             }}
           >
             <span {...layer('FleetHealthBand / mean / value.text', 'type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)', '{30d fleet mean delta %}')}>
-              <Stat label="30d fleet mean" value={fmtPct(mean30)} onFill={ikbBand} />
+              <Stat glyph={D['fleet-mean'].glyph} label={dlabel('fleet-mean')} value={fmtPct(mean30)} onFill={ikbBand} />
             </span>
             <Field level="fleet" field="fleet_total_daily_spend" />
             {/* ⚖ #4 spend slot: renders only if/when ruled in (Field → null while UNDEFINED) */}
@@ -164,7 +172,7 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         {/* CELL 3 — fleet burn now */}
         <div style={{ ...cell, flexShrink: 0 }}>
           <span {...layer('FleetHealthBand / burn / value.text', 'type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)', '{sum of live fleet burn} gph')}>
-            <Stat label="fleet burn" value={`${burnNow.toLocaleString()} gph`} />
+            <Stat glyph={D['fleet-burn'].glyph} label={dlabel('fleet-burn')} value={`${burnNow.toLocaleString()} gph`} />
           </span>
           <span {...layer('FleetHealthBand / burn / spark.chart', 'ink/secondary 1px · auto-ranged (never approaches 0)', '{fleet total burn, 24h hourly}')}>
             <Sparkline values={burn24} width={120} height={24} zeroBaseline={false} />
@@ -173,10 +181,15 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         {/* CELL 4 — next 24h: arrivals + bunker flags, linking to the board */}
         <a href="#port-calls" style={{ ...cell, flexShrink: 0, textDecoration: 'none', color: NEUTRAL.ink, cursor: 'pointer' }}>
           <span {...layer('FleetHealthBand / arrivals / value.text', 'type/hero · font/data tabular · ink/primary · links to #port-calls', '{# port calls in next 24h}')}>
-            <Stat label="arrivals 24h" value={arrivals} />
+            <Stat glyph={D['arrivals'].glyph} label={dlabel('arrivals')} value={arrivals} />
           </span>
-          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)', '{# bunker-flagged calls in next 24h}')} style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
-            {bunkers} BUNKER {bunkers === 1 ? 'flag' : 'flags'}
+          {/* ROUND 90: the BUNKER descriptor word → placeholder glyph (neutral);
+              count keeps its advisory tint; the name surfaces only in Learn mode */}
+          <span {...layer('FleetHealthBand / arrivals / bunker.text', 'glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn', '{# bunker-flagged calls in next 24h}')} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)' }}>
+            <span style={{ lineHeight: 0, color: NEUTRAL.inkMuted, flexShrink: 0 }}><Glyph name={D['bunker'].glyph} size={14} /></span>
+            <span style={{ color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
+              {bunkers}{learnOn ? ` ${D['bunker'].name}` : ''} {bunkers === 1 ? 'flag' : 'flags'}
+            </span>
           </span>
         </a>
       </div>

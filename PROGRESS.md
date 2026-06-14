@@ -1,3 +1,42 @@
+# PROGRESS — 2026-06-13 (Session 79: ROUND 90 — fleet-band glyphs + thumbcard value-first rebalance)
+
+## Done (verified — docs/screens/r90-*.png)
+### FleetHealthBand — descriptors → placeholder glyphs + Learn labels
+- Every descriptor word (WATCH / NOMINAL / DEGRADED / 30D FLEET MEAN / FLEET BURN
+  / ARRIVALS 24H / BUNKER) → a neutral placeholder library glyph; band reads
+  glyph + value. Verified: 0 descriptor words visible in default mode.
+- Names + meanings authored in the **shared ia-model** (`IA_BAND_DESCRIPTORS`) —
+  single source, no separate label store. Default = glyph alone; **Learn mode
+  surfaces the name** from the model (verified: all six names appear in Learn;
+  grep-confirmed names live ONLY in ia-model.ts).
+- Glyphs greyscale/neutral; the census **values keep their treatment** (WATCH "1"
+  stays gold). `Stat` gained an optional `glyph` prop (neutral, never inherits the
+  value's status tint) + optional `label` (passed only in Learn).
+
+### Thumbcard — value-first rebalance
+- Deviation value is now the card HERO (HERO 20, tint logic unchanged); vessel
+  NAME demoted DISPLAY 24 → **PRIMARY 16** (a label, not a headline; status tint
+  kept). Verified on Meridian: name 16px / value 20px, both gold.
+- **Audit follow-up**: the name sat at DISPLAY 24 (inspector register) while the
+  fleet-mean above was HERO 20 — they competed. Demoting resolves it; card row +
+  upper fold now read at one consistent summary register.
+- Card glyphs unified: calendar/wave/clock were 26/24/14 → all **18** (calendar
+  was the oversized offender). Glyph px ≠ type tier — no type orphan; tiers used
+  stay 16 + 20.
+
+## Severity / demo-path safety (verified)
+- **Meridian still pops**: gold name + gold +7.6% value + gold meter strip — the
+  clear alerted card. Demoting the name did NOT weaken severity (strip + value
+  tint carry it, round 66 holds).
+- Data / consequence sort / meter strip / expand / alert logic all unchanged.
+  TSC-OK · LINT-CLEAN · `npm run verify` PASSED · offline build compiled.
+
+## Next session
+Anthony to refine which band descriptors keep glyphs vs revert to labels, and
+which drawn glyphs replace the placeholders (drawing queue).
+
+---
+
 # PROGRESS — 2026-06-13 (Session 78: ROUND 89 — IA SYSTEM: shared source + dual-consumer skeleton)
 
 ## Done (verified — screenshots docs/screens/r89-*.png)

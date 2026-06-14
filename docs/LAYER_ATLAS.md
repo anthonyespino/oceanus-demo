@@ -117,7 +117,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/FleetHealthBand.tsx*
 
 - `arrivals / bunker.text`
-  - TOKENS — font/data 11 · advisory tint when >0, else ink/muted (advisory is informational, not severity)
+  - TOKENS — glyph placeholder (neutral) + count · advisory tint on count when >0, else ink/muted (advisory is informational, not severity) · name from ia-model in Learn
   - BINDS — {# bunker-flagged calls in next 24h}
 - `arrivals / value.text`
   - TOKENS — type/hero · font/data tabular · ink/primary · links to #port-calls
@@ -505,7 +505,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
   - BINDS — {|derived.efficiency_delta_pct|}
 - `name.text`
-  - TOKENS — type/DISPLAY (var --type-display) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)
+  - TOKENS — type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)
   - BINDS — {vessel.static.name}
 - `now.glyph`
   - TOKENS — glyph/clock (drawn) · NEUTRAL UI ink (round 63) · sized to the mock · identifies now-vs-baseline
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-14T05:38:19.225Z*
+*142 instrumented leaves · 20 components · generated 2026-06-14T05:53:33.148Z*

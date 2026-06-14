@@ -175,6 +175,36 @@ export const IA_NODES: Record<IANodeId, IANode> = {
   },
 };
 
+// ─── BAND DESCRIPTORS (round 90) ─────────────────────────────────────────────
+// The FleetHealthBand's small descriptor words (WATCH / NOMINAL / 30D FLEET
+// MEAN / FLEET BURN / ARRIVALS 24H / BUNKER) become placeholder GLYPHS. Their
+// names + meanings are authored HERE — the same single source the IA page and
+// Learn annotations read. The band reads glyph + value by default; Learn mode
+// surfaces the name from this map (no separate label store). `glyph` is a
+// type-only reference to the library; Anthony refines which survive as glyphs.
+import type { GlyphName } from '../components/Glyph';
+
+export interface IADescriptor {
+  id: string;
+  glyph: GlyphName; // placeholder library glyph (greyscale/neutral)
+  name: string; // the descriptor word shown in Learn mode
+  meaning: string; // the full meaning (single source for tooltips / IA page)
+}
+
+export const IA_BAND_DESCRIPTORS: Record<string, IADescriptor> = {
+  degraded: { id: 'degraded', glyph: 'alert-triangle', name: 'DEGRADED', meaning: 'vessels at worst severity (WARNING+).' },
+  watch: { id: 'watch', glyph: 'gauge', name: 'WATCH', meaning: 'vessels in caution or worse — wants attention.' },
+  nominal: { id: 'nominal', glyph: 'vessel', name: 'NOMINAL', meaning: 'vessels reading healthy; the affirmative all-clear.' },
+  'fleet-mean': { id: 'fleet-mean', glyph: 'calendar', name: '30D FLEET MEAN', meaning: 'fleet-wide efficiency deviation, 30-day mean — never shown without the census beside it.' },
+  'fleet-burn': { id: 'fleet-burn', glyph: 'fuel-drop', name: 'FLEET BURN', meaning: 'live total fuel burn across the fleet, gph.' },
+  arrivals: { id: 'arrivals', glyph: 'anchor', name: 'ARRIVALS 24H', meaning: 'port calls scheduled in the next 24 hours.' },
+  bunker: { id: 'bunker', glyph: 'tank', name: 'BUNKER', meaning: 'calls flagged to order fuel — endurance margin tight at ETA.' },
+};
+
+export function getBandDescriptor(id: string): IADescriptor | undefined {
+  return IA_BAND_DESCRIPTORS[id];
+}
+
 // ─── LAYER 2 · HIERARCHY (the Display Information Architecture Index) ─────────
 export interface IAHierarchyNode {
   label: string;
