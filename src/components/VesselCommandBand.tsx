@@ -15,7 +15,6 @@
 // The clock sits one type step below the name — the name is the only hero.
 // The collapse chevron reduces the primary row to a name + mode + clock line.
 
-import { useState } from 'react';
 import type { VesselState, VesselSample } from '../data/types';
 import { EFF_DELTA_CAUTION_PCT, BUNKER_SOON_H } from '../data/alerts';
 import { PORTS, SITES, distanceNm, place } from '../data/fleet';
@@ -29,6 +28,7 @@ import { FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, glassFill, fmtTime } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 import { Annotated } from '../learn/Annotated'; // round 89: IA-node binding (voyage-bar)
+import { useLearn } from '../learn/LearnProvider'; // round 106: Expert strips secondary context
 import { IA_GLYPH_MEANING } from '../ia/ia-model'; // round 103: distinct glyph meaning (single source)
 
 function maxObservedBurn(v: VesselState): number {
@@ -115,10 +115,9 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   const { collapsedPanels, togglePanel, surfaceGlass } = useFleet();
   const id = vessel.static.id;
   const min = !!collapsedPanels[`${id}:command`];
-  // ROUND 88: ONE maximize/minimize control toggles BOTH endpoint detail columns
-  // (was two independent chevrons, round 83). Default collapsed to the summary
-  // (endpoints + progress + %); click maximize to reveal detail. Click-only.
-  const [detailOpen, setDetailOpen] = useState(false);
+  // ROUND 106: the voyage detail columns are no longer click-gated (chevron
+  // removed). They show by DEFAULT and hide in EXPERT mode (density).
+  const { expertOn } = useLearn();
 
   const d = vessel.derived;
   const now = vessel.history.minutes.at(-1)!;
@@ -254,26 +253,23 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
       transform: nearEnd ? 'translateX(-100%) translateX(-7px)' : 'translateX(-50%)',
       ...extra,
     });
-    // ROUND 88: endpoint labels are plain (no per-label chevron); ONE maximize
-    // button (above the grid) toggles BOTH detail columns. Default collapsed.
+    // ROUND 106: the round-88 maximize/minimize CHEVRON is REMOVED — it overlapped
+    // the destination label (layout bug) and gated secondary context behind a
+    // click (off-model). The endpoint detail columns (origin spec/speed · dest
+    // ETA/NM-to-go) are now DEFAULT-VISIBLE and HIDDEN in Expert mode (`!expertOn`)
+    // — matching the mode model (default complete, Expert stripped for density).
+    // No click, no chevron. This is secondary CONTEXT (not severity, not a primary
+    // value), appropriate to strip in Expert.
     profile = (
       <div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
-          <button
-            {...layer('VesselCommandBand / voyage / detail.toggle', 'single maximize/minimize — reveals/hides BOTH endpoint detail columns (origin spec/speed · dest ETA/NM-to-go) · default collapsed · click (round 88, replaces the two chevrons)', '{detailOpen} toggle')}
-            onClick={() => setDetailOpen((o) => !o)} aria-expanded={detailOpen} aria-label={detailOpen ? 'hide voyage detail' : 'show voyage detail'}
-            style={{ background: 'var(--color-surface-overlay)', border: '1px solid var(--color-line-strong)', borderRadius: 1, padding: 3, cursor: 'pointer', color: 'var(--color-ink-secondary)', lineHeight: 0 }}>
-            <Glyph name={detailOpen ? 'collapse' : 'expand'} size={13} />
-          </button>
-        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(150px, auto) 1fr minmax(150px, auto)', gap: 14, alignItems: 'start' }}>
-          {/* ORIGIN column — plain label; detail revealed by the maximize toggle */}
+          {/* ORIGIN column — plain label; detail DEFAULT-VISIBLE, expert-hidden */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, alignItems: 'flex-start' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
               <span {...layer('VesselCommandBand / profile / origin.text', 'font/data 15 · ink/secondary · endpoint label (name once)', '{transit-run start}')} style={endpointLabel}>{origin?.label ?? 'UNDERWAY'}</span>
               {origin?.isPort && <StateMark port={origin.label} />}
             </span>
-            {detailOpen && (
+            {!expertOn && (
               <>
                 <span {...layer('VesselCommandBand / originCol / spec.text', 'font/data 15 · ink/muted · context (no tint)', '{static.length_ft} ft {static.class}')} style={colItem}>{vessel.static.length_ft} ft {vessel.static.class}</span>
                 <span {...layer('VesselCommandBand / originCol / speed.text', 'font/data 15 · ink/muted · context', '{position.speed_over_ground_kn} kn')} style={colItem}>{sog.toFixed(1)} kn</span>
@@ -303,13 +299,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               <div {...layer('VesselCommandBand / marker / position.text', 'font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')} style={markerLabel({ bottom: 0 })}>{posRef}</div>
             )}
           </div>
-          {/* DESTINATION column — plain label; detail revealed by the maximize toggle */}
+          {/* DESTINATION column — plain label; detail DEFAULT-VISIBLE, expert-hidden */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, alignItems: 'flex-end' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, maxWidth: '100%' }}>
               <span {...layer('VesselCommandBand / profile / destination.text', 'font/data 15 · ink/secondary · endpoint label (name once)', '{next_port_calls[0].port}')} style={endpointLabel}>{next?.port ?? '—'}</span>
               {next && <StateMark port={next.port} />}
             </span>
-            {detailOpen && (
+            {!expertOn && (
               <>
                 {next && <span {...layer('VesselCommandBand / destCol / eta.text', 'font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE', '{next_port_calls[0].eta}')} style={{ ...colItem, textAlign: 'right' }}>◇ ETA {fmtTime(next.eta)}</span>}
                 {toGoNm !== null && <span {...layer('VesselCommandBand / destCol / toGo.text', 'font/data 15 · ink/muted · context · distance remaining', '{nm to destination}')} style={{ ...colItem, textAlign: 'right' }}>{toGoNm.toFixed(0)} NM TO GO</span>}

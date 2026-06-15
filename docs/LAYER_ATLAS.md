@@ -381,9 +381,6 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `profile / vessel.glyph`
   - TOKENS — glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track
   - BINDS — {live position on track}
-- `voyage / detail.toggle`
-  - TOKENS — single maximize/minimize — reveals/hides BOTH endpoint detail columns (origin spec/speed · dest ETA/NM-to-go) · default collapsed · click (round 88, replaces the two chevrons)
-  - BINDS — {detailOpen} toggle
 
 ## VesselInspector
 
@@ -529,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-15T20:59:16.030Z*
+*140 instrumented leaves · 20 components · generated 2026-06-15T21:07:21.796Z*

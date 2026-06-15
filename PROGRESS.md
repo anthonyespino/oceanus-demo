@@ -1,3 +1,27 @@
+# PROGRESS — 2026-06-15 (Session 94: ROUND 106 — remove CommandBand voyage-detail chevron)
+
+## Done (verified docs/screens/r106-default.png, r106-expert.png)
+- Removed the round-88 voyage detail maximize/minimize chevron (overlapped the
+  destination label + gated secondary context behind a click). Verified: 0 toggle
+  buttons.
+- Gated content was the endpoint DETAIL columns — origin spec (240 ft OSV) +
+  speed (kn), destination ETA + NM TO GO. Secondary context (not severity/primary).
+- Now DEFAULT-VISIBLE, EXPERT-HIDDEN (!expertOn) — matches the mode model.
+  Verified: default spec/eta/togo all visible; expert all hidden.
+- Overlap fixed: detail lays out inline under each endpoint label, clean spacing,
+  no button crowding the destination.
+- Removed detailOpen state (+ unused useState import); added useLearn (expertOn).
+- The separate whole-band minimize chevron (collapses entire band) is a different
+  affordance, retained (gates primary instruments, not secondary context).
+
+## Safety
+Severity unaffected (context info only). Demo path intact. TSC-OK · LINT-CLEAN ·
+verify PASSED · build OK.
+
+## NOTE — Round 107 (Expert aggressive strip) is a DRAFT awaiting review; NOT built.
+
+---
+
 # PROGRESS — 2026-06-15 (Session 93: ROUND 105 — sort subtitle → Learn docent + status bar type down)
 
 ## Done (verified docs/screens/r105-default.png, r105-learn-statusbar.png)

@@ -913,3 +913,23 @@ originals.*
     blue + breath binding. No orphan (existing tier).
   - **Fleet plot position UNCHANGED** (the prior plan's reorder was scrapped) —
     only the subtitle relocation + status-bar type change happened.
+
+- **ROUND 106: CommandBand voyage-detail CHEVRON removed → default-visible /
+  expert-hidden**. The round-88 maximize/minimize toggle on the voyage bar (a)
+  overlapped the destination label (layout bug — the button sat at the grid's
+  top-right, crowding "Galveston, TX") and (b) gated SECONDARY CONTEXT behind a
+  click (off-model — chevron-collapse affordances were removed elsewhere this
+  session). Removed entirely.
+  - **Gated content (reported):** the endpoint DETAIL columns — origin
+    `{length_ft} ft {class}` (spec) + `{sog} kn` (speed), destination `◇ ETA` +
+    `{nm} NM TO GO`. Confirmed SECONDARY CONTEXT (not severity, not a primary
+    value) — the primary voyage info (origin/destination labels, progress %,
+    marker, position reference) always shows. So default-visible / expert-hidden
+    is correct: now shown by default (no click), hidden in EXPERT (`!expertOn`)
+    for density — matching the mode model (default complete, Expert stripped).
+  - **Overlap fixed:** with the chevron gone, the detail lays out inline under
+    each endpoint label with clean spacing — no button crowding the destination.
+  - **Scope:** the separate whole-band MINIMIZE chevron (collapses the entire
+    CommandBand via `collapsedPanels`) is a different affordance — it gates the
+    primary instruments, not secondary context, so it is NOT the chevron the brief
+    described and is retained. Severity untouched (this is context info).

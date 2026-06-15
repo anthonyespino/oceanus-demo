@@ -199,8 +199,6 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • origin.text  → font/data 15 · ink/secondary · endpoint label (name once) · {transit-run start}
     • track.line  → line/strong 2px · GREY = distance remaining (ahead of marker) · {origin→destination, remaining}
     • vessel.glyph  → glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track · {live position on track}
-  Region: voyage
-    • detail.toggle  → single maximize/minimize — reveals/hides BOTH endpoint detail columns (origin spec/speed · dest ETA/NM-to-go) · default collapsed · click (round 88, replaces the two chevrons) · {detailOpen} toggle
 
 ## VesselInspector
 
@@ -299,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-15T20:59:16.032Z*
+*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-15T21:07:21.797Z*
