@@ -95,8 +95,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: chartBand
     • maximize.glyph  → transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted · {chartMax} toggle
-  Region: header
-    • sort.subtitle  → page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped) · ranked by sustained deviation
+  Region: status
+    • sort.docent  → Learn-only docent · CONTEXT dimmed (gb.label) · the consequence-sort thesis, inline with the status bar (round 105, from ia-model) · {IA_SORT_THESIS}
 
 ## Gauge
 
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-14T20:51:59.383Z*
+*141 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-15T20:59:16.032Z*

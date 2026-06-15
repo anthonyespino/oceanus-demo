@@ -205,6 +205,12 @@ export function getBandDescriptor(id: string): IADescriptor | undefined {
   return IA_BAND_DESCRIPTORS[id];
 }
 
+// ROUND 105: the consequence-sort thesis is a Learn-layer DOCENT explanation, not
+// permanent default chrome. It lives here (single source) and is surfaced inline
+// with the global status bar ONLY in Learn mode (default stays clean). Same
+// sort/receipt as IA_PROCESS['consequence-sort'], stated as a one-line docent.
+export const IA_SORT_THESIS = 'ranked by sustained deviation — fleet ordered by consequence, not arrival';
+
 // ROUND 103: distinct glyph meanings — Learn caught wave + endurance SHARING
 // glyph.wave (a false association / substantiation violation). The two slots now
 // depict different quantities and read distinctly from this single source:

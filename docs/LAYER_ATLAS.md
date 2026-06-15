@@ -176,9 +176,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `chartBand / maximize.glyph`
   - TOKENS — transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted
   - BINDS — {chartMax} toggle
-- `header / sort.subtitle`
-  - TOKENS — page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped)
-  - BINDS — ranked by sustained deviation
+- `status / sort.docent`
+  - TOKENS — Learn-only docent · CONTEXT dimmed (gb.label) · the consequence-sort thesis, inline with the status bar (round 105, from ia-model)
+  - BINDS — {IA_SORT_THESIS}
 
 ## Gauge
 
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-14T20:51:59.381Z*
+*141 instrumented leaves · 20 components · generated 2026-06-15T20:59:16.030Z*

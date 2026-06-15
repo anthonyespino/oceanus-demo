@@ -130,7 +130,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [dotSpace, setDotSpace] = useState(120); // DENSITY
   const [mag, setMag] = useState(2.5); // MAGNIFY
   const [flow, setFlow] = useState(1.0); // FLOW/RIDGE
-  const [clusterType, setClusterType] = useState<ClusterType>('primary'); // round 95: default PRIMARY 16
+  const [clusterType, setClusterType] = useState<ClusterType>('context'); // round 105: dropped a tier → CONTEXT 13 (was PRIMARY 16, still too large)
   const [surfaceGlass, setSurfaceGlass] = useState(false); // round 97: glass off by default (plain float)
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});

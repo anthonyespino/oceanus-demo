@@ -11,6 +11,8 @@ import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
 import { useFleet } from '../state/FleetProvider';
+import { useLearn } from '../learn/LearnProvider'; // round 105: sort thesis is Learn-layer docent
+import { IA_SORT_THESIS } from '../ia/ia-model'; // round 105: single source for the Learn docent text
 import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
 import { FleetHealthBand } from './FleetHealthBand';
@@ -23,6 +25,7 @@ import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before d
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const { density, treatment, censusFilter, tileSizes, setTileSize, autoPromote } = useFleet();
+  const { learnOn } = useLearn(); // round 105: sort thesis shows only in Learn mode
   // ROUND 68: chart-band maximize — a TRANSIENT resize, local to the view (not a
   // persisted layout mode). Default load is always the standard band size.
   const [chartMax, setChartMax] = useState(false);
@@ -41,15 +44,11 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
     // round 50: Calm Sea lives in the layout now (persistent across routes so
     // the scope change eases); board content sits above it (z-index:1)
     <main style={{ padding: 20, maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-      {/* ROUND 98: the "TREND BOARD" page label + its Expert chart.trend glyph are
-          REMOVED (redundant — we know it's the fleet trend board). The ONE line
-          kept is the sort thesis, as a quiet subtitle (CONTEXT, dimmed) in BOTH
-          default and Expert — the only text that explains the consequence sort, so
-          it earns its place. The reclaimed space settles naturally (marginBottom
-          held), no orphan gap. */}
-      <div {...layer('FleetView / header / sort.subtitle', 'page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped)', 'ranked by sustained deviation')} style={{ ...gb.label, fontSize: 'var(--type-context)', marginBottom: 12 }}>
-        ranked by sustained deviation
-      </div>
+      {/* ROUND 105: the sort thesis ("ranked by sustained deviation") is REMOVED
+          from default — it was a permanent header block for a one-line explanation.
+          It now lives in LEARN mode only, inline with the global status bar below
+          the map (a docent layer, single source ia-model). Default top-fold is
+          tighter; no orphan gap (the band now owns the top). */}
       {/* round 3.2: FleetTrend band owns the top of the page; board directly
           below; chart below the board (supersedes round 3's chart-on-top) */}
       {/* round 33: the standing ALERTS card is gone — the health band's
@@ -85,8 +84,15 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           PRIMARY tier). DATALINK/SYNC + CAUTION·ADVISORY; the round-79 breath
           binding rides along (still breathes only when LIVE, static in the
           DEGRADED demo seed). CAUTION·ADVISORY stay clickable DetailChips. */}
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0 18px' }}>
+      {/* ROUND 105: status bar centered below the map; the sort-thesis DOCENT
+          appears INLINE here ONLY in Learn mode (single source ia-model). */}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 16, flexWrap: 'wrap', margin: '14px 0 18px' }}>
         <Annotated name="SystemStatusStrip" node="status-cluster" inline><StatusHeader prominent /></Annotated>
+        {learnOn && (
+          <span {...layer('FleetView / status / sort.docent', 'Learn-only docent · CONTEXT dimmed (gb.label) · the consequence-sort thesis, inline with the status bar (round 105, from ia-model)', '{IA_SORT_THESIS}')} style={{ ...gb.label, fontSize: 'var(--type-context)', marginBottom: 0 }}>
+            {IA_SORT_THESIS}
+          </span>
+        )}
       </div>
 
       <div

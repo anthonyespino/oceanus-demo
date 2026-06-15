@@ -895,3 +895,21 @@ originals.*
     (the span)", pulse = "current live reading, now (the instant)" — distinct, made
     explicit, consumed via Learn `title`. Only the GLYPH changed; the value's tint
     logic is separate and unchanged (no severity color on the glyph).
+
+- **ROUND 105: sort thesis → Learn-mode docent (inline with the status bar) +
+  status-bar type dropped a tier**.
+  - **"ranked by sustained deviation" removed from DEFAULT** — it was a permanent
+    header block for a one-line explanation. It now appears ONLY in Learn mode,
+    INLINE with the global status bar below the map, as a docent layer; the text
+    is single-sourced in ia-model (`IA_SORT_THESIS`, consistent with how Learn
+    surfaces other meanings). Default top-fold is tighter; the FleetHealthBand owns
+    the top, no orphan gap. (The sort BEHAVIOR is unchanged — this is the on-screen
+    explanation, not the comparator.)
+  - **Status bar type dropped one tier** — the DATALINK / LAST SYNC /
+    CAUTION·ADVISORY cluster default went PRIMARY 16 → **CONTEXT 13** (the
+    round-95 `clusterType` default flipped to `context`; the dev toggle remains).
+    It reads as a quiet status line now; bold weight (600) kept for legibility at
+    13. CAUTION·ADVISORY stays clickable + gold; DATALINK keeps its degraded-state
+    blue + breath binding. No orphan (existing tier).
+  - **Fleet plot position UNCHANGED** (the prior plan's reorder was scrapped) —
+    only the subtitle relocation + status-bar type change happened.

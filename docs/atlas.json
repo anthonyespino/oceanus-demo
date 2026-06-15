@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-14T20:51:59.383Z",
+  "generated": "2026-06-15T20:59:16.032Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -453,12 +453,12 @@
       "file": "src/components/FleetView.tsx"
     },
     {
-      "path": "FleetView / header / sort.subtitle",
+      "path": "FleetView / status / sort.docent",
       "component": "FleetView",
-      "region": "header",
-      "leaf": "sort.subtitle",
-      "tokens": "page subtitle · CONTEXT dimmed (gb.label) · states the consequence-sort thesis (round 98: TREND BOARD label + scope glyph dropped)",
-      "binds": "ranked by sustained deviation",
+      "region": "status",
+      "leaf": "sort.docent",
+      "tokens": "Learn-only docent · CONTEXT dimmed (gb.label) · the consequence-sort thesis, inline with the status bar (round 105, from ia-model)",
+      "binds": "{IA_SORT_THESIS}",
       "file": "src/components/FleetView.tsx"
     },
     {

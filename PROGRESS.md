@@ -1,3 +1,21 @@
+# PROGRESS — 2026-06-15 (Session 93: ROUND 105 — sort subtitle → Learn docent + status bar type down)
+
+## Done (verified docs/screens/r105-default.png, r105-learn-statusbar.png)
+- "ranked by sustained deviation" REMOVED from default; now Learn-only, inline
+  with the global status bar below the map (single source ia-model IA_SORT_THESIS).
+  Verified: absent in default, present in Learn. Default top-fold tighter, no
+  orphan gap (FleetHealthBand owns the top).
+- Status bar type dropped a tier: clusterType default PRIMARY 16 → CONTEXT 13
+  (dev toggle remains). Verified DATALINK = 13px/600. Quiet status line; CAUTION
+  gold + clickable, DATALINK degraded-blue + breath intact.
+- Fleet plot position unchanged (prior reorder scrapped).
+
+## Safety
+Sort behavior unchanged (on-screen explanation only); type scale held (no orphan);
+earned color intact. TSC-OK · LINT-CLEAN · verify PASSED · build OK.
+
+---
+
 # PROGRESS — 2026-06-14 (Session 92: ROUND 104 — now/baseline clock → pulse-live glyph)
 
 ## Done (verified docs/screens/r104-tile-footer.png)
