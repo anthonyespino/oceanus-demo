@@ -1009,3 +1009,45 @@ originals.*
     untouched (no green; value tint logic unchanged — value stays neutral); type
     scale at micro; no clutter in default/expert; demo path intact.
     TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 110: SCENARIOS REARCHITECTED — three selectable whole-fleet states.**
+  - **Part A (audit):** a scenario library already existed; the carry-through bug's
+    root cause is that overlays patched only `alerts`/`derived` while the inspector
+    computes panels from raw `history.minutes` + history envelopes — so synthetic
+    cautions fell back to seed telemetry and only Meridian (the seed anomaly) was
+    coherent end-to-end. Vessels chosen (Anthony): S2 = Marlin Ridge (v03), S3 =
+    Osprey Point (v14) — each already in the right mode with the right seed
+    telemetry, minimizing the override surface and coherence risk.
+  - **Part B:** `SCENARIOS` reduced to three; the D-panel scenario section is a
+    labeled **1/2/3** selector (one active, default S1). Each scenario is a clean
+    single-outlier board + carry-through inspector for its lone caution vessel.
+    - **S1 — Meridian (mechanical, hero):** identity/unchanged. The demo path.
+    - **S2 — Marlin Ridge (fuel/endurance → logistics):** engines clean, efficiency
+      normal, tanks drawn down, endurance tight (52h) with **endurance = fuel ÷ burn
+      coherent by construction** (recomputed from the drawn-down tanks ÷ real transit
+      burn). ENDURANCE caution → fuel panel → logistics.
+    - **S3 — Osprey Point (station-keeping → environment):** mode STATION, engines
+      clean, sea state elevated (8 ft / 24 kn — already roughest in seed), burn
+      elevated for station (118 gph), efficiency Δ +10.2% vs station baseline
+      (trend/sparkline lifted to match), endurance recomputed from the raised burn.
+      EFF_DELTA caution → efficiency panel → environment.
+  - **THE FIX (carry-through):** scenarios now override the caution vessel's latest
+    `history.minutes` sample (`setNow`: engines/tanks/weather) + the derived trend
+    series, so the inspector's computed panels (engine-twin, fuel/endurance,
+    efficiency, weather) read coherently — not just the summary numbers.
+  - **No stale bleed:** `apply` is a pure transform over the immutable base fleet
+    (clones only); switching any direction fully reloads. Verified: re-applying S1
+    after S2/S3 yields byte-identical bystanders; v03 tanks return to the seed value
+    (no drawdown residue). The `clean()` helper was strengthened so non-caution
+    bystanders carry no lingering trend/twin-gap (e.g. Meridian shows no +7.6% / +58°F
+    when it is not the active caution).
+  - **Known limitation (logged, off the demo path):** a *bystander* anomaly vessel's
+    deep 30D EGT-gap HISTORY chart (reads 30 days of `history.hourly`) is not
+    rewritten — only v01, only as a bystander, only if clicked; its
+    headline/verdict/gauges read clean. Rewriting 30d of hourly per scenario was
+    disproportionate for an off-path bystander. Follow-up round if full scrub wanted.
+  - **Holds:** earned color (gold caution only, NO green, no new colors); severity
+    unmissable; substantiation (no impossible number combos — endurance math + weather
+    coherent); consequence sort (caution #1); type scale; greyscale; presence/absence
+    datalink. Demo-path safe (S1 default, unchanged hero).
+    TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

@@ -282,8 +282,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — mode chip · default / learn (L) / expert (E) · mutually exclusive
   - BINDS — {ui mode}
 - `scenario / scenario.chip`
-  - TOKENS — scenario library chip · accent when active · synthetic overlay (demo = base seed)
-  - BINDS — {scenario id} → applies overlay
+  - TOKENS — scenario selector · 1/2/3 whole-fleet state · accent when active · default S1 (Meridian, base seed); S2/S3 synthetic
+  - BINDS — {scenario id} → reloads fleet + inspector
 - `sheet / settings.sheet`
   - TOKENS — gear-summoned settings sheet · collapsible sections (round 108)
   - BINDS — —
@@ -526,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-16T02:43:06.323Z*
+*140 instrumented leaves · 20 components · generated 2026-06-16T03:20:15.790Z*

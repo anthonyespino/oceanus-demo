@@ -94,15 +94,18 @@ export function DevPanel() {
       </div>
 
       <Section title="scenario">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          {SCENARIOS.map((s) => (
+        {/* ROUND 110: three selectable whole-fleet states (1 / 2 / 3), one active
+            at a time, default Scenario 1 (Meridian). Switching fully reloads the
+            board + inspector for the active scenario (no stale bleed). */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {SCENARIOS.map((s, i) => (
             <button
               key={s.id}
-              {...layer('SettingsSheet / scenario / scenario.chip', 'scenario library chip · accent when active · synthetic overlay (demo = base seed)', '{scenario id} → applies overlay')}
+              {...layer('SettingsSheet / scenario / scenario.chip', 'scenario selector · 1/2/3 whole-fleet state · accent when active · default S1 (Meridian, base seed); S2/S3 synthetic', '{scenario id} → reloads fleet + inspector')}
               onClick={() => f.setScenario(s.id)}
-              style={{ ...toggleStyle(f.scenario === s.id), fontSize: 'var(--type-micro)' }}
+              style={{ ...toggleStyle(f.scenario === s.id), fontSize: 'var(--type-micro)', textAlign: 'left' }}
             >
-              {s.label}
+              {i + 1} · {s.label}
             </button>
           ))}
         </div>

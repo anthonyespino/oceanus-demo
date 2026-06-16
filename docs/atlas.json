@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T02:43:06.325Z",
+  "generated": "2026-06-16T03:20:15.792Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -133,8 +133,8 @@
       "component": "SettingsSheet",
       "region": "scenario",
       "leaf": "scenario.chip",
-      "tokens": "scenario library chip · accent when active · synthetic overlay (demo = base seed)",
-      "binds": "{scenario id} → applies overlay",
+      "tokens": "scenario selector · 1/2/3 whole-fleet state · accent when active · default S1 (Meridian, base seed); S2/S3 synthetic",
+      "binds": "{scenario id} → reloads fleet + inspector",
       "file": "src/components/DevPanel.tsx"
     },
     {

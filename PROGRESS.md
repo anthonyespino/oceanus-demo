@@ -1,3 +1,61 @@
+# PROGRESS — 2026-06-15 (Session 97: ROUND 110 — scenario switcher: three selectable whole-fleet states)
+
+## PART A — AUDIT (reported, confirmed by Anthony)
+- A scenario LIBRARY already existed (`src/state/scenarios.ts`, 10 overlays + D-panel
+  chips + FleetProvider `scenarioById(scenario).apply(fleet)` → viewFleet). Not a
+  single hardcoded state.
+- **Root-cause of the carry-through bug (the key find):** overlays patched only
+  `alerts` + `derived`, but the INSPECTOR computes its panels from raw
+  `vessel.history.minutes` (engine EGT/fuel, tanks, weather) + `history` envelopes.
+  So a synthetic caution's inspector fell back to seed telemetry → only Meridian
+  (v01, the seed anomaly) told a coherent end-to-end story.
+- **Vessels confirmed:** S2 = Marlin Ridge (v03, transit OSV, lowest clean-transit
+  endurance → smallest override), S3 = Osprey Point (v14, STATION, already roughest
+  seed weather → environment story substantiated by existing data).
+
+## PART B — Done (verified docs/screens/r110-s1-board, -s2-board, -s2-inspector, -s3-board, -s3-inspector)
+- SCENARIOS refactored to THREE selectable whole-fleet states; D-panel scenario
+  section is now a labeled **1 / 2 / 3** selector (default S1). One active at a time.
+- **THE FIX:** scenarios now also override the caution vessel's latest `history.minutes`
+  sample (`setNow`) + the derived trend series, so the inspector's COMPUTED panels
+  read coherently — not just summary numbers.
+- **S1 Meridian (mechanical, hero):** identity/unchanged. v01 lone caution, EGT +58°F,
+  endurance 179h (fuel÷burn coherent). #1 by sort.
+- **S2 Marlin Ridge (fuel/endurance → logistics):** v03 lone caution. Engines CLEAN
+  (gap ~+5°F, flat 30d EGT chart), efficiency normal (+3.7%), tanks drawn to 17%/39%
+  (low, not starved), endurance **52h** with fuel÷burn coherent by construction
+  (14,521 gal ×0.95 ÷ 264.7 gph = 52h), ENDURANCE caution docks at fuel → logistics.
+- **S3 Osprey Point (station-keeping → environment):** v14 lone caution, STATION.
+  Engines CLEAN (−4°F, flat 30d chart), efficiency Δ **+10.2%** vs station baseline
+  (sustained; trend chart + sparkline lifted to match), weather elevated **8 ft / 24 kn**,
+  burn high-for-station **118 gph**, endurance recomputed 170h (fuel÷burn coherent).
+  EFF_DELTA caution docks at efficiency → environment.
+- **No stale bleed:** `apply` is pure over the immutable base; switch S1→S2→S3→S1 and
+  every bystander returns identical (data test: demo-reapply v01/v03/v14 byte-identical;
+  v03 tanks 29,039 == base, no drawdown residue). Board #1 returns to v01.
+- **Non-caution coherence:** `clean()` strengthened — clears alerts, freshens streams,
+  clamps elevated performance numbers into the nominal band, and matches the now-sample
+  MAIN engines, so a bystander (e.g. Meridian in S2/S3) shows NO lingering +7.6% trend
+  or +58°F gap (verified: v01 bystander → trend 3, eff 3, gap 0, 0 alerts). Clean
+  single-outlier boards in all three (census "1 CAUTION").
+
+## KNOWN LIMITATION (flagged for Anthony)
+- A *bystander* anomaly vessel's deep 30D EGT-GAP HISTORY chart (reads `history.hourly`,
+  30 days) is NOT rewritten — only v01, only when it is NOT the active caution, and only
+  if someone clicks into it (off the demo path). Its headline/verdict/gauges read clean
+  (now-sample matched, derived clamped); only the historical 30d gap chart retains the
+  seed climb. Rewriting 30 days of hourly history per scenario was out of proportion for
+  a bystander off the walkthrough. Easy follow-up round if you want it fully scrubbed.
+
+## Safety
+Earned color held (gold caution only, NO green, no new colors). Severity unmissable.
+Substantiation: each scenario internally coherent — endurance=fuel÷burn (S1/S2/S3 all
+check), weather-justifies-burn (S3), engines clean where the cause is elsewhere. Sort
+(caution #1), type scale, greyscale, presence/absence datalink all held. Demo path = S1
+Meridian, default on load, unchanged. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-15 (Session 96: ROUND 109 — census trend: confirm source + mode-aware labeling)
 
 ## PART A — CONFIRMED (read from source: FleetHealthBand.tsx + fleetState.fleetDailyTrend + derived.daily_delta_1y)

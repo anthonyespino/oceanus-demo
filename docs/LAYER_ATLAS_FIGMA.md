@@ -153,7 +153,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: mode
     • mode.chip  → mode chip · default / learn (L) / expert (E) · mutually exclusive · {ui mode}
   Region: scenario
-    • scenario.chip  → scenario library chip · accent when active · synthetic overlay (demo = base seed) · {scenario id} → applies overlay
+    • scenario.chip  → scenario selector · 1/2/3 whole-fleet state · accent when active · default S1 (Meridian, base seed); S2/S3 synthetic · {scenario id} → reloads fleet + inspector
   Region: sheet
     • settings.sheet  → gear-summoned settings sheet · collapsible sections (round 108) · —
 
@@ -297,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T02:43:06.324Z*
+*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T03:20:15.792Z*
