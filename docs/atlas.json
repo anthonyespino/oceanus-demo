@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T15:29:08.518Z",
+  "generated": "2026-06-16T19:30:05.148Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -282,30 +282,12 @@
       "file": "src/components/EngineTwinPanel.tsx"
     },
     {
-      "path": "EngineTwinPanel / verdict / avg.text",
-      "component": "EngineTwinPanel",
-      "region": "verdict",
-      "leaf": "avg.text",
-      "tokens": "font/data 11 · ink/secondary",
-      "binds": "{derived.egt_twin_gap_f} — 24h avg at matched load",
-      "file": "src/components/EngineTwinPanel.tsx"
-    },
-    {
-      "path": "EngineTwinPanel / verdict / fuelDelta.text",
-      "component": "EngineTwinPanel",
-      "region": "verdict",
-      "leaf": "fuelDelta.text",
-      "tokens": "font/data 14",
-      "binds": "{E2.fuel_rate / E1.fuel_rate − 1} at matched load",
-      "file": "src/components/EngineTwinPanel.tsx"
-    },
-    {
       "path": "EngineTwinPanel / verdict / gap.text",
       "component": "EngineTwinPanel",
       "region": "verdict",
       "leaf": "gap.text",
-      "tokens": "type/hero · font/data tabular — largest type in the section",
-      "binds": "{E2.egt − E1.egt} now, both running",
+      "tokens": "type/hero · font/data tabular — largest type in the section · severity yellow when divergent (round 118)",
+      "binds": "{derived.egt_twin_gap_f} — sustained 24h-avg gap at matched load",
       "file": "src/components/EngineTwinPanel.tsx"
     },
     {
@@ -313,8 +295,17 @@
       "component": "EngineTwinPanel",
       "region": "verdict",
       "leaf": "label.text",
-      "tokens": "gb.label micro-caps · ink/muted",
-      "binds": "E2 VS E1 EGT (static)",
+      "tokens": "gb.label micro-caps · ink/muted · SUSTAINED qualifier (round 118)",
+      "binds": "E2 VS E1 EGT · SUSTAINED",
+      "file": "src/components/EngineTwinPanel.tsx"
+    },
+    {
+      "path": "EngineTwinPanel / verdict / live.text",
+      "component": "EngineTwinPanel",
+      "region": "verdict",
+      "leaf": "live.text",
+      "tokens": "font/data 12 · ink/dim · live instantaneous gap + fuel Δ, or \"mains off\" when neither main runs (round 118)",
+      "binds": "{E2.egt − E1.egt} live · {fuel Δ at matched load} | mains off",
       "file": "src/components/EngineTwinPanel.tsx"
     },
     {

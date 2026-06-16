@@ -75,7 +75,7 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
     alerts.push({
       level: 'CAUTION',
       code: 'EGT_DIVERGENCE',
-      message: `${hot.engine_id} EGT +${Math.abs(d.egt_twin_gap_f).toFixed(0)}°F over twin at matched load`,
+      message: `${hot.engine_id} EGT +${Math.abs(d.egt_twin_gap_f).toFixed(0)}°F over twin at matched load, sustained 30d`,
     });
   }
   // Endurance requirement derived from distance to next port at cruise speed,

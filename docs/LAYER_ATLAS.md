@@ -99,18 +99,15 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `rows / engine.text`
   - TOKENS — font/data 12 · id+role ink/muted left · state tabular right · hairline divider
   - BINDS — {id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only
-- `verdict / avg.text`
-  - TOKENS — font/data 11 · ink/secondary
-  - BINDS — {derived.egt_twin_gap_f} — 24h avg at matched load
-- `verdict / fuelDelta.text`
-  - TOKENS — font/data 14
-  - BINDS — {E2.fuel_rate / E1.fuel_rate − 1} at matched load
 - `verdict / gap.text`
-  - TOKENS — type/hero · font/data tabular — largest type in the section
-  - BINDS — {E2.egt − E1.egt} now, both running
+  - TOKENS — type/hero · font/data tabular — largest type in the section · severity yellow when divergent (round 118)
+  - BINDS — {derived.egt_twin_gap_f} — sustained 24h-avg gap at matched load
 - `verdict / label.text`
-  - TOKENS — gb.label micro-caps · ink/muted
-  - BINDS — E2 VS E1 EGT (static)
+  - TOKENS — gb.label micro-caps · ink/muted · SUSTAINED qualifier (round 118)
+  - BINDS — E2 VS E1 EGT · SUSTAINED
+- `verdict / live.text`
+  - TOKENS — font/data 12 · ink/dim · live instantaneous gap + fuel Δ, or "mains off" when neither main runs (round 118)
+  - BINDS — {E2.egt − E1.egt} live · {fuel Δ at matched load} | mains off
 
 ## FleetHealthBand
 
@@ -529,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-16T15:29:08.515Z*
+*140 instrumented leaves · 20 components · generated 2026-06-16T19:30:05.146Z*

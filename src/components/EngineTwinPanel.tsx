@@ -11,6 +11,7 @@
 // cluster. Nothing repeats. EngineCard died round 31.
 
 import type { VesselState } from '../data/types';
+import { EGT_GAP_CAUTION_F } from '../data/alerts'; // round 118: severity threshold for the sustained-gap hero
 import { Field } from './Field';
 import { InstrumentCluster } from './InstrumentCluster';
 import { useContentWidth } from './NauticalChart';
@@ -73,8 +74,19 @@ function GapTrend({ values }: { values: number[] }) {
 export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
   const now = vessel.history.minutes.at(-1)!;
   const [m1, m2] = now.engines.filter((e) => e.role === 'MAIN');
-  const fuelGapPct = m1.fuel_rate_gph > 0 ? (m2.fuel_rate_gph / m1.fuel_rate_gph - 1) * 100 : 0;
-  const egtGapNow = m1.running && m2.running ? m2.exhaust_gas_temp_f - m1.exhaust_gas_temp_f : 0;
+  const mainsRunning = m1.running && m2.running;
+  const fuelGapPct = mainsRunning && m1.fuel_rate_gph > 0 ? (m2.fuel_rate_gph / m1.fuel_rate_gph - 1) * 100 : 0;
+  // ROUND 118: the panel HERO is the SUSTAINED divergence (the figure the caution is
+  // about) — never the raw live gap. The live gap is 0 when both mains are OFF (no
+  // differential when neither runs), which would misread as "all clear" while the
+  // caution still says +58. So the hero shows the 24h-averaged sustained gap (yellow
+  // when caution-level), and the live gap is a dim secondary that attributes its 0 to
+  // "mains off". This is a divergence at matched load (efficiency degradation), a
+  // trend — NOT acute overheating.
+  const sustainedGap = vessel.derived.egt_twin_gap_f;
+  const liveGap = mainsRunning ? m2.exhaust_gas_temp_f - m1.exhaust_gas_temp_f : null;
+  const divergent = Math.abs(sustainedGap) > EGT_GAP_CAUTION_F;
+  const fmtGap = (n: number) => `${n > 0 ? '+' : ''}${Math.round(n)}`;
   const ids = ['E1', 'E2', 'G1', 'G2'];
 
   return (
@@ -86,13 +98,18 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
       <div style={{ display: 'flex', gap: 'var(--pad-card)', alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="twin_comparison_delta">
           <div style={{ flex: '0 1 30%', minWidth: 210 }}>
-            <div {...layer('EngineTwinPanel / verdict / label.text', 'gb.label micro-caps · ink/muted', 'E2 VS E1 EGT (static)')} style={{ ...gb.label, marginBottom: 4 }}>E2 vs E1 EGT</div>
-            {/* gap hero — largest type in the section */}
-            <div {...layer('EngineTwinPanel / verdict / gap.text', 'type/hero · font/data tabular — largest type in the section', '{E2.egt − E1.egt} now, both running')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-              {egtGapNow > 0 ? '+' : ''}{egtGapNow} °F
+            <div {...layer('EngineTwinPanel / verdict / label.text', 'gb.label micro-caps · ink/muted · SUSTAINED qualifier (round 118)', 'E2 VS E1 EGT · SUSTAINED')} style={{ ...gb.label, marginBottom: 4 }}>E2 vs E1 EGT · sustained</div>
+            {/* ROUND 118: HERO = sustained divergence (24h-avg gap), severity-YELLOW when
+                caution-level — this is the number the caution is about, no longer the
+                quietest element. Never the raw live gap (0 when mains off → false all-clear). */}
+            <div {...layer('EngineTwinPanel / verdict / gap.text', 'type/hero · font/data tabular — largest type in the section · severity yellow when divergent (round 118)', '{derived.egt_twin_gap_f} — sustained 24h-avg gap at matched load')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums', color: divergent ? 'var(--color-alert-caution)' : undefined }}>
+              {fmtGap(sustainedGap)} °F
             </div>
-            <div {...layer('EngineTwinPanel / verdict / fuelDelta.text', 'font/data 14', '{E2.fuel_rate / E1.fuel_rate − 1} at matched load')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', marginTop: 4 }}>fuel {fmtPct(fuelGapPct)} at matched load</div>
-            <div {...layer('EngineTwinPanel / verdict / avg.text', 'font/data 11 · ink/secondary', '{derived.egt_twin_gap_f} — 24h avg at matched load')} style={{ ...gb.dim, fontFamily: FONT.data, fontSize: 'var(--type-context)', marginTop: 2 }}>24h avg gap {vessel.derived.egt_twin_gap_f} °F</div>
+            {/* live state — dim secondary; when both mains OFF the live 0 is attributed
+                to "mains off", never presented as the headline finding. */}
+            <div {...layer('EngineTwinPanel / verdict / live.text', 'font/data 12 · ink/dim · live instantaneous gap + fuel Δ, or "mains off" when neither main runs (round 118)', '{E2.egt − E1.egt} live · {fuel Δ at matched load} | mains off')} style={{ ...gb.dim, fontFamily: FONT.data, fontSize: 'var(--type-context)', marginTop: 4 }}>
+              {mainsRunning ? `live ${fmtGap(liveGap!)} °F · fuel ${fmtPct(fuelGapPct)} at matched load` : 'live — · mains off'}
+            </div>
           </div>
         </Field>
         <div {...layer('EngineTwinPanel / gapTrend / area.chart', 'fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)', '{daily mean E2−E1 EGT, 30d, both running} — the "three weeks early" graphic')} style={{ flex: '1 1 320px', minWidth: 0 }}>

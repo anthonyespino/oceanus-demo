@@ -1230,3 +1230,19 @@ originals.*
     ModeTimeline, EventLog); kept 11 live; refreshed FleetHealthBand off its stale alias.
   - Holds: single source (ia-model), three operator modes intact, Learn operator-only, IA
     page = provenance home (unchanged). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 118: Engine-Twins hero tells the sustained-divergence story in every engine
+  state.** The hero was the raw LIVE gap, which is 0°F when both mains are OFF → false
+  "all clear" while the caution says +58. Fixed: the hero is now the SUSTAINED gap
+  (`egt_twin_gap_f`, 24h-averaged), rendered in severity YELLOW when caution-level
+  (`|gap| > EGT_GAP_CAUTION_F`) — the number the caution is about is now the loudest
+  element, not the quietest. The live instantaneous gap is a DIM secondary with explicit
+  timeframe ("live +61 °F · fuel +X% at matched load"), and when both mains are off it reads
+  "live — · mains off" (the 0 attributed to mains-off, never the headline). The caution
+  message conveys persistence — "…over twin at matched load, sustained 30d" — and the whole
+  panel stays in the divergence-at-matched-load / trend register: NO "overheating" wording.
+  Holds: earned color (yellow only on the sustained severity figure, no green); severity
+  unmissable; substantiation (hero matches the caution; engines-off 0 ≠ resolution); Expert
+  keeps the sustained value (signal). Demo path (Meridian, mains running) unchanged — still
+  shows the live gap, now in the secondary, with +58 as the yellow hero.
+  TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

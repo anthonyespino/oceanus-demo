@@ -56,10 +56,9 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: rows
     • engine.text  → font/data 12 · id+role ink/muted left · state tabular right · hairline divider · {id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only
   Region: verdict
-    • avg.text  → font/data 11 · ink/secondary · {derived.egt_twin_gap_f} — 24h avg at matched load
-    • fuelDelta.text  → font/data 14 · {E2.fuel_rate / E1.fuel_rate − 1} at matched load
-    • gap.text  → type/hero · font/data tabular — largest type in the section · {E2.egt − E1.egt} now, both running
-    • label.text  → gb.label micro-caps · ink/muted · E2 VS E1 EGT (static)
+    • gap.text  → type/hero · font/data tabular — largest type in the section · severity yellow when divergent (round 118) · {derived.egt_twin_gap_f} — sustained 24h-avg gap at matched load
+    • label.text  → gb.label micro-caps · ink/muted · SUSTAINED qualifier (round 118) · E2 VS E1 EGT · SUSTAINED
+    • live.text  → font/data 12 · ink/dim · live instantaneous gap + fuel Δ, or "mains off" when neither main runs (round 118) · {E2.egt − E1.egt} live · {fuel Δ at matched load} | mains off
 
 ## FleetHealthBand
 
@@ -299,4 +298,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T15:29:08.517Z*
+*140 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T19:30:05.147Z*

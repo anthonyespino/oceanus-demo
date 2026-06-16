@@ -1,3 +1,38 @@
+# PROGRESS — 2026-06-16 (Session 105: ROUND 118 — Engine-Twins hero = sustained divergence, severity-yellow, mains-off safe)
+
+## The bug
+- The EGT panel hero was the raw LIVE instantaneous gap (`egtGapNow`), which is 0°F when
+  both mains are OFF (no differential when neither runs) → misread as "all clear" while the
+  caution still says +58/+60. And the sustained gap (the number the caution is about) was
+  the quietest, dimmest element.
+
+## Done (verified docs/screens/r118-engine-hero.png)
+- **Hero = SUSTAINED divergence** (`derived.egt_twin_gap_f`, the 24h-averaged figure), never
+  the raw live gap. Mains running → live≈sustained, hero shows the real divergence; mains OFF
+  → hero stays the sustained gap (never drops to 0).
+- **Severity yellow on the sustained hero** when caution-level (`|gap| > EGT_GAP_CAUTION_F`).
+  It's now the loudest element, not the quietest. Clean twins read neutral. No green.
+- **Live state = dim secondary**, timeframe explicit: mains running → "live +61 °F · fuel
+  +32.2% at matched load"; mains OFF → "**live — · mains off**" (the live 0 attributed to
+  mains-off, never the headline). Hero label "E2 vs E1 EGT · sustained".
+- **Caution message conveys SUSTAINED, not a spike:** alerts.ts EGT_DIVERGENCE →
+  "…+58°F over twin at matched load, **sustained 30d**". Language stays divergence-at-matched-
+  load (efficiency/trend register) — **no "overheating" anywhere** (grep-confirmed none).
+- Verified: Meridian (mains running, divergent) → hero +58 **yellow** + live +61 secondary;
+  Bayou Runner (PORT, mains off, clean) → hero -2 neutral + "live — · mains off". The
+  divergent+mains-off combination is now impossible to misread (hero = sustained yellow
+  independent of mains state; live-0 only ever appears in the dim "mains off" secondary).
+
+## Holds
+Earned color (yellow only on the sustained severity figure; no green); severity unmissable
+(sustained reads at a glance — fixes "had to dig for it"); substantiation (hero matches the
+caution; transient engines-off 0 ≠ all-clear); type scale; Expert keeps the sustained value
+(signal), section header label strips per round 107. Demo path (Meridian, mains running)
+unchanged — still shows the live gap (now in the secondary) + the +58 (now the yellow hero).
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 104: ROUND 117 — resolve the Learn-vs-IA conflation: provenance → IA page/builder, purpose → Learn)
 
 ## Audit (reported before the rewrite) — the conflation had THREE Learn surfaces
