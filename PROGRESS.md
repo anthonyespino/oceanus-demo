@@ -1,3 +1,41 @@
+# PROGRESS — 2026-06-16 (Session 100: ROUND 113 — Fleet Health Band census: one confirmed-clear model)
+
+## Done (verified docs/screens/r113-census-default.png, r113-census-expert.png)
+- **One confirmed-clear model across the census.** Every count now renders its number
+  INCLUDING at zero (a confirmed-clear reading, not hidden):
+  - **The fix:** the caution/WATCH count was hidden at zero (round-45 presence filter) —
+    now shows. Removed the `cls === 'nominal' || counts[cls] > 0` filter so degraded +
+    watch + nominal all always render. e.g. S1 now reads "0 DEGRADED · 1 WATCH · 14 NOMINAL".
+  - Nominal + bunker already showed counts; aligned all to the same behavior.
+- **Earned color preserved (white-at-zero, color-only-when-real):** rewrote `censusColor`
+  to return neutral/white (inkSecondary) when `counts[cls] === 0`, and the severity color
+  only when ≥1 (watch = gold, degraded = red; nominal = neutral/quiet or green/automotive).
+  The white-zero gate is `counts[cls] === 0` ONLY — it never strips color from a genuine
+  non-zero count. Verified: WATCH 1 = gold (227,209,65), DEGRADED 0 = neutral (176,176,176).
+- **Bunker flags:** zero now white/neutral (was inkMuted/dim); advisory tint only when ≥1.
+- **Default vs Expert labels (107 strip rule):** Default shows text (DEGRADED/WATCH/NOMINAL,
+  BUNKER FLAGS); Expert replaces the label with a glyph, the NUMBER stays in both. Verified
+  Expert: "0 / 1 / 14" with 3 distinct glyphs (alert-triangle / gauge / vessel) + the bunker
+  tank glyph; the gold 1 stays gold in Expert too.
+- **Census glyphs distinct** (degraded=alert-triangle, watch=gauge, nominal=vessel,
+  bunker=tank — all existing PATHS placeholders, no collisions).
+
+## Note (flagged)
+- The literal white-zero CAUTION (watch = 0) isn't reachable in the three demo scenarios —
+  each is a single-outlier board with exactly ONE caution by design (round 110). The
+  identical white-zero code path is demonstrated by DEGRADED = 0 (neutral) in all three
+  scenarios; the logic is uniformly count-gated, so watch = 0 would render white the same way.
+- I extended the always-show to DEGRADED too (not just watch/nominal/bunker the brief named)
+  for the "one consistent model" — "0 DEGRADED" is the affirmative no-warnings reading. Trivial
+  to revert degraded to presence-only if you'd rather not show it at zero.
+
+## Safety
+Earned color held (white at zero, severity only when real — gold caution not stripped);
+greyscale base; type scale unchanged; glyph honesty (distinct, no collisions); severity still
+glance-readable. Demo path intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 99: ROUND 112 — current + environmental cluster, expert/chevron cleanup, Learn z-index, inspector spacing)
 
 ## PART A — current in the data model (verified coherent + scenario-flowed)

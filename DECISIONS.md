@@ -1122,3 +1122,26 @@ originals.*
     (no green/new color); severity untouched + glance-readable both modes; glyph honesty;
     type scale; greyscale; no product-UI chevrons. S1 unchanged; demo path intact.
     TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 113: Fleet Health Band census — one confirmed-clear model.** Every census
+  count (degraded / watch-caution / nominal / bunker flags) now ALWAYS renders its
+  number, including at ZERO — a zero is a white/neutral *confirmed-clear* reading, not
+  hidden. Supersedes the round-45 presence rule that hid degraded/watch at zero (the
+  caution count was invisible at zero — the bug). Removed the presence filter; all tiers
+  render.
+  - **Earned color, preserved precisely:** `censusColor` returns neutral/white when
+    `counts[cls] === 0`, and the severity color ONLY when ≥1 (watch = gold, degraded =
+    red; nominal = neutral in quiet / green in automotive). The white-zero gate is
+    `counts[cls] === 0` alone, so it never strips color from a genuine non-zero count —
+    a real caution still reads gold. Bunker: white at zero, advisory tint only when ≥1.
+  - **Default vs Expert (the round-107 strip rule):** Default shows the text label
+    (DEGRADED / WATCH / NOMINAL, BUNKER FLAGS); Expert replaces the label with a glyph,
+    and the NUMBER stays in both modes. Census glyphs are distinct (alert-triangle /
+    gauge / vessel / tank — no collisions, glyph honesty).
+  - **Note:** the literal watch = 0 case isn't reachable in the three demo scenarios
+    (each is a single-outlier board with exactly one caution, round 110); the identical
+    white-zero path is exercised by degraded = 0 in every scenario. Degraded was included
+    in the always-show for consistency ("0 DEGRADED" = affirmative no-warnings); revert to
+    presence-only is trivial if undesired.
+  - Earned color / greyscale / type scale / glyph honesty / severity glance-readability
+    all held. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

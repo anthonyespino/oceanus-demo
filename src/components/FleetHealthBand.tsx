@@ -79,8 +79,16 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   // census
   const counts: Record<StatusLevel, number> = { degraded: 0, watch: 0, nominal: 0 };
   for (const v of fleet) counts[vesselStatus(v.alerts)]++;
-  const censusColor = (cls: StatusLevel) =>
-    cls === 'nominal' && treatment === 'dark-cockpit' ? NEUTRAL.inkSecondary : STATUS_COLOR[cls];
+  // ROUND 113: ONE confirmed-clear model. A count is WHITE/neutral at ZERO (a
+  // confirmed-clear reading — "we checked, it's clear" — not hidden), and only
+  // earns its severity color when it is ≥1 and represents a REAL condition
+  // (1+ caution = gold, 0 caution = white). The white-zero rule must never strip
+  // color from a genuine non-zero count — that's gated on counts[cls] === 0 only.
+  const censusColor = (cls: StatusLevel) => {
+    if (counts[cls] === 0) return NEUTRAL.inkSecondary; // confirmed-clear zero — neutral
+    if (cls === 'nominal') return treatment === 'dark-cockpit' ? NEUTRAL.inkSecondary : STATUS_COLOR.nominal;
+    return STATUS_COLOR[cls]; // watch = gold, degraded = red — earned, only when real (≥1)
+  };
   const pickCensus = (cls: StatusLevel) => {
     const next = censusFilter === cls ? null : cls;
     setCensusFilter(next);
@@ -137,10 +145,12 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         {/* CELL 1 — status census (clickable filters; never separable from the mean) */}
         <div style={{ ...cell, borderLeft: 'none', paddingLeft: 0, flexDirection: 'row', gap: 18, alignItems: 'center' }}>
-          {/* round 45 presence rule: degraded/watch render only when present;
-              nominal ALWAYS (the affirmative all-clear — the band's own shape
-              encodes severity). At rest: just "NOMINAL 15". */}
-          {(['degraded', 'watch', 'nominal'] as StatusLevel[]).filter((cls) => cls === 'nominal' || counts[cls] > 0).map((cls) => (
+          {/* ROUND 113: CONFIRMED-CLEAR — every tier ALWAYS renders its count,
+              including at zero (supersedes the round-45 presence rule that hid
+              degraded/watch at zero). A zero is a white/neutral confirmed-clear
+              reading; a real count (≥1) earns its color. e.g. "0 DEGRADED · 1 WATCH
+              · 14 NOMINAL" — the board affirmatively reports no warnings. */}
+          {(['degraded', 'watch', 'nominal'] as StatusLevel[]).map((cls) => (
             <button
               key={cls}
               {...CENSUS_LAYER[cls]}
@@ -215,8 +225,11 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
               not severity). Name from the shared ia-model. */}
           <span {...layer('FleetHealthBand / arrivals / bunker.text', 'descriptor: TEXT label (default/learn) | placeholder glyph (expert), centered · count advisory tint when >0 else ink/muted · name from ia-model', '{# bunker-flagged calls in next 24h}')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)' }}>
             {expertOn && <span style={{ lineHeight: 0, color: NEUTRAL.inkMuted, flexShrink: 0 }}><Glyph name={D['bunker'].glyph} size={14} /></span>}
-            <span style={{ color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkMuted }}>
-              {bunkers}{!expertOn ? ` ${D['bunker'].name}` : ''} {bunkers === 1 ? 'flag' : 'flags'}
+            {/* ROUND 113: confirmed-clear — number always shows; ZERO is white/neutral
+                (inkSecondary), advisory tint only when ≥1 (a real flag). Expert strips
+                the "BUNKER flag(s)" LABEL words to the glyph (above); the value stays. */}
+            <span style={{ color: bunkers > 0 ? 'var(--color-alert-advisory)' : NEUTRAL.inkSecondary }}>
+              {bunkers}{!expertOn ? ` ${D['bunker'].name} ${bunkers === 1 ? 'flag' : 'flags'}` : ''}
             </span>
           </span>
         </a>
