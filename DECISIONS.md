@@ -1246,3 +1246,15 @@ originals.*
   keeps the sustained value (signal). Demo path (Meridian, mains running) unchanged — still
   shows the live gap, now in the secondary, with +58 as the yellow hero.
   TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 119: EGT-gap trend chart guaranteed headroom (no top clip).** Finding: the
+  GapTrend is mode-IDENTICAL (no `expertOn` branch; Default/Expert render byte-identical —
+  verified) — there is no Expert-specific compression. The clip was the live 60x sim
+  climbing Meridian's gap into a tight ceiling: `hi = ceil(max/10)*10` left ~0 headroom when
+  the peak sat just under a ×10 tick, in BOTH modes. Fix: `hi = max(20, ceil((max+10)/10)*10)`
+  — always keeps the peak ≥10°F below the upper bound, so the trend line (which is SIGNAL,
+  the sustained-divergence evidence) renders fully with headroom at any data level. No data/
+  line/color change; only the y-axis upper bound rounds a band higher to hold the headroom.
+  Because the chart is shared, the fix applies to both modes — Default isn't regressed, it
+  gains the same headroom (the intended legibility). TSC-OK · LINT-CLEAN · verify PASSED ·
+  offline build OK.

@@ -47,7 +47,14 @@ function GapTrend({ values }: { values: number[] }) {
   const M = { l: 34, r: 8, t: 8, b: 18 };
   if (values.length < 2) return null;
   const lo = Math.min(-20, Math.floor(Math.min(...values) / 10) * 10);
-  const hi = Math.max(20, Math.ceil(Math.max(...values) / 10) * 10);
+  // ROUND 119: guarantee a headroom band ABOVE the peak so the line never collides
+  // with / clips against the upper bound. The old `ceil(max/10)*10` left ~0 headroom
+  // when the peak sat just under a ×10 tick (e.g. peak 68 → ceiling 70), and the live
+  // 60x sim climbs Meridian's gap right up to it. Adding a +10°F band before rounding
+  // keeps the max ≥10°F below the ceiling at all times. (The chart is shared + mode-
+  // identical, so this preserves clear headroom in BOTH Default and Expert — it is the
+  // trend chart, i.e. signal, and must stay legible.) Data/line/color unchanged.
+  const hi = Math.max(20, Math.ceil((Math.max(...values) + 10) / 10) * 10);
   const x = (i: number) => M.l + (i / (values.length - 1)) * (W - M.l - M.r);
   const y = (v: number) => M.t + (1 - (v - lo) / (hi - lo)) * (H - M.t - M.b);
   const line = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');

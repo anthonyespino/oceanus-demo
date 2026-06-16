@@ -1,3 +1,33 @@
+# PROGRESS — 2026-06-16 (Session 106: ROUND 119 — EGT-gap trend chart headroom (no top clip))
+
+## Finding (reported honestly): the clip is NOT mode-specific
+- The GapTrend chart has NO mode branch (no `expertOn` in the component; fixed `H=120`).
+  Captured Default vs Expert back-to-back: byte-identical — same svg height, same line peak
+  position (lineMinY 17.4 both), same axis. So Expert does NOT compress or clip it differently.
+- The real cause: the live 60x sim climbs Meridian's EGT gap toward a TIGHT ceiling. The old
+  `hi = ceil(max/10)*10` left ~0 headroom when the peak sat just under a ×10 tick (peak 68 →
+  ceiling 70 → peak crowds/touches the top). This happens in BOTH modes as the gap climbs;
+  it was observed in Expert by timing (the gap had climbed by the time the mode was switched).
+
+## Fix (verified docs/screens/r119-gaptrend-headroom.png)
+- Guaranteed headroom on the y-domain: `hi = max(20, ceil((max + 10)/10)*10)` — always keeps
+  the peak ≥10°F below the upper bound. The trend chart is SIGNAL (the sustained-divergence
+  evidence), so it must stay legible; this preserves clear headroom at current data (~65°F)
+  and higher. Verified: peak now sits ~18px below the +80 ceiling (was ~7px below +70); no
+  top clipping; Default and Expert render identical (lineMinY 25.9, ticks [-20,0,+80] both).
+- No data / line / color change (line stays greyscale, data untouched); only the y-axis upper
+  bound rounds one band higher to hold the headroom.
+
+## Note on "Default unchanged"
+Because the chart is shared + mode-identical, the fix necessarily applies to both modes —
+there's no Expert-only knob to turn. Default is NOT regressed: it gains the same clear
+headroom (peak well below the ceiling), which is exactly the legibility the request wanted.
+The only visible Default change is the upper-bound tick rounding up a band when the peak is
+near it (+70 → +80 here). Holds: signal stays legible in Expert; no green; greyscale line.
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 105: ROUND 118 — Engine-Twins hero = sustained divergence, severity-yellow, mains-off safe)
 
 ## The bug
