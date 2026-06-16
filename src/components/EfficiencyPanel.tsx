@@ -9,7 +9,6 @@
 
 import type { VesselState } from '../data/types';
 import { Field } from './Field';
-import { RevealZone } from './Contextual';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
 import { EfficiencyCurve } from './EfficiencyCurve';
@@ -17,29 +16,16 @@ import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
+import { useLearn } from '../learn/LearnProvider'; // round 112: default-show / expert-hide the deeper context
 
 export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   const d = vessel.derived;
+  const { expertOn } = useLearn();
   return (
     // round 37: header floats above the fill
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 'var(--pad-stack)' }}>
       <Label g="chart.efficiency" headerAttrs={layer('EfficiencyPanel / header / header.glyph', 'section header · chart.efficiency (curve motif) · glyph-only in expert mode', 'EFFICIENCY · {mode}')} style={{ marginBottom: 4 }}>efficiency · {d.mode}</Label>
       <section style={{ ...gb.box, display: 'flex', flexDirection: 'column' }}>
-      <RevealZone
-        reveal={
-          <span style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-            <Field level="vessel" field="trend_90d" revealed>
-              <span>{fmtPct(d.trend_90d)} per 90d</span>
-            </Field>
-            <Field level="vessel" field="history_1y" revealed>
-              <Sparkline values={d.daily_delta_1y.map((x) => x.delta)} width={360} height={36} />
-            </Field>
-            <Field level="vessel" field="baseline_band_visualization" revealed>
-              <span>expected range around {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}</span>
-            </Field>
-          </span>
-        }
-      >
       {/* hero row */}
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
@@ -72,7 +58,24 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
         </span>
       </div>
-      </RevealZone>
+      {/* ROUND 112: the reveal CHEVRON is removed — the deeper efficiency context
+          (90d trend · 1y history · baseline band) is shown by DEFAULT and stripped
+          in EXPERT. No collapse (same ruling as round 106). */}
+      {!expertOn && (
+        <div style={{ borderTop: '1px solid var(--color-line-hairline)', marginTop: 8, paddingTop: 8, fontSize: 'var(--type-context)' }}>
+          <span style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+            <Field level="vessel" field="trend_90d" revealed>
+              <span>{fmtPct(d.trend_90d)} per 90d</span>
+            </Field>
+            <Field level="vessel" field="history_1y" revealed>
+              <Sparkline values={d.daily_delta_1y.map((x) => x.delta)} width={360} height={36} />
+            </Field>
+            <Field level="vessel" field="baseline_band_visualization" revealed>
+              <span>expected range around {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}</span>
+            </Field>
+          </span>
+        </div>
+      )}
       </section>
     </div>
   );

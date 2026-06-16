@@ -126,7 +126,11 @@ function marlinEndurance(v: VesselState): VesselState {
 // cause is the environment, not the engine. ("Different culprit, same structure.")
 function ospreyEnvironment(v: VesselState): VesselState {
   const now = v.history.minutes.at(-1)!;
-  const weather = { ...now.weather, wave_height_ft: 8.0, wind_speed_kn: 24 };
+  // ROUND 112: current ELEVATED too — wind + waves + current now all corroborate
+  // the same rough-conditions picture, so the "weather justifies the burn"
+  // diagnosis is fully substantiated (and the DP system works harder against a
+  // 2.4 kn set, consistent with the elevated station-keeping burn).
+  const weather = { ...now.weather, wave_height_ft: 8.0, wind_speed_kn: 24, current_kn: 2.4, current_dir_deg: 18 };
   // lift the last ~14 daily points so the 30d trend chart climbs into the caution
   const daily = v.derived.daily_delta_1y.map((x, i, arr) =>
     i >= arr.length - 14 ? { ...x, delta: Math.round((4 + (i - (arr.length - 14)) * 0.48) * 10) / 10 } : x);

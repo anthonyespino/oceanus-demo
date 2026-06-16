@@ -17,6 +17,7 @@
 // a separate teaching layer where explain-on-hover is the expected convention.
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLearn } from './LearnProvider';
 import { ANNOTATIONS } from './annotations';
 import { IA_NODES, TIER_LABEL, type IANodeId } from '../ia/ia-model'; // round 89: shared IA source
@@ -139,8 +140,16 @@ export function Annotated({
       }}
     >
       {children}
-      {iaCard}
-      {docent}
+      {/* ROUND 112: the docent/IA card is position:fixed, but a fixed element is
+          trapped (re-based + stacked, sometimes clipped) by any ancestor that is a
+          containing block for fixed descendants — notably the round-97/108 glass
+          panels (backdrop-filter) and any transform/filter ancestor. That was the
+          trip-summary "Learn renders behind the panel" bug. Portaling the card to
+          document.body escapes every ancestor stacking context/containing block, so
+          it layers above ALL content consistently. Fixed coords are viewport-based
+          (from getBoundingClientRect), so placement is unchanged by the portal. */}
+      {(iaCard || docent) && typeof document !== 'undefined' &&
+        createPortal(<>{iaCard}{docent}</>, document.body)}
     </div>
   );
 }

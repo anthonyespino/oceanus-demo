@@ -225,7 +225,7 @@ export function InspectorChart({
   );
   return (
     // round 37: header floats above the fill
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 'var(--pad-stack)' }}>
       <Label g="route" headerAttrs={layer('InspectorChart / header / header.glyph', 'section header · route glyph · glyph-only in expert mode', 'POSITION')} style={{ marginBottom: 4 }}>position</Label>
       <section style={{ ...gb.box, borderRadius: RADIUS }}>{body}</section>
     </div>

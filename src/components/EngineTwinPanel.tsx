@@ -79,7 +79,7 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
 
   return (
     // round 37: header floats above the fill
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 'var(--pad-stack)' }}>
       <Label g="engine" headerAttrs={layer('EngineTwinPanel / header / header.glyph', 'section header · engine glyph · glyph-only in expert mode', 'ENGINE TWINS')} style={{ marginBottom: 4 }}>engine twins</Label>
       <section style={gb.box}>
       {/* ROW 1 — verdict left, panel-wide evidence right */}

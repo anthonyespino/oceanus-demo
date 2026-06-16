@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T03:39:34.662Z",
+  "generated": "2026-06-16T04:21:28.058Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -696,6 +696,15 @@
       "file": "src/components/VesselCommandBand.tsx"
     },
     {
+      "path": "VesselCommandBand / centerStack / current.text",
+      "component": "VesselCommandBand",
+      "region": "centerStack",
+      "leaf": "current.text",
+      "tokens": "glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale",
+      "binds": "{weather.current_kn} kn {weather.current_dir_deg}°",
+      "file": "src/components/VesselCommandBand.tsx"
+    },
+    {
       "path": "VesselCommandBand / centerStack / location.text",
       "component": "VesselCommandBand",
       "region": "centerStack",
@@ -736,7 +745,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "waves.text",
-      "tokens": "glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line",
+      "tokens": "glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale",
       "binds": "{weather.wave_height_ft} ft",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -745,7 +754,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "wind.text",
-      "tokens": "font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)",
+      "tokens": "glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale",
       "binds": "{weather.wind_speed_kn} kn",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -1308,6 +1317,12 @@
       "name": "wave",
       "importFile": "wave.svg",
       "drawn": true
+    },
+    {
+      "component": "glyph/current",
+      "name": "current",
+      "importFile": "current.svg",
+      "drawn": false
     },
     {
       "component": "glyph/anchor",

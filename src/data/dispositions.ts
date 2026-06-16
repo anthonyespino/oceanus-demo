@@ -75,7 +75,7 @@ export const DISPOSITIONS: DispositionEntry[] = [
   { field: 'engine.oil_temp_f', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'engine.rpm', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'engine.running_hours', level: 'vessel', disposition: 'CONTEXTUAL' },
-  { field: 'weather.current', level: 'vessel', disposition: 'CONTEXTUAL' },
+  { field: 'weather.current', level: 'vessel', disposition: 'VISIBLE' }, // round 112: promoted into the environmental cluster (wind/waves/current), shown by default
   { field: 'weather.visibility', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'weather.precip', level: 'vessel', disposition: 'CONTEXTUAL' },
   { field: 'tank.capacity_gal', level: 'vessel', disposition: 'CONTEXTUAL' },

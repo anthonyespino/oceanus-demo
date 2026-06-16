@@ -1085,3 +1085,40 @@ originals.*
     faces) is HELD, not built — only if L1 proves insufficient.
   - Earned color / severity / type scale / greyscale all held; demo path intact.
     TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 112: current + environmental cluster, expert/chevron cleanup, Learn
+  z-index, inspector rhythm.**
+  - **Current (Part A):** already a real, substantiated field (`WeatherSample.current_kn`
+    /`current_dir_deg`, time-addressable noise, consumed in DP load). Elevated through
+    the S3 override (Osprey Point 2.4 kn @ 18°) so wind + waves + current all corroborate
+    the rough-conditions diagnosis. Flows through the round-110 scenario system with no
+    stale bleed (S1→S3→S1 verified).
+  - **Environmental cluster (Part B):** the command band shows wind / waves / current
+    (three distinct glyphs — added `glyph.current`, a directional flow mark, distinct
+    from wind + wave per glyph-honesty). DEFAULT exposed · EXPERT hidden · LEARN explains
+    each via `IA_GLYPH_MEANING` (wind = air, waves = sea-surface height, current = water
+    movement + set — explicit vocabulary distinction). `weather.current` disposition
+    CONTEXTUAL→VISIBLE. The broken reveal chevron is removed (shown or stripped, never
+    click-to-hide — same ruling as round 106). Current speed+direction = one value.
+  - **Chevrons + expert headers (Part C):** killed the EfficiencyPanel reveal chevron
+    (content default-show / expert-hide) and — for guardrail-11 consistency (no chevrons
+    in product UI) — also the VesselSynoptic (fuel) reveal chevron. All three reveal
+    chevrons across the inspector are now gone. All inspector panel header TEXT is hidden
+    in Expert (all five panels route through `Label`, → null in Expert via round 107;
+    reconciled, no double-impl).
+  - **Learn z-index (Part D):** Learn IA/docent cards (`position:fixed`) were trapped by
+    `backdrop-filter` glass panels (which are containing blocks + stacking contexts for
+    fixed descendants) — the trip-summary "renders behind the panel" bug. Fixed by
+    portaling the cards to `document.body` (escapes all ancestor stacking contexts);
+    fixed/viewport coords keep placement. Universal — covers every section.
+  - **Inspector rhythm (added):** one token `--pad-stack: 16px` governs every inter-panel
+    gap (replaced scattered hardcoded `marginBottom:8`) — uniform vertical rhythm in
+    Default + Expert. Spacing only.
+  - **Top-edge bleed (added):** confirmed REAL but not a stacking bug — the sticky command
+    band's frosted glass (~0.62–0.72 alpha) transmitted scrolled content through it. Fixed
+    by making the STICKY band's fill near-opaque (0.97–0.985) while keeping the blur/radius
+    glass aesthetic; non-sticky floating sections keep the lighter frost.
+  - **Holds:** substantiation (current coherent, corroborates wind/waves); earned color
+    (no green/new color); severity untouched + glance-readable both modes; glyph honesty;
+    type scale; greyscale; no product-UI chevrons. S1 unchanged; demo path intact.
+    TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

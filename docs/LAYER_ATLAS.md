@@ -318,6 +318,9 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `centerStack / crew.glyph`
   - TOKENS — glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"
   - BINDS — crew Master
+- `centerStack / current.text`
+  - TOKENS — glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale
+  - BINDS — {weather.current_kn} kn {weather.current_dir_deg}°
 - `centerStack / location.text`
   - TOKENS — font/data 12 · ink/secondary · place as value
   - BINDS — {destination | moored port | work site}
@@ -331,10 +334,10 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/hero · font/display caps · ink/primary
   - BINDS — {vessel.static.name}
 - `centerStack / waves.text`
-  - TOKENS — glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line
+  - TOKENS — glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale
   - BINDS — {weather.wave_height_ft} ft
 - `centerStack / wind.text`
-  - TOKENS — font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)
+  - TOKENS — glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale
   - BINDS — {weather.wind_speed_kn} kn
 - `destCol / eta.text`
   - TOKENS — font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE
@@ -526,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-16T03:39:34.660Z*
+*141 instrumented leaves · 20 components · generated 2026-06-16T04:21:28.057Z*

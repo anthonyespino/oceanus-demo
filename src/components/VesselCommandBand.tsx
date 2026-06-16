@@ -23,7 +23,6 @@ import { Field } from './Field';
 import { Gauge } from './Gauge';
 import { Glyph, MODE_GLYPH, type GlyphName } from './Glyph';
 import { StateMark } from './StateMark';
-import { RevealZone } from './Contextual';
 import { FONT, NEUTRAL, RADIUS } from './probeTokens';
 import { gb, glassFill, fmtTime } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -184,16 +183,24 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   // float. The instrument row is now its own floating block (full radius); a
   // small GAP (marginBottom) separates it from the voyage bar — the gap +
   // glass-edge/diffraction do the separating, not a stroke.
+  // ROUND 112: the band is STICKY (top:0) — panels scroll UNDER it. With the
+  // round-97/108 frosted fill (~0.62–0.72 alpha) the scrolled content transmitted
+  // through the glass as a faint blurred bleed at the band's edges. NOT a stacking
+  // bug (z:6 is correctly above content); it's glass TRANSPARENCY. Fix: keep the
+  // glass aesthetic (blur + radius + gradient sheen) but make the sticky band's
+  // fill near-OPAQUE so nothing bleeds through. The non-sticky floating sections
+  // (FleetHealthBand/FleetMap) keep the lighter frost — they never overlap
+  // scrolled content, so their treatment is unchanged.
   const sticky: React.CSSProperties = {
-    ...(surfaceGlass ? glassFill : {}),
-    padding: '24px var(--pad-card) 20px', marginBottom: 8, position: 'sticky', top: 0, zIndex: 6,
+    ...(surfaceGlass ? { ...glassFill, background: 'linear-gradient(180deg, rgba(28,28,28,0.97), rgba(16,16,16,0.985))' } : {}),
+    padding: '24px var(--pad-card) 20px', marginBottom: 'var(--pad-stack)', position: 'sticky', top: 0, zIndex: 6,
     borderRadius: RADIUS,
   };
 
   // collapsed: name + mode + clock, one line (still sticky, still constant)
   if (min) {
     return (
-      <section style={{ ...sticky, marginBottom: 8, borderRadius: RADIUS, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
+      <section style={{ ...sticky, marginBottom: 'var(--pad-stack)', borderRadius: RADIUS, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
         <span style={{ ...nameStyle, fontSize: 'var(--type-display)' }}>{vessel.static.name}</span>
         {modeChip}
         <span style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', fontVariantNumeric: 'tabular-nums', color: still ? '#ffffff' : NEUTRAL.ink }}>
@@ -380,22 +387,27 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 held at context-scale (round 53), NOT promoted (they feed Calm
                 Sea, they stay context). The weather-detail reveal rides this
                 line now (current/visibility/precip). */}
-            <RevealZone
-              reveal={
-                <Field level="vessel" field="weather.current" revealed>
-                  <span>current {wx.current_kn} kn · visibility {wx.visibility_nm} nm · {wx.precip}</span>
-                </Field>
-              }
-            >
-              <span style={{ display: 'inline-flex', justifyContent: 'center', gap: 18, ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
+            {/* ROUND 112: the ENVIRONMENTAL CLUSTER — wind / waves / current, three
+                distinct glyphs + values on one line. The broken round-83 reveal
+                CHEVRON is removed: the cluster is shown (Default) or stripped
+                (Expert), never click-to-hide (same ruling as round 106). Learn
+                explains each value's meaning via its glyph title (ia-model) — making
+                the wind/waves/current vocabulary distinction explicit. Current's
+                speed + set-direction read as ONE value; visibility/precip drop from
+                the cluster (kept compact, not bloated). */}
+            {!expertOn && (
+              <span style={{ display: 'inline-flex', justifyContent: 'center', gap: 18, flexWrap: 'wrap', ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
                 <Field level="vessel" field="weather.wind">
-                  <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} attrs={layer('VesselCommandBand / centerStack / wind.text', 'font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · own line (round 73)', '{weather.wind_speed_kn} kn')} />
+                  <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} title={IA_GLYPH_MEANING.wind} attrs={layer('VesselCommandBand / centerStack / wind.text', 'glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wind_speed_kn} kn')} />
                 </Field>
                 <Field level="vessel" field="weather.waves">
-                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.wave} attrs={layer('VesselCommandBand / centerStack / waves.text', 'glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · own line', '{weather.wave_height_ft} ft')} />
+                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.wave} attrs={layer('VesselCommandBand / centerStack / waves.text', 'glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale', '{weather.wave_height_ft} ft')} />
+                </Field>
+                <Field level="vessel" field="weather.current">
+                  <WxInline g="current" value={`${wx.current_kn} kn ${Math.round(wx.current_dir_deg)}°`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.current} attrs={layer('VesselCommandBand / centerStack / current.text', 'glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale', '{weather.current_kn} kn {weather.current_dir_deg}°')} />
                 </Field>
               </span>
-            </RevealZone>
+            )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
             <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / effDelta.chart', 'Gauge primitive · caution band ≥+8 (alert-backed)', '{derived.efficiency_delta_pct} vs mode baseline')}>
@@ -423,7 +435,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           ROUND 101: the seam divider above is gone (removed on the sticky row); a
           small gap now separates the two floating blocks. Padding is just
           breathing room; glass when toggled. */}
-      <section style={{ ...(surfaceGlass ? glassFill : {}), padding: 'var(--pad-card)', marginBottom: 8 }}>
+      <section style={{ ...(surfaceGlass ? glassFill : {}), padding: 'var(--pad-card)', marginBottom: 'var(--pad-stack)' }}>
         <Field level="vessel" field="next_port_calls"><Annotated name="RoutePanel" node="voyage-bar">{profile}</Annotated></Field>
         {wxStale && (
           <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>

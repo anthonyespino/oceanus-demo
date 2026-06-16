@@ -13,7 +13,7 @@ import type { VesselState } from '../data/types';
 import { RECON_CAUTION_PCT } from '../data/alerts';
 import { useContentWidth } from './NauticalChart';
 import { ReconChip } from './FlowReconciliation';
-import { RevealZone } from './Contextual';
+import { useLearn } from '../learn/LearnProvider'; // round 112: default-show / expert-hide (no chevron)
 import { Field } from './Field';
 import { FONT, NEUTRAL, RADIUS, STATUS_COLOR } from './probeTokens';
 import { gb } from './gb';
@@ -115,6 +115,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
   const tanks = [...now.tanks.filter((t) => t.type === 'STORAGE'), ...now.tanks.filter((t) => t.type === 'FEEDER')];
   const tankGeo = [...GEOM.storage, ...GEOM.feeder];
   const recon = vessel.derived.reconciliation;
+  const { expertOn } = useLearn(); // round 112: default-show / expert-hide
   const reconColor =
     recon.status === 'OK' ? INK2
     : Math.abs(recon.error_pct) > RECON_CAUTION_PCT ? STATUS_COLOR.watch
@@ -127,27 +128,12 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
 
   return (
     // round 37: header row floats above the fill
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 'var(--pad-stack)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginRight: 26, marginBottom: 4 }}>
         <Label g="tank" headerAttrs={layer('VesselSynoptic / header / header.glyph', 'section header · tank glyph · glyph-only in expert mode', 'FUEL')} style={{ marginBottom: 0 }}>fuel</Label>
         <ReconChip vessel={vessel} />
       </div>
       <section style={gb.box}>
-      <RevealZone
-        reveal={
-          <span>
-            <Field level="vessel" field="tank.capacity_gal" revealed>
-              <span>
-                capacity {tanks.map((t) => `${t.tank_id.split('-')[1]} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal
-              </span>
-            </Field>
-            {' — '}
-            <Field level="vessel" field="tank.transfer_active" revealed>
-              <span>{xferActive ? 'TRANSFER ACTIVE' : 'no transfer in progress'}</span>
-            </Field>
-          </span>
-        }
-      >
       <div ref={wrapRef}>
         <svg width={w} height={h} viewBox={`0 0 ${VB.w} ${VB.h}`} style={{ display: 'block' }}>
           {/* hull + superstructure: neutral ink lines, schematic */}
@@ -277,7 +263,20 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
           })}
         </div>
       </div>
-      </RevealZone>
+      {/* ROUND 112: reveal CHEVRON removed (guardrail 11 — no chevrons in product
+          UI; same family as the wind/waves + efficiency chevrons this round). Tank
+          capacity + transfer status are shown by DEFAULT, stripped in EXPERT. */}
+      {!expertOn && (
+        <div style={{ borderTop: '1px solid var(--color-line-hairline)', marginTop: 8, paddingTop: 8, fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary }}>
+          <Field level="vessel" field="tank.capacity_gal" revealed>
+            <span>capacity {tanks.map((t) => `${t.tank_id.split('-')[1]} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal</span>
+          </Field>
+          {' — '}
+          <Field level="vessel" field="tank.transfer_active" revealed>
+            <span>{xferActive ? 'TRANSFER ACTIVE' : 'no transfer in progress'}</span>
+          </Field>
+        </div>
+      )}
       </section>
     </div>
   );

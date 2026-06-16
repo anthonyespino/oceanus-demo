@@ -231,7 +231,13 @@ export const IA_SORT_THESIS = 'ranked by sustained deviation — fleet ordered b
 // Consumed by the live elements' Learn `title` so the card/CommandBand expose the
 // honest meaning per glyph.
 export const IA_GLYPH_MEANING: Partial<Record<GlyphName, string>> = {
-  wave: 'Sea state — weather wave height.',
+  // ROUND 112: the environmental cluster is three DIFFERENT things — make the
+  // vocabulary distinction explicit (a real confusion): WIND moves air, WAVES are
+  // the sea's surface height, CURRENT moves the water itself (and pushes the hull,
+  // so the DP system burns to hold station against it).
+  wind: 'Wind — air speed over the deck (kn). Not the water.',
+  wave: 'Sea state — wave height, the height of the sea surface (ft).',
+  current: 'Current — the water itself moving past the hull (speed kn + set direction). Drives station-keeping burn.',
   'fuel-drop': 'Fuel endurance — hours of fuel-time remaining (not weather).',
   // ROUND 104: calendar + pulse are a SPAN/INSTANT pair on the tile — the same
   // efficiency metric over two timeframes. The clock (time-of-day) was misleading

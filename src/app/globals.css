@@ -57,6 +57,7 @@
   --pad-card-dense: 12px; /* round 15: inspector density step */
   --gap-card: 8px; /* round 21 B5: the one gap between cards */
   --pad-section: 12px;
+  --pad-stack: 16px; /* round 112: THE single inter-panel gap for the inspector stack — one regular vertical rhythm (Default + Expert); replaces scattered hardcoded marginBottom:8 */
   --color-line-hairline: rgba(235, 235, 235, 0.12); /* card frames: ink at low alpha */
   --color-fill-level: rgba(235, 235, 235, 0.1); /* round 20: tank level fill — white at low alpha */
   --color-scrim: rgba(16, 16, 16, 0.62); /* dims the chart beneath floating cards */

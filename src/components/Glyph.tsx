@@ -10,7 +10,7 @@ import { useLearn } from '../learn/LearnProvider'; // LEARN/EXPERT MODE — stri
 import { IMPORTED_GLYPHS } from './glyphs.generated'; // round 47: Anthony's drawn glyphs (drop-in)
 
 export type GlyphName =
-  | 'vessel' | 'engine' | 'tank' | 'fuel-drop' | 'wind' | 'wave' | 'anchor'
+  | 'vessel' | 'engine' | 'tank' | 'fuel-drop' | 'wind' | 'wave' | 'current' | 'anchor'
   | 'route' | 'crew' | 'clock' | 'alert-triangle' | 'datalink' | 'gauge' | 'chart'
   | 'expand' | 'collapse' // round 17 control glyphs — same Figma 1:1 contract
   | 'crosshair' // round 24: STATION (DP holding) — replaces the weak vessel mapping
@@ -31,6 +31,11 @@ const PATHS: Record<GlyphName, string[]> = {
   'fuel-drop': ['M12 4 C12 4 6 11 6 14.5 A6 6 0 0 0 18 14.5 C18 11 12 4 12 4 Z'],
   wind: ['M3 8 H14 A2.6 2.6 0 1 0 11.4 5.4', 'M3 13 H18 A2.6 2.6 0 1 1 15.4 15.6', 'M3 18 H11'],
   wave: ['M2 10 C5 6.5 8 6.5 11 10 C14 13.5 17 13.5 20 10', 'M2 16 C5 12.5 8 12.5 11 16 C14 19.5 17 19.5 20 16'],
+  // round 112: current = water MOVEMENT + direction — a single flowing line ending
+  // in an arrowhead (directional). Distinct from wind (three straight gust lines)
+  // and wave (two parallel sea-surface sines, no arrow). Placeholder until drawn
+  // (drop docs/glyphs-import/current.svg per round 48).
+  current: ['M2 13 C5 10 8 10 11 13 C12.6 14.6 14.2 14.6 15.8 13.4', 'M13 11 L17 13.2 L13 15.4'],
   anchor: ['M12 8 A2 2 0 1 0 12 4 A2 2 0 0 0 12 8', 'M12 8 V19', 'M8 10 H16', 'M5 14 C5 17.5 8.5 19 12 19 C15.5 19 19 17.5 19 14', 'M5 14 L3.2 12.4 M5 14 L7 12.4', 'M19 14 L20.8 12.4 M19 14 L17 12.4'],
   route: ['M5 18 C9 18 9 6 13 6 C17 6 16 14 20 14', 'M5 19.5 A1.5 1.5 0 1 0 5 16.5 A1.5 1.5 0 0 0 5 19.5', 'M20 15.5 A1.5 1.5 0 1 0 20 12.5 A1.5 1.5 0 0 0 20 15.5'],
   crew: ['M12 10 A3 3 0 1 0 12 4 A3 3 0 0 0 12 10', 'M5 19 C5 14.5 8.5 13 12 13 C15.5 13 19 14.5 19 19'],

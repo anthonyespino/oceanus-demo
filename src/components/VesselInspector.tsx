@@ -77,7 +77,7 @@ export function VesselInspector({
             their panels below; this renders ONLY when there are general alerts
             (no empty box otherwise). */}
         {routed.general.length > 0 && (
-          <section data-panel="general" style={{ ...gb.box, padding: '6px var(--pad-card)', marginBottom: 8, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <section data-panel="general" style={{ ...gb.box, padding: '6px var(--pad-card)', marginBottom: 'var(--pad-stack)', display: 'flex', flexDirection: 'column', gap: 2 }}>
             <span {...layer('VesselInspector / generalAlerts / header.text', 'compact GENERAL alerts area · only unroutable alerts (no evidence panel)', 'GENERAL')} style={{ ...gb.label, fontSize: 'var(--type-micro)', marginBottom: 2 }}>general</span>
             {routed.general.map((a, i) => (
               <div key={i} style={{ color: NEUTRAL.inkSecondary, fontSize: 'var(--type-context)', lineHeight: 1.4 }}>

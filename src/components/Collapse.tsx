@@ -53,7 +53,7 @@ export function Collapse({
   };
   if (min) {
     return (
-      <section data-panel={k} style={{ ...gb.box, marginBottom: 8, paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
+      <section data-panel={k} style={{ ...gb.box, marginBottom: 'var(--pad-stack)', paddingTop: 'var(--pad-section)', paddingBottom: 'var(--pad-section)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
           <Label g={glyph} style={{ marginBottom: 0 }}>{title}</Label>
           <span style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

@@ -62,7 +62,7 @@ export function CrewLogPanel({ vessel }: { vessel: VesselState }) {
 
   return (
     // round 37: header floats above the fill
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 'var(--pad-stack)' }}>
       <Label g="crew" headerAttrs={layer('CrewLogPanel / header / header.glyph', 'section header · crew glyph · glyph-only in expert mode', 'CREW & LOG')} style={{ marginBottom: 4 }}>crew &amp; log</Label>
       <section style={gb.box}>
       <div style={{ display: 'flex', gap: 'var(--pad-section)', alignItems: 'flex-start', flexWrap: 'wrap' }}>
