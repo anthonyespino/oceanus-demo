@@ -1,3 +1,34 @@
+# PROGRESS — 2026-06-16 (Session 108: ROUND 121 — efficiency envelope X-axis tightened (no dead axis space))
+
+## The bug
+- The EfficiencyCurve X-domain was computed from envelope bins + the NOW point only, padded a
+  wide `max(0.25, span*0.18)` — and it EXCLUDED the optimal-speed bracket. Result: empty axis
+  bands left and right where no envelope is drawn, and the OPTIMAL bracket (12.3–12.8) + NOW dot
+  stranded out in the dead right region, reading as detached from the band.
+
+## Done (verified docs/screens/r121-efficiency-curve.png)
+- **X-domain now bounds ALL plotted X-elements** — envelope, optimal-speed bracket, AND the live
+  NOW point — with only minimal breathing pad (`max(0.08, span*0.05)`, was 0.25/18%). No stretch
+  of axis is left empty. Surgical change to the domain calc ONLY — every other thing (styling,
+  ticks, envelope fill, line weight, Y-domain, element placement code) is untouched, so it reads
+  as the SAME designed panel, correctly proportioned (not a regenerated chart).
+- **NOW dot + OPTIMAL bracket now sit within the plot area** (verified: envelope band x 90→485,
+  NOW dot x342 inside it, OPTIMAL x408→587 inside the 58→616 plot — dead pad ~30px/side vs the
+  old wide bands), reading as connected to the envelope.
+- **Vertical gap preserved:** the change is X-only; the NOW dot's vertical distance above the
+  envelope (the "+13.0% vs envelope" payoff) is set by the separate, unchanged Y-domain — the dot
+  still floats clearly above the band by its real margin.
+- Visual language intact: GAL/NM + KN labels, OPTIMAL bracket, 12-MO NORMAL label, tick styling,
+  greyscale envelope, the yellow NOW dot + "vs envelope" label (earned color, severity-substantiating),
+  everything else neutral. No green. Data / envelope values / chart meaning unchanged.
+
+## Holds
+Substantiation (no axis shown where there's no data); earned color (yellow only on NOW/vs-envelope);
+type scale; greyscale; consistent with the panel's existing design. TSC-OK · LINT-CLEAN · verify
+PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 107: ROUND 120 — minimal presenter sim transport (reset + pause/resume) by the master clock)
 
 ## Done (verified docs/screens/r120-sim-transport.png)

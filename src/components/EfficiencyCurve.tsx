@@ -46,12 +46,22 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
     );
   }
 
-  // Domain fits the content (envelope + live point), padded ~15-18% — the
-  // data occupies ~70-80% of the plot, never a corner.
-  const speeds = [...env.bins.map((b) => b.speed), ...(pt ? [pt.speed] : [])];
+  // ROUND 121: the X domain bounds ALL plotted X-elements — the envelope, the
+  // optimal-speed bracket, AND the live NOW point — with only minimal breathing
+  // padding, so there's no stretch of axis where nothing is drawn. The old domain
+  // (envelope + point only, padded a wide max(0.25, 18%)) left empty bands left/right
+  // and stranded the OPTIMAL bracket + NOW dot out in the dead right region. X-ONLY:
+  // the NOW dot's vertical gap above the envelope (the +X% vs-envelope reading — the
+  // whole chart's payoff) is set by the SEPARATE Y domain below and is unchanged.
+  const speeds = [
+    ...env.bins.map((b) => b.speed),
+    ...(pt ? [pt.speed] : []),
+    ...(env.optimal ? [env.optimal.lo, env.optimal.hi] : []),
+  ];
   const spanX = Math.max(0.5, Math.max(...speeds) - Math.min(...speeds));
-  const xLo = Math.min(...speeds) - Math.max(0.25, spanX * 0.18);
-  const xHi = Math.max(...speeds) + Math.max(0.25, spanX * 0.18);
+  const padX = Math.max(0.08, spanX * 0.05); // minimal breathing room, not the old wide bands
+  const xLo = Math.min(...speeds) - padX;
+  const xHi = Math.max(...speeds) + padX;
   const yVals = [...env.bins.flatMap((b) => [b.p25, b.p75]), ...(pt ? [pt.galNm] : [])].filter((v) => v > 0);
   // Round 15: band + point own the vertical middle two-thirds, not a
   // stripe in empty air.

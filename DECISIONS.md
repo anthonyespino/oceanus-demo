@@ -1273,3 +1273,16 @@ originals.*
   (neutral). No green, greyscale, earned-color held; master clock + scenario switcher
   undisturbed. Verified: pause froze 15:03Z, resume → 15:05Z, reset → 15:00Z seed + Meridian
   +58°F. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 121: efficiency envelope X-axis tightened — no dead axis space.** The
+  EfficiencyCurve X-domain was built from envelope bins + the NOW point only, padded a wide
+  `max(0.25, 18%)`, and excluded the optimal-speed bracket — leaving empty axis left/right and
+  stranding the OPTIMAL bracket + NOW dot in the dead right region. Fix (domain calc ONLY): the
+  X-domain now bounds ALL plotted X-elements (envelope, optimal bracket, NOW point) with minimal
+  padding (`max(0.08, 5%)`), so no stretch of axis is empty and the elements sit within the plot,
+  connected to the band. Reworked WITHIN the panel's existing visual language — styling, ticks,
+  envelope fill, line weight, labels, Y-domain, and element placement are all untouched; it reads
+  as the same designed panel, correctly proportioned. The change is X-only, so the NOW dot's
+  vertical gap above the envelope (the +X% vs-envelope payoff, set by the separate Y-domain) is
+  preserved. Earned color held (yellow only on NOW/vs-envelope; no green); data/envelope/meaning
+  unchanged. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

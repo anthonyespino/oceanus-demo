@@ -304,4 +304,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/play  → play.svg
     · glyph/reset  → reset.svg
 
-*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T19:54:40.776Z*
+*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T20:09:12.977Z*
