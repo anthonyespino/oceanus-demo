@@ -1,3 +1,38 @@
+# PROGRESS — 2026-06-16 (Session 113: ROUND 126 — reconcile engine/generator node labels across panels)
+
+## Part A — audit (reported before fixing)
+- The fuel schematic showed four stern nodes labeled **E1, E2, E3, E4**. The engine-twins panel
+  models the same four units as **E1, E2 (mains)** and **G1, G2 (generators)**.
+- Root finding: the schematic nodes were ALREADY the right four units — `now.engines` by index
+  `[E1 MAIN 80%, E2 MAIN 80%, E3 GEN OFF, E4 GEN 34%]` — and the two generator nodes were already
+  typed `role:'GEN'` with the smaller radius (r12 vs the mains' r17) and their own fuel-flow lines.
+  The ONLY defect was the LABEL: the schematic printed the raw data `engine_id` (E3/E4) while the
+  engine-twins panel relabels those same indices **G1/G2**. Same physical unit, two different names
+  across panels — exactly what a fuel engineer cross-referencing the two views would trip on.
+
+## Part B — reconcile (done, verified docs/screens/r126-synoptic-labels.png)
+- Renamed the schematic's two generator nodes **E3→G1, E4→G2** in `VesselSynoptic.tsx` GEOM.engines
+  + GEOM.callouts (ids + callout keys), with a round-126 comment noting that labels are display
+  identity (by index), data binding stays by `engine_id`. Mains E1/E2 unchanged.
+- **Label parity proven in code:** both panels map data indices 0–3 → `['E1','E2','G1','G2']`
+  (`EngineTwinPanel.tsx:97` `ids` array; VesselSynoptic GEOM.engines order). No unit has two names.
+- **Verified on screen** (Meridian, default): schematic now reads **E1** (top-right, r17, 80%) ·
+  **E2** (bottom-right, r17, 80%, **yellow** — the diverging main) · **G1** (top, r12, **OFF**) ·
+  **G2** (bottom, r12, **34%** running) — matching the engine-twins panel exactly.
+  - Mains vs gens distinguishable (radius r17 vs r12); running/off states consistent across both
+    panels (G1 OFF, G2 34%); generator fuel consumption represented (G2 34% draw → its flow line).
+  - **Burn reconciliation holds:** central meter **296 gph** ≈ Σ engine draws
+    (124.5 + 160.5 + 0 + 9.9 = 294.9 gph) → **RECON OK** (generators' burn is real and counted).
+  - Yellow earned ONLY on the diverging unit (E2 main); generators neutral. Compact + contained
+    proportions UNCHANGED (round-123/124/125 hull/conformance/containment untouched).
+
+## Holds
+No data change (engine_id binding, loads, burns all unchanged — labels are display-only). Standing
+design-system rule intact (no off-token hex, greyscale + earned color, no new sizes/strokes).
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 112: ROUND 125 — fuel schematic tank containment (tanks inside the hull))
 
 ## The bug

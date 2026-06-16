@@ -66,17 +66,24 @@ const GEOM = {
     { id: 'FD2', x: 300, y: 102, w: 76, h: 40 },
   ],
   meter: { x: 432, y: 92 },
+  // ROUND 126: the two generators carry their ENGINE-PANEL display labels (G1/G2),
+  // not their raw data engine_id (E3/E4) — the same unit must have ONE name across
+  // panels (component-identity consistency, same principle as the glyph-naming work).
+  // Mains stay E1/E2 (large nodes), gens G1/G2 (smaller nodes — visually distinct as
+  // not-propulsion). The data mapping is still by INDEX (now.engines[i]) and the alert
+  // tint still keys on the data engine_id, so identities + states + earned color match
+  // the engine-twins panel exactly.
   engines: [
     { id: 'E1', x: 588, y: 60, r: 17, role: 'MAIN' },
     { id: 'E2', x: 588, y: 124, r: 17, role: 'MAIN' },
-    { id: 'E3', x: 500, y: 54, r: 12, role: 'GEN' },
-    { id: 'E4', x: 500, y: 130, r: 12, role: 'GEN' },
+    { id: 'G1', x: 500, y: 54, r: 12, role: 'GEN' },
+    { id: 'G2', x: 500, y: 130, r: 12, role: 'GEN' },
   ],
   callouts: {
     ST1: { lx: 216, ly: 16 }, ST2: { lx: 216, ly: 176 },
     FD1: { lx: 338, ly: 16 }, FD2: { lx: 338, ly: 176 },
     E1: { lx: 626, ly: 16 }, E2: { lx: 626, ly: 176 },
-    E3: { lx: 500, ly: 16 }, E4: { lx: 500, ly: 176 },
+    G1: { lx: 500, ly: 16 }, G2: { lx: 500, ly: 176 },
   } as Record<string, { lx: number; ly: number }>,
 };
 

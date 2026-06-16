@@ -1354,3 +1354,19 @@ originals.*
   (no re-bloat). Engines/manifold/connector lines/RECON marker confirmed still inside. No data
   change; standing design-system conformance (round 124) untouched. TSC-OK · LINT-CLEAN · verify
   PASSED · offline build OK.
+
+- **ROUND 126: reconcile engine/generator node labels across panels.** The fuel schematic
+  labeled its four stern nodes E1/E2/E3/E4 while the engine-twins panel names the same four units
+  E1/E2 (mains) + G1/G2 (generators) — the same physical unit carried two different names across
+  views, a cross-referencing hazard for a fuel engineer. Audit found the nodes were ALREADY the
+  correct four units (`now.engines` by index: E1/E2 MAIN, E3/E4 GEN) and the generators were
+  already typed `role:'GEN'` with the smaller radius + their own fuel-flow lines — the only defect
+  was that the schematic printed the raw data `engine_id` (E3/E4) instead of the panel's display
+  labels (G1/G2). Fixed: renamed the two generator nodes E3→G1, E4→G2 in VesselSynoptic GEOM
+  (ids + callouts), labels-as-display-identity (by index) while data binding stays by `engine_id`.
+  Label parity now proven in code (both panels map indices 0–3 → ['E1','E2','G1','G2']). Verified:
+  schematic reads E1/E2 mains (r17) + G1/G2 gens (r12) matching the panel; running/off consistent
+  (G1 OFF, G2 34%); generator burn represented (G2 draw); burn reconciles (meter 296 ≈ Σ 294.9 gph
+  → RECON OK); yellow earned only on the diverging main (E2), gens neutral; compact + contained
+  proportions unchanged. No data change (labels display-only). TSC-OK · LINT-CLEAN · verify PASSED
+  · offline build OK.
