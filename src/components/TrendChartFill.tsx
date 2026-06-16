@@ -6,12 +6,14 @@
 // the min-gap rule.
 
 import { useEffect, useRef, useState } from 'react';
-import { FONT } from './probeTokens';
+import { FONT, NEUTRAL } from './probeTokens';
 
-const ML = 30; // y-label gutter
-const MR = 6;
+// ROUND 124: margins + treatment matched to the EGT-gap chart (GapTrend) — bottom lane
+// for the −30D/NOW endpoints, 8px-floor axis numbers, fill-level area under the line.
+const ML = 34; // y-label gutter (matches GapTrend M.l)
+const MR = 8;
 const MT = 8;
-const MB = 8;
+const MB = 18; // endpoint label lane (−30D / NOW)
 
 function yTickStep(span: number, pxPerUnit: number): number {
   const steps = [0.5, 1, 2, 5, 10, 20, 50];
@@ -41,24 +43,30 @@ export function TrendChartFill({ values }: { values: number[] }) {
   const ticks: number[] = [];
   for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) ticks.push(Math.round(v * 10) / 10);
 
+  // ROUND 124: axis numbers + endpoints in the EGT-gap chart's style — 8px floor, ink/muted.
+  const tick: React.CSSProperties = { fontFamily: FONT.data, fontSize: 'var(--type-micro-floor)' };
+  const linePts = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   return (
     <div ref={ref} style={{ width: '100%', height: '100%', minHeight: 90 }}>
       {values.length > 1 && (
         <svg width={w} height={h} style={{ display: 'block' }}>
           {ticks.map((v) => (
             <g key={v}>
+              {/* gridlines match GapTrend: line/strong at zero, line/subtle elsewhere, 1px */}
               <line x1={ML} y1={y(v)} x2={w - MR} y2={y(v)}
-                stroke={v === 0 ? 'var(--color-line-strong)' : 'var(--color-line-subtle)'} strokeWidth={v === 0 ? 1.25 : 0.5} />
-              <text x={ML - 5} y={y(v) + 3} textAnchor="end"
-                style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro)' }} fill="var(--color-ink-muted)">
-                {v === 0 ? '0' : `${v > 0 ? '+' : ''}${v}`}
+                stroke={v === 0 ? 'var(--color-line-strong)' : 'var(--color-line-subtle)'} strokeWidth={1} />
+              {/* % vs baseline — "0" = at baseline, the delta read against zero */}
+              <text x={ML - 4} y={y(v) + 3} textAnchor="end" style={tick} fill={NEUTRAL.inkMuted}>
+                {v === 0 ? '0' : `${v > 0 ? '+' : ''}${v}%`}
               </text>
             </g>
           ))}
-          <polyline
-            points={values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}
-            fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.5}
-          />
+          {/* fill/level area to the zero baseline, then the line — same treatment as the EGT-gap chart */}
+          <polygon points={`${ML},${y(0).toFixed(1)} ${linePts} ${x(values.length - 1).toFixed(1)},${y(0).toFixed(1)}`} fill="var(--color-fill-level)" />
+          <polyline points={linePts} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.2} />
+          {/* X-span endpoints, parallel to the EGT-gap chart's −30D / NOW */}
+          <text x={ML} y={h - 4} style={tick} fill={NEUTRAL.inkMuted}>−30D</text>
+          <text x={w - MR} y={h - 4} textAnchor="end" style={tick} fill={NEUTRAL.inkMuted}>NOW</text>
         </svg>
       )}
     </div>

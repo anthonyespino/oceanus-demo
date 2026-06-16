@@ -1,3 +1,50 @@
+# PROGRESS — 2026-06-16 (Session 111: ROUND 124 — STANDING design-system rule + envelope/schematic conformance + trend-chart labeling)
+
+## STANDING RULE recorded (DECISIONS.md, permanent)
+Every created/reworked component must conform to the design system, not just function:
+established type tiers (no one-off sizes), matching stroke/line-weight conventions, greyscale
++ earned-color (no off-token hex, no green), comparable spacing rhythm. A fix is complete when
+it works AND is visually indistinguishable in styling-language from the refined panels. "Recoded
+but not designed into the system" is a defect; visual conformance is acceptance criteria.
+
+## 1 — Envelope axis re-tightened (the round-121 fix that didn't fully land)
+- Root cause found in `curve.ts`: optimal range = good-bins ± **0.25 pad**, which pushed
+  optimal.hi 0.25 PAST the envelope's last bin (Meridian: band tops at 12.5, optimal was
+  12.25–**12.75**) — so including optimal in the domain (round 121) widened the axis and left
+  the bracket stranded past the band. **Fix: clamp the optimal band to the measured speed range**
+  (`hi = min(bandHi, max(good)+0.25)`) — never claim an optimal speed beyond the data. Verified:
+  ticks now stop at 12.5 (no 12.75), OPTIMAL reads **12.3–12.5** sitting at the band's edge,
+  band fills to x578 of the 616 plot (38px pad vs the old 131px dead). NOW dot's vertical gap
+  preserved (X-only change; +13.0% vs envelope reads clearly).
+- Conformance: replaced off-scale hex (#6e7681/#3d4651/#4a535e/#a9b1ba) with tokens; axis numbers
+  now use the 8px floor + ink/muted, identical to the EGT-gap chart.
+
+## 2 — 30D-TREND time-series labeled (Part A confirmed, then Part B)
+- **Part A (confirmed from source):** `TrendChartFill` plots `derived.daily_delta_1y.slice(-30)`
+  — the 30-day daily efficiency-delta series, Y in **% vs baseline**, X **−30d → now**. Matches
+  the header's "30D TREND". (Source confirmed before labeling.)
+- **Part B:** labeled to match the EGT-gap chart exactly — caption **"EFFICIENCY · 30D"** (parallel
+  to "EGT GAP · 30D"), y-ticks **"+10%…0"** (% Y-unit), **−30D / NOW** X-endpoints, zero reference
+  ("0"), fill/level area + 1.2px line + 8px-floor ticks (GapTrend's treatment). The envelope
+  (vs-speed) and trend (over-time) are now both labeled + clearly distinct.
+
+## 3 — Fuel schematic conformed to the design system
+- Root cause of "strokes/text don't match": VesselSynoptic is the ONLY one of these SVGs with a
+  **scaling viewBox** (720-unit space rendered at ~1040px → ~1.4× scale), so its text + strokes
+  rendered ~1.4× larger/heavier than the pixel-space EGT/envelope charts. **Fix: compensate by
+  the viewBox scale `k`** — text fontSize `px/k` and stroke weights `sw(px)=px/k` so both land at
+  their true tier px / px weights, identical to the refined panels. Type → --type-micro (10) /
+  --type-context (13) only; hull normalized 1.5→1.25; off-token `#0b0e13` → surface-base. Data/
+  labels/E2-yellow unchanged; dot matrices NOT reordered (still held).
+
+## Holds
+Standing rule applied across all three. Substantiation (no axis/bracket where there's no data);
+earned color (yellow only on NOW/vs-envelope + E2; no green); type tiers; greyscale; no off-token
+hex. No data/meaning change (envelope values, gal/nm, trend series untouched; optimal clamped to
+measured range). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 110: ROUND 123 — fuel-twin hull compaction (data fills the frame))
 
 ## Done (verified docs/screens/r123-hull-compacted.png)

@@ -36,7 +36,11 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
   const pt = liveOperatingPoint(vessel.history);
   const status = vesselStatus(vessel.alerts);
   const sparse = env.transitHours < MIN_TRANSIT_HOURS;
-  const mono = { fontFamily: FONT.data, fontSize: 'var(--type-micro)', fill: '#6e7681' };
+  // ROUND 124 (design-system conformance): tokens, not off-scale hex. `mono` for the
+  // chart's micro labels; `tick` for axis numbers — 8px floor + ink/muted, identical to
+  // the EGT-gap chart's axis treatment (round 119).
+  const mono = { fontFamily: FONT.data, fontSize: 'var(--type-micro)', fill: NEUTRAL.inkMuted };
+  const tick = { fontFamily: FONT.data, fontSize: 'var(--type-micro-floor)', fill: NEUTRAL.inkMuted };
 
   if (env.bins.length < 3) {
     return (
@@ -93,15 +97,15 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
           {/* axes: ticks in their row, titles in their own gutters */}
           {xTicks.map((s) => (
             <g key={s}>
-              <line x1={x(s)} y1={H - M.b} x2={x(s)} y2={H - M.b + 4} stroke="#3d4651" />
-              <text x={x(s)} y={H - M.b + 15} textAnchor="middle" {...mono}>{s}</text>
+              <line x1={x(s)} y1={H - M.b} x2={x(s)} y2={H - M.b + 4} stroke="var(--color-line-subtle)" />
+              <text x={x(s)} y={H - M.b + 15} textAnchor="middle" {...tick}>{s}</text>
             </g>
           ))}
           <text x={w - M.r} y={H - 6} textAnchor="end" {...mono} letterSpacing="0.2em">KN</text>
           {yTicks.map((v) => (
             <g key={v}>
-              <line x1={M.l - 4} y1={y(v)} x2={M.l} y2={y(v)} stroke="#3d4651" />
-              <text x={M.l - 8} y={y(v) + 3} textAnchor="end" {...mono}>{v}</text>
+              <line x1={M.l - 4} y1={y(v)} x2={M.l} y2={y(v)} stroke="var(--color-line-subtle)" />
+              <text x={M.l - 8} y={y(v) + 3} textAnchor="end" {...tick}>{v}</text>
             </g>
           ))}
           <text x={14} y={M.t + (H - M.t - M.b) / 2} textAnchor="middle" {...mono} letterSpacing="0.2em"
@@ -109,7 +113,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
           {/* optimal-speed bracket: its own lane BELOW the axis (round 21 B1 —
               never over plot content) */}
           {env.optimal && !sparse && (
-            <g stroke="#4a535e" fill="none">
+            <g stroke="var(--color-line-strong)" fill="none">
               <line x1={x(env.optimal.lo)} y1={H - 30} x2={x(env.optimal.lo)} y2={H - 25} />
               <line x1={x(env.optimal.hi)} y1={H - 30} x2={x(env.optimal.hi)} y2={H - 25} />
               <line x1={x(env.optimal.lo)} y1={H - 25} x2={x(env.optimal.hi)} y2={H - 25} />
@@ -145,7 +149,7 @@ export function EfficiencyCurve({ vessel }: { vessel: VesselState }) {
                 y={(y(pt.galNm) + y(medianAtPt)) / 2 + 3}
                 textAnchor={x(pt.speed) + 130 > w - M.r ? 'end' : 'start'}
                 {...mono} style={{ fontSize: 'var(--type-micro)' }}
-                fill={status !== 'nominal' ? STATUS_COLOR[status] : '#a9b1ba'}
+                fill={status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.inkSecondary}
               >
                 {fmtPct(deltaPct!)} vs envelope
               </text>

@@ -74,8 +74,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — IQR band surface/overlay · median ink/secondary · live point accent ring
   - BINDS — {1y transit envelope: gal/nm vs kn} — speed-specific comparison
 - `charts / trend30.chart`
-  - TOKENS — ink/secondary line · zero axis · fills cell
-  - BINDS — {daily_delta_1y[-30d]}
+  - TOKENS — fill/level area · ink/secondary line · zero ref · −30D→NOW · % vs baseline — the 30d delta TREND (round 124: labeled to match the EGT-gap chart) · distinct from the envelope (vs-speed)
+  - BINDS — {daily_delta_1y[-30d]} % vs baseline
 - `footer / baseline.text`
   - TOKENS — font/data 12 · ink/secondary
   - BINDS — {derived.baseline_value} {baseline_metric}
@@ -532,4 +532,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-16T20:21:25.811Z*
+*142 instrumented leaves · 20 components · generated 2026-06-16T20:48:24.447Z*

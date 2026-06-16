@@ -44,8 +44,12 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
         <div {...layer('EfficiencyPanel / charts / envelope.chart', 'IQR band surface/overlay · median ink/secondary · live point accent ring', '{1y transit envelope: gal/nm vs kn} — speed-specific comparison')} style={{ flex: '3 1 380px', minWidth: 0 }}>
           <EfficiencyCurve vessel={vessel} />
         </div>
-        <div {...layer('EfficiencyPanel / charts / trend30.chart', 'ink/secondary line · zero axis · fills cell', '{daily_delta_1y[-30d]}')} style={{ flex: '2 1 260px', minWidth: 0, height: 250, display: 'flex', flexDirection: 'column' }}>
-          <TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} />
+        <div {...layer('EfficiencyPanel / charts / trend30.chart', 'fill/level area · ink/secondary line · zero ref · −30D→NOW · % vs baseline — the 30d delta TREND (round 124: labeled to match the EGT-gap chart) · distinct from the envelope (vs-speed)', '{daily_delta_1y[-30d]} % vs baseline')} style={{ flex: '2 1 260px', minWidth: 0, height: 250, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: 1, minHeight: 0 }}><TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} /></div>
+          {/* ROUND 124: title parallel to the EGT-gap chart's "EGT GAP · 30D" — identifies
+              this as the over-time trend (the envelope is the vs-speed view). Same caption
+              treatment (micro · letterSpacing 1 · ink/muted · centered). */}
+          <div style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1, color: 'var(--color-ink-muted)', marginTop: 2, textAlign: 'center' }}>EFFICIENCY · 30D</div>
         </div>
       </div>
       {/* footer: baseline context + 24h strip (burn gph lives in the band) */}

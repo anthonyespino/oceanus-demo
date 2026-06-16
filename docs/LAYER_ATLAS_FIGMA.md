@@ -40,7 +40,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: charts
     • envelope.chart  → IQR band surface/overlay · median ink/secondary · live point accent ring · {1y transit envelope: gal/nm vs kn} — speed-specific comparison
-    • trend30.chart  → ink/secondary line · zero axis · fills cell · {daily_delta_1y[-30d]}
+    • trend30.chart  → fill/level area · ink/secondary line · zero ref · −30D→NOW · % vs baseline — the 30d delta TREND (round 124: labeled to match the EGT-gap chart) · distinct from the envelope (vs-speed) · {daily_delta_1y[-30d]} % vs baseline
   Region: footer
     • baseline.text  → font/data 12 · ink/secondary · {derived.baseline_value} {baseline_metric}
     • spark24.chart  → ink/secondary 1px · line/subtle frame · {derived.sparkline_24h — hourly efficiency_delta}
@@ -304,4 +304,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/play  → play.svg
     · glyph/reset  → reset.svg
 
-*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T20:21:25.812Z*
+*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T20:48:24.448Z*

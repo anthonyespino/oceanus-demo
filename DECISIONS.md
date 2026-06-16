@@ -3,6 +3,19 @@
 PM/customer rulings binding on implementation. Per DATA_MODEL.md §11 (v2),
 this file is the ruling ledger; PROGRESS.md remains the session log.
 
+> **STANDING RULE — DESIGN-SYSTEM CONFORMANCE (round 124, permanent; applies to ALL
+> visual/component work).** Any time a component is created or reworked, it must conform
+> to the established design system, not merely function. Specifically it must: (1) use the
+> existing type-scale tiers (no arbitrary or one-off font sizes); (2) match the existing
+> stroke / line-weight conventions (hairlines + line weights consistent with the rest of
+> the interface; no component-specific weights); (3) hold greyscale + earned-color (color
+> only where already earned, no green; no off-token hex); (4) match the spacing/padding
+> rhythm of comparable panels. A fix is NOT complete when it works — it is complete when it
+> works AND is visually indistinguishable in styling-language from the already-refined
+> panels (EGT/Engine-Twins panel, gauges, command band). "Recoded but not designed into the
+> system" is a DEFECT. Visual conformance is part of every component's acceptance criteria,
+> not a follow-up.
+
 *Ledger created Session 3 (2026-06-10). Rulings 1–5 are transcribed from the
 PM's Session 1 review (relayed during Session 2); 6–8 are reconstructed from
 their references in the Session 3 brief — PM: flag any drift from the
@@ -1311,3 +1324,24 @@ originals.*
   result). Information-over-decoration (hull earns only its spatial-context space); earned color
   (E2 yellow where alert-named, no green); type scale; greyscale; panel consistency.
   TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 124: design-system conformance pass (standing rule applied) — envelope axis,
+  trend-chart labeling, schematic styling.** (Standing design-system rule recorded at the TOP
+  of this file as a permanent constraint.)
+  - **Envelope axis** (the round-121 fix that didn't fully land): `curve.ts` padded the optimal
+    range ±0.25, pushing optimal.hi past the envelope's last bin (12.5 → 12.75) and stranding the
+    bracket past the band. CLAMPED the optimal band to the measured speed range (no claim beyond
+    data) — ticks stop at 12.5, OPTIMAL = 12.3–12.5 at the band's edge, no dead axis, NOW dot's
+    vertical gap preserved (X-only). Off-scale hex → tokens; axis numbers → 8px floor (EGT parity).
+  - **30D-trend time-series** (Part A confirmed: `daily_delta_1y[-30d]`, % vs baseline, −30d→now)
+    LABELED to match the EGT-gap chart: caption "EFFICIENCY · 30D", % y-ticks, −30D/NOW endpoints,
+    zero reference, fill/level area + 1.2px line + 8px ticks. Envelope (vs-speed) and trend
+    (over-time) now both labeled + distinct.
+  - **Fuel schematic** conformed: it was the only SVG with a scaling viewBox, so its text +
+    strokes rendered ~1.4× larger/heavier than the pixel-space panels. Compensated by the viewBox
+    scale (text px/k, stroke sw(px)=px/k) so both land at true tier px / px weights; type →
+    micro(10)/context(13) only; hull 1.5→1.25; off-token #0b0e13 → surface-base. Dot matrices NOT
+    reordered (still held).
+  - No data/meaning change (envelope/gal-nm/trend series untouched; optimal clamped to measured
+    range); earned color (no green); type tiers; greyscale; no off-token hex.
+    TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

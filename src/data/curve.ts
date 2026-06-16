@@ -61,7 +61,17 @@ export function transitEnvelope(history: VesselHistory): Envelope {
   if (bins.length >= 3) {
     const minMedian = Math.min(...bins.map((b) => b.median));
     const good = bins.filter((b) => b.median <= minMedian * 1.05).map((b) => b.speed);
-    optimal = { lo: Math.min(...good) - 0.25, hi: Math.max(...good) + 0.25 };
+    // ROUND 124: CLAMP the optimal band to the MEASURED speed range. The ±0.25 gives a
+    // visible bracket around the good bin(s), but it must never extend past the envelope's
+    // own bins — we can't claim an optimal speed where there's no data, and the overhang
+    // stranded the bracket past the band's end (the chart's dead-axis defect). Clamping
+    // keeps the bracket honest AND inside the plotted band, connected to it.
+    const bandLo = bins[0].speed;
+    const bandHi = bins[bins.length - 1].speed;
+    optimal = {
+      lo: Math.max(bandLo, Math.min(...good) - 0.25),
+      hi: Math.min(bandHi, Math.max(...good) + 0.25),
+    };
   }
   return { bins, transitHours: samples.length, optimal };
 }

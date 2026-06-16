@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T20:21:25.812Z",
+  "generated": "2026-06-16T20:48:24.449Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -205,8 +205,8 @@
       "component": "EfficiencyPanel",
       "region": "charts",
       "leaf": "trend30.chart",
-      "tokens": "ink/secondary line · zero axis · fills cell",
-      "binds": "{daily_delta_1y[-30d]}",
+      "tokens": "fill/level area · ink/secondary line · zero ref · −30D→NOW · % vs baseline — the 30d delta TREND (round 124: labeled to match the EGT-gap chart) · distinct from the envelope (vs-speed)",
+      "binds": "{daily_delta_1y[-30d]} % vs baseline",
       "file": "src/components/EfficiencyPanel.tsx"
     },
     {
