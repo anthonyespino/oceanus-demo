@@ -74,7 +74,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • nominal.status  → green (automotive) | ink/secondary (quiet) · count · click filters board · {# vessels nominal}
     • watch.status  → STATUS_COLOR.watch (amber) · count · click filters board · {# vessels watch}
   Region: mean
-    • trend.chart  → ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule) · {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
+    • trend.chart  → ink/secondary line · surface/overlay p10–p90 band · zero ref line — census and mean never separate (component rule) · round 109: default/learn add a 0 + span label, Expert bare · {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
     • value.text  → type/hero · font/data tabular · ink/primary (round 108: IKB fill removed entirely) · {30d fleet mean delta %}
 
 ## FleetMap
@@ -297,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T02:24:02.736Z*
+*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T02:43:06.324Z*

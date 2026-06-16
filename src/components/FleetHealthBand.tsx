@@ -25,6 +25,7 @@ import { Glyph } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, toggleStyle } from './probeTokens';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 import { useLearn } from '../learn/LearnProvider'; // round 90: Learn surfaces descriptor names
+import { Annotated } from '../learn/Annotated'; // round 109: Learn exposes the trend's full meaning (ia-model node)
 import { IA_BAND_DESCRIPTORS } from '../ia/ia-model'; // round 90: single source for descriptor glyph + name
 
 type TrendRange = 30 | 90 | 365;
@@ -101,6 +102,9 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   const hi = Math.max(...vals, p90, 0) + 0.3;
   const y = (v: number) => H - ((v - lo) / (hi - lo)) * H;
   const x = (i: number) => (i / Math.max(1, vals.length - 1)) * w;
+  // round 109: span label for the line's window (the toggleable range). DEFAULT +
+  // LEARN only — Expert stays bare (operator competence). Context/micro register.
+  const spanLabel = range === 365 ? '1Y' : `${range}D`;
 
   // burn + next 24h
   const burnNow = fleetBurnNow(fleet);
@@ -164,15 +168,32 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
             <Field level="fleet" field="fleet_total_daily_spend" />
             {/* ⚖ #4 spend slot: renders only if/when ruled in (Field → null while UNDEFINED) */}
           </div>
-          <div ref={wrapRef} style={{ flex: 1, minWidth: 80 }} {...layer('FleetHealthBand / mean / trend.chart', 'ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)', '{rolling-mean daily fleet delta over range} + {p10/p90 envelope}')}>
+          <div ref={wrapRef} style={{ flex: 1, minWidth: 80 }} {...layer('FleetHealthBand / mean / trend.chart', 'ink/secondary line · surface/overlay p10–p90 band · zero ref line — census and mean never separate (component rule) · round 109: default/learn add a 0 + span label, Expert bare', '{rolling-mean daily fleet delta over range} + {p10/p90 envelope}')}>
+            {/* ROUND 109: Learn exposes the FULL meaning of the fleet-mean trend
+                (metric, zero-read, span, units, me-vs-everybody) from the shared
+                ia-model node. Passthrough (zero-cost) when Learn is off. */}
+            <Annotated name="FleetMeanTrend" node="fleet-trend">
             <svg width={w} height={H} style={{ display: 'block', border: '1px solid var(--color-line-subtle)', background: 'var(--color-surface-base)' }}>
               <rect x={0} y={y(p90)} width={w} height={Math.max(0, y(p10) - y(p90))} fill="var(--color-surface-overlay)" />
+              {/* zero reference line — the anchor; up = worse (over-burn). Unchanged
+                  across modes (Expert keeps it bare, just unlabeled). */}
               <line x1={0} y1={y(0)} x2={w} y2={y(0)} stroke="var(--color-line-strong)" strokeWidth={1} />
               <polyline
                 points={vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}
                 fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.25}
               />
+              {/* ROUND 109: DEFAULT + LEARN minimal anchors — a "0" on the zero ref
+                  line (so the line reads as zero + direction is legible: above = worse)
+                  and a span label (the line's window). NOT a full axis: no Y ticks,
+                  no X time ticks. Expert (E) strips both — bare strip. Greyscale only. */}
+              {!expertOn && (
+                <>
+                  <text x={3} y={y(0) - 3} fontFamily="var(--font-data)" fontSize={10} fill="var(--color-ink-muted)" letterSpacing={0.5}>0</text>
+                  <text x={w - 3} y={12} textAnchor="end" fontFamily="var(--font-data)" fontSize={10} fill="var(--color-ink-muted)" letterSpacing={0.5}>{spanLabel}</text>
+                </>
+              )}
             </svg>
+            </Annotated>
           </div>
         </div>
         {/* CELL 3 — fleet burn now */}

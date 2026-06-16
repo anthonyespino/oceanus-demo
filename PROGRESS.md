@@ -1,3 +1,47 @@
+# PROGRESS — 2026-06-15 (Session 96: ROUND 109 — census trend: confirm source + mode-aware labeling)
+
+## PART A — CONFIRMED (read from source: FleetHealthBand.tsx + fleetState.fleetDailyTrend + derived.daily_delta_1y)
+- **Exact metric:** the census-strip trend LINE plots the **fleet-wide MEAN
+  efficiency delta vs each vessel's mode baseline** — `fleetDailyTrend()` averages
+  every vessel's daily `efficiency_delta` per day, then the band draws a **7-day
+  rolling mean** of that fleet series. ✓ Matches the expected "me-problem vs
+  everybody-problem" read.
+- **The value (+0.3%)** beside it is the **30-day mean** of the same daily fleet
+  delta (fixed 30d window — independent of the line's range toggle).
+- **Span of the line:** the toggleable `range` — default **90d** (toggle 30d / 90d
+  / 1y). (So the value=30d and the line=90d by default; the new span label anchors
+  the LINE's window.)
+- **Zero reference line:** **ALREADY EXISTS** (FleetHealthBand.tsx line ~170,
+  `<line y1={y(0)} y2={y(0)}>`, stroke `--color-line-strong`), plus a **p10–p90
+  envelope band** (surface-overlay). So Part B item 2 was already partly satisfied;
+  this round adds the *labeling/anchoring* around it, not the line itself.
+- **Data source:** `fleetDailyTrend(fleet)` ← `v.derived.daily_delta_1y` ←
+  efficiency_delta vs mode_baseline (§4). Greyscale; no color.
+
+## PART B — Done (verified docs/screens/r109-default-trend.png, r109-expert-trend.png, r109-learn-hover.png)
+- **DEFAULT (minimal anchor):** added a **"0" label** on the existing zero reference
+  line + a **span label** ("90D", reflecting `range`) at the chart's top-right.
+  Both greyscale, micro tier (10px font/data, ink-muted). Direction now legible
+  (above the labeled zero = worse / over-burn). **No** Y-axis ticks, **no** X time
+  ticks — still a glance strip. Verified svg labels = ["0","90D"].
+- **EXPERT (bare):** both labels stripped (`!expertOn`). Verified svg labels = [].
+  The minimal default labels do NOT leak into Expert. The zero line + envelope stay
+  exactly as before (Expert unchanged).
+- **LEARN (full meaning):** the trend chart is wrapped in `Annotated` bound to a new
+  ia-model node `fleet-trend`; hover reveals the full card — metric (fleet-mean eff
+  delta vs mode baseline, 7d rolling), how to read (against zero; flat fleet + one
+  outlier = isolate that vessel), span, units. Single source = ia-model. Verified
+  card renders with full what/why/ruling.
+
+## Safety
+Greyscale held (zero line + labels neutral, no color). Earned-color untouched (no
+green; value tint logic unchanged — value stays neutral). Substantiation: the trend
+is now anchored to zero + span so it can't read as an unanchored wiggle. Type scale:
+labels at micro tier. No clutter added to default/expert. Demo path intact.
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-15 (Session 95: ROUND 108 — lock startup defaults + dev-panel cleanup; datalink green struck per amendment)
 
 ## Done (verified docs/screens/r108-default.png, r108-devpanel.png, r108-expert.png)

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T02:24:02.736Z",
+  "generated": "2026-06-16T02:43:06.325Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -385,7 +385,7 @@
       "component": "FleetHealthBand",
       "region": "mean",
       "leaf": "trend.chart",
-      "tokens": "ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)",
+      "tokens": "ink/secondary line · surface/overlay p10–p90 band · zero ref line — census and mean never separate (component rule) · round 109: default/learn add a 0 + span label, Expert bare",
       "binds": "{rolling-mean daily fleet delta over range} + {p10/p90 envelope}",
       "file": "src/components/FleetHealthBand.tsx"
     },

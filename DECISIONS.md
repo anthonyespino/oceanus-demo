@@ -980,3 +980,32 @@ originals.*
   - **Guardrails verified:** severity/gold untouched; baked water/texture identical
     to prior look; demo path comes up correct with no toggling; Expert auto-2x off.
     TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 109: CENSUS TREND — confirmed source + mode-aware labeling.**
+  - **Part A — confirmed (read from source).** The census-strip trend LINE plots
+    the **fleet-wide MEAN efficiency delta vs each vessel's mode baseline**
+    (`fleetDailyTrend()` averages every vessel's daily `efficiency_delta` per day;
+    the band draws a 7-day rolling mean of it over the toggleable `range`, default
+    90d). The headline value (+0.3%) is the **30-day mean** of the same daily fleet
+    delta. A **zero reference line already existed** (line ~170) plus a p10–p90
+    envelope. Source: `derived.daily_delta_1y` → efficiency_delta vs mode_baseline
+    (§4). This is exactly the "me-problem vs everybody-problem" read.
+  - **Part B — same element, different explanation per operator expertise (the
+    three-mode principle applied to one component):**
+    - **Default (minimal anchor):** "0" label on the zero reference line + a span
+      label (the line's window, e.g. "90D") at the chart corner. Greyscale, micro
+      tier. Direction is legible (above the labeled zero = worse / over-burn). NOT a
+      full chart: no Y-axis ticks, no X time ticks — still a glance strip.
+    - **Expert (bare):** both labels stripped (`!expertOn`); the zero line + envelope
+      stay exactly as before. The trained operator knows what the fleet-mean strip
+      is (consistent with round 107's competence assumption). No label leak.
+    - **Learn (full meaning):** the chart is bound to a new ia-model node
+      `fleet-trend`; hover reveals the full explanation (metric, zero-read, span,
+      units, the me-vs-everybody logic) from the single source.
+  - **Substantiation fix:** the trend was visually unanchored (zero line present but
+    unlabeled); it is now read against a *labeled* zero + an explicit span, so it
+    can't mislead as a free-floating wiggle.
+  - **Holds:** greyscale (zero line + labels neutral, no color); earned-color
+    untouched (no green; value tint logic unchanged — value stays neutral); type
+    scale at micro; no clutter in default/expert; demo path intact.
+    TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

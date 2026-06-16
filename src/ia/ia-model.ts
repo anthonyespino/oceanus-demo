@@ -29,6 +29,7 @@ export type IANodeId =
   | 'command-gauges'
   | 'meter-strip'
   | 'fleet-health-band'
+  | 'fleet-trend'
   | 'fleet-plot'
   | 'engine-twin'
   | 'fuel-synoptic'
@@ -98,6 +99,17 @@ export const IA_NODES: Record<IANodeId, IANode> = {
     why: 'Before reading any one ship, the operator wants the fleet in one line: which way is it drifting, and how many ships want attention?',
     rulings: [
       { round: 33, text: 'The standing ALERTS card is gone — the band’s count header summons the alert sheet on demand.' },
+    ],
+  },
+  'fleet-trend': {
+    id: 'fleet-trend',
+    name: 'Fleet-Mean Trend',
+    path: 'FleetHealthBand / mean / trend.chart',
+    tier: 'context',
+    what: "Fleet-wide MEAN efficiency delta vs each vessel's mode baseline — every vessel's daily efficiency_delta averaged across the fleet, drawn as a 7-day rolling mean over the selected span (default 90d; toggle 30d/90d/1y). Units: % deviation. The shaded band is the p10–p90 envelope; the headline value beside it is the 30-day mean.",
+    why: "Read against ZERO: zero = the fleet burning as expected; ABOVE zero = collectively over-burning (up is worse). It is the me-problem-vs-everybody-problem check — a flat fleet mean with one tile spiking means isolate that vessel; the whole line drifting up means a fleet-wide cause (weather, fuel batch, policy), not one ship.",
+    rulings: [
+      { round: 109, text: 'Anchored to a zero reference line + span label so the line can never read as an unanchored wiggle (substantiation). Minimal in default, bare in Expert (operator competence), full meaning here in Learn.' },
     ],
   },
   'fleet-plot': {
