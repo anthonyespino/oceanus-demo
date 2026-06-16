@@ -11,8 +11,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 *source: src/components/LiveControls.tsx*
 
 - `clock / master.clock.text`
-  - TOKENS — global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock
-  - BINDS — system UTC now
+  - TOKENS — UTC/Zulu SIM clock (round 122: simulation time, not system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · pauses/resumes/resets with the sim · distinct from the per-vessel mission clock
+  - BINDS — {simTime} — sim now
 - `transport / pause.glyph`
   - TOKENS — presenter sim transport · pause/resume (rides {live}) · neutral utility · reflects state (pause glyph running, play glyph paused)
   - BINDS — {live} → freeze/continue sim clock
@@ -532,4 +532,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-16T20:09:12.975Z*
+*142 instrumented leaves · 20 components · generated 2026-06-16T20:15:48.372Z*

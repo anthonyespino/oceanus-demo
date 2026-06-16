@@ -1,3 +1,26 @@
+# PROGRESS — 2026-06-16 (Session 109: ROUND 122 — Pause freezes the master Zulu clock too (total sim freeze))
+
+## Done (verified docs/screens/r122-header.png)
+- The master Zulu clock (top-right) was a REAL wall clock (`new Date()` ticking), independent
+  of the sim — so Pause froze telemetry but the clock kept running. Now it IS simulation time:
+  driven by `simTime` (the sim's "now"), so the whole imagined world's wall clock pauses,
+  resumes, and resets WITH the sim. Zero new state — pointing the clock at `simTime` (which is
+  derived from the fleet, which pauses on `!live` and resets via `resetSim`) gives every behavior
+  for free; removed the real-time interval.
+- Verified: on load (running) Zulu reads sim time (15:01Z, not the real ~19:xx); PAUSE froze it
+  at 15:01Z across a full 10s watch (telemetry + mission timers already froze); RESUME continued
+  to 15:03Z from the frozen moment (NOT jumping to real current time); RESET snapped it to
+  15:00Z (DEMO_EPOCH seed). The entire interface holds one coherent stopped moment when paused.
+- simTime advances in 1-min ticks (60x), so the clock reads to the minute (HH:MMZ); date +
+  hero-time split unchanged. Paused state clear (play glyph on the transport).
+
+## Holds
+Transport behaving consistently (pause = total freeze of the simulated world); no data/severity/
+color change; greyscale utility; scenario switcher + reset undisturbed. TSC-OK · LINT-CLEAN ·
+verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 108: ROUND 121 — efficiency envelope X-axis tightened (no dead axis space))
 
 ## The bug

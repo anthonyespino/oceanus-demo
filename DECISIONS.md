@@ -1286,3 +1286,14 @@ originals.*
   vertical gap above the envelope (the +X% vs-envelope payoff, set by the separate Y-domain) is
   preserved. Earned color held (yellow only on NOW/vs-envelope; no green); data/envelope/meaning
   unchanged. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 122: Pause freezes the master Zulu clock too — total sim freeze.** The top-right
+  Zulu clock was a real system wall clock (kept ticking through Pause). It is now SIMULATION
+  time — driven by `simTime` — so the whole imagined world's wall clock pauses, resumes, and
+  resets with the sim. Conceptually Pause stops the entire simulated world, its wall-time
+  included; Resume continues from the frozen moment (never jumps to real current time); Reset
+  snaps it to the seed (DEMO_EPOCH). Implemented by sourcing the clock from `simTime` (derived
+  from the fleet, which already pauses on `!live` and resets via `resetSim`) — no new state.
+  Reads to the minute (sim advances 1-min ticks). Verified: PAUSE froze it 10s, RESUME → next
+  sim minute, RESET → 15:00Z. No data/severity/color change; greyscale; scenario switcher +
+  reset undisturbed. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

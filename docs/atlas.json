@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T20:09:12.977Z",
+  "generated": "2026-06-16T20:15:48.374Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -583,8 +583,8 @@
       "component": "AppHeader",
       "region": "clock",
       "leaf": "master.clock.text",
-      "tokens": "global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock",
-      "binds": "system UTC now",
+      "tokens": "UTC/Zulu SIM clock (round 122: simulation time, not system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · pauses/resumes/resets with the sim · distinct from the per-vessel mission clock",
+      "binds": "{simTime} — sim now",
       "file": "src/components/LiveControls.tsx"
     },
     {

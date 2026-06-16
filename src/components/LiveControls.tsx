@@ -2,7 +2,6 @@
 // Live-mode control: tick on/off + speed. State lives in src/state; this is
 // just buttons. Demo epoch stays pinned — "live" advances simulated minutes.
 
-import { useEffect, useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
 import { toggleStyle, NEUTRAL } from './probeTokens';
 import { fmtTime } from './gb';
@@ -49,32 +48,28 @@ function SimTransport() {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-// ROUND 79: the GLOBAL master clock — a real UTC/Zulu wall clock (system time),
-// top-right on every page. DISTINCT from the per-vessel mission clock (T−/ON
-// STATION/IN PORT) in the CommandBand. Client-only + mounted-gated so SSR doesn't
-// hydration-mismatch on the ticking time.
+// ROUND 79 / ROUND 122: the GLOBAL master clock — a UTC/Zulu clock top-right on every
+// page. ROUND 122: it is now SIMULATION time, not real wall-time — driven by `simTime`
+// (the sim's "now"), so the whole imagined world's wall clock pauses, resumes, and
+// resets WITH the sim. Pause halts everything including this clock; resume continues
+// from the frozen moment (never jumps to real current time); reset snaps it to the seed
+// (DEMO_EPOCH). simTime advances in 1-min ticks, so the clock reads to the minute. Still
+// distinct from the per-vessel mission clock (T−/ON STATION/IN PORT) in the CommandBand.
 function MasterClock() {
-  const [now, setNow] = useState<Date | null>(null);
-  useEffect(() => {
-    // mount-time tick (client only — avoids SSR hydration mismatch on the time)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setNow(new Date());
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
+  const { simTime } = useFleet();
+  const t = simTime != null ? new Date(simTime) : null;
   // ROUND 91: date + time split into two type weights — the TIME is the hero,
-  // the DATE is a quiet subordinate prefix (smaller tier + lighter weight/ink),
-  // so the long date string stops fighting the time for attention.
-  const dateStr = now
-    ? `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())}`
+  // the DATE is a quiet subordinate prefix (smaller tier + lighter weight/ink).
+  const dateStr = t
+    ? `${t.getUTCFullYear()}-${pad(t.getUTCMonth() + 1)}-${pad(t.getUTCDate())}`
     : '————-——-——';
-  const timeStr = now
-    ? `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}Z`
-    : '——:——:——Z';
+  const timeStr = t
+    ? `${pad(t.getUTCHours())}:${pad(t.getUTCMinutes())}Z`
+    : '——:——Z';
   return (
     <span
-      {...layer('AppHeader / clock / master.clock.text', 'global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock', 'system UTC now')}
-      title="global UTC (Zulu) — system wall clock"
+      {...layer('AppHeader / clock / master.clock.text', 'UTC/Zulu SIM clock (round 122: simulation time, not system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · pauses/resumes/resets with the sim · distinct from the per-vessel mission clock', '{simTime} — sim now')}
+      title="simulation clock (Zulu) — pauses / resumes / resets with the sim"
       style={{ display: 'inline-flex', alignItems: 'baseline', gap: 8, fontFamily: 'var(--font-data)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}
     >
       {/* DATE — subordinate prefix: smaller tier + lighter weight + dimmer ink */}
