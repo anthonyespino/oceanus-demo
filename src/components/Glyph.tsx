@@ -22,7 +22,8 @@ export type GlyphName =
   // chart.efficiency); plus a back glyph for the rail's ← fleet board
   | 'chart.fleet' | 'chart.trend' | 'chart.efficiency' | 'back'
   | 'calendar' // round 49: 30-day window — VesselTile trend.glyph slot's library icon
-  | 'pulse'; // round 104: live/current reading — VesselTile now.glyph (replaces the misleading clock)
+  | 'pulse' // round 104: live/current reading — VesselTile now.glyph (replaces the misleading clock)
+  | 'pause' | 'play' | 'reset'; // round 120: presenter sim transport (pause/resume + reset to seed)
 
 const PATHS: Record<GlyphName, string[]> = {
   vessel: ['M3 14 H21 L18 18 H6 Z', 'M9 14 V9 H14 V14', 'M11 9 V6'],
@@ -59,6 +60,11 @@ const PATHS: Record<GlyphName, string[]> = {
   // round 104: pulse/live-indicator — a baseline with an ECG-like spike, reads as
   // "current, live reading" (placeholder until glyph.pulse.svg is drawn/scraped).
   pulse: ['M2 12 H8 L10 5 L13 19 L15.5 12 H22'],
+  // round 120: presenter sim-transport glyphs — pause (two bars), play/resume
+  // (triangle), reset (circular refresh arrow). Neutral utility, no severity color.
+  pause: ['M9 5 V19', 'M15 5 V19'],
+  play: ['M8 5 L19 12 L8 19 Z'],
+  reset: ['M12 5 A7 7 0 1 1 5 12', 'M5 12 L3.4 9.7 M5 12 L7.4 10.4'],
 };
 
 /** Round 36 (⚖6 resolved: heading is VISIBLE as marker rotation): filled

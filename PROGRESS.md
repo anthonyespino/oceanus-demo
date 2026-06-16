@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-16 (Session 107: ROUND 120 — minimal presenter sim transport (reset + pause/resume) by the master clock)
+
+## Done (verified docs/screens/r120-sim-transport.png)
+- A small, discreet transport cluster sits LEFT of the top-right master clock — two dim
+  greyscale glyph buttons (pause/resume + reset), no labels (titles on hover). Quiet utility,
+  reads as dev tooling, does NOT compete with the clock or instruments; the master clock stays
+  rightmost + undisturbed.
+- **Pause/Resume** rides the existing `live` flag (so the D-panel live toggle stays in sync):
+  pause freezes the sim clock → telemetry holds; resume continues from where it paused. The
+  glyph reflects state (pause when running, play when paused; play tinted one step brighter so
+  "held" is subtly noticeable). The DATALINK breath is CSS (UI liveness), unaffected by pause.
+- **Reset** (`resetSim` on FleetProvider) drops the live-advanced runtimes (`resetFleet()`) and
+  re-snapshots the deterministic seed — identical to a fresh page load but IN-PLACE: scenario,
+  mode, dev settings, and the master wall clock are all preserved (no URL reload). Clears the
+  crossing/prev-status bookkeeping; yields one frame for the ~2s rebuild.
+- Verified: PAUSE froze the sim clock at 15:03Z across 2.6s; RESUME advanced to 15:05Z; RESET
+  snapped to 15:00Z (DEMO_EPOCH seed) and Meridian's sustained hero back to +58°F. Scenario
+  switcher + D-panel sim controls (60x etc.) undisturbed.
+
+## Scope/holds
+Presenter/dev tooling (an operator wouldn't pause a live fleet), kept always-reachable but
+subtle so it stays out of the demo's visual story. New glyphs pause/play/reset (neutral
+utility). No green, greyscale, earned-color held (no severity color on the control). Master
+clock display + scenario switcher untouched. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 106: ROUND 119 — EGT-gap trend chart headroom (no top clip))
 
 ## Finding (reported honestly): the clip is NOT mode-specific

@@ -1258,3 +1258,18 @@ originals.*
   Because the chart is shared, the fix applies to both modes — Default isn't regressed, it
   gains the same headroom (the intended legibility). TSC-OK · LINT-CLEAN · verify PASSED ·
   offline build OK.
+
+- **ROUND 120: minimal presenter sim transport (reset + pause/resume) beside the master
+  clock.** Replaces the "junky" full-page refresh as the way to reset drifting live data.
+  A small, discreet greyscale cluster (two glyph buttons, no labels) sits LEFT of the
+  top-right master clock — quiet utility that stays out of the demo's visual story and does
+  not compete with the clock/instruments. **Pause/Resume** rides the existing `live` flag
+  (D-panel live toggle stays in sync): pause freezes the sim clock so telemetry holds, resume
+  continues; the glyph reflects state. **Reset** (`resetSim`) drops the live-advanced runtimes
+  and re-snapshots the deterministic seed — identical to a fresh load but IN-PLACE: scenario,
+  mode, dev settings, and the master wall clock preserved (no URL reload). This is presenter/
+  dev tooling (an operator wouldn't pause a live fleet); the full D-panel sim controls (60x
+  etc.) stay as-is — this is a minimal always-reachable subset. New glyphs pause/play/reset
+  (neutral). No green, greyscale, earned-color held; master clock + scenario switcher
+  undisturbed. Verified: pause froze 15:03Z, resume → 15:05Z, reset → 15:00Z seed + Meridian
+  +58°F. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

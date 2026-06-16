@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T19:36:22.487Z",
+  "generated": "2026-06-16T19:54:40.776Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -585,6 +585,24 @@
       "leaf": "master.clock.text",
       "tokens": "global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock",
       "binds": "system UTC now",
+      "file": "src/components/LiveControls.tsx"
+    },
+    {
+      "path": "AppHeader / transport / pause.glyph",
+      "component": "AppHeader",
+      "region": "transport",
+      "leaf": "pause.glyph",
+      "tokens": "presenter sim transport · pause/resume (rides {live}) · neutral utility · reflects state (pause glyph running, play glyph paused)",
+      "binds": "{live} → freeze/continue sim clock",
+      "file": "src/components/LiveControls.tsx"
+    },
+    {
+      "path": "AppHeader / transport / reset.glyph",
+      "component": "AppHeader",
+      "region": "transport",
+      "leaf": "reset.glyph",
+      "tokens": "presenter sim transport · reset to seed state (no page reload; scenario/mode preserved) · neutral utility",
+      "binds": "→ resetSim()",
       "file": "src/components/LiveControls.tsx"
     },
     {
@@ -1433,6 +1451,24 @@
       "component": "glyph/pulse",
       "name": "pulse",
       "importFile": "pulse.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/pause",
+      "name": "pause",
+      "importFile": "pause.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/play",
+      "name": "play",
+      "importFile": "play.svg",
+      "drawn": false
+    },
+    {
+      "component": "glyph/reset",
+      "name": "reset",
+      "importFile": "reset.svg",
       "drawn": false
     }
   ]

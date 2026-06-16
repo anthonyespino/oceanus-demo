@@ -10,6 +10,9 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
 
   Region: clock
     • master.clock.text  → global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock · system UTC now
+  Region: transport
+    • pause.glyph  → presenter sim transport · pause/resume (rides {live}) · neutral utility · reflects state (pause glyph running, play glyph paused) · {live} → freeze/continue sim clock
+    • reset.glyph  → presenter sim transport · reset to seed state (no page reload; scenario/mode preserved) · neutral utility · → resetSim()
 
 ## CrewLogPanel
 
@@ -297,5 +300,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/back  → back.svg
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
+    · glyph/pause  → pause.svg
+    · glyph/play  → play.svg
+    · glyph/reset  → reset.svg
 
-*140 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T19:36:22.487Z*
+*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T19:54:40.776Z*

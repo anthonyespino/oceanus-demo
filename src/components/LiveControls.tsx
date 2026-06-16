@@ -4,9 +4,48 @@
 
 import { useEffect, useState } from 'react';
 import { useFleet } from '../state/FleetProvider';
-import { toggleStyle } from './probeTokens';
+import { toggleStyle, NEUTRAL } from './probeTokens';
 import { fmtTime } from './gb';
+import { Glyph } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
+
+// ROUND 120: minimal presenter SIM TRANSPORT, parked beside the master clock —
+// Pause/Resume (freeze/continue the sim clock so telemetry holds still) + Reset
+// (snap the sim + all derived data back to the seed state, no page reload). Quiet
+// greyscale utility: it must NOT compete with the clock or any instrument, and it
+// stays out of the demo's visual story. Pause/Resume rides the existing `live` flag
+// (so the D-panel live toggle stays in sync); the glyph reflects state (pause when
+// running, play when paused). Neutral ink only — no severity color, no green. This is
+// presenter/dev tooling (an operator wouldn't pause a live fleet), kept always-reachable.
+function SimTransport() {
+  const { live, setLive, resetSim } = useFleet();
+  const btn: React.CSSProperties = {
+    background: 'none', border: 'none', cursor: 'pointer', padding: 2, lineHeight: 0,
+    display: 'inline-flex', color: NEUTRAL.inkMuted,
+  };
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <button
+        {...layer('AppHeader / transport / pause.glyph', 'presenter sim transport · pause/resume (rides {live}) · neutral utility · reflects state (pause glyph running, play glyph paused)', '{live} → freeze/continue sim clock')}
+        aria-label={live ? 'pause sim clock' : 'resume sim clock'}
+        title={live ? 'pause sim clock' : 'resume sim clock'}
+        onClick={() => setLive(!live)}
+        style={{ ...btn, color: live ? NEUTRAL.inkMuted : NEUTRAL.inkSecondary }}
+      >
+        <Glyph name={live ? 'pause' : 'play'} size={14} />
+      </button>
+      <button
+        {...layer('AppHeader / transport / reset.glyph', 'presenter sim transport · reset to seed state (no page reload; scenario/mode preserved) · neutral utility', '→ resetSim()')}
+        aria-label="reset sim to seed state"
+        title="reset to seed state"
+        onClick={resetSim}
+        style={btn}
+      >
+        <Glyph name="reset" size={14} />
+      </button>
+    </span>
+  );
+}
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -91,7 +130,12 @@ export function AppHeader() {
       <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--type-primary)', fontWeight: 700, letterSpacing: 2, whiteSpace: 'nowrap' }}>
         OCEANUS FLEET
       </span>
-      <MasterClock />
+      {/* ROUND 120: transport sits LEFT of the clock so the master clock stays rightmost
+          + undisturbed; quiet greyscale, reads as utility not a product feature. */}
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 14 }}>
+        <SimTransport />
+        <MasterClock />
+      </span>
     </header>
   );
 }

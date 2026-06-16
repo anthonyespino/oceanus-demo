@@ -8,7 +8,7 @@
 // demo epoch is pinned, so the browser regenerates the identical world.
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { advanceFleet, getFleet } from '../data/fleetState';
+import { advanceFleet, getFleet, resetFleet } from '../data/fleetState';
 import { vesselStatus, type StatusLevel } from '../data/alerts';
 import type { VesselState } from '../data/types';
 import { scenarioById } from './scenarios';
@@ -41,6 +41,10 @@ interface FleetContextValue {
   live: boolean;
   speed: TickSpeed;
   setLive: (on: boolean) => void;
+  // round 120: presenter transport — snap the sim + all derived/live data back to the
+  // seed starting state (the fresh-load state) WITHOUT a page reload. Preserves the
+  // active scenario (the overlay re-applies on the fresh seed base) + mode + settings.
+  resetSim: () => void;
   setSpeed: (s: TickSpeed) => void;
   density: TileDensity;
   setDensity: (d: TileDensity) => void;
@@ -122,6 +126,18 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);
 
+  // ROUND 120: presenter RESET — drop the live-advanced runtimes and re-snapshot the
+  // deterministic seed (identical to a fresh page load, but in-place: scenario / mode /
+  // dev settings + the master wall clock are untouched). Clears the crossing/prev-status
+  // bookkeeping too. Yields one frame (brief regenerating beat) for the ~2s rebuild.
+  const resetSim = () => {
+    resetFleet();
+    prevStatus.current = new Map();
+    setCrossings({});
+    setFleet(null);
+    setTimeout(() => setFleet(getFleet()), 30);
+  };
+
   useEffect(() => {
     if (generating.current) return; // strict-mode double mount
     generating.current = true;
@@ -161,7 +177,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   return (
     <FleetContext.Provider
       value={{
-        fleet: viewFleet, simTime, live, speed, setLive, setSpeed,
+        fleet: viewFleet, simTime, live, speed, setLive, setSpeed, resetSim,
         density, setDensity, treatment, setTreatment,
         motion, setMotion, crossings,
         stateMarks, setStateMarks,

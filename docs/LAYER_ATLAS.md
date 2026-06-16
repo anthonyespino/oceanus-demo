@@ -13,6 +13,12 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
 - `clock / master.clock.text`
   - TOKENS — global UTC/Zulu wall clock (system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · distinct from the per-vessel mission clock
   - BINDS — system UTC now
+- `transport / pause.glyph`
+  - TOKENS — presenter sim transport · pause/resume (rides {live}) · neutral utility · reflects state (pause glyph running, play glyph paused)
+  - BINDS — {live} → freeze/continue sim clock
+- `transport / reset.glyph`
+  - TOKENS — presenter sim transport · reset to seed state (no page reload; scenario/mode preserved) · neutral utility
+  - BINDS — → resetSim()
 
 ## CrewLogPanel
 
@@ -526,4 +532,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-16T19:36:22.486Z*
+*142 instrumented leaves · 20 components · generated 2026-06-16T19:54:40.774Z*
