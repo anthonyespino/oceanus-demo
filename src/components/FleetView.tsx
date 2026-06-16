@@ -25,7 +25,7 @@ import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before d
 
 export function FleetView({ fleet }: { fleet: VesselState[] }) {
   const { density, treatment, censusFilter, tileSizes, setTileSize, autoPromote } = useFleet();
-  const { learnOn } = useLearn(); // round 105: sort thesis shows only in Learn mode
+  const { learnOn, expertOn } = useLearn(); // round 105: sort thesis (Learn) · round 108: Expert forces auto-2x off
   // ROUND 68: chart-band maximize — a TRANSIENT resize, local to the view (not a
   // persisted layout mode). Default load is always the standard band size.
   const [chartMax, setChartMax] = useState(false);
@@ -112,7 +112,9 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
           // cap applies only to automatic promotion
           // round 26: auto-promotion OFF by default — the board points, the
           // human zooms. Kept behind the dev flag in case the verdict flips.
-          const auto = autoPromote && promotedIds.has(v.static.id) ? 'expanded' : density === 'minimal' ? 'mini' : 'standard';
+          // round 108: Expert forces officer-sizes (auto-2x OFF) regardless of the
+          // startup default — consistent with the Expert strip (round 107).
+          const auto = autoPromote && !expertOn && promotedIds.has(v.static.id) ? 'expanded' : density === 'minimal' ? 'mini' : 'standard';
           const size = tileSizes[v.static.id] ?? auto;
           return (
             <div

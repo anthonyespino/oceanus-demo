@@ -18,7 +18,7 @@ export type TickSpeed = 1 | 60;
 // motion variant (addendum item 7 — one item max, both testable).
 export type TileDensity = 'minimal' | 'standard';
 export type ColorTreatment = 'automotive' | 'dark-cockpit';
-export type MotionVariant = 'off' | 'ripple' | 'breathe';
+export type MotionVariant = 'off' | 'breathe'; // round 108: ripple option removed (not meaningfully distinct from breathe)
 // round 68: LayoutVariant retired — chart-band is the sole FleetView layout
 // (board-first removed); the chart band gains a transient maximize control.
 // round 61: ⚖14 resolved — the meter strip is the sole expand affordance.
@@ -26,9 +26,9 @@ export type MotionVariant = 'off' | 'ripple' | 'breathe';
 // (edge/both retired, toggle removed). Severity now lives on the strip + name
 // tint + value tint; the tile carries no severity outline at all.
 export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator experiment
-// round 75/76: Calm Sea rendering treatments — gradient (round 67/74), particle
-// field (round 75), dot matrix (round 76); all greyscale, selectable for compare.
-export type WaterMode = 'gradient' | 'particle' | 'matrix';
+// round 108: WaterMode selector REMOVED — gradient is the locked, baked-in water
+// treatment (constants live in AmbientSea); the particle/matrix shaders are retired
+// from the UI. No water-styling controls remain.
 export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
 // round 95: status-cluster type-size under evaluation — PRIMARY 16 vs CONTEXT 13
 export type ClusterType = 'primary' | 'context';
@@ -46,8 +46,6 @@ interface FleetContextValue {
   setTreatment: (t: ColorTreatment) => void;
   motion: MotionVariant;
   setMotion: (m: MotionVariant) => void;
-  ikbBand: boolean; // round 5: the one large IKB fill moment, behind a toggle
-  setIkbBand: (b: boolean) => void;
   bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
   setBearingLine: (b: boolean) => void;
   railMode: RailMode; // round 24: rail mode indicator variant
@@ -63,19 +61,8 @@ interface FleetContextValue {
   setScenario: (id: string) => void;
   ambientSea: boolean; // round 46: Calm Sea ambient wave (default on)
   setAmbientSea: (b: boolean) => void;
-  shimmer: boolean; // round 72/74: fine texture toggle (round 74: default ON)
-  setShimmer: (b: boolean) => void;
-  // round 74: live Calm Sea dev sliders — wave amplitude/contrast + texture density/brightness
-  waveAmp: number; setWaveAmp: (n: number) => void;
-  texDens: number; setTexDens: (n: number) => void;
-  texBright: number; setTexBright: (n: number) => void;
-  // round 75/76: Calm Sea rendering treatment selector (gradient | particle | matrix)
-  waterMode: WaterMode; setWaterMode: (m: WaterMode) => void;
-  // round 76/77: dot-flow field controls (radius + density + magnification + ridge flow)
-  dotSize: number; setDotSize: (n: number) => void;
-  dotSpace: number; setDotSpace: (n: number) => void;
-  mag: number; setMag: (n: number) => void;
-  flow: number; setFlow: (n: number) => void;
+  // round 108: water/texture controls REMOVED from state — gradient + Anthony's
+  // tuned values are baked as constants in AmbientSea (TEXTURE locked ON).
   // round 95: global status-cluster type-size toggle (PRIMARY 16 vs CONTEXT 13),
   // default PRIMARY — pending Anthony's pixel verdict
   clusterType: ClusterType; setClusterType: (t: ClusterType) => void;
@@ -96,7 +83,10 @@ const FleetContext = createContext<FleetContextValue | null>(null);
 
 export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [fleet, setFleet] = useState<VesselState[] | null>(null);
-  const [live, setLive] = useState(false);
+  // ROUND 108: demo-ready startup — live ticking ON at 60x so the app comes up
+  // animating (sea breath + sim clock) with no manual setup. Sim still advances
+  // 1-min ticks from the pinned DEMO_EPOCH (determinism + verify untouched).
+  const [live, setLive] = useState(true);
   const [speed, setSpeed] = useState<TickSpeed>(60);
   const [density, setDensity] = useState<TileDensity>('standard');
   // Round 44: startup defaults set from Anthony's dev-panel screenshot.
@@ -105,33 +95,22 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   // toggle. (The "dies at token lock" framing no longer applies — quiet is
   // now the chosen look.)
   const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
-  const [motion, setMotion] = useState<MotionVariant>('off');
-  const [ikbBand, setIkbBand] = useState(false);
-  const [bearingLine, setBearingLine] = useState(false); // round 44: voyage card only
+  const [motion, setMotion] = useState<MotionVariant>('breathe'); // round 108: Breathe locked as startup
+  const [bearingLine, setBearingLine] = useState(true); // round 108: BRG ray on at startup (toggle kept)
   const [railMode, setRailMode] = useState<RailMode>('glyph');
-  const [autoPromote, setAutoPromote] = useState(false);
+  // round 108: auto-2x ON at startup (legacy); FleetView forces it OFF in Expert
+  // (officer sizes) regardless of this default.
+  const [autoPromote, setAutoPromote] = useState(true);
   const [stateMarks, setStateMarks] = useState(true); // round 44: state marks on
   const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
   const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
   const [scenario, setScenario] = useState('demo');
-  const [ambientSea, setAmbientSea] = useState(true); // round 46: default on
-  // ROUND 80: persisted water defaults — Anthony's tuned values, applied on every
-  // fresh page load (FleetProvider sits above the router, so FleetView and
-  // VesselInspector both initialize here; no page loads at different settings).
-  // The round-50 dataset binding (amp/freq from fleet/vessel delta) still
-  // modulates ON TOP of these — these are the baseline it modulates from, not a
-  // freeze.
-  const [shimmer, setShimmer] = useState(true); // TEXTURE: on
-  const [waveAmp, setWaveAmp] = useState(0.08); // WAVE AMP
-  const [texDens, setTexDens] = useState(0.0); // TEX DENS
-  const [texBright, setTexBright] = useState(0.25); // TEX BRIGHT
-  const [waterMode, setWaterMode] = useState<WaterMode>('gradient'); // WATER MODE: gradient
-  const [dotSize, setDotSize] = useState(0.5); // DOT SIZE
-  const [dotSpace, setDotSpace] = useState(120); // DENSITY
-  const [mag, setMag] = useState(2.5); // MAGNIFY
-  const [flow, setFlow] = useState(1.0); // FLOW/RIDGE
-  const [clusterType, setClusterType] = useState<ClusterType>('context'); // round 105: dropped a tier → CONTEXT 13 (was PRIMARY 16, still too large)
-  const [surfaceGlass, setSurfaceGlass] = useState(false); // round 97: glass off by default (plain float)
+  const [ambientSea, setAmbientSea] = useState(true); // round 46/108: always on (toggle removed)
+  // ROUND 108: water/texture values are now BAKED as constants in AmbientSea
+  // (gradient, Anthony's round-80 tuned amp/texture, texture ON). The state +
+  // sliders + mode selector that lived here are removed; the look is locked.
+  const [clusterType, setClusterType] = useState<ClusterType>('context'); // round 105/108: locked CONTEXT 13 (toggle removed)
+  const [surfaceGlass, setSurfaceGlass] = useState(true); // round 108: glass locked ON (toggle removed — decided top-bar treatment)
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -181,12 +160,9 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         fleet: viewFleet, simTime, live, speed, setLive, setSpeed,
         density, setDensity, treatment, setTreatment,
         motion, setMotion, crossings,
-        ikbBand, setIkbBand,
         stateMarks, setStateMarks,
         bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
-        collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea, shimmer, setShimmer,
-        waveAmp, setWaveAmp, texDens, setTexDens, texBright, setTexBright,
-        waterMode, setWaterMode, dotSize, setDotSize, dotSpace, setDotSpace, mag, setMag, flow, setFlow,
+        collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
         clusterType, setClusterType,
         surfaceGlass, setSurfaceGlass,
         censusFilter, setCensusFilter,

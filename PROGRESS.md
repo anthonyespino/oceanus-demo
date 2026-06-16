@@ -1,3 +1,44 @@
+# PROGRESS — 2026-06-15 (Session 95: ROUND 108 — lock startup defaults + dev-panel cleanup; datalink green struck per amendment)
+
+## Done (verified docs/screens/r108-default.png, r108-devpanel.png, r108-expert.png)
+- STARTUP DEFAULTS LOCKED in FleetProvider — fresh load comes up demo-ready, no
+  manual toggling. Verified live on a fresh load:
+  - SimClock LIVE + 60x ON (sim clock advanced 15:05Z→15:07Z in 2.5s).
+  - Surface Glass locked ON; Status type locked CONTEXT (13); Color B quiet
+    (automotive off); Motion Breathe; State Marks on; Ambient Sea on; Auto-2x on
+    (legacy) — 1 expanded tile in default; Bearing BRG ray; Rail Mode glyph;
+    Density standard; Texture on (baked).
+- EXPERT forces auto-2x OFF (officer sizes): verified 0 expanded tiles in Expert.
+- REMOVED ENTIRELY: ripple sliders; surface-glass toggle (glass just the locked
+  state); IKB band + IKB fill (FleetHealthBand fill gone — no IKB renders); state-
+  marks toggle; ambient-sea toggle; water-mode + the ENTIRE water-styling group
+  (mode + all sliders + readout) — values BAKED as constants in AmbientSea
+  (gradient, waveAmp 0.08, texDens 0.0, texBright 0.25, dotSize 0.5, dotSpace 120,
+  mag 2.5, flow 1.0 — byte-identical to prior startup defaults); status A/B toggle;
+  the ripple MOTION option (+ orphaned .probe-ripple CSS).
+- KEPT TOGGLES (startup value locked, toggle usable): color (automotive), motion
+  (off/breathe), density, bearing, rail mode, auto 2x.
+- DEV PANEL → collapsible chevron sections (minimized by default): scenario / ia /
+  mode / clock / color·motion / layout. Dev-tool affordance only — product UI
+  stays chevron-free.
+- DATALINK GREEN (amendment D): NO green added. Confirmed green renders NOWHERE on
+  the demo path (automated greenish-pixel scan = 0 hits). Datalink live/degraded
+  is carried by BREATH/motion only (FRESH → grey + `.datalink-breath`; DEGRADED/
+  STALE → still + advisory-blue), exactly as the amendment specifies — no code
+  change needed. Earned-color rule stays STRICT: color = severity only.
+  - NOTE: the green token `--color-data-nominal` (#3fb950) still exists but renders
+    ONLY inside the KEPT Automotive treatment (ruling 14 — green-nominal canonical),
+    which is NOT the demo path. Default/quiet path uses neutral grey for nominal.
+
+## Safety
+Severity/alert color untouched (gold caution intact). Baked water/texture identical
+to prior look. Determinism + DEMO_EPOCH + verify untouched. TSC-OK · LINT-CLEAN ·
+verify PASSED · offline build OK.
+
+## NOTE — Round 107 (Expert aggressive strip) is still a DRAFT awaiting review; NOT built.
+
+---
+
 # PROGRESS — 2026-06-15 (Session 94: ROUND 106 — remove CommandBand voyage-detail chevron)
 
 ## Done (verified docs/screens/r106-default.png, r106-expert.png)

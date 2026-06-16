@@ -933,3 +933,50 @@ originals.*
     CommandBand via `collapsedPanels`) is a different affordance — it gates the
     primary instruments, not secondary context, so it is NOT the chevron the brief
     described and is retained. Severity untouched (this is context info).
+
+- **ROUND 108: STARTUP DEFAULTS LOCKED + dev-panel cleanup + datalink green STRUCK
+  (amendment).** The app now comes up DEMO-READY on a fresh load with no manual
+  setup; the dev panel shed most of its toggles and reorganized into collapsible
+  sections.
+  - **Locked startup defaults (FleetProvider):** SimClock LIVE + 60x ON; Surface
+    Glass ON; Status type CONTEXT (13); Color B quiet (automotive OFF); Motion
+    Breathe; State Marks ON; Ambient Sea ON; Auto-2x ON (legacy) — *but Expert
+    forces auto-2x OFF (officer sizes) regardless*; Bearing BRG ray; Rail Mode
+    mode-glyph; Density standard; Texture ON. (Live ticks still advance 1-min
+    steps from the pinned DEMO_EPOCH — determinism + verify untouched.)
+  - **Removed entirely (toggle + underlying option/styling):** ripple sliders;
+    IKB band + IKB fill (the FleetHealthBand accent fill is gone — no IKB renders
+    anywhere); water-mode selector + the ENTIRE water-styling control group (mode,
+    wave amp, tex dens/bright, flow/ridge, magnify, dot size, density) + the dev
+    water readout — Anthony's tuned values are BAKED as constants in `AmbientSea`
+    (gradient; waveAmp 0.08, texDens 0.0, texBright 0.25, dotSize 0.5, dotSpace 120,
+    mag 2.5, flow 1.0), byte-identical to the prior startup defaults (look
+    unchanged); the ripple MOTION option (+ its orphaned `.probe-ripple` CSS).
+  - **Removed toggle, value locked (state retained, consumed elsewhere):** surface
+    glass (glass is the decided top-bar treatment, locked ON); state marks (ON);
+    ambient sea (ON); status A/B (locked CONTEXT 13).
+  - **Kept toggles (startup value locked, toggle still usable):** color
+    (automotive A / quiet B), motion (off / breathe), density, bearing, rail mode,
+    auto 2x.
+  - **Dev panel → collapsible chevron sections** (minimized by default): scenario /
+    ia / mode / clock / color·motion / layout. This is the DEV/SETTINGS TOOL, which
+    may use chevrons/accordions — the no-chevron ruling governs the OPERATOR-FACING
+    product UI only, which stays chevron-free.
+  - **DATALINK — NO GREEN (amendment D, revised).** The original brief proposed
+    green for a live datalink signal; the amendment STRUCK it. No green was added.
+    Datalink live/degraded is carried by BREATH/motion only — FRESH breathes
+    (`.datalink-breath`) + grey ink; DEGRADED/STALE goes still + advisory-blue
+    (round 79). Presence is the indicator, absence is silence. No code change
+    needed (datalink never used green). **Confirmed green renders NOWHERE on the
+    demo path** (automated greenish-pixel scan = 0 hits). **Earned-color rule stays
+    STRICT: color = severity only, no exceptions.**
+    - The green token `--color-data-nominal` (#3fb950) is NOT removed: it renders
+      ONLY inside the KEPT Automotive treatment (ruling 14 — green-nominal
+      canonical), which is an alternate, not the demo path. In the locked default
+      (quiet / automotive-off), nominal uses neutral grey — so the presentation
+      build shows zero green. Ruling 14 is binding and the Automotive toggle is
+      explicitly kept, so the automotive green-nominal convention is preserved
+      rather than silently deviated from.
+  - **Guardrails verified:** severity/gold untouched; baked water/texture identical
+    to prior look; demo path comes up correct with no toggling; Expert auto-2x off.
+    TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

@@ -21,7 +21,7 @@ import { Stat } from './Stat';
 import { fmtPct } from './gb';
 import { RADIUS, STATUS_COLOR, NEUTRAL, FONT, ALERT_TEXT_COLOR } from './probeTokens';
 import { useState } from 'react';
-import { useFleet, type ColorTreatment, type TileSize } from '../state/FleetProvider';
+import { type ColorTreatment, type TileSize } from '../state/FleetProvider';
 import { Glyph, MODE_GLYPH } from './Glyph';
 import { IA_GLYPH_MEANING } from '../ia/ia-model'; // round 103: distinct glyph meaning (single source)
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
@@ -45,7 +45,6 @@ export function VesselTile({
   onSize: (s: TileSize) => void;
 }) {
   const d = vessel.derived;
-  const { motion, crossings } = useFleet();
   const [hot, setHot] = useState(false); // hover/focus-within → show controls
   const [sparkRef, sparkW] = useContentWidth(180); // round 39: full-width bottom spark
   const status = vesselStatus(vessel.alerts);
@@ -99,9 +98,8 @@ export function VesselTile({
         opacity: tileDim ? 0.45 : 1, // round 26: all idle nominal tiles recede
       }}
     >
-      {motion === 'ripple' && crossings[vessel.static.id] && (
-        <span key={crossings[vessel.static.id]} className="probe-ripple" style={{ borderColor: STATUS_COLOR[status] }} />
-      )}
+      {/* round 108: the ripple motion variant is removed (Breathe is the locked
+          motion); the threshold-cross ripple overlay no longer renders. */}
       {/* round 54: ONE state-aware resize toggle (was two buttons) — shows the
           collapse affordance when expanded, the expand affordance otherwise.
           One control, anchored top-right, no drift. Keyboard +/- keep the full

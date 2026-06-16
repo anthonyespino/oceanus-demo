@@ -62,7 +62,7 @@ const cell: React.CSSProperties = {
 
 export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
   const [range, setRange] = useState<TrendRange>(90);
-  const { ikbBand, treatment, censusFilter, setCensusFilter, surfaceGlass } = useFleet();
+  const { treatment, censusFilter, setCensusFilter, surfaceGlass } = useFleet();
   const [wrapRef, w] = useContentWidth(560);
   // ROUND 94: three descriptor states (resolves the round-52 thread where
   // default absorbed glyphs and blurred the modes):
@@ -157,14 +157,9 @@ export function FleetHealthBand({ fleet }: { fleet: VesselState[] }) {
         </div>
         {/* CELL 2 — 30d mean + trend curve (the census's other half) */}
         <div style={{ ...cell, flex: '2 1 320px', minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <div
-            style={{
-              flexShrink: 0,
-              ...(ikbBand ? { background: ACCENT.primary, borderRadius: RADIUS, padding: '8px 12px' } : {}),
-            }}
-          >
-            <span {...layer('FleetHealthBand / mean / value.text', 'type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)', '{30d fleet mean delta %}')}>
-              <Stat glyph={dGlyph('fleet-mean')} label={dLabel('fleet-mean')} value={fmtPct(mean30)} onFill={ikbBand} center />
+          <div style={{ flexShrink: 0 }}>
+            <span {...layer('FleetHealthBand / mean / value.text', 'type/hero · font/data tabular · ink/primary (round 108: IKB fill removed entirely)', '{30d fleet mean delta %}')}>
+              <Stat glyph={dGlyph('fleet-mean')} label={dLabel('fleet-mean')} value={fmtPct(mean30)} center />
             </span>
             <Field level="fleet" field="fleet_total_daily_spend" />
             {/* ⚖ #4 spend slot: renders only if/when ruled in (Field → null while UNDEFINED) */}

@@ -141,7 +141,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule)
   - BINDS — {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
 - `mean / value.text`
-  - TOKENS — type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)
+  - TOKENS — type/hero · font/data tabular · ink/primary (round 108: IKB fill removed entirely)
   - BINDS — {30d fleet mean delta %}
 
 ## FleetMap
@@ -285,7 +285,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — scenario library chip · accent when active · synthetic overlay (demo = base seed)
   - BINDS — {scenario id} → applies overlay
 - `sheet / settings.sheet`
-  - TOKENS — gear-summoned settings sheet · SCENARIO / MODE / DEV sections
+  - TOKENS — gear-summoned settings sheet · collapsible sections (round 108)
   - BINDS — —
 
 ## StatusHeader
@@ -526,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-15T21:07:21.796Z*
+*140 instrumented leaves · 20 components · generated 2026-06-16T02:24:02.735Z*

@@ -75,7 +75,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • watch.status  → STATUS_COLOR.watch (amber) · count · click filters board · {# vessels watch}
   Region: mean
     • trend.chart  → ink/secondary line · surface/overlay p10–p90 band · zero line — census and mean never separate (component rule) · {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
-    • value.text  → type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle) · {30d fleet mean delta %}
+    • value.text  → type/hero · font/data tabular · ink/primary (round 108: IKB fill removed entirely) · {30d fleet mean delta %}
 
 ## FleetMap
 
@@ -155,7 +155,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
   Region: scenario
     • scenario.chip  → scenario library chip · accent when active · synthetic overlay (demo = base seed) · {scenario id} → applies overlay
   Region: sheet
-    • settings.sheet  → gear-summoned settings sheet · SCENARIO / MODE / DEV sections · —
+    • settings.sheet  → gear-summoned settings sheet · collapsible sections (round 108) · —
 
 ## StatusHeader
 
@@ -297,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-15T21:07:21.797Z*
+*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T02:24:02.736Z*

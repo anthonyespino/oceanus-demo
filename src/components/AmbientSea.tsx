@@ -192,6 +192,21 @@ void main(){
 
 const MODE_FRAG: Record<string, string> = { gradient: FRAG_GRADIENT, particle: FRAG_PARTICLE, matrix: FRAG_MATRIX };
 
+// ROUND 108: water treatment is LOCKED — the dev sliders / mode selector are
+// removed and Anthony's tuned round-80 values are baked here as constants. These
+// are byte-identical to the prior startup defaults, so the rendered look is
+// unchanged. The round-50 dataset binding (amp/freq) still modulates on top.
+// TEXTURE locked ON; note texDens stayed 0 at startup (the dense fine-glint
+// branch was off), so the gradient reads exactly as it did before.
+const WATER_MODE = 'gradient';
+const WAVE_AMP = 0.08;
+const TEX_DENS = 0.0;
+const TEX_BRIGHT = 0.25;
+const DOT_SIZE = 0.5;
+const DOT_SPACE = 120;
+const MAG = 2.5;
+const FLOW = 1.0;
+
 function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLShader | null {
   const s = gl.createShader(type);
   if (!s) return null;
@@ -201,21 +216,21 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export function AmbientSea() {
-  const { fleet, ambientSea, shimmer, waveAmp, texDens, texBright, waterMode, dotSize, dotSpace, mag, flow } = useFleet();
+  const { fleet, ambientSea } = useFleet();
   const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [fallback, setFallback] = useState(false); // no WebGL / context fail → static still
   const [reduced, setReduced] = useState(false);
 
   // live inputs in a ref so the rAF loop reads them without re-subscribing.
-  // round 74: waveAmp/texDens/texBright are dev sliders; the shimmer toggle
-  // gates the texture (off → density 0).
-  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: 0.08, texDens: 0.0, texBright: 0.25, dotSize: 0.5, dotSpace: 120, mag: 2.5, flow: 1.0 }); // round 80 persisted defaults
+  // round 108: the water/texture knobs are baked constants now; only amp/freq
+  // (the round-50 dataset binding) still vary per scope.
+  const inputs = useRef({ amp: 0.4, freq: 1, waveAmp: WAVE_AMP, texDens: TEX_DENS, texBright: TEX_BRIGHT, dotSize: DOT_SIZE, dotSpace: DOT_SPACE, mag: MAG, flow: FLOW });
   const { scope, vesselId } = waterScope(pathname);
   const target = waterInputs(fleet ?? null, scope, vesselId);
   useEffect(() => {
-    inputs.current = { amp: target.amp, freq: target.freq, waveAmp, texDens: shimmer ? texDens : 0, texBright, dotSize, dotSpace, mag, flow };
-  }, [target.amp, target.freq, shimmer, waveAmp, texDens, texBright, dotSize, dotSpace, mag, flow]);
+    inputs.current = { amp: target.amp, freq: target.freq, waveAmp: WAVE_AMP, texDens: TEX_DENS, texBright: TEX_BRIGHT, dotSize: DOT_SIZE, dotSpace: DOT_SPACE, mag: MAG, flow: FLOW };
+  }, [target.amp, target.freq]);
 
   // ROUND 95: Calm Sea persists in EXPERT mode (the round-46 expert-off is
   // reversed). After round 94 floated the Fleet Plot + FleetHealthBand directly
@@ -240,7 +255,7 @@ export function AmbientSea() {
     if (!gl) { setFallback(true); return; }
 
     const vs = compile(gl, gl.VERTEX_SHADER, VERT);
-    const fs = compile(gl, gl.FRAGMENT_SHADER, MODE_FRAG[waterMode] ?? FRAG_GRADIENT);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, MODE_FRAG[WATER_MODE] ?? FRAG_GRADIENT);
     const prog = gl.createProgram();
     if (!vs || !fs || !prog) { setFallback(true); return; }
     gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
@@ -322,7 +337,7 @@ export function AmbientSea() {
     raf = requestAnimationFrame(frame);
 
     return () => { cancelAnimationFrame(raf); cleanup(); };
-  }, [on, reduced, waterMode]);
+  }, [on, reduced]);
 
   if (!on) return null;
 
@@ -342,5 +357,5 @@ export function AmbientSea() {
   // key per (waterMode + still/live): switching mode or reduced-motion remounts a
   // FRESH canvas, so the prior context's loseContext() (cleanup hygiene) never
   // leaves a dead canvas for the next getContext() (round 74/75 context-loss fix).
-  return <canvas key={`${waterMode}-${reduced ? 'still' : 'live'}`} ref={canvasRef} aria-hidden style={base} />;
+  return <canvas key={`${WATER_MODE}-${reduced ? 'still' : 'live'}`} ref={canvasRef} aria-hidden style={base} />;
 }

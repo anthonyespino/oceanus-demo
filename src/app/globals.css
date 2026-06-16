@@ -165,24 +165,8 @@ textarea,
   }
 }
 
-/* LAYOUT PROBE motion budget (round 3 addendum). Two toggleable variants,
-   one item max, NO continuous blink. Reduced-motion users get none of it. */
-.probe-ripple {
-  position: absolute;
-  left: 50%;
-  top: 12px;
-  width: 24px;
-  height: 24px;
-  margin-left: -12px;
-  border: 2px solid var(--color-ink-muted);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: probe-ripple 900ms ease-out 1 forwards; /* one-time, steady after */
-}
-@keyframes probe-ripple {
-  from { transform: scale(0.4); opacity: 0.9; }
-  to { transform: scale(2.4); opacity: 0; }
-}
+/* LAYOUT PROBE motion budget (round 3 addendum). round 108: the ripple variant
+   is removed — Breathe is the locked motion. Reduced-motion users get none of it. */
 .probe-breathe {
   animation: probe-breathe 2.5s ease-in-out infinite; /* slow breathe, not blink */
 }
@@ -192,7 +176,6 @@ textarea,
   opacity: 1;
 }
 @media (prefers-reduced-motion: reduce) {
-  .probe-ripple,
   .probe-breathe {
     animation: none !important;
   }

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-15T21:07:21.797Z",
+  "generated": "2026-06-16T02:24:02.736Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -142,7 +142,7 @@
       "component": "SettingsSheet",
       "region": "sheet",
       "leaf": "settings.sheet",
-      "tokens": "gear-summoned settings sheet · SCENARIO / MODE / DEV sections",
+      "tokens": "gear-summoned settings sheet · collapsible sections (round 108)",
       "binds": "—",
       "file": "src/components/DevPanel.tsx"
     },
@@ -394,7 +394,7 @@
       "component": "FleetHealthBand",
       "region": "mean",
       "leaf": "value.text",
-      "tokens": "type/hero · font/data tabular · ink/primary (IKB fill behind dev toggle)",
+      "tokens": "type/hero · font/data tabular · ink/primary (round 108: IKB fill removed entirely)",
       "binds": "{30d fleet mean delta %}",
       "file": "src/components/FleetHealthBand.tsx"
     },
