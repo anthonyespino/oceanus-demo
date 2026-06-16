@@ -67,6 +67,16 @@ export function fmtPct(x: number): string {
   return `${x > 0 ? '+' : ''}${x.toFixed(1)}%`;
 }
 
+// ROUND 107: EXPERT alert phrasing — the essential, value-bearing clause only.
+// Alert messages put the value + its substantiating qualifier FIRST and any
+// advice / secondary context after a " — " em-dash separator (e.g. "Endurance 52
+// h below 78 h required (return + reserve) — plan resupply/return timing"). Expert
+// keeps the head (value + substantiation), drops the trailing prose. Severity (the
+// [LEVEL] tag + its color) is rendered separately and never touched here.
+export function essentialAlert(message: string): string {
+  return message.split(' — ')[0];
+}
+
 export function fmtDay(t: number): string {
   return new Date(t).toISOString().slice(0, 10);
 }

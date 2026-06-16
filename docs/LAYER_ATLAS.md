@@ -355,7 +355,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — Gauge primitive · 116px (round 79)
   - BINDS — {position.speed_over_ground_kn} / max {cruise×1.35}
 - `marker / position.text`
-  - TOKENS — font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6)
+  - TOKENS — font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · round 107: expert-stripped
   - BINDS — {nm from nearest port | alongside}
 - `marker / progress.text`
   - TOKENS — font/data 15 · ink/muted · progress % anchored above the marker (flips left near 100% so it never overlaps the destination, round 88) — bound to real voyage progress
@@ -526,4 +526,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*140 instrumented leaves · 20 components · generated 2026-06-16T03:20:15.790Z*
+*140 instrumented leaves · 20 components · generated 2026-06-16T03:39:34.660Z*

@@ -1,3 +1,62 @@
+# PROGRESS — 2026-06-15 (Session 98: BATCH — ROUND 111 + ROUND 107; 108/109/110 already shipped this session)
+
+## Context
+Anthony bundled four rounds (108 → 111 → 109 → 107). 108 (9aa0dd6), 109 (ca7b5ae),
+110 (d77294c) were already built + pushed earlier this session. This session adds the
+two new rounds — 111 then 107 — plus the one batch-introduced delta to 108: Rail Mode
+startup default → Transit Stroke.
+
+## ROUND 111 — Done (verified docs/screens/r111-minimal-board.png)
+- **D-key bug FIXED:** the round-108 DevPanel rewrite dropped the keydown handler;
+  restored. `d`/`D` toggles the panel; ignores typing in inputs; no collision with
+  Learn's `e`/`l`. Verified: opens true · closes true.
+- **Bearing toggle now works in FleetView (was inspector-only — bug):** FleetMap draws
+  a dashed BRG ray from each UNDERWAY (TRANSIT) vessel to its next port, clipped at the
+  chart edge (same dashed style as the inspector ray; no per-ray label — markers carry
+  names). Verified: default BRG-ray ON → 5 rays; "voyage card only" → 0; back on → 5.
+- **Rail Mode startup default → Transit Stroke** (FleetProvider; toggle kept). [Sets the
+  108 rail default.]
+- **Density MINIMAL shrinks the board:** grid min column 210→150, gap 20→10; VesselTile
+  mini steps name + hero value down a tier and trims padding + glyph. Verified: tile
+  484→347, tiles-per-row 4→6 (more vessels), standard unchanged, severity still pops
+  (meter strip + status tint untouched). Scenario switcher (110) undisturbed.
+
+## ROUND 107 — Done (verified docs/screens/r107-inspector-default.png, r107-inspector-expert.png)
+Rule: Expert removes what a trained operator already knows, keeps what the data provides.
+- **Section headers GONE in Expert** (Label → null; supersedes round 44's glyph-only).
+  Strips both the inner panel headers and the Collapse minimized headers. Verified:
+  DEFAULT has ENGINE TWINS / EFFICIENCY (count 1 each); EXPERT has 0.
+- **Gauge captions** (SPEED/BURN/EFF Δ/ENDURANCE): already stripped in Expert (round 44);
+  scales/range markings KEPT. Verified DEFAULT 1 / EXPERT 0.
+- **Verbose alert phrasing → essential in Expert:** new `essentialAlert()` keeps the
+  value-bearing head (value + substantiation) and drops the trailing " — " advice/context
+  prose; severity ([LEVEL] tag + color) untouched. Applied to docked + general alerts.
+  Verified: S2 ENDURANCE shows "Endurance 52 h below 78 h required (return + reserve)"
+  with "— plan resupply/return timing" dropped; [CAUTION] tag kept.
+- **Descriptive/context prose stripped in Expert** (CommandBand): the STATION/PORT spec
+  line (class + position + speed — class is fixed knowledge, speed on the gauge), the
+  "next call ETA" appendage, and the transit position reference. Verified spec line gone.
+- **Kept:** all values + instruments + gauge scales + severity + glyphs; reflows DENSE
+  (header space reclaimed, not Default-with-holes); Calm Sea persists (round 95).
+- **Census labels stay glyphs** in Expert (round 94, untouched).
+- **Default + Learn UNCHANGED** (headers/captions/prose all present; verified).
+
+## JUDGMENT CALL (flagged) — "X nm from {port}" position reference
+The governing RULE ("keep what the data provides") says a live POSITION fix is data, not
+chrome — so I KEPT the position panel's "X nm from {port}" Collapse summary, while
+stripping the *redundant* copy of it from the CommandBand spec line (position lives in the
+position panel). If you'd rather it be stripped everywhere in Expert, one-line change.
+
+## LEVEL 2 HELD (not built)
+Reducing gauge scales/ticks toward bare faces — only if you judge L1 insufficient.
+
+## Safety
+Earned color held (gold severity only, no green, no new colors); severity NEVER stripped
+(alert color/state intact in Expert); type scale held (mini steps tiers, no orphans);
+greyscale; demo path = S1 default, intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-15 (Session 97: ROUND 110 — scenario switcher: three selectable whole-fleet states)
 
 ## PART A — AUDIT (reported, confirmed by Anthony)

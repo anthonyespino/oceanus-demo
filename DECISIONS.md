@@ -1051,3 +1051,37 @@ originals.*
     coherent); consequence sort (caution #1); type scale; greyscale; presence/absence
     datalink. Demo-path safe (S1 default, unchanged hero).
     TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 111: bug fixes + density.** (a) D-key toggle restored — the round-108
+  DevPanel rewrite had dropped the keydown handler (no collision with Learn's E/L).
+  (b) Bearing toggle now works in FleetView too (was inspector-only — bug): the Fleet
+  Plot draws a dashed BRG ray from each underway/TRANSIT vessel to its next port,
+  clipped at the chart edge (same style as the inspector ray; no per-ray label —
+  markers carry names; "voyage card only" = no rays). (c) Rail Mode startup default →
+  Transit Stroke (toggle kept) — sets the round-108 rail default. (d) Density MINIMAL
+  now meaningfully shrinks the board: grid min-column 210→150 + gap 20→10, and
+  VesselTile mini steps the name + hero value down one tier and trims padding/glyph —
+  more vessels per screen, standard unchanged, severity (meter strip + status tint)
+  untouched. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 107: EXPERT aggressive strip (Level 1).** Rule: Expert removes what a trained
+  operator already knows, keeps what the data provides.
+  - **Stripped in Expert:** section headers ENTIRELY (`Label` → null — supersedes round
+    44's glyph-only header; strips inner panel headers AND Collapse minimized headers,
+    panels reflow up into the reclaimed space); gauge captions (already, round 44 —
+    scales/range markings KEPT); verbose alert phrasing → essential (`essentialAlert()`
+    keeps the value-bearing head + drops the trailing " — " advice/context prose;
+    severity tag + color untouched); descriptive/context prose in the CommandBand (the
+    STATION/PORT spec line, the "next call ETA" appendage, the transit position
+    reference).
+  - **Kept in Expert:** all values + instruments + gauge SCALES + severity (never
+    stripped) + glyphs; census labels stay glyphs (round 94); Calm Sea persists (round
+    95). Reflows DENSE, not Default-with-holes.
+  - **Judgment call (logged):** the position panel's "X nm from {port}" Collapse summary
+    is KEPT — by the governing rule a live position fix is DATA, not chrome — while the
+    *redundant* copy on the CommandBand spec line is stripped (position lives in the
+    position panel). Easy to strip everywhere if Anthony prefers.
+  - **Default + Learn UNCHANGED.** **Level 2** (reducing gauge scales/ticks toward bare
+    faces) is HELD, not built — only if L1 proves insufficient.
+  - Earned color / severity / type scale / greyscale all held; demo path intact.
+    TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

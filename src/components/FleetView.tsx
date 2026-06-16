@@ -98,8 +98,13 @@ export function FleetView({ fleet }: { fleet: VesselState[] }) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
-          gap: 20,
+          // ROUND 111: density MINIMAL packs the board tighter — smaller min column
+          // + tighter gap → more vessels per screen (standard unchanged). The tile
+          // itself also shrinks (VesselTile mini); severity stays unmissable.
+          gridTemplateColumns: density === 'minimal'
+            ? 'repeat(auto-fill, minmax(150px, 1fr))'
+            : 'repeat(auto-fill, minmax(210px, 1fr))',
+          gap: density === 'minimal' ? 10 : 20,
           justifyItems: 'stretch',
           gridAutoFlow: 'row dense', // round 17: mixed manual sizes reflow without orphan gaps (supersedes round 3 no-dense rule)
           marginBottom: 20,

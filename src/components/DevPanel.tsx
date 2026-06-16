@@ -11,7 +11,7 @@
 // (mode + all sliders, values baked into AmbientSea), and the status A/B toggle.
 // Kept toggles: color (automotive), motion, density, bearing, rail mode, auto 2x.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useFleet } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // LEARN/EXPERT MODE — strip before demo week
@@ -61,6 +61,19 @@ export function DevPanel() {
   const [open, setOpen] = useState(false);
   const f = useFleet();
   const { mode, setMode } = useLearn();
+
+  // ROUND 111: restore the D-key toggle (the round-108 panel rewrite dropped it).
+  // No collision with Learn's E/L (LearnProvider owns those); typing in an input
+  // never triggers it.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable) return;
+      if (e.key === 'd' || e.key === 'D') setOpen((o) => !o);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   if (!open) {
     return (

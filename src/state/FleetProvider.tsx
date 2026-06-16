@@ -97,7 +97,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
   const [motion, setMotion] = useState<MotionVariant>('breathe'); // round 108: Breathe locked as startup
   const [bearingLine, setBearingLine] = useState(true); // round 108: BRG ray on at startup (toggle kept)
-  const [railMode, setRailMode] = useState<RailMode>('glyph');
+  const [railMode, setRailMode] = useState<RailMode>('stroke'); // round 111: Transit Stroke is the startup default (toggle kept)
   // round 108: auto-2x ON at startup (legacy); FleetView forces it OFF in Expert
   // (officer sizes) regardless of this default.
   const [autoPromote, setAutoPromote] = useState(true);

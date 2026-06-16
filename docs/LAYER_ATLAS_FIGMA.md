@@ -188,7 +188,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • endurance.chart  → Gauge primitive · log dial · caution band <72h (alert-backed) · {derived.endurance_hours}
     • speed.chart  → Gauge primitive · 116px (round 79) · {position.speed_over_ground_kn} / max {cruise×1.35}
   Region: marker
-    • position.text  → font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · {nm from nearest port | alongside}
+    • position.text  → font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · round 107: expert-stripped · {nm from nearest port | alongside}
     • progress.text  → font/data 15 · ink/muted · progress % anchored above the marker (flips left near 100% so it never overlaps the destination, round 88) — bound to real voyage progress · {round(frac*100)}%
   Region: originCol
     • spec.text  → font/data 15 · ink/muted · context (no tint) · {static.length_ft} ft {static.class}
@@ -297,4 +297,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T03:20:15.792Z*
+*140 leaves · 20 components · 26 glyphs (3 drawn) · generated 2026-06-16T03:39:34.662Z*

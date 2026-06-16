@@ -228,11 +228,17 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <div style={{ ...mono, textAlign: 'center' }}>
           {now.mode === 'PORT' ? 'MOORED' : now.mode === 'STATION' ? 'ON STATION' : 'STANDBY'} — {at}
           {now.mode === 'PORT' && <StateMark port={at} />}
-          {next && <span style={{ color: NEUTRAL.inkMuted }}> · next call {next.port} ETA {fmtTime(next.eta)}</span>}
+          {/* ROUND 107: secondary "next call ETA" prose stripped in Expert */}
+          {!expertOn && next && <span style={{ color: NEUTRAL.inkMuted }}> · next call {next.port} ETA {fmtTime(next.eta)}</span>}
         </div>
-        <div style={{ ...colItem, textAlign: 'center', marginTop: 'var(--pad-section)' }}>
-          {vessel.static.length_ft} ft {vessel.static.class} · {posRef} · {sog.toFixed(1)} kn
-        </div>
+        {/* ROUND 107: the spec/context line (class is fixed operator knowledge, speed
+            is on the gauge, position is in the position panel) is chrome in Expert —
+            stripped. Default + Learn keep it. */}
+        {!expertOn && (
+          <div style={{ ...colItem, textAlign: 'center', marginTop: 'var(--pad-section)' }}>
+            {vessel.static.length_ft} ft {vessel.static.class} · {posRef} · {sog.toFixed(1)} kn
+          </div>
+        )}
       </div>
     );
   } else {
@@ -294,9 +300,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 </>
               )}
             </div>
-            {/* current-position reference (round 82) — floats under the marker */}
-            {fracPct !== null && (
-              <div {...layer('VesselCommandBand / marker / position.text', 'font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6)', '{nm from nearest port | alongside}')} style={markerLabel({ bottom: 0 })}>{posRef}</div>
+            {/* current-position reference (round 82) — floats under the marker.
+                ROUND 107: stripped in Expert (the live track + marker carry the
+                position graphically; the precise readout is in the position panel). */}
+            {fracPct !== null && !expertOn && (
+              <div {...layer('VesselCommandBand / marker / position.text', 'font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · round 107: expert-stripped', '{nm from nearest port | alongside}')} style={markerLabel({ bottom: 0 })}>{posRef}</div>
             )}
           </div>
           {/* DESTINATION column — plain label; detail DEFAULT-VISIBLE, expert-hidden */}

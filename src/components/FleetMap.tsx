@@ -14,6 +14,7 @@ import { NauticalChart, useContentWidth, usePanZoom, FollowChip, type ChartFrame
 import { clusterPoints, placeLabels, labelWidth } from './chartLayout';
 import { MarkerTooltip, ClusterSplay } from './ChartOverlays';
 import { STATUS_COLOR } from './probeTokens';
+import { place } from '../data/fleet'; // round 111: next-port target for the FleetView bearing ray
 import { fmtPct, glassFill } from './gb';
 import { Label, VESSEL_MARKER_PATH, sternPoint } from './Glyph';
 import { useLearn } from '../learn/LearnProvider'; // round 88: redundant header → Learn-only
@@ -43,7 +44,7 @@ export function FleetMap({
   height?: number;
 }) {
   const router = useRouter();
-  const { motion, surfaceGlass } = useFleet();
+  const { motion, surfaceGlass, bearingLine } = useFleet();
   const { learnOn } = useLearn(); // round 88: "FLEET PLOT — GULF OF MEXICO" is a redundant location restatement — Learn-only docent
   const [wrapRef, w] = useContentWidth(width);
   const [hoverId, setHoverId] = useState<string | null>(null);
@@ -125,6 +126,33 @@ export function FleetMap({
                     />
                   );
                 });
+              })}
+              {/* ROUND 111: BEARING toggle now works in FleetView too (was
+                  inspector-only — bug). When BRG-ray is on, each UNDERWAY (TRANSIT)
+                  vessel draws a dashed bearing ray to its next port, clipped at the
+                  chart edge (same dashed style as the inspector ray; no per-ray
+                  label — the markers already carry names, 15 labels would clutter).
+                  "voyage card only" = no rays. */}
+              {bearingLine && fleet.map((v) => {
+                if (v.derived.mode !== 'TRANSIT') return null;
+                const next = v.history.nextPortCalls[0];
+                if (!next) return null;
+                const dest = place(next.port);
+                const here = v.history.minutes.at(-1)!.position;
+                const x0 = px(here.lon), y0 = py(here.lat);
+                const dx = px(dest.lon) - x0, dy = py(dest.lat) - y0;
+                if (dx === 0 && dy === 0) return null;
+                let tEdge = Infinity;
+                if (dx > 0) tEdge = Math.min(tEdge, (w - x0) / dx);
+                if (dx < 0) tEdge = Math.min(tEdge, -x0 / dx);
+                if (dy > 0) tEdge = Math.min(tEdge, (height - y0) / dy);
+                if (dy < 0) tEdge = Math.min(tEdge, -y0 / dy);
+                const t1 = Math.min(1, tEdge); // stop at the port if in frame
+                return (
+                  <line key={`brg-${v.static.id}`} x1={x0} y1={y0}
+                    x2={x0 + dx * t1} y2={y0 + dy * t1}
+                    stroke="#5e5e5e" strokeWidth={0.75} strokeDasharray="6 4" />
+                );
               })}
               {/* placed labels + leader lines (collision-managed) */}
               {singles.map((m, i) => {

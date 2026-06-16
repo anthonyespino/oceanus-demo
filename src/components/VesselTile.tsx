@@ -50,6 +50,10 @@ export function VesselTile({
   const status = vesselStatus(vessel.alerts);
   const mini = size === 'mini';
   const tier = size === 'expanded' ? 2 : 1;
+  // ROUND 111: density MINIMAL shrinks the tile — glyph + name + hero value step
+  // down a tier so more vessels fit, while the meter strip + status tint keep
+  // severity unmissable. (no orphan sizes — all from the unified scale.)
+  const cg = mini ? 13 : CARD_GLYPH;
   const step = (dir: 1 | -1) => {
     const next = SIZE_ORDER[SIZE_ORDER.indexOf(size) + dir];
     if (next) onSize(next);
@@ -132,7 +136,7 @@ export function VesselTile({
           state label, NOT a hero; it must not compete with the deviation value or
           the name. Greyscale (mode is state, not severity). Learn/title = mode name
           (matches the rail's title approach). */}
-      <div style={{ padding: mini ? '12px 14px 14px' : '16px 14px 16px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+      <div style={{ padding: mini ? '8px 10px 8px' : '16px 14px 16px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: mini ? 3 : 5 }}>
         <span
           {...layer('VesselTile / mode.glyph', 'MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')}
           title={d.mode}
@@ -148,16 +152,16 @@ export function VesselTile({
             register) and out-shouted the HERO-20 fleet-mean above it. Status tint
             on the name is KEPT (earned) — Meridian's name still goes gold, the
             strip + value tint carry severity (round 66), so it still pops. */}
-        <div {...layer('VesselTile / name.text', 'type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)', '{vessel.static.name}')} style={{ fontFamily: FONT.display, fontSize: 'var(--type-primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
+        <div {...layer('VesselTile / name.text', 'type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)', '{vessel.static.name}')} style={{ fontFamily: FONT.display, fontSize: mini ? 'var(--type-context)' : 'var(--type-primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: status !== 'nominal' ? STATUS_COLOR[status] : undefined }}>{vessel.static.name}</div>
       </div>
       {/* BODY — darker fill (tile base shows through); centered glyph-above-
           value at top, two-column footer pinned to the base (round 63 mock) */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, padding: mini ? '10px 14px' : '16px 14px' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, padding: mini ? '6px 10px' : '16px 14px' }}>
         {/* primary value: category glyph (calendar) centered ABOVE the value */}
         <div style={{ textAlign: 'center' }}>
           <div title="30-day trend" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: colored && status !== 'nominal' ? STATUS_COLOR[status] : NEUTRAL.ink }}>
-            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend', '30d trend')} title={IA_GLYPH_MEANING.calendar} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={CARD_GLYPH} /></span>
-            <span {...layer('VesselTile / trend.value.text', 'type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+            <span {...layer('VesselTile / trend.glyph', 'glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend', '30d trend')} title={IA_GLYPH_MEANING.calendar} style={{ lineHeight: 0, color: NEUTRAL.ink }}><Glyph name="calendar" size={cg} /></span>
+            <span {...layer('VesselTile / trend.value.text', 'type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal', '{derived.trend_30d} %/30d — the primary board signal (ruling 13)')} style={{ fontFamily: FONT.data, fontSize: mini ? 'var(--type-primary)' : 'var(--type-hero)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
               {fmtPct(d.trend_30d)}
               {treatment === 'automotive' && status === 'nominal' && (
                 <span style={{ color: STATUS_COLOR.nominal, fontSize: 16 }}> ✓</span>

@@ -105,13 +105,12 @@ export function Glyph({ name, size = 14, color = 'currentColor' }: { name: Glyph
     the atlas enumerates it). */
 export function Label({ g, children, style, headerAttrs }: { g: GlyphName; children: React.ReactNode; style?: React.CSSProperties; headerAttrs?: Record<string, string> }) {
   const { expertOn } = useLearn();
-  if (expertOn) {
-    return (
-      <span {...headerAttrs} style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--pad-section)', ...style }}>
-        <Glyph name={g} size={20} />
-      </span>
-    );
-  }
+  // ROUND 107: EXPERT strips section headers ENTIRELY — no text, no glyph
+  // replacement (supersedes round 44's glyph-only header). A trained operator
+  // identifies a panel by its instruments + position; the header is chrome, and
+  // the panel reflows up into the reclaimed space. Default + Learn unchanged.
+  // Severity is never carried by a header, so nothing severity-bearing is lost.
+  if (expertOn) return null;
   return (
     <span {...headerAttrs} style={{ ...gb.label, display: 'flex', alignItems: 'center', gap: 6, ...style }}>
       <Glyph name={g} />

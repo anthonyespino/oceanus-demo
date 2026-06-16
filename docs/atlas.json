@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T03:20:15.792Z",
+  "generated": "2026-06-16T03:39:34.662Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -808,7 +808,7 @@
       "component": "VesselCommandBand",
       "region": "marker",
       "leaf": "position.text",
-      "tokens": "font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6)",
+      "tokens": "font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · round 107: expert-stripped",
       "binds": "{nm from nearest port | alongside}",
       "file": "src/components/VesselCommandBand.tsx"
     },

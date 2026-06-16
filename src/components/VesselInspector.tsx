@@ -23,8 +23,9 @@ import { VesselSynoptic } from './VesselSynoptic';
 import { VesselCommandBand } from './VesselCommandBand';
 import { CrewLogPanel } from './CrewLogPanel';
 import { layer } from '../learn/layer'; // LEARN/EXPERT MODE — strip before demo week
+import { useLearn } from '../learn/LearnProvider'; // round 107: Expert essentializes alert phrasing
 import { ALERT_TEXT_COLOR, NEUTRAL } from './probeTokens';
-import { gb, fmtPct } from './gb';
+import { gb, fmtPct, essentialAlert } from './gb';
 import { Annotated } from '../learn/Annotated'; // LEARN MODE — strip before demo week
 
 export function VesselInspector({
@@ -36,6 +37,7 @@ export function VesselInspector({
   fleet: VesselState[];
   treatment: ColorTreatment;
 }) {
+  const { expertOn } = useLearn(); // round 107: Expert essentializes alert phrasing
   const [canvasH, setCanvasH] = useState(300);
   useEffect(() => {
     const fit = () => setCanvasH(Math.min(360, Math.round(window.innerHeight * 0.3)));
@@ -79,7 +81,7 @@ export function VesselInspector({
             <span {...layer('VesselInspector / generalAlerts / header.text', 'compact GENERAL alerts area · only unroutable alerts (no evidence panel)', 'GENERAL')} style={{ ...gb.label, fontSize: 'var(--type-micro)', marginBottom: 2 }}>general</span>
             {routed.general.map((a, i) => (
               <div key={i} style={{ color: NEUTRAL.inkSecondary, fontSize: 'var(--type-context)', lineHeight: 1.4 }}>
-                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
+                <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {expertOn ? essentialAlert(a.message) : a.message}
               </div>
             ))}
           </section>

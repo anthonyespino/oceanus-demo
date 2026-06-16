@@ -4,9 +4,10 @@
 // The chevron is the round 17 control glyph pair — same geometry language.
 
 import { useFleet } from '../state/FleetProvider';
+import { useLearn } from '../learn/LearnProvider'; // round 107: Expert essentializes alert phrasing
 import { Glyph, Label, type GlyphName } from './Glyph';
 import { NEUTRAL, RADIUS, ALERT_TEXT_COLOR, FONT } from './probeTokens';
-import { gb } from './gb';
+import { gb, essentialAlert } from './gb';
 import type { Alert } from '../data/types';
 
 // ROUND 100: a docked alert reads as THIS panel's alert — it sits at the top of
@@ -15,12 +16,13 @@ import type { Alert } from '../data/types';
 // it never bloats the header; severity stays visible even when the panel is
 // collapsed.
 function DockedAlerts({ alerts }: { alerts?: Alert[] }) {
+  const { expertOn } = useLearn();
   if (!alerts || alerts.length === 0) return null;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4 }}>
       {alerts.map((a, i) => (
         <div key={i} style={{ fontFamily: FONT.data, fontSize: 'var(--type-context)', lineHeight: 1.4, color: NEUTRAL.inkSecondary }}>
-          <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {a.message}
+          <span style={{ color: ALERT_TEXT_COLOR[a.level] }}>[{a.level}]</span> {expertOn ? essentialAlert(a.message) : a.message}
         </div>
       ))}
     </div>
