@@ -51,14 +51,19 @@ const HULL_PATH =
   'M 22 92 C 38 54, 66 34, 100 30 L 600 30 C 638 34, 660 58, 662 92 ' +
   'C 660 126, 638 150, 600 154 L 100 154 C 66 150, 38 130, 22 92 Z';
 const SUPER_PATH = 'M 84 58 L 122 58 Q 130 58 130 66 L 130 118 Q 130 126 122 126 L 84 126 Q 72 92 84 58 Z';
+// ROUND 125 (containment): tank boxes pulled IN to sit fully inside the hull's straight
+// interior (y30–154) with consistent ≥10px clearance top + bottom — the round-123/124
+// compaction tightened the hull without constraining the tanks, so the lower tanks'
+// bottoms (ST2 reached y156) crossed the hull's lower edge. Hull + x-positions + compact
+// proportions unchanged; only tank y/heights are constrained.
 const GEOM = {
   storage: [
-    { id: 'ST1', x: 148, y: 34, w: 136, h: 50 },
-    { id: 'ST2', x: 148, y: 106, w: 136, h: 50 },
+    { id: 'ST1', x: 148, y: 40, w: 136, h: 46 }, // top clr 10 (hull top y30)
+    { id: 'ST2', x: 148, y: 98, w: 136, h: 46 }, // bottom clr 10 (hull bottom y154)
   ],
   feeder: [
-    { id: 'FD1', x: 300, y: 38, w: 76, h: 46 },
-    { id: 'FD2', x: 300, y: 106, w: 76, h: 46 },
+    { id: 'FD1', x: 300, y: 44, w: 76, h: 40 },
+    { id: 'FD2', x: 300, y: 102, w: 76, h: 40 },
   ],
   meter: { x: 432, y: 92 },
   engines: [

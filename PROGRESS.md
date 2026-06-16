@@ -1,3 +1,28 @@
+# PROGRESS — 2026-06-16 (Session 112: ROUND 125 — fuel schematic tank containment (tanks inside the hull))
+
+## The bug
+- The round-123 hull compaction tightened the outline (y-range 300→190) without constraining
+  the tank boxes — so the lower tanks crossed the hull's lower edge. Measured (viewBox units):
+  hull interior y30–154, but ST2 reached **y156** (crossed by 2px) and FD2 sat at y152 (2px) —
+  the lower tanks' bottoms touched/punched the hull outline (visible on ST2/FD2).
+
+## Done (verified docs/screens/r125-tank-containment.png)
+- Constrained all four tank boxes to the hull's straight interior with consistent **≥10px
+  clearance** top + bottom (hull + x-positions + compact proportions UNCHANGED — only tank
+  y/heights): ST1 y40–86, ST2 y98–144, FD1 y44–84, FD2 y102–142. Storage h50→46, feeder
+  h46→40 to seat them with clearance. Verified: every tank fully inside, none crossing/touching
+  (ST2 bottom now y144 vs hull y154; FD2 y142).
+- Confirmed everything else stays contained/correct: engine nodes (x571–605, well inside the
+  x600–662 right region), manifold diamond, connector lines, RECON OK marker — none cross the
+  outline. E2 still yellow (earned). No re-bloating of the hull.
+
+## Holds
+Compact proportions kept (hull not re-enlarged); standing design-system rule still holds (round-124
+stroke/type/greyscale conformance untouched); no data change (82%/50%/49% unchanged). TSC-OK ·
+LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 111: ROUND 124 — STANDING design-system rule + envelope/schematic conformance + trend-chart labeling)
 
 ## STANDING RULE recorded (DECISIONS.md, permanent)

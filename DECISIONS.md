@@ -1345,3 +1345,12 @@ originals.*
   - No data/meaning change (envelope/gal-nm/trend series untouched; optimal clamped to measured
     range); earned color (no green); type tiers; greyscale; no off-token hex.
     TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 125: fuel schematic tank containment.** The round-123 hull compaction tightened the
+  outline without constraining the tank boxes, so the lower tanks crossed the hull's lower edge
+  (ST2 reached y156 vs hull interior y30–154; FD2 at y152, 2px). Fixed by pulling all four tanks
+  in to consistent ≥10px clearance top + bottom (ST1 y40–86, ST2 y98–144, FD1 y44–84, FD2
+  y102–142; storage h50→46, feeder h46→40) — hull + x-positions + compact proportions UNCHANGED
+  (no re-bloat). Engines/manifold/connector lines/RECON marker confirmed still inside. No data
+  change; standing design-system conformance (round 124) untouched. TSC-OK · LINT-CLEAN · verify
+  PASSED · offline build OK.
