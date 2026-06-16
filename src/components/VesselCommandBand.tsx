@@ -235,8 +235,10 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         <div style={{ ...mono, textAlign: 'center' }}>
           {now.mode === 'PORT' ? 'MOORED' : now.mode === 'STATION' ? 'ON STATION' : 'STANDBY'} — {at}
           {now.mode === 'PORT' && <StateMark port={at} />}
-          {/* ROUND 107: secondary "next call ETA" prose stripped in Expert */}
-          {!expertOn && next && <span style={{ color: NEUTRAL.inkMuted }}> · next call {next.port} ETA {fmtTime(next.eta)}</span>}
+          {/* ROUND 116: the next-call ETA VALUE is SIGNAL (round-114 ruling) — kept in
+              Expert for non-transit vessels too; only the "next call" / "ETA" orientation
+              labels strip (Expert: "· {port} ◇ {time}"). */}
+          {next && <span style={{ color: NEUTRAL.inkMuted }}> · {expertOn ? '' : 'next call '}{next.port} {expertOn ? '◇ ' : 'ETA '}{fmtTime(next.eta)}</span>}
         </div>
         {/* ROUND 107: the spec/context line (class is fixed operator knowledge, speed
             is on the gauge, position is in the position panel) is chrome in Expert —
@@ -320,12 +322,15 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
               <span {...layer('VesselCommandBand / profile / destination.text', 'font/data 15 · ink/secondary · endpoint label (name once)', '{next_port_calls[0].port}')} style={endpointLabel}>{next?.port ?? '—'}</span>
               {next && <StateMark port={next.port} />}
             </span>
-            {!expertOn && (
-              <>
-                {next && <span {...layer('VesselCommandBand / destCol / eta.text', 'font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE', '{next_port_calls[0].eta}')} style={{ ...colItem, textAlign: 'right' }}>◇ ETA {fmtTime(next.eta)}</span>}
-                {toGoNm !== null && <span {...layer('VesselCommandBand / destCol / toGo.text', 'font/data 15 · ink/muted · context · distance remaining', '{nm to destination}')} style={{ ...colItem, textAlign: 'right' }}>{toGoNm.toFixed(0)} NM TO GO</span>}
-              </>
-            )}
+            {/* ROUND 116: ETA + NM-TO-GO are LIVE SIGNAL (round-114 ruling) — NM-to-go is
+                the endurance-vs-distance number the fuel persona reads to decide; ETA is
+                independent signal, NOT restated by the progress marker. They render in BOTH
+                modes; EXPERT strips only the ORIENTATION labels ("ETA" word / "TO GO"), the
+                VALUES stay. Reconciles the voyage bar with the keep-live-signal rule (the
+                round-106 expert-hide here was over-stripping signal). Origin spec/speed
+                above stays expert-stripped — static spec + speed already on the gauge. */}
+            {next && <span {...layer('VesselCommandBand / destCol / eta.text', 'font/data 15 · ink/muted · absolute ETA + Z — SIGNAL, kept in Expert (round 116); only the "ETA" label strips', '{next_port_calls[0].eta}')} style={{ ...colItem, textAlign: 'right' }}>◇ {expertOn ? '' : 'ETA '}{fmtTime(next.eta)}</span>}
+            {toGoNm !== null && <span {...layer('VesselCommandBand / destCol / toGo.text', 'font/data 15 · ink/muted · distance remaining — SIGNAL (endurance-vs-distance), kept in Expert (round 116); only "TO GO" label strips', '{nm to destination}')} style={{ ...colItem, textAlign: 'right' }}>{toGoNm.toFixed(0)} {expertOn ? 'NM' : 'NM TO GO'}</span>}
           </div>
         </div>
       </div>

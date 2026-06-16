@@ -340,10 +340,10 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · live signal, kept in Expert (round 114)
   - BINDS — {weather.wind_speed_kn} kn
 - `destCol / eta.text`
-  - TOKENS — font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE
+  - TOKENS — font/data 15 · ink/muted · absolute ETA + Z — SIGNAL, kept in Expert (round 116); only the "ETA" label strips
   - BINDS — {next_port_calls[0].eta}
 - `destCol / toGo.text`
-  - TOKENS — font/data 15 · ink/muted · context · distance remaining
+  - TOKENS — font/data 15 · ink/muted · distance remaining — SIGNAL (endurance-vs-distance), kept in Expert (round 116); only "TO GO" label strips
   - BINDS — {nm to destination}
 - `gaugeRail / burn.chart`
   - TOKENS — Gauge primitive · 116px (round 79)
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-16T07:49:06.805Z*
+*141 instrumented leaves · 20 components · generated 2026-06-16T14:47:08.750Z*

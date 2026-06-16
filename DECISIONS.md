@@ -1196,3 +1196,16 @@ originals.*
   from single source); greyscale (accent neutral, no color creep); severity reads cleanly
   over the accent (selection + caution tint unmuddied); type scale; consequence logic
   (transit marginally more presence). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 116: voyage-bar ETA/NM-to-go reconciled with the round-114 signal ruling.**
+  The round-114 audit ruled ETA + NM-to-go are SIGNAL (NM-to-go is the endurance-vs-
+  distance figure the fuel persona reads; ETA is independent signal, not restated by the
+  progress marker) — but the voyage bar still carried the round-106 `!expertOn` gate
+  hiding them in Expert (decided-keep / built-strip / unreconciled). Confirmed strip-drift
+  (not a seed gap): Default showed both, Expert showed neither. Fix: ETA + NM-to-go render
+  in BOTH modes; Expert strips only the ORIENTATION labels, the VALUES stay — transit
+  Expert shows "◇ {ETA}" + "{n} NM" (drop "ETA"/"TO GO"); non-transit keeps the next-call
+  ETA value too ("· {port} ◇ {time}"). Origin spec/speed/position stay Expert-stripped
+  (static spec / gauge-restatement). This makes the build obey the keep-live-signal rule
+  at its most decision-relevant point. Default + Learn unchanged; severity/greyscale/type
+  scale held. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

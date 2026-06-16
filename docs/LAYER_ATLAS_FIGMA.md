@@ -181,8 +181,8 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • waves.text  → glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · live signal, kept in Expert (round 114) · {weather.wave_height_ft} ft
     • wind.text  → glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · live signal, kept in Expert (round 114) · {weather.wind_speed_kn} kn
   Region: destCol
-    • eta.text  → font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE · {next_port_calls[0].eta}
-    • toGo.text  → font/data 15 · ink/muted · context · distance remaining · {nm to destination}
+    • eta.text  → font/data 15 · ink/muted · absolute ETA + Z — SIGNAL, kept in Expert (round 116); only the "ETA" label strips · {next_port_calls[0].eta}
+    • toGo.text  → font/data 15 · ink/muted · distance remaining — SIGNAL (endurance-vs-distance), kept in Expert (round 116); only "TO GO" label strips · {nm to destination}
   Region: gaugeRail
     • burn.chart  → Gauge primitive · 116px (round 79) · {derived.burn_rate_gph} / max observed 1y
     • effDelta.chart  → Gauge primitive · caution band ≥+8 (alert-backed) · {derived.efficiency_delta_pct} vs mode baseline
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T07:49:06.807Z*
+*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T14:47:08.752Z*

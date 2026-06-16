@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T07:49:06.807Z",
+  "generated": "2026-06-16T14:47:08.753Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -763,7 +763,7 @@
       "component": "VesselCommandBand",
       "region": "destCol",
       "leaf": "eta.text",
-      "tokens": "font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE",
+      "tokens": "font/data 15 · ink/muted · absolute ETA + Z — SIGNAL, kept in Expert (round 116); only the \"ETA\" label strips",
       "binds": "{next_port_calls[0].eta}",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -772,7 +772,7 @@
       "component": "VesselCommandBand",
       "region": "destCol",
       "leaf": "toGo.text",
-      "tokens": "font/data 15 · ink/muted · context · distance remaining",
+      "tokens": "font/data 15 · ink/muted · distance remaining — SIGNAL (endurance-vs-distance), kept in Expert (round 116); only \"TO GO\" label strips",
       "binds": "{nm to destination}",
       "file": "src/components/VesselCommandBand.tsx"
     },

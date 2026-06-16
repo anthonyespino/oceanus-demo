@@ -1,3 +1,37 @@
+# PROGRESS — 2026-06-16 (Session 103: ROUND 116 — reconcile voyage-bar ETA/NM-to-go with the round-114 signal ruling)
+
+## The drift (confirmed, not a data gap)
+- Round 114 ruled ETA + NM-to-go are SIGNAL and should stay in Expert (NM-to-go is the
+  endurance-vs-distance number the fuel persona reads; ETA is independent signal, not
+  restated by the progress marker). But the voyage bar still carried the round-106
+  `!expertOn` gate hiding them — decided-keep, built-strip, never reconciled.
+- Confirmed via Default↔Expert on Meridian: DEFAULT showed "ETA 2026-06-19 17:43Z" +
+  "332 NM TO GO"; EXPERT showed neither. So it was strip-drift, not a seed gap (the data
+  is present in both modes).
+
+## Fix (verified across all three scenarios)
+- The voyage-bar ETA + NM-to-go now render in BOTH modes; EXPERT strips only the
+  ORIENTATION labels, the VALUES stay (orientation-vs-signal rule):
+  - Transit (Meridian, Marlin Ridge): EXPERT shows "◇ {ETA timestamp}" (the "ETA" word
+    drops, ◇ glyph + value stay) and "{n} NM" (the "TO GO" label drops, number + unit
+    stay). DEFAULT unchanged ("◇ ETA {time}", "{n} NM TO GO").
+  - Non-transit (Osprey, station): the next-call ETA VALUE is kept in EXPERT too
+    ("· {port} ◇ {time}"); the "next call"/"ETA" labels strip. DEFAULT unchanged.
+  - Origin spec (240 ft OSV) + speed + position reference stay EXPERT-stripped — static
+    spec is orientation, speed is already on the gauge (restatement). No orientation
+    labels resurrected.
+- Verified: EXPERT keeps ETA value (Meridian/Marlin Ridge/Osprey all show the timestamp)
+  + NM-to-go value (Meridian 332 NM, Marlin Ridge 98 NM; Osprey is station = none); the
+  "ETA"/"TO GO" labels are gone; DEFAULT unchanged. The build now obeys the round-114
+  keep-live-signal rule at its most decision-relevant point (the fuel persona's NM-to-go).
+
+## Safety
+Signal kept (ETA + NM-to-go values); only orientation labels stripped; severity untouched;
+greyscale (no color); type scale; Default + Learn unchanged. Demo path intact.
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 102: ROUND 115 — rail mode combined into one permanent treatment)
 
 ## Done (verified docs/screens/r115-rail.png)
