@@ -224,7 +224,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • header.glyph  → section header · tank glyph · glyph-only in expert mode · FUEL
   Region: hull
     • hull.line  → ink/secondary 1.5px — neutral, never status · {HULL_PATH — Figma hull replaces 1:1}
-    • label.text  → font/data 9 · ink/muted · SUPERSTRUCTURE (static)
+    • label.text  → font/data 9 · ink/muted · small superstructure marker (round 123) · SUPER (superstructure marker)
     • superstructure.shape  → surface/overlay fill · line/strong · {SUPER_PATH}
   Region: meter
     • meter.shape  → surface/overlay · line/strong · 45° diamond · flow meter node
@@ -304,4 +304,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     · glyph/play  → play.svg
     · glyph/reset  → reset.svg
 
-*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T20:15:48.374Z*
+*142 leaves · 20 components · 30 glyphs (3 drawn) · generated 2026-06-16T20:21:25.812Z*

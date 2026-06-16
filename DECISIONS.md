@@ -1297,3 +1297,17 @@ originals.*
   Reads to the minute (sim advances 1-min ticks). Verified: PAUSE froze it 10s, RESUME → next
   sim minute, RESET → 15:00Z. No data/severity/color change; greyscale; scenario switcher +
   reset undisturbed. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 123: fuel-twin hull compaction — data fills the frame.** The synoptic hull was
+  oversized illustration (a giant SUPERSTRUCTURE block + dead bow space eating the left third;
+  data crammed right). Compacted to a light contextual outline hugging dense data: viewBox
+  720×300 → 720×190 (~36% shorter), pointed bow + rounded stern with fore/aft + port/starboard
+  preserved, SUPERSTRUCTURE reduced to a small "SUPER" marker forward (full word in a `<title>`),
+  and tanks/feeders/meter/engines repositioned to fill x≈148–605 with OSV-sensible proportions
+  (storage dominant, gens+mains aft). Contained to `VB`/`HULL_PATH`/`SUPER_PATH`/`GEOM` + the
+  three hardcoded label positions — the renderer reads only these, so all data/labels/treatment
+  are unchanged; reads as the same designed panel, correctly proportioned. REORDER HELD: the dot
+  matrices stay below the schematic (the above-vs-below decision comes after seeing the compacted
+  result). Information-over-decoration (hull earns only its spatial-context space); earned color
+  (E2 yellow where alert-named, no green); type scale; greyscale; panel consistency.
+  TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

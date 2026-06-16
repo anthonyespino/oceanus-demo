@@ -38,33 +38,40 @@ function DotMatrix({ pct, tint }: { pct: number; tint: string | null }) {
 }
 
 // ---------------------------------------------------------------- geometry --
-// ViewBox 720×300, bow LEFT. Replace HULL_PATH + GEOM with Figma export later.
-const VB = { w: 720, h: 300 };
+// ROUND 123: HULL COMPACTED. The old 720×300 hull was mostly illustration — a giant
+// SUPERSTRUCTURE block + dead bow space ate the left third while the data crammed into
+// the right two-thirds. Now the hull is a LIGHT contextual outline hugging dense data:
+// a minimal pointed bow (left), a small superstructure marker forward, then the tanks /
+// feeders / meter / engines filling x≈148–605, aft engines at the stern. Vertical span
+// cut 300→190 (~36% shorter). Fore→aft = left→right, port = top, starboard = bottom —
+// OSV proportions kept (storage tanks dominant; superstructure a small forward block).
+// Replace HULL_PATH + GEOM with Figma export later; the renderer reads only these.
+const VB = { w: 720, h: 190 };
 const HULL_PATH =
-  'M 24 150 C 40 96, 84 70, 150 64 L 600 64 C 660 70, 696 100, 698 150 ' +
-  'C 696 200, 660 230, 600 236 L 150 236 C 84 230, 40 204, 24 150 Z';
-const SUPER_PATH = 'M 96 92 L 220 92 Q 232 92 232 104 L 232 196 Q 232 208 220 208 L 96 208 Q 76 180 72 150 Q 76 120 96 92 Z';
+  'M 22 92 C 38 54, 66 34, 100 30 L 600 30 C 638 34, 660 58, 662 92 ' +
+  'C 660 126, 638 150, 600 154 L 100 154 C 66 150, 38 130, 22 92 Z';
+const SUPER_PATH = 'M 84 58 L 122 58 Q 130 58 130 66 L 130 118 Q 130 126 122 126 L 84 126 Q 72 92 84 58 Z';
 const GEOM = {
   storage: [
-    { id: 'ST1', x: 270, y: 84, w: 96, h: 60 },
-    { id: 'ST2', x: 270, y: 156, w: 96, h: 60 },
+    { id: 'ST1', x: 148, y: 34, w: 136, h: 50 },
+    { id: 'ST2', x: 148, y: 106, w: 136, h: 50 },
   ],
   feeder: [
-    { id: 'FD1', x: 408, y: 92, w: 56, h: 48 },
-    { id: 'FD2', x: 408, y: 160, w: 56, h: 48 },
+    { id: 'FD1', x: 300, y: 38, w: 76, h: 46 },
+    { id: 'FD2', x: 300, y: 106, w: 76, h: 46 },
   ],
-  meter: { x: 506, y: 150 },
+  meter: { x: 432, y: 92 },
   engines: [
-    { id: 'E1', x: 596, y: 100, r: 17, role: 'MAIN' },
-    { id: 'E2', x: 596, y: 200, r: 17, role: 'MAIN' },
-    { id: 'E3', x: 538, y: 92, r: 12, role: 'GEN' },
-    { id: 'E4', x: 538, y: 208, r: 12, role: 'GEN' },
+    { id: 'E1', x: 588, y: 60, r: 17, role: 'MAIN' },
+    { id: 'E2', x: 588, y: 124, r: 17, role: 'MAIN' },
+    { id: 'E3', x: 500, y: 54, r: 12, role: 'GEN' },
+    { id: 'E4', x: 500, y: 130, r: 12, role: 'GEN' },
   ],
   callouts: {
-    ST1: { lx: 300, ly: 30 }, ST2: { lx: 300, ly: 274 },
-    FD1: { lx: 430, ly: 30 }, FD2: { lx: 430, ly: 274 },
-    E1: { lx: 640, ly: 30 }, E2: { lx: 640, ly: 274 },
-    E3: { lx: 520, ly: 30 }, E4: { lx: 520, ly: 274 },
+    ST1: { lx: 216, ly: 16 }, ST2: { lx: 216, ly: 176 },
+    FD1: { lx: 338, ly: 16 }, FD2: { lx: 338, ly: 176 },
+    E1: { lx: 626, ly: 16 }, E2: { lx: 626, ly: 176 },
+    E3: { lx: 500, ly: 16 }, E4: { lx: 500, ly: 176 },
   } as Record<string, { lx: number; ly: number }>,
 };
 
@@ -139,8 +146,13 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
           {/* hull + superstructure: neutral ink lines, schematic */}
           <path {...layer('VesselSynoptic / hull / hull.line', 'ink/secondary 1.5px — neutral, never status', '{HULL_PATH — Figma hull replaces 1:1}')} d={HULL_PATH} fill="none" stroke={INK2} strokeWidth={1.5} />
           <path {...layer('VesselSynoptic / hull / superstructure.shape', 'surface/overlay fill · line/strong', '{SUPER_PATH}')} d={SUPER_PATH} fill="var(--color-surface-overlay)" stroke={LINE} strokeWidth={1} />
-          <text {...layer('VesselSynoptic / hull / label.text', 'font/data 9 · ink/muted', 'SUPERSTRUCTURE (static)')} x={150} y={154} textAnchor="middle" style={mono('var(--type-micro)')} fill={NEUTRAL.inkMuted}>SUPERSTRUCTURE</text>
-          <text x={36} y={150} textAnchor="middle" style={mono('var(--type-micro)')} fill={NEUTRAL.inkMuted} transform="rotate(-90 36 150)">BOW</text>
+          {/* ROUND 123: superstructure reduced to a small forward marker — it's crew
+              quarters, not fuel data, so it earns only an orientation tag, not a third
+              of the frame. <title> carries the full word. */}
+          <text {...layer('VesselSynoptic / hull / label.text', 'font/data 9 · ink/muted · small superstructure marker (round 123)', 'SUPER (superstructure marker)')} x={101} y={95} textAnchor="middle" style={mono('var(--type-micro)')} fill={NEUTRAL.inkMuted}>
+            <title>SUPERSTRUCTURE</title>SUPER
+          </text>
+          <text x={26} y={92} textAnchor="middle" style={mono('var(--type-micro)')} fill={NEUTRAL.inkMuted} transform="rotate(-90 26 92)">BOW</text>
 
           {/* flow paths storage→feeder→meter→engines (neutral) */}
           {[0, 1].map((i) => (
@@ -157,7 +169,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
               stroke={LINE} strokeWidth={1.2} />
           ))}
           {xferActive && (
-            <text x={388} y={150} textAnchor="middle" style={mono('var(--type-micro)')} fill={INK2}>XFER</text>
+            <text x={292} y={88} textAnchor="middle" style={mono('var(--type-micro)')} fill={INK2}>XFER</text>
           )}
 
           {/* tanks (round 20): level as VERTICAL fill, bottom-up, fill/level
@@ -216,7 +228,7 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
           {[...tankGeo.map((g) => ({ id: g.id, ax: g.x + g.w / 2, ayTop: g.y, ayBot: g.y + g.h })),
             ...GEOM.engines.map((g) => ({ id: g.id, ax: g.x, ayTop: g.y - g.r, ayBot: g.y + g.r }))].map((c) => {
             const l = GEOM.callouts[c.id];
-            const up = l.ly < 150; // which side of the hull the label sits on
+            const up = l.ly < VB.h / 2; // round 123: which side of the hull the label sits on (centerline follows VB)
             const anchorY = up ? c.ayTop : c.ayBot;
             return (
               <g key={`co-${c.id}`}>

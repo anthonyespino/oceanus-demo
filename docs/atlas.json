@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T20:15:48.374Z",
+  "generated": "2026-06-16T20:21:25.812Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -997,8 +997,8 @@
       "component": "VesselSynoptic",
       "region": "hull",
       "leaf": "label.text",
-      "tokens": "font/data 9 · ink/muted",
-      "binds": "SUPERSTRUCTURE (static)",
+      "tokens": "font/data 9 · ink/muted · small superstructure marker (round 123)",
+      "binds": "SUPER (superstructure marker)",
       "file": "src/components/VesselSynoptic.tsx"
     },
     {

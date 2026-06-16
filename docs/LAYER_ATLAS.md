@@ -428,8 +428,8 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — ink/secondary 1.5px — neutral, never status
   - BINDS — {HULL_PATH — Figma hull replaces 1:1}
 - `hull / label.text`
-  - TOKENS — font/data 9 · ink/muted
-  - BINDS — SUPERSTRUCTURE (static)
+  - TOKENS — font/data 9 · ink/muted · small superstructure marker (round 123)
+  - BINDS — SUPER (superstructure marker)
 - `hull / superstructure.shape`
   - TOKENS — surface/overlay fill · line/strong
   - BINDS — {SUPER_PATH}
@@ -532,4 +532,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*142 instrumented leaves · 20 components · generated 2026-06-16T20:15:48.372Z*
+*142 instrumented leaves · 20 components · generated 2026-06-16T20:21:25.811Z*

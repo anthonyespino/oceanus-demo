@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-16 (Session 110: ROUND 123 — fuel-twin hull compaction (data fills the frame))
+
+## Done (verified docs/screens/r123-hull-compacted.png)
+- The fuel-synoptic hull was oversized illustration — a giant SUPERSTRUCTURE block + dead bow
+  space ate the left third while the real data (ST1/ST2/FD1/FD2, engines, manifold) crammed into
+  the right two-thirds. Compacted HARD: the hull is now a light contextual outline hugging dense
+  data.
+  - **Geometry rewrite, contained to `VB` / `HULL_PATH` / `SUPER_PATH` / `GEOM`** (the renderer
+    reads only these) + 3 hardcoded label positions. ViewBox 720×300 → **720×190** (~36% shorter
+    rendered height). Pointed bow (left), rounded stern (right); fore→aft = left→right, port = top,
+    starboard = bottom — all preserved.
+  - **SUPERSTRUCTURE → a small "SUPER" marker** forward (full word in a `<title>`) — it's crew
+    quarters, not fuel data, so it earns only an orientation tag, not a third of the frame.
+  - **Data fills x≈148–605, densely**: storage tanks dominant (OSV-sensible), feeders smaller aft
+    of storage, meter mid, gens + mains at the stern. Empty bow reduced to a minimal taper.
+- **Dot matrices NOT reordered** — still below the schematic with exact gallons (reorder decision
+  held for after seeing this result, per the brief). All data/labels intact (ST1/ST2/FD1/FD2,
+  E1–E4, gph, RECON OK, capacity line).
+- Earned color: E2 (the divergent main, alert-named) reads yellow; everything else neutral; no
+  green. Same line weights, type scale, greyscale, fill/label treatment — reads as the same
+  designed panel, correctly proportioned, not a foreign recode.
+
+## Holds
+Information over decoration (hull earns only the space its spatial-context value justifies);
+substantiation; earned color (yellow only where already earned); type scale; greyscale; panel-
+design consistency; demo path intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 109: ROUND 122 — Pause freezes the master Zulu clock too (total sim freeze))
 
 ## Done (verified docs/screens/r122-header.png)
