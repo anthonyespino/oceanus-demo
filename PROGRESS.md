@@ -1,3 +1,40 @@
+# PROGRESS — 2026-06-16 (Session 104: ROUND 117 — resolve the Learn-vs-IA conflation: provenance → IA page/builder, purpose → Learn)
+
+## Audit (reported before the rewrite) — the conflation had THREE Learn surfaces
+- ia-model IANode fields split: PURPOSE = what/why (operator); PROVENANCE = path/tier/
+  rulings (builder). The IA page (IASystemMap) already renders provenance — nothing to add.
+- (1) Annotated IA card rendered name+path+tier+what+why+ruling — mixed (path/tier/ruling
+  + code-language rulings in operator Learn). (2) Docent ANNOTATIONS = operator copy, clean
+  but with stale/orphaned entries. (3) LayerLens (LAYER/TOKENS/BINDS + copy-to-Figma) =
+  pure builder provenance, gated by operator `learnOn` — the biggest leak.
+
+## Done (verified docs/screens/r117-learn-card.png)
+- **1 — LayerLens decoupled from Learn → its own D-panel toggle** (`layerLens`, default OFF,
+  in the "ia / system map" builder section). Now gated by the toggle, not `learnOn`. Verified:
+  Learn + lens OFF → NO LAYER/TOKENS/BINDS overlay on hover; Default + lens ON → overlay shows
+  ("LAYER FleetHealthBand / census / … · click — copy layer path"). Independent of the three
+  operator modes; copy-to-Figma kept. Three operator modes stay exactly three.
+- **2 — Learn IA card → name + what + why ONLY.** Dropped path, tier, ruling (provenance →
+  IA page). Verified card reads "Vessel Tile / what · … / why · …" — zero code/hierarchy/
+  tier/ruling references. (Dropped the "IA ·" builder prefix too; trimmed card-height est.)
+- **3 — three operator-copy gaps rewritten:** calm-sea (dropped "WebGL" + the fish/birds/
+  matrix-rain process history → "atmosphere, never a readout…"); voyage-bar (fixed the stale
+  "maximize toggle / detail columns" ref → "endpoint detail (ETA, distance-to-go)"); engine-twin
+  why ("survives the causal-bucket filter" → "holds up after weather, route, and load are ruled out").
+- **4 — docent ANNOTATIONS cleaned: 13 ORPHANED entries removed** (Annotated name no longer
+  rendered / component removed/renamed/merged): FleetTrend, AlertRail, NominalRow, VesselSitrep,
+  VesselHeader, EfficiencyCurve, WeatherPanel, CrewPanel, EngineCard, TankSchematic,
+  FlowReconciliation, ModeTimeline, EventLog. Kept 11 (all map to a live `<Annotated name=…>`);
+  refreshed the FleetHealthBand entry off its stale round-12 "trend" alias.
+
+## Holds
+Single source intact (ia-model is the one model; Learn filters purpose, IA page filters
+provenance — no duplication). Three operator modes unchanged (Default/Expert/Learn; layerLens
+is a dev toggle, not a mode). Learn = operator-only (what/why, plain language). IA page still
+renders full provenance (path/tier/rulings — untouched). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 103: ROUND 116 — reconcile voyage-bar ETA/NM-to-go with the round-114 signal ruling)
 
 ## The drift (confirmed, not a data gap)

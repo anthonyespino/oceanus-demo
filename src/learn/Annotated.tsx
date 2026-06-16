@@ -20,14 +20,14 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLearn } from './LearnProvider';
 import { ANNOTATIONS } from './annotations';
-import { IA_NODES, TIER_LABEL, type IANodeId } from '../ia/ia-model'; // round 89: shared IA source
+import { IA_NODES, type IANodeId } from '../ia/ia-model'; // round 89: shared IA source
 
 type Anchor = { top: number; left: number; bottom: number };
 
 const DOCENT_W = 330;
 const DOCENT_H = 112; // estimate for clamping
 const IA_W = 300;
-const IA_H = 170; // estimate for the taller what/why/ruling card
+const IA_H = 130; // round 117: name + what + why only (no tier/ruling) — shorter card
 
 // Fixed placement near the anchor: clamp horizontally so it never runs
 // off-screen, and flip above the element when there isn't room below.
@@ -74,18 +74,13 @@ export function Annotated({
           fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', lineHeight: 1.5,
         }}
       >
-        <div style={{ color: 'var(--color-accent-bright)', letterSpacing: 1 }}>
-          IA · {n.name} <span style={{ color: 'var(--color-ink-muted)' }}>· {n.path}</span>
-        </div>
-        <div style={{ color: 'var(--color-ink-muted)', letterSpacing: 0.5, marginTop: 1 }}>{TIER_LABEL[n.tier]}</div>
+        {/* ROUND 117: operator Learn card = name + what + why ONLY. Provenance —
+            path, tier, ruling — is builder content and lives on the IA page (which
+            already renders it). Learn is operator-facing: what it is, why it's here,
+            what decision it supports — plain language, no code/hierarchy/ruling. */}
+        <div style={{ color: 'var(--color-accent-bright)', letterSpacing: 1 }}>{n.name}</div>
         <div style={{ color: 'var(--color-ink-primary)', marginTop: 3 }}><span style={{ color: 'var(--color-ink-muted)' }}>what · </span>{n.what}</div>
         <div style={{ color: 'var(--color-ink-secondary)', marginTop: 2 }}><span style={{ color: 'var(--color-ink-muted)' }}>why · </span>{n.why}</div>
-        {n.rulings[0] && (
-          <div style={{ color: 'var(--color-ink-muted)', marginTop: 2 }}>
-            <span style={{ color: 'var(--color-ink-secondary)' }}>ruling · </span>
-            {n.rulings[0].round != null ? `R${n.rulings[0].round} — ` : ''}{n.rulings[0].text}
-          </div>
-        )}
       </div>
     );
   }

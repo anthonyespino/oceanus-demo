@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { useLearn } from './LearnProvider';
+import { useFleet } from '../state/FleetProvider'; // round 117: lens gated by its own dev toggle, not operator Learn
 
 const CARD_W = 360;
 
@@ -34,12 +35,18 @@ async function copyText(text: string): Promise<boolean> {
 }
 
 export function LayerLens() {
-  const { learnOn, setLeafActive, iaHover } = useLearn();
+  // ROUND 117: the layer lens is a BUILDER/handoff provenance inspector, not an
+  // operator feature. It is gated by its own D-panel toggle (`layerLens`), fully
+  // decoupled from operator Learn — when the toggle is OFF, no LAYER/TOKENS/BINDS
+  // overlay appears in ANY operator mode (including Learn). (Still coordinates with
+  // the Learn IA card via iaHover/leafActive when a builder happens to run both.)
+  const { setLeafActive, iaHover } = useLearn();
+  const { layerLens } = useFleet();
   const [info, setInfo] = useState<{ path: string; tokens: string | null; binds: string | null; x: number; y: number } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!learnOn) return;
+    if (!layerLens) return;
     const over = (e: MouseEvent) => {
       const t = e.target as Element | null;
       const el = t?.closest?.('[data-layer]') as Element | null;
@@ -71,7 +78,7 @@ export function LayerLens() {
       setInfo(null);
       setLeafActive(false);
     };
-  }, [learnOn, setLeafActive]);
+  }, [layerLens, setLeafActive]);
 
   useEffect(() => {
     if (!toast) return;
@@ -79,7 +86,7 @@ export function LayerLens() {
     return () => clearTimeout(t);
   }, [toast]);
 
-  if (!learnOn) return null;
+  if (!layerLens) return null;
   const row = (k: string, v: string) => (
     <div style={{ display: 'flex', gap: 8 }}>
       <span style={{ color: 'var(--color-ink-muted)', width: 52, flexShrink: 0, letterSpacing: 1 }}>{k}</span>

@@ -1209,3 +1209,24 @@ originals.*
   (static spec / gauge-restatement). This makes the build obey the keep-live-signal rule
   at its most decision-relevant point. Default + Learn unchanged; severity/greyscale/type
   scale held. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 117: Learn vs IA-page conflation resolved — provenance to the builder
+  surfaces, purpose to operator Learn; ia-model stays the single source.** IANode fields
+  are consumer-routed into two categories: PURPOSE (what/why → operator Learn) and
+  PROVENANCE (path/tier/rulings → IA page). No duplication — the two surfaces filter one
+  model.
+  - **LayerLens decoupled from operator Learn** → its own D-panel toggle (`layerLens`,
+    default OFF, builder/handoff inspector). When off, no LAYER/TOKENS/BINDS overlay
+    appears in ANY operator mode (incl. Learn); copy-to-Figma kept. The three operator
+    modes stay exactly three — `layerLens` is a dev toggle, not a mode.
+  - **Learn IA card → name + what + why only** (dropped path, tier, ruling — provenance,
+    which the IA page already renders). Learn is purely operator-facing now.
+  - **Operator-copy gaps filled:** calm-sea (no "WebGL" / no process history), voyage-bar
+    (stale maximize-toggle ref → endpoint detail ETA/distance-to-go), engine-twin why
+    ("causal-bucket filter" → "holds up after weather, route, and load are ruled out").
+  - **Docent ANNOTATIONS pruned:** removed 13 orphaned entries whose Annotated name is no
+    longer rendered (FleetTrend, AlertRail, NominalRow, VesselSitrep, VesselHeader,
+    EfficiencyCurve, WeatherPanel, CrewPanel, EngineCard, TankSchematic, FlowReconciliation,
+    ModeTimeline, EventLog); kept 11 live; refreshed FleetHealthBand off its stale alias.
+  - Holds: single source (ia-model), three operator modes intact, Learn operator-only, IA
+    page = provenance home (unchanged). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

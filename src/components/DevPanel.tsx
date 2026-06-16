@@ -137,6 +137,13 @@ export function DevPanel() {
         >
           open system map →
         </Link>
+        {/* ROUND 117: the layer lens (LAYER/TOKENS/BINDS hover + copy-to-Figma) is a
+            BUILDER provenance inspector — its own toggle, decoupled from operator Learn.
+            Off by default; when off it never appears in any operator mode. */}
+        <div style={{ marginTop: 8 }}>
+          <Row label="layer lens" value={f.layerLens} onPick={f.setLayerLens}
+            options={[{ v: false, text: 'off' }, { v: true, text: 'on (builder)' }]} />
+        </div>
       </Section>
 
       <Section title="mode">

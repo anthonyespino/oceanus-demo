@@ -69,6 +69,10 @@ interface FleetContextValue {
   // round 97: SURFACE GLASS dev toggle (attempt #5) on the floating sections —
   // default OFF (plain float on gradient); ON = near-opaque fill + subtle blur
   surfaceGlass: boolean; setSurfaceGlass: (b: boolean) => void;
+  // round 117: LayerLens (builder/handoff provenance inspector — LAYER/TOKENS/BINDS +
+  // copy) decoupled from operator Learn; its own dev toggle, default OFF. Not an
+  // operator mode; the three operator modes stay exactly three.
+  layerLens: boolean; setLayerLens: (b: boolean) => void;
   censusFilter: StatusLevel | null; // round 12: band census → tile highlight
   setCensusFilter: (s: StatusLevel | null) => void;
   /** round 17: manual per-tile size — persists and overrides auto-promotion
@@ -110,6 +114,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   // sliders + mode selector that lived here are removed; the look is locked.
   const [clusterType, setClusterType] = useState<ClusterType>('context'); // round 105/108: locked CONTEXT 13 (toggle removed)
   const [surfaceGlass, setSurfaceGlass] = useState(true); // round 108: glass locked ON (toggle removed — decided top-bar treatment)
+  const [layerLens, setLayerLens] = useState(false); // round 117: builder layer-lens, off by default (not an operator feature)
   const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
   const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
   const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
@@ -164,6 +169,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
         clusterType, setClusterType,
         surfaceGlass, setSurfaceGlass,
+        layerLens, setLayerLens,
         censusFilter, setCensusFilter,
         tileSizes, setTileSize,
       }}

@@ -131,7 +131,7 @@ export const IA_NODES: Record<IANodeId, IANode> = {
     path: 'EngineTwinPanel',
     tier: 'context',
     what: 'The two propulsion engines side by side, with the gap between them (EGT °F, fuel Δ at matched load) drawn explicitly.',
-    why: 'The whole anomaly story lives here: twins should track. A sustained EGT/fuel divergence at matched load is the engine signature that survives the causal-bucket filter.',
+    why: 'The whole anomaly story lives here: twins should track. A sustained EGT/fuel divergence at matched load is the engine signature that holds up after weather, route, and load are ruled out.',
     rulings: [
       { round: 3, text: 'EGT_DIVERGENCE interpolates the actual diverging engine_id — never hardcode "Engine 2".' },
       { round: 10, text: '30d daily-mean EGT overlay per engine — Engine 2 visibly climbs while Engine 1 stays flat.' },
@@ -153,7 +153,7 @@ export const IA_NODES: Record<IANodeId, IANode> = {
     name: 'Voyage Bar',
     path: 'VesselCommandBand / voyage',
     tier: 'context',
-    what: 'Greyscale trip canvas: origin → destination, a marker at live progress %, current-position reference, and detail columns on a maximize toggle.',
+    what: 'Greyscale trip canvas: origin → destination, a marker at live progress %, a current-position reference, and endpoint detail (ETA, distance-to-go).',
     why: 'Progress against the plan, honestly: grey ahead, white covered, no fake forecast. Origin is the transit-run start, not "last port" (which would read 100%).',
     rulings: [
       { round: 81, text: 'Greyscale progress — WHITE covered / GREY remaining; blue removed.' },
@@ -177,8 +177,8 @@ export const IA_NODES: Record<IANodeId, IANode> = {
     name: 'Calm Sea',
     path: 'AmbientSea',
     tier: 'micro',
-    what: 'A restrained WebGL ambient field behind the dashboard — a slow gradient with optional faint texture; persists across routes.',
-    why: 'Presence without distraction: the sea is context, not a readout. Every form that read as a literal object (fish, birds, matrix rain) was cut.',
+    what: 'A restrained ambient field behind the dashboard — a slow grey gradient with optional faint texture.',
+    why: 'Presence without distraction — the sea is atmosphere, never a readout, so it never competes with an instrument for your eye.',
     rulings: [
       { round: 67, text: 'Smooth gradient, grain dropped.' },
       { round: 77, text: 'Particle/dot forms that read as fish or birds were cut; the mark was rebuilt to read as water.' },
