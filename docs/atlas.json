@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T07:42:37.029Z",
+  "generated": "2026-06-16T07:49:06.807Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -430,7 +430,7 @@
       "component": "FleetRail",
       "region": "row",
       "leaf": "mode.glyph",
-      "tokens": "MODE_GLYPH · ink/muted · learn/title = full mode name (round 43)",
+      "tokens": "MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · always shown (round 115)",
       "binds": "{derived.mode}: TRANSIT | STATION | STANDBY | PORT",
       "file": "src/components/FleetRail.tsx"
     },

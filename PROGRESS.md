@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-16 (Session 102: ROUND 115 — rail mode combined into one permanent treatment)
+
+## Done (verified docs/screens/r115-rail.png)
+- The Rail Mode either/or toggle (glyph vs transit-stroke) is GONE — combined into one
+  permanent, baked treatment:
+  - **Every** rail row ALWAYS shows its mode glyph (universal, from the single MODE_GLYPH
+    source — transit=route / station=crosshair / port=anchor / standby=clock). Verified
+    all 15 rows render a glyph.
+  - **Transit** vessels ADDITIONALLY get a subtle reinforcing accent — a thin (2px) neutral
+    stroke in the left gutter (ink/secondary). NOT the old full-border "transit stroke"
+    (which competed with the selection border); an inset accent that leaves the selection +
+    severity borders untouched. Verified the accent renders ONLY on TRANSIT rows
+    (v01/v03/v13/v15/v09), zero on station/port/standby.
+  - Non-transit rows show the glyph only (quieter — presence reflects activity).
+- Removed the Rail Mode `<Row>` from the D-panel; removed `RailMode` type + `railMode`
+  state/setter + context entries from FleetProvider (baked out, like the round-108 locks).
+- Verified: selection (Meridian, gold border + wash) and severity (Meridian's gold caution
+  name + dot) read cleanly OVER the transit accent — not muddied. Accent is greyscale (no
+  color added). Glyph matches each vessel's real mode (single source).
+
+## Safety
+Glyph honesty (mode from single source); greyscale (accent neutral, no color creep);
+severity unmuddied + glance-readable; type scale unchanged; consequence logic (transit gets
+marginally more presence — consistent). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 101: ROUND 114 — orphaned bearing, flat header strips, Expert re-audit on the orientation-vs-signal principle)
 
 ## 1 — Orphaned bearing glyph killed in non-transit (verified)

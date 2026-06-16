@@ -88,7 +88,7 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • back.glyph  → back link · glyph-only in expert mode · → /
   Region: row
     • dot.status  → status color | ink/muted nominal (treatment B) · {vesselStatus(alerts)}
-    • mode.glyph  → MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
+    • mode.glyph  → MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · always shown (round 115) · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers) · {vessel.static.name}
 
 ## FleetView
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T07:42:37.029Z*
+*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T07:49:06.807Z*

@@ -25,7 +25,9 @@ export type MotionVariant = 'off' | 'breathe'; // round 108: ripple option remov
 // round 66: the severity-placement experiment is RESOLVED to STRIP fleet-wide
 // (edge/both retired, toggle removed). Severity now lives on the strip + name
 // tint + value tint; the tile carries no severity outline at all.
-export type RailMode = 'glyph' | 'stroke'; // round 24 rail mode-indicator experiment
+// round 115: RailMode toggle removed — the rail treatment is now permanent + combined
+// (every row shows its mode glyph; transit rows add a subtle reinforcing accent). Baked
+// into FleetRail, no longer state.
 // round 108: WaterMode selector REMOVED — gradient is the locked, baked-in water
 // treatment (constants live in AmbientSea); the particle/matrix shaders are retired
 // from the UI. No water-styling controls remain.
@@ -48,8 +50,6 @@ interface FleetContextValue {
   setMotion: (m: MotionVariant) => void;
   bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
   setBearingLine: (b: boolean) => void;
-  railMode: RailMode; // round 24: rail mode indicator variant
-  setRailMode: (r: RailMode) => void;
   autoPromote: boolean; // round 26: auto-2x disabled by default, flag kept
   setAutoPromote: (b: boolean) => void;
   stateMarks: boolean; // round 21 B4: state silhouettes beside port names
@@ -97,7 +97,6 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
   const [motion, setMotion] = useState<MotionVariant>('breathe'); // round 108: Breathe locked as startup
   const [bearingLine, setBearingLine] = useState(true); // round 108: BRG ray on at startup (toggle kept)
-  const [railMode, setRailMode] = useState<RailMode>('stroke'); // round 111: Transit Stroke is the startup default (toggle kept)
   // round 108: auto-2x ON at startup (legacy); FleetView forces it OFF in Expert
   // (officer sizes) regardless of this default.
   const [autoPromote, setAutoPromote] = useState(true);
@@ -161,7 +160,7 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
         density, setDensity, treatment, setTreatment,
         motion, setMotion, crossings,
         stateMarks, setStateMarks,
-        bearingLine, setBearingLine, railMode, setRailMode, autoPromote, setAutoPromote,
+        bearingLine, setBearingLine, autoPromote, setAutoPromote,
         collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
         clusterType, setClusterType,
         surfaceGlass, setSurfaceGlass,

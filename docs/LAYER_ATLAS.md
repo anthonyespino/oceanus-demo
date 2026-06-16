@@ -163,7 +163,7 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — status color | ink/muted nominal (treatment B)
   - BINDS — {vesselStatus(alerts)}
 - `row / mode.glyph`
-  - TOKENS — MODE_GLYPH · ink/muted · learn/title = full mode name (round 43)
+  - TOKENS — MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · always shown (round 115)
   - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
 - `row / name.text`
   - TOKENS — font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)
@@ -529,4 +529,4 @@ in learn mode (L) to copy its layer path for the Figma layer-name field.
   - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
   - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
 
-*141 instrumented leaves · 20 components · generated 2026-06-16T07:42:37.027Z*
+*141 instrumented leaves · 20 components · generated 2026-06-16T07:49:06.805Z*

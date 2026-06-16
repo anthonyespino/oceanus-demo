@@ -1182,3 +1182,17 @@ originals.*
     via a kept instrument; trivially restorable to Expert if Anthony rules them signal.
   - Severity never stripped; greyscale (no color added); glyph honesty; type scale;
     Default + Learn unchanged. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 115: rail mode → one permanent combined treatment.** The round-24 either/or
+  experiment (mode glyph VS transit stroke) is resolved and the toggle removed. Permanent,
+  baked behavior: every rail row ALWAYS shows its mode glyph (universal, from the single
+  MODE_GLYPH source); TRANSIT vessels ADDITIONALLY get a subtle reinforcing accent — a thin
+  2px neutral (ink/secondary) stroke in the left gutter — so underway vessels are marginally
+  more glanceable. This is NOT the old full-border transit stroke (which competed with the
+  selection border, the round-24 flagged collision); it's an inset accent that leaves the
+  selection + severity borders untouched. Non-transit rows show the glyph only (presence
+  reflects activity). Removed the D-panel Rail Mode row + the `RailMode` type / `railMode`
+  state from FleetProvider (baked, like the round-108 locks). Holds: glyph honesty (mode
+  from single source); greyscale (accent neutral, no color creep); severity reads cleanly
+  over the accent (selection + caution tint unmuddied); type scale; consequence logic
+  (transit marginally more presence). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

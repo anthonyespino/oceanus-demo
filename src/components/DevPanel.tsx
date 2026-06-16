@@ -170,8 +170,7 @@ export function DevPanel() {
           options={[{ v: 'minimal' as const, text: 'minimal' }, { v: 'standard' as const, text: 'standard' }]} />
         <Row label="bearing" value={f.bearingLine} onPick={f.setBearingLine}
           options={[{ v: true, text: 'BRG ray' }, { v: false, text: 'voyage card only' }]} />
-        <Row label="rail mode" value={f.railMode} onPick={f.setRailMode}
-          options={[{ v: 'glyph' as const, text: 'mode glyph' }, { v: 'stroke' as const, text: 'transit stroke' }]} />
+        {/* round 115: rail mode toggle removed — combined treatment (glyph + transit accent) is permanent */}
         <Row label="auto 2x" value={f.autoPromote} onPick={f.setAutoPromote}
           options={[{ v: false, text: 'off (officer sizes)' }, { v: true, text: 'on (legacy)' }]} />
       </Section>

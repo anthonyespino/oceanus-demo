@@ -16,7 +16,7 @@ import Link from 'next/link';
 import type { VesselState } from '../data/types';
 import { vesselStatus } from '../data/alerts';
 import { compareVessels } from '../data/fleetState';
-import { useFleet, type ColorTreatment } from '../state/FleetProvider';
+import { type ColorTreatment } from '../state/FleetProvider';
 import { useLearn } from '../learn/LearnProvider'; // EXPERT MODE — strip before demo week
 import { Glyph, MODE_GLYPH } from './Glyph';
 import { ACCENT, NEUTRAL, RADIUS, STATUS_COLOR, FONT, selectionBorder } from './probeTokens';
@@ -33,7 +33,6 @@ export function FleetRail({
   selectedId: string;
   treatment: ColorTreatment;
 }) {
-  const { railMode } = useFleet();
   const { expertOn } = useLearn();
   const ranked = [...fleet].sort(compareVessels); // round 21 A1: shared comparator
   const selectedRef = useRef<HTMLAnchorElement>(null);
@@ -79,7 +78,14 @@ export function FleetRail({
         const active = ACTIVE_MODES.has(v.derived.mode);
         // three layers: alerted never dims; selection never dims
         const dim = !alerted && !active && !selected && status === 'nominal';
-        const transitStroke = railMode === 'stroke' && v.derived.mode === 'TRANSIT' && !selected && status === 'nominal';
+        // ROUND 115: COMBINED, permanent rail treatment (toggle removed). Every row
+        // ALWAYS shows its mode glyph; TRANSIT vessels ADDITIONALLY get a subtle
+        // reinforcing accent — a thin neutral stroke in the left gutter — so underway
+        // vessels are marginally more glanceable. It is NOT the old full-border stroke
+        // (which competed with the selection border); it's an inset accent that leaves
+        // the selection + severity borders untouched. Greyscale (no color), and severity
+        // (status border + name tint) still reads over it.
+        const transit = v.derived.mode === 'TRANSIT';
         return (
           <Link
             key={v.static.id}
@@ -89,9 +95,8 @@ export function FleetRail({
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              border: transitStroke
-                ? `1px solid ${NEUTRAL.ink}` // flagged risk: reads close to selection
-                : `1px solid ${selectionBorder(status, selected)}`,
+              position: 'relative',
+              border: `1px solid ${selectionBorder(status, selected)}`,
               borderRadius: RADIUS,
               background: selected ? ACCENT.wash : NEUTRAL.surface,
               padding: '4px 8px',
@@ -103,6 +108,12 @@ export function FleetRail({
               opacity: dim ? 0.45 : 1,
             }}
           >
+            {/* ROUND 115: TRANSIT reinforcing accent — thin neutral stroke in the left
+                gutter, only underway. Subtle (ink/secondary, 2px), reinforcing not
+                competing; non-transit rows show the glyph only. */}
+            {transit && (
+              <span aria-hidden style={{ position: 'absolute', left: 3, top: 6, bottom: 6, width: 2, borderRadius: 1, background: NEUTRAL.inkSecondary }} />
+            )}
             <span
               {...layer('FleetRail / row / dot.status', 'status color | ink/muted nominal (treatment B)', '{vesselStatus(alerts)}')}
               style={{
@@ -116,11 +127,11 @@ export function FleetRail({
             <span {...layer('FleetRail / row / name.text', 'font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)', '{vessel.static.name}')} style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
               {v.static.name}
             </span>
-            {railMode === 'glyph' && (
-              <span {...layer('FleetRail / row / mode.glyph', 'MODE_GLYPH · ink/muted · learn/title = full mode name (round 43)', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')} title={v.derived.mode} style={{ color: NEUTRAL.inkMuted, lineHeight: 0, flexShrink: 0 }}>
-                <Glyph name={MODE_GLYPH[v.derived.mode]} size={15} />
-              </span>
-            )}
+            {/* ROUND 115: mode glyph ALWAYS renders (universal mode indicator from the
+                single MODE_GLYPH source) — no longer behind a toggle. */}
+            <span {...layer('FleetRail / row / mode.glyph', 'MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · always shown (round 115)', '{derived.mode}: TRANSIT | STATION | STANDBY | PORT')} title={v.derived.mode} style={{ color: NEUTRAL.inkMuted, lineHeight: 0, flexShrink: 0 }}>
+              <Glyph name={MODE_GLYPH[v.derived.mode]} size={15} />
+            </span>
           </Link>
         );
       })}
