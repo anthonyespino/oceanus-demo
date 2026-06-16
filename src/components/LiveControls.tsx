@@ -83,6 +83,9 @@ export function AppHeader() {
         gap: 16,
         borderBottom: '1px solid var(--color-line-subtle)',
         padding: '6px 12px',
+        // ROUND 114: the global header is a header strip → FLAT near-black, not the
+        // sea gradient (gradient = floating instrument surfaces only).
+        background: 'var(--color-surface-base)',
       }}
     >
       <span style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--type-primary)', fontWeight: 700, letterSpacing: 2, whiteSpace: 'nowrap' }}>

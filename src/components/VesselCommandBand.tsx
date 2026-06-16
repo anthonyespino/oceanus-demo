@@ -387,27 +387,25 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 held at context-scale (round 53), NOT promoted (they feed Calm
                 Sea, they stay context). The weather-detail reveal rides this
                 line now (current/visibility/precip). */}
-            {/* ROUND 112: the ENVIRONMENTAL CLUSTER — wind / waves / current, three
-                distinct glyphs + values on one line. The broken round-83 reveal
-                CHEVRON is removed: the cluster is shown (Default) or stripped
-                (Expert), never click-to-hide (same ruling as round 106). Learn
-                explains each value's meaning via its glyph title (ia-model) — making
-                the wind/waves/current vocabulary distinction explicit. Current's
-                speed + set-direction read as ONE value; visibility/precip drop from
-                the cluster (kept compact, not bloated). */}
-            {!expertOn && (
-              <span style={{ display: 'inline-flex', justifyContent: 'center', gap: 18, flexWrap: 'wrap', ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
-                <Field level="vessel" field="weather.wind">
-                  <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} title={IA_GLYPH_MEANING.wind} attrs={layer('VesselCommandBand / centerStack / wind.text', 'glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale', '{weather.wind_speed_kn} kn')} />
-                </Field>
-                <Field level="vessel" field="weather.waves">
-                  <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.wave} attrs={layer('VesselCommandBand / centerStack / waves.text', 'glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale', '{weather.wave_height_ft} ft')} />
-                </Field>
-                <Field level="vessel" field="weather.current">
-                  <WxInline g="current" value={`${wx.current_kn} kn ${Math.round(wx.current_dir_deg)}°`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.current} attrs={layer('VesselCommandBand / centerStack / current.text', 'glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale', '{weather.current_kn} kn {weather.current_dir_deg}°')} />
-                </Field>
-              </span>
-            )}
+            {/* ROUND 114: the ENVIRONMENTAL CLUSTER — wind / waves / current — shows in
+                ALL modes including EXPERT. These are LIVE SIGNAL (real-time conditions an
+                operator reads to decide, and in the weather scenario they ARE the
+                diagnosis), so the VALUES never strip. The format is already glyph+value
+                (the glyph is the orientation marker — there is no text label to strip),
+                so Default and Expert read identically here. Reverses the round-112 expert
+                hide, which was over-stripping signal. Learn still explains each via the
+                glyph title (ia-model); the wind/waves/current vocabulary stays distinct. */}
+            <span style={{ display: 'inline-flex', justifyContent: 'center', gap: 18, flexWrap: 'wrap', ...(wxStale ? gb.stale : {}) }} title={wxStale ? 'weather feed STALE' : undefined}>
+              <Field level="vessel" field="weather.wind">
+                <WxInline g="wind" value={`${wx.wind_speed_kn} kn`} title={IA_GLYPH_MEANING.wind} attrs={layer('VesselCommandBand / centerStack / wind.text', 'glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · live signal, kept in Expert (round 114)', '{weather.wind_speed_kn} kn')} />
+              </Field>
+              <Field level="vessel" field="weather.waves">
+                <WxInline g="wave" value={`${wx.wave_height_ft} ft`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.wave} attrs={layer('VesselCommandBand / centerStack / waves.text', 'glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · live signal, kept in Expert (round 114)', '{weather.wave_height_ft} ft')} />
+              </Field>
+              <Field level="vessel" field="weather.current">
+                <WxInline g="current" value={`${wx.current_kn} kn ${Math.round(wx.current_dir_deg)}°`} glyphColor={NEUTRAL.inkMuted} title={IA_GLYPH_MEANING.current} attrs={layer('VesselCommandBand / centerStack / current.text', 'glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale · live signal, kept in Expert (round 114)', '{weather.current_kn} kn {weather.current_dir_deg}°')} />
+              </Field>
+            </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
             <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / effDelta.chart', 'Gauge primitive · caution band ≥+8 (alert-backed)', '{derived.efficiency_delta_pct} vs mode baseline')}>
@@ -431,11 +429,13 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
           the destination label, current-position reference floating with the
           marker). All reference/context: neutral, dimmed, context-scale, no
           tint/weight/alert. */}
-      {/* ROUND 96: FLOAT — voyage bar panel fill removed; floats on the gradient.
-          ROUND 101: the seam divider above is gone (removed on the sticky row); a
-          small gap now separates the two floating blocks. Padding is just
-          breathing room; glass when toggled. */}
-      <section style={{ ...(surfaceGlass ? glassFill : {}), padding: 'var(--pad-card)', marginBottom: 'var(--pad-stack)' }}>
+      {/* ROUND 114: the voyage / TRIP-SUMMARY bar is a HEADER/CONTEXT strip, not a
+          floating instrument surface — so it gets a FLAT near-black fill, NOT the
+          glass/gradient treatment (which was leaking the sea behind a strip that
+          shouldn't float). Rule: gradient = floating instrument surfaces only;
+          header/context strips are flat. (Supersedes the round-96/101 float-on-
+          gradient treatment for this strip.) */}
+      <section style={{ background: 'var(--color-surface-base)', borderRadius: RADIUS, padding: 'var(--pad-card)', marginBottom: 'var(--pad-stack)' }}>
         <Field level="vessel" field="next_port_calls"><Annotated name="RoutePanel" node="voyage-bar">{profile}</Annotated></Field>
         {wxStale && (
           <div style={{ ...mono, textAlign: 'center', marginTop: 'var(--pad-section)', color: 'var(--color-data-stale)' }}>

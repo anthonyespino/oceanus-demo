@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-16T07:15:05.620Z",
+  "generated": "2026-06-16T07:42:37.029Z",
   "convention": "Component / region(camelCase) / role.kind",
   "kinds": [
     "text",
@@ -700,7 +700,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "current.text",
-      "tokens": "glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale",
+      "tokens": "glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale · live signal, kept in Expert (round 114)",
       "binds": "{weather.current_kn} kn {weather.current_dir_deg}°",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -745,7 +745,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "waves.text",
-      "tokens": "glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale",
+      "tokens": "glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · live signal, kept in Expert (round 114)",
       "binds": "{weather.wave_height_ft} ft",
       "file": "src/components/VesselCommandBand.tsx"
     },
@@ -754,7 +754,7 @@
       "component": "VesselCommandBand",
       "region": "centerStack",
       "leaf": "wind.text",
-      "tokens": "glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale",
+      "tokens": "glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · live signal, kept in Expert (round 114)",
       "binds": "{weather.wind_speed_kn} kn",
       "file": "src/components/VesselCommandBand.tsx"
     },

@@ -1145,3 +1145,40 @@ originals.*
     presence-only is trivial if undesired.
   - Earned color / greyscale / type scale / glyph honesty / severity glance-readability
     all held. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 114: orphaned bearing, flat header strips, Expert re-audit.**
+  - **Orphaned bearing:** the InspectorChart dashed BRG ray (bearing-to-next-call) is
+    now TRANSIT-only — a moored/on-station/in-port vessel has no active voyage for it to
+    describe (substantiation). Shows underway, hidden otherwise.
+  - **Flat header/context strips:** new rule — **gradient (the sea) belongs only behind
+    floating INSTRUMENT surfaces; header/CONTEXT strips are FLAT near-black.** The
+    trip-summary voyage bar (a context strip) had the glass fill leaking the sea → now
+    flat `--color-surface-base`. The global AppHeader (also bg-less, sea leaking) → flat
+    too. Floating instruments (health band, fleet plot, sticky command band, inspector
+    panels) keep their treatment.
+  - **EXPERT PRINCIPLE (now the governing rule for the strip):** Expert strips
+    ORIENTATION (labels / section headers / gauge captions / static spec lines — what a
+    trained operator learned once and never re-reads), and KEEPS all LIVE SIGNAL (values,
+    instruments, scales, severity, real-time conditions — the current state of the world
+    right now). Test per element: already-known (strip) vs read-right-now (keep).
+  - **Audit result + fix:** wind/waves/current VALUES were over-stripped in Expert (round
+    112) — they are live signal (and the S3 diagnosis), so they now show in ALL modes
+    (the cluster is glyph+value; the glyph is the orientation marker, no text label to
+    strip). Full audit, each Expert strip tagged orientation / signal / restatement-of-
+    kept-signal:
+    - Orientation (correctly stripped): section headers, gauge captions, census + bunker
+      text labels (→ glyph), vessel-class spec line.
+    - Signal (kept): all gauge values + scales, severity (never stripped), tank levels,
+      engine EGT/fuel, efficiency now-Δ/30d/envelope/24h, **wind/waves/current (fixed)**.
+    - Restatement / secondary reference (text stripped, primary signal kept by a shown
+      instrument — no signal hidden): position text (track+marker keep it), transit
+      ETA/NM-TO-GO + non-transit next-call ETA (progress track/marker/% keep it),
+      efficiency deep-history 90d/1y/baseline-range (historical reference; live-now kept),
+      fuel capacity (static spec) + transfer status (tank levels carry the fuel signal).
+    - No PRIMARY value/instrument/scale/severity/live-reading is stripped in Expert; the
+      env cluster was the one genuine primary-signal hide.
+  - **Flagged:** transit ETA/NM-TO-GO and fuel transfer-active are the closest borderline
+    "reference vs signal" calls — kept-as-reference because the primary live state shows
+    via a kept instrument; trivially restorable to Expert if Anthony rules them signal.
+  - Severity never stripped; greyscale (no color added); glyph honesty; type scale;
+    Default + Learn unchanged. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

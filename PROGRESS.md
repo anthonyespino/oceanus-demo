@@ -1,3 +1,66 @@
+# PROGRESS — 2026-06-16 (Session 101: ROUND 114 — orphaned bearing, flat header strips, Expert re-audit on the orientation-vs-signal principle)
+
+## 1 — Orphaned bearing glyph killed in non-transit (verified)
+- The InspectorChart dashed BRG ray (bearing-to-next-call) rendered for ANY vessel
+  with a next port call, regardless of mode — so a moored/on-station/in-port vessel
+  showed an orphaned "BRG {PORT}" ray with no active voyage to describe. Gated to
+  `mode === 'TRANSIT'`. Verified: v04 (ON STATION) → 0 rays / no BRG label; v01
+  (TRANSIT) → 1 ray "BRG GALVESTON TX".
+
+## 2 — Flat background for header/context strips (verified)
+- Rule going forward: **gradient (the sea) = floating instrument surfaces only;
+  header/context strips are FLAT near-black.**
+- Fixed the TRIP-SUMMARY voyage bar (CommandBand voyage `<section>`) — it had the glass
+  fill (`surfaceGlass ? glassFill`) so the sea bled behind a strip that shouldn't float.
+  Now flat `var(--color-surface-base)` (#101010). Verified: flat, no gradient.
+- Spot-check found the global AppHeader also had no bg (sea leaking behind it) → flat
+  near-black too (verified rgb(16,16,16)). Floating instruments (FleetHealthBand,
+  FleetMap, sticky command band, engine/efficiency/fuel panels) unchanged.
+
+## 3 — Expert re-audit on the orientation-vs-signal principle (verified)
+- **Principle (now the rule):** Expert strips ORIENTATION (what tells you "this is what
+  you're looking at" — labels, section headers, gauge captions, static spec lines).
+  Expert KEEPS all LIVE SIGNAL (values, instruments, scales, severity, real-time
+  conditions — "the current state of the world right now"). Test per element: does a
+  trained operator already know this (strip) or read it right now (keep)?
+- **The fix:** wind/waves/current VALUES were hidden entirely in Expert (round 112) —
+  that's LIVE SIGNAL (and in the weather scenario it IS the diagnosis). Now shown in ALL
+  modes. The cluster is already glyph+value (the glyph is the orientation marker; there
+  is no text label to strip), so Default and Expert read identically. Verified Expert
+  shows "🌬 5.9 kn ≋ 2.4 ft → 0.2 kn 183°"; severity (+13.7% gold) still reads cleanly.
+- **Full audit (each Expert strip tagged):**
+  - ORIENTATION → correctly stripped: section headers (POSITION/ENGINE TWINS/EFFICIENCY/
+    FUEL/CREW); gauge captions (SPEED/BURN/EFF Δ/ENDURANCE); census tier labels →
+    glyph; bunker label → glyph; CommandBand vessel-class spec (240 ft OSV, static).
+  - SIGNAL → kept (and the env-cluster fix): all gauge VALUES + SCALES; severity (alert
+    color/lines — never stripped); tank levels; engine EGT/fuel values; efficiency
+    now-Δ / 30d / envelope point / 24h spark; **wind/waves/current values (fixed)**.
+  - RESTATEMENT-of-kept-signal / SECONDARY-reference → text stripped, primary signal
+    kept by a shown instrument (so no signal hidden): position text "X nm from port"
+    (kept graphically by the track+marker + position panel); transit ETA / NM-TO-GO and
+    non-transit "next call ETA" (live progress kept graphically by track+marker+%; the
+    precise schedule/distance is reference); efficiency deep-history (90d trend / 1y
+    sparkline / baseline range — historical reference, the live-now efficiency is kept);
+    fuel reveal (tank capacity = static spec; transfer status = minor live adjunct, the
+    tank LEVELS carry the fuel signal in Expert).
+  - **No PRIMARY value / instrument / scale / severity / live-reading is stripped in
+    Expert** after this round. The env cluster was the one genuine primary-signal hide.
+
+## Flagged (borderline, for Anthony)
+- Among the stripped RESTATEMENT/REFERENCE items, the closest to "live signal" are the
+  transit **ETA / NM-TO-GO** and the fuel **transfer-active** status. They're currently
+  treated as reference because the primary live state is shown by a kept instrument
+  (progress track/marker; tank levels). If you'd rather those exact values stay in
+  Expert too, it's a small follow-up — say so.
+
+## Safety
+Severity never stripped (loudest signal, reads cleanly over transit + caution); values/
+instruments/scales kept; glyph honesty (env glyphs distinct, mode from single source);
+type scale; greyscale (flat fills neutral, no color added). Default + Learn unchanged.
+Demo path intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 100: ROUND 113 — Fleet Health Band census: one confirmed-clear model)
 
 ## Done (verified docs/screens/r113-census-default.png, r113-census-expert.png)

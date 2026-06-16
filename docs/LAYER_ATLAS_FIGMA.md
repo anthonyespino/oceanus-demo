@@ -173,13 +173,13 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     • anchor.glyph  → glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place · place
     • clock.text  → type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14) · {T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only
     • crew.glyph  → glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master" · crew Master
-    • current.text  → glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale · {weather.current_kn} kn {weather.current_dir_deg}°
+    • current.text  → glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale · live signal, kept in Expert (round 114) · {weather.current_kn} kn {weather.current_dir_deg}°
     • location.text  → font/data 12 · ink/secondary · place as value · {destination | moored port | work site}
     • master.name.text  → font/data 12 · ink/secondary · name as value (no label, no stroke) · {crew Master.name}
     • mode.glyph  → boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name · {derived.mode}: TRANSIT | STATION | STANDBY | PORT
     • name.text  → type/hero · font/display caps · ink/primary · {vessel.static.name}
-    • waves.text  → glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · {weather.wave_height_ft} ft
-    • wind.text  → glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · {weather.wind_speed_kn} kn
+    • waves.text  → glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · live signal, kept in Expert (round 114) · {weather.wave_height_ft} ft
+    • wind.text  → glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · live signal, kept in Expert (round 114) · {weather.wind_speed_kn} kn
   Region: destCol
     • eta.text  → font/data 15 · ink/muted · context (no tint) — absolute ETA + Z lives HERE · {next_port_calls[0].eta}
     • toGo.text  → font/data 15 · ink/muted · context · distance remaining · {nm to destination}
@@ -299,4 +299,4 @@ applied. Convention: `Component / region(camelCase) / role.kind` — name the la
     ✓ glyph/calendar  → calendar.svg
     · glyph/pulse  → pulse.svg
 
-*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T07:15:05.620Z*
+*141 leaves · 20 components · 27 glyphs (3 drawn) · generated 2026-06-16T07:42:37.029Z*

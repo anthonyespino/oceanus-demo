@@ -170,8 +170,13 @@ export function InspectorChart({
               })()}
               {/* round 23: NOT a route — a dashed bearing ray, clipped at the
                   chart edge, labeled BRG; the voyage card carries the real
-                  destination. Behind the dev toggle (Anthony judges). */}
-              {bearingLine && nextPlace && (() => {
+                  destination. Behind the dev toggle (Anthony judges).
+                  ROUND 114: TRANSIT-only. A bearing-to-next-call is only meaningful
+                  underway — a moored / on-station / in-port vessel has no active
+                  voyage for the ray to describe, so the indicator was orphaned in
+                  non-transit states. Don't show a directional indicator with no
+                  transit it describes (substantiation). */}
+              {bearingLine && nextPlace && vessel.derived.mode === 'TRANSIT' && (() => {
                 const x0 = px(pos.lon);
                 const y0 = py(pos.lat);
                 const dx = px(nextPlace.lon) - x0;
