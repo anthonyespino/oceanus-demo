@@ -10,7 +10,7 @@
 // E1–E4 — our L1-L5 annotation language.
 
 import type { VesselState } from '../data/types';
-import { RECON_CAUTION_PCT } from '../data/alerts';
+import { RECON_CAUTION_PCT, engineLabel } from '../data/alerts';
 import { useContentWidth } from './NauticalChart';
 import { ReconChip } from './FlowReconciliation';
 import { useLearn } from '../learn/LearnProvider'; // round 112: default-show / expert-hide (no chevron)
@@ -100,10 +100,12 @@ function tankTint(v: VesselState, tankLabel: string): string | null {
   return null;
 }
 
-/** Engines named in active CAUTION/WARNING alert messages get their tint. */
+/** Engines named in active CAUTION/WARNING alert messages get their tint. ROUND 131: alert copy
+    now carries the operator label (E1/E2/G1/G2), not the internal engine_id — match on the label. */
 function engineTint(v: VesselState, engineId: string): string | null {
+  const label = engineLabel(engineId);
   for (const a of v.alerts) {
-    if (a.message.includes(engineId)) {
+    if (a.message.includes(label)) {
       return a.level === 'WARNING' ? STATUS_COLOR.degraded : STATUS_COLOR.watch;
     }
   }
@@ -298,7 +300,9 @@ export function VesselSynoptic({ vessel }: { vessel: VesselState }) {
       {!expertOn && (
         <div style={{ borderTop: '1px solid var(--color-line-hairline)', marginTop: 8, paddingTop: 8, fontSize: 'var(--type-context)', color: NEUTRAL.inkSecondary }}>
           <Field level="vessel" field="tank.capacity_gal" revealed>
-            <span>capacity {tanks.map((t) => `${t.tank_id.split('-')[1]} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal</span>
+            {/* ROUND 131: operator tank labels (ST1/ST2/FD1/FD2 — same as the schematic callouts),
+                never the raw data tank_id suffix (T1–T4). Internal ids stay off the operator surface. */}
+            <span>capacity {tanks.map((t, i) => `${['ST1', 'ST2', 'FD1', 'FD2'][i] ?? t.type} ${t.capacity_gal.toLocaleString()}`).join(' · ')} gal</span>
           </Field>
           {' — '}
           <Field level="vessel" field="tank.transfer_active" revealed>

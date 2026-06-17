@@ -1440,3 +1440,19 @@ originals.*
   honest for presenting, no fast-forward artifacts; 60x stays a deliberate D-panel choice (pause +
   reset intact). Demo numbers unchanged (endurance is printed, not asserted, by verify). TSC-OK ·
   LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 131: internal/dev info off the operator surface (vXX ID leaks + scenario banner).** One
+  standing rule, two fixes — internal identifiers + build-time/dev meta must never appear in
+  operator/presentation copy, and yellow is reserved for real severity. (a) **vXX leak:** the EGT
+  caution read "v01-E2 EGT …" (data-model id). Added exported `engineLabel(engine_id)` → operator
+  label ("v01-E3" → "G1", R126 mapping); alerts now read "E2 EGT …" with the vessel ref dropped
+  (redundant with the header). Audit found + fixed the OIL_PRESSURE alert (same leak) and the
+  VesselSynoptic capacity line (raw "T1–T4" → ST1/ST2/FD1/FD2); `.static.id` elsewhere is keys/
+  DOM-ids/lookups, not rendered. Zero vXX across all 3 scenarios. **Coupling:** components found the
+  flagged engine by substring-matching the full id in the message (InstrumentCluster, engineTint) and
+  verify asserted it — switched all match sites + the PM-ruling-3 check to the operator label (E1/E2/
+  G1/G2 are mutually non-substring). E2 tint/auto-select preserved. (b) **Scenario banner:** the
+  yellow "SCENARIO: … synthetic, not the demo path" bar (scenarios 2/3 only) leaked dev/synthetic
+  flagging onto the operator surface in the earned severity color — removed from the main view for
+  all scenarios; a NEUTRAL synthetic marker now lives in the D-panel scenario section only. Demo path
+  intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

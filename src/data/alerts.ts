@@ -43,6 +43,15 @@ export const BUNKER_SOON_H = 72;
 export const FEEDER_LOW_PCT = 20; // ADVISORY: feeder low while a main runs
 export const TANK_CRITICAL_PCT = 5; // CAUTION: any tank critically low
 
+// ROUND 131: operator-facing engine label from the data engine_id ("v01-E3" → "G1"). Alert copy
+// must NEVER carry the internal vessel-prefixed id (v01-…) — that's build-time provenance; the
+// operator thinks "Meridian / E2". Maps the two gens E3/E4 to their G1/G2 display names (R126).
+const ENGINE_DISPLAY: Record<string, string> = { E1: 'E1', E2: 'E2', E3: 'G1', E4: 'G2' };
+export function engineLabel(engineId: string): string {
+  const suffix = engineId.slice(engineId.indexOf('-') + 1); // "v01-E2" → "E2"
+  return ENGINE_DISPLAY[suffix] ?? suffix;
+}
+
 export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: DerivedVesselMetrics): Alert[] {
   const alerts: Alert[] = [];
   const now = history.minutes[history.minutes.length - 1];
@@ -51,7 +60,7 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
   // ---- WARNING ----
   for (const e of now.engines) {
     if (e.running && e.oil_pressure_psi < 30) {
-      alerts.push({ level: 'WARNING', code: 'OIL_PRESSURE', message: `${e.engine_id} oil pressure ${e.oil_pressure_psi} psi` });
+      alerts.push({ level: 'WARNING', code: 'OIL_PRESSURE', message: `${engineLabel(e.engine_id)} oil pressure ${e.oil_pressure_psi} psi` });
     }
   }
   const feederPct = mean(now.tanks.filter((t) => t.type === 'FEEDER').map((t) => t.level_pct));
@@ -75,7 +84,7 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
     alerts.push({
       level: 'CAUTION',
       code: 'EGT_DIVERGENCE',
-      message: `${hot.engine_id} EGT +${Math.abs(d.egt_twin_gap_f).toFixed(0)}°F over twin at matched load, sustained 30d`,
+      message: `${engineLabel(hot.engine_id)} EGT +${Math.abs(d.egt_twin_gap_f).toFixed(0)}°F over twin at matched load, sustained 30d`,
     });
   }
   // Endurance requirement derived from distance to next port at cruise speed,

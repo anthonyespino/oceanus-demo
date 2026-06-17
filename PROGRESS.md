@@ -1,3 +1,43 @@
+# PROGRESS — 2026-06-16 (Session 118: ROUND 131 — keep internal/dev info off the operator surface: vXX ID leaks + scenario banner)
+
+One standing rule, two surfacings: internal identifiers + build-time/dev meta must never appear in
+operator/presentation copy, and earned color (yellow) is reserved for real severity.
+
+## 1 — Internal vessel-ID (vXX) leak in operator copy
+- **Reported:** the Meridian EGT caution read "v01-E2 EGT +58°F …" — the data-model id leaking.
+- **Audit (all operator-facing text, all 3 scenarios):**
+  - `alerts.ts` EGT_DIVERGENCE + OIL_PRESSURE embedded `engine_id` ("v01-E2"). FIXED.
+  - `VesselSynoptic` capacity line printed the raw tank-id suffix "T1–T4" instead of the operator
+    labels ST1/ST2/FD1/FD2 used everywhere else in the same panel (same class). FIXED.
+  - Everything else (`.static.id` in FleetMap/InspectorChart/FleetView/etc.) is keys / DOM-ids /
+    lookups — never rendered text. Clean. No other leaks.
+- **Fix:** new exported `engineLabel(engine_id)` → operator label ("v01-E3" → "G1", R126 mapping).
+  Alerts use it; vessel ref dropped (redundant with the header/tile) → "E2 EGT …". Confirmed:
+  zero `vNN-` anywhere on the rendered page; zero vXX in alert messages across all 3 scenarios.
+- **Coupling caught + fixed:** components identified the flagged engine by substring-matching the
+  full `engine_id` in the message (InstrumentCluster `flaggedEngineIdx`/`engineVital`, VesselSynoptic
+  `engineTint`) — and verify asserted the id was present. Switched all match sites + the verify check
+  to the operator label (E1/E2/G1/G2 are mutually non-substring, so matching is unambiguous).
+  Verified end-to-end: base Meridian still auto-selects E2, "sensors — E2", E2 node tinted gold.
+
+## 2 — Scenario banner removed from the main/presentation view
+- The yellow "SCENARIO: … — synthetic, not the demo path" bar showed on scenarios 2/3 only
+  (inconsistent vs scenario 1), leaked dev/synthetic-data flagging onto the operator surface, and
+  used yellow (earned severity color) for a dev label — competing with real cautions.
+- Removed from the main view for ALL scenarios (FleetProvider). Scenario identity stays in the
+  D-panel selector; added a NEUTRAL (ink/muted, not yellow) "synthetic — not the demo path" marker
+  in the D-panel scenario section for dev awareness. Confirmed: no banner in the main view for any
+  scenario; D-panel marker present and grey.
+
+## Verify (against both briefs)
+No vXX (or any internal id) in operator copy anywhere; vessel refs use names or are dropped where
+redundant; engine tint/auto-select preserved; no scenario banner in the main view (consistent across
+1/2/3); scenario id + synthetic marker in the D-panel only; yellow reserved for severity; demo path
+intact. TSC-OK · LINT-CLEAN · verify PASSED (PM ruling 3 check updated to operator-label semantics) ·
+offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 117: ROUND 130 — endurance racing-at-60x bug fix + sim clock 1x default)
 
 ## 1 — Endurance racing upward at 60x (data-coherence bug, PRIORITY)

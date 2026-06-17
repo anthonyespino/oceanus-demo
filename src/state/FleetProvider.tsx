@@ -194,16 +194,11 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-      {active.synthetic && (
-        <div style={{
-          position: 'fixed', bottom: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 70,
-          fontFamily: 'var(--font-data)', fontSize: 'var(--type-context)', letterSpacing: 1.5,
-          color: 'var(--color-alert-caution)', border: '1px solid var(--color-alert-caution)',
-          background: 'var(--color-surface-raised)', borderRadius: 1, padding: '4px 10px', // RADIUS token value (state layer)
-        }}>
-          SCENARIO: {active.label} — synthetic, not the demo path
-        </div>
-      )}
+      {/* ROUND 131: the synthetic-scenario banner is REMOVED from the main/presentation view.
+          It was build-time/dev info (synthetic-data flagging) leaking onto the operator surface,
+          and it used yellow (the earned severity color) for a dev label — competing with real
+          cautions. Scenario identity + the synthetic marker now live in the D-panel only (neutral),
+          where presenter-facing info belongs. (Same principle as the v01 fix / Learn-vs-IA split.) */}
     </FleetContext.Provider>
   );
 }

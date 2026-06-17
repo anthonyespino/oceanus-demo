@@ -118,7 +118,9 @@ check(weekly[3].fuelGap > 15, `Engine 2 fuel rate diverged from twin (${pct(week
 check(anomaly.alerts.some((a) => a.code === 'EFF_DELTA'), 'CAUTION EFF_DELTA active');
 check(anomaly.alerts.some((a) => a.code === 'EGT_DIVERGENCE'), 'CAUTION EGT_DIVERGENCE active');
 const egtMsg = anomaly.alerts.find((a) => a.code === 'EGT_DIVERGENCE')?.message ?? '';
-check(egtMsg.includes(`${anomaly.static.id}-E2`), `EGT alert names the diverging engine id (PM ruling 3): "${egtMsg}"`);
+// PM ruling 3: the alert names the diverging engine. ROUND 131: operator-facing copy carries the
+// engine's DISPLAY label (E2), never the internal vessel-prefixed id (v01-E2) — assert both.
+check(egtMsg.includes('E2') && !/v\d\d/.test(egtMsg), `EGT alert names the diverging engine by operator label, no internal id (PM ruling 3 + round 131): "${egtMsg}"`);
 
 // EfficiencyCurve (round 5): the live point's vertical displacement above the
 // vessel's own transit envelope must tell the same story as efficiency_delta.

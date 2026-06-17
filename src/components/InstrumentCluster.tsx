@@ -10,6 +10,7 @@ import { useState } from 'react';
 import type { VesselState } from '../data/types';
 import { toggleStyle, NEUTRAL } from './probeTokens';
 import { Gauge, type Vital } from './Gauge';
+import { engineLabel } from '../data/alerts'; // round 131: alert copy carries the operator label, match on it
 import { gb } from './gb';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
 
@@ -19,7 +20,7 @@ const DANGER = 'var(--color-alert-warning)';
 function flaggedEngineIdx(vessel: VesselState): number {
   const now = vessel.history.minutes.at(-1)!;
   for (const a of vessel.alerts) {
-    const idx = now.engines.findIndex((e) => a.message.includes(e.engine_id));
+    const idx = now.engines.findIndex((e) => a.message.includes(engineLabel(e.engine_id)));
     if (idx >= 0) return idx;
   }
   return 0;
@@ -36,7 +37,7 @@ export function engineVital(
 ): Vital {
   if (!running) return 'still';
   for (const a of vessel.alerts) {
-    if (a.message.includes(engineId)) return a.level === 'WARNING' ? 'degraded' : 'watch';
+    if (a.message.includes(engineLabel(engineId))) return a.level === 'WARNING' ? 'degraded' : 'watch';
   }
   return overLimit ? limitLevel : 'nominal';
 }

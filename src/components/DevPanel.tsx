@@ -122,6 +122,13 @@ export function DevPanel() {
             </button>
           ))}
         </div>
+        {/* ROUND 131: synthetic-scenario marker lives HERE (presenter/dev surface) only — neutral
+            ink, never the yellow severity color, and never on the main view. */}
+        {SCENARIOS.find((s) => s.id === f.scenario)?.synthetic && (
+          <div style={{ fontSize: 'var(--type-micro)', letterSpacing: 1, color: 'var(--color-ink-muted)', marginTop: 4 }}>
+            synthetic — not the demo path
+          </div>
+        )}
       </Section>
 
       <Section title="ia / system map">
