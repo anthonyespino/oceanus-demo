@@ -93,6 +93,7 @@ export function DevPanel() {
   }
   return (
     <div
+      data-devpanel="" /* ROUND 133: the layer lens skips this subtree so its own off-toggle (and every D-panel control) stays clickable */
       {...layer('SettingsSheet / sheet / settings.sheet', 'gear-summoned settings sheet · collapsible sections (round 108)', '—')}
       style={{
         position: 'fixed', top: 44, right: 12, zIndex: 50, width: 320,

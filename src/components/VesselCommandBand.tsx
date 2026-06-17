@@ -358,6 +358,12 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
         {/* round 53 / 79: three balanced masses (left cluster · center · right
             cluster), even gutters — round 79 GROWS the gauges and pulls the
             clusters inward (gap 44→30) to kill the dead air; balance preserved */}
+        {/* ROUND 133: the header instrument panel is now wired into Learn (it was missed —
+            hover did nothing here). Annotated wraps the INNER content, NOT the sticky <section>,
+            so position:sticky is preserved (wrapping the section in a relative block would break
+            it). The Learn card portals to document.body (round 112), so the sticky band's stacking
+            context can't trap it. */}
+        <Annotated name="VesselCommandBand" node="command-gauges">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 30, flexWrap: 'wrap', marginTop: 4 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--pad-section)' }}>
             <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / speed.chart', 'Gauge primitive · 116px (round 79)', '{position.speed_over_ground_kn} / max {cruise×1.35}')}>
@@ -433,6 +439,7 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
             </div>
           </div>
         </div>
+        </Annotated>
         {/* ROUND 79: the round-73 bottom data-health footer is REMOVED —
             DATALINK + LAST SYNC now live in the global top bar (AppHeader). */}
       </section>

@@ -1469,3 +1469,19 @@ originals.*
   a substantiation violation. **Resolution:** keep the endurance shortfall on the gauge required-
   threshold + caution text only (already single-sourced, R129); no voyage-bar change. (Revisit only
   if scenario 2 is redesigned so the displayed leg is genuinely unreachable.)
+
+- **ROUND 133: four fixes — per-sensor color, alerting-engine chip tint, Learn-on-header, LayerLens
+  toggle.** (1) **CRITICAL earned-color:** the sensor cluster painted ALL five dials yellow whenever
+  the selected engine was named in any alert (`engineVital` inherited the engine-level alert onto
+  every dial). Replaced with `sensorVital` — each dial colors only when its OWN reading breaches its
+  OWN range (EGT>920, coolant>203, oil-temp>226, oil<30; RPM none); OFF→still, in-range→white,
+  per-engine. Verified E2 EGT alone colors, E1/G2 all white. (2) **Selector chip tint:** the alerting
+  engine's chip (E2) tints (caution/warning) via new `engineAlertColor`, single-sourced from
+  `vessel.alerts` + the operator-label match; others neutral. (3) **Learn-on-header:** the sticky
+  command-band header had no Annotated binding (Learn hover dead there); wrapped its INNER content
+  (not the sticky `<section>` — would break position:sticky) in `Annotated name="VesselCommandBand"
+  node="command-gauges"`, card portals to body (R112). (4) **LayerLens stuck-on:** the whole D-panel
+  is a `[data-layer]` element and the lens's capture-phase click handler stopPropagation'd every
+  data-layer click, hijacking its own off-toggle; marked the panel `data-devpanel` and made the lens
+  skip that subtree (the lens is for the product surface, not the dev panel). Default/Expert/Learn
+  preserved; demo path intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

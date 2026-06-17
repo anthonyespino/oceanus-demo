@@ -26,6 +26,8 @@ export const ANNOTATIONS: Record<string, Annotation> = {
   PortCallsTimeline: { mark: '●', desc: '72h arrivals board by port, with fuel-margin (BUNKER) flags', answers: 'who arrives where, and who needs fuel ordered?' },
   EfficiencyPanel: { mark: '●', desc: "Burn vs this vessel's own normal for its current mode, with 30/90d/1y trends", answers: 'how far off normal, fairly judged, and trending which way?' },
   RoutePanel: { mark: '●', desc: 'Voyage progress: origin to next port by distance covered', answers: 'is the plan being sailed?' },
+  // ROUND 133: the header instrument panel was missing a Learn binding (hover did nothing there).
+  VesselCommandBand: { mark: '●', desc: 'The vessel header as an instrument panel: identity, four gauges (speed · burn · efficiency Δ · endurance), mode clock, and live conditions', answers: 'what is this ship doing right now, at a glance?' },
   EngineTwinPanel: { mark: '●', desc: 'The two propulsion engines side by side; the gap between them rendered explicitly', answers: 'are the twins still twins?' },
   VesselSynoptic: { mark: '⚖', desc: 'Top-down hull schematic with tanks, engines, and flow drawn in place', answers: 'where does the fuel physically live and move?' },
   Contextual: { mark: '◐', desc: 'The single reveal mechanism for detail-on-demand', answers: 'what else is here?' },

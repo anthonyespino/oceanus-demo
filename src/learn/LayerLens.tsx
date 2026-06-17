@@ -49,6 +49,10 @@ export function LayerLens() {
     if (!layerLens) return;
     const over = (e: MouseEvent) => {
       const t = e.target as Element | null;
+      // ROUND 133: never inspect/intercept the D-panel itself — the whole sheet is a data-layer
+      // element, so without this the lens swallowed clicks on its own controls (its off-toggle was
+      // stuck on). The lens is for the product surface, not the dev panel.
+      if (t?.closest?.('[data-devpanel]')) { setInfo(null); setLeafActive(false); return; }
       const el = t?.closest?.('[data-layer]') as Element | null;
       if (!el) { setInfo(null); setLeafActive(false); return; }
       const r = el.getBoundingClientRect();
@@ -63,6 +67,7 @@ export function LayerLens() {
     };
     const click = (e: MouseEvent) => {
       const t = e.target as Element | null;
+      if (t?.closest?.('[data-devpanel]')) return; // ROUND 133: let D-panel controls work (incl. the lens toggle)
       const el = t?.closest?.('[data-layer]') as Element | null;
       if (!el) return;
       e.preventDefault();

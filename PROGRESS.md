@@ -1,3 +1,43 @@
+# PROGRESS — 2026-06-17 (Session 119: ROUND 133 — four fixes: per-sensor color, alerting-engine chip tint, Learn-on-header, LayerLens toggle)
+
+## 1 — CRITICAL: per-sensor severity color (the "all gauges yellow" bug)
+- The sensor row painted ALL five gauges (EGT/coolant/oil/oil-temp/RPM) yellow whenever the
+  selected engine was named in any alert — `engineVital` inherited the engine's alert level onto
+  every dial. Earned-color violation: only the reading actually out of range should color.
+- **Fix:** replaced `engineVital` with `sensorVital(running, over, limitLevel)` — each dial carries
+  its OWN out-of-range test (`over`): EGT > 920, coolant > 203, oil-temp > 226 (ceilings), oil
+  pressure < 30 (floor), RPM none. OFF → still; in-range → white. Per-engine (each E1/E2/G1/G2
+  selection evaluates its own values). **Verified (DOM + screenshot):** E2 → EGT 935°F yellow,
+  coolant/oil/oil-temp/RPM white; E1 → all white (877°F in range); G2 → all white; G1 → off/still.
+
+## 2 — Alerting-engine selector chip tint (earned)
+- The E2 chip (the engine with the active EGT caution) now tints yellow (text + border) so the one
+  to inspect is obvious; E1/G1/G2 stay neutral. New `engineAlertColor()` — single-sourced from the
+  same `vessel.alerts` + `engineLabel` match that drives the rest of E2's treatment (warning→red,
+  caution→yellow). Verified: E2 chip rgb(227,209,65), others neutral.
+
+## 3 — Learn hover on the header panel (was missed)
+- The sticky command-band header (identity + four gauges + clock + conditions) had no `Annotated`
+  binding, so Learn hover did nothing there. Added the `VesselCommandBand` annotation + bound the
+  header content to the existing `command-gauges` IA node. Wrapped the INNER content (not the
+  sticky `<section>` — wrapping that would break `position: sticky`); the card portals to body
+  (round-112 fix) so the sticky stacking context can't trap it. Verified: hovering the header in
+  Learn shows the "Command Gauges" card.
+
+## 4 — Layer mode wouldn't turn off
+- The whole D-panel sheet is a `[data-layer]` element, and LayerLens's capture-phase click handler
+  `preventDefault/stopPropagation`'d every `[data-layer]` click to copy its path — so clicking the
+  lens's own "off" toggle was hijacked (stuck on). **Fix:** marked the D-panel root `data-devpanel`
+  and made the LayerLens hover+click handlers skip that subtree (the lens inspects the product
+  surface, not the dev panel). Verified: on → off → on all work; no lens card after off.
+
+## Verify (against the brief)
+Only out-of-range sensor values colored across all four engine selections (EGT yellow, normals
+white); E2 selector tints (others neutral); Learn hovers work on the header; Layer mode toggles
+off as well as on; no regressions. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 118: ROUND 131 — keep internal/dev info off the operator surface: vXX ID leaks + scenario banner)
 
 One standing rule, two surfacings: internal identifiers + build-time/dev meta must never appear in
