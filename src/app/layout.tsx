@@ -4,6 +4,7 @@ import './globals.css';
 import { FleetProvider } from '../state/FleetProvider';
 import { LearnProvider } from '../learn/LearnProvider'; // LEARN MODE — strip before demo week
 import { AppHeader, DevPanel, AmbientSea } from '../components';
+import { LaunchScreen } from '../components/LaunchScreen'; // round 137: one-time startup mark (new app chrome, not a Figma data component — direct import keeps the locked barrel clean)
 
 // Type system (round 26): Barlow = UI, IBM Plex Mono = data/numerals
 // (tabular), D-DIN = display. Self-hosted woff2 (src/fonts/, OFL licenses
@@ -49,6 +50,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             {children}
           </LearnProvider>
         </FleetProvider>
+        {/* round 137: one-time startup veil — sits ABOVE the app (z 1000), independent of the
+            providers, so it shows once on initial mount and the board runs live underneath. */}
+        <LaunchScreen />
       </body>
     </html>
   );

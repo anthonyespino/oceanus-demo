@@ -1521,3 +1521,19 @@ originals.*
   the endurance gauge required-threshold (R129) + the ENDURANCE caution text, which already agree
   (single-sourced from `endurance_required_hours`). (Revisit only if "low" is redefined or the
   scenario is redrawn so tanks genuinely cross the low thresholds.)
+
+- **ROUND 137: startup launch screen (centered Oceanus mark).** New `LaunchScreen` in the root
+  layout — the ONLY place the full centered mark appears (header unchanged, no board/D-panel logo).
+  Full-viewport veil over `--color-surface-base` (z 1000); the inlined `oceanus.logo.svg` (drawn
+  white, viewBox-preserved) centered at 25vw/max 280px; logo only. Shows ONCE on initial mount: the
+  layout persists across client navigations and scenario switches are FleetProvider state (no
+  remount), so neither re-triggers it. ~2.2s sequence (logo fade-in / hold / veil fade-out at 1800ms
+  / unmount 2200ms), JS-phase-driven with CSS opacity transitions on the build's ease-in-out curve —
+  deliberately not a CSS keyframe applied at SSR (that decoupled the animation start at first-paint
+  from the mount-time unmount timer and the phase drifted). Board renders + runs underneath from
+  first paint (no second load; the solid cover hides the brief loading state → no flash of empty
+  state). prefers-reduced-motion: CSS zeroes the transitions → solid mark, ~0.7s, then cut. Logo
+  inlined (not `<img>` — an `<img>` of the SVG reported naturalWidth 0 → zero-height). DEV note: the
+  glyphs prebuild scans all of docs/glyphs-import, so the logo svgs get picked up as (unused) Glyph
+  entries — harmless; move/filter if undesired (launch screen doesn't depend on them). TSC-OK ·
+  LINT-CLEAN · verify PASSED · offline build OK.

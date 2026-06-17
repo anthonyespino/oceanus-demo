@@ -186,6 +186,16 @@ textarea,
   50% { opacity: 0.45; }
 }
 
+/* ROUND 137: launch veil (src/components/LaunchScreen.tsx) — reduced-motion users get NO fades;
+   the mark shows solid and is cut (timing handled in JS). Same reduced-motion discipline as the
+   breathe/callout animations above. */
+@media (prefers-reduced-motion: reduce) {
+  .launch-veil,
+  .launch-logo {
+    transition: none !important;
+  }
+}
+
 /* ROUND 50: Calm Sea is a WebGL canvas (src/components/AmbientSea.tsx) with a
    CSS-gradient static still for reduced-motion / WebGL fallback — no global
    classes needed. The round-46 SVG paper-wave CSS was removed here. */

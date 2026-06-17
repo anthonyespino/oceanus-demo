@@ -1,3 +1,49 @@
+# PROGRESS — 2026-06-17 (Session 122: ROUND 137 — startup launch screen with the centered Oceanus mark)
+
+## Done (verified docs/screens/r137-launch-screen.png)
+- New `LaunchScreen` component mounted in the root layout (`src/app/layout.tsx`), so it shows ONCE
+  on initial app mount and — because the layout persists across client navigations and scenario
+  switches are FleetProvider *state* (no remount) — it does NOT re-trigger on FleetView↔Vessel
+  navigation or D-panel scenario switches. Verified both: veil absent after nav and after switching
+  to Marlin Ridge.
+- Full-viewport veil over `--color-surface-base` (#101010, the app base — not pure black), z 1000
+  above all chrome. The centered Oceanus mark (inlined from `docs/glyphs-import/oceanus.logo.svg`,
+  drawn white, viewBox-preserved) at 25vw capped 280px → 280×283, centered at viewport center.
+  Logo only — no tagline, spinner, loading text, version, or status.
+- Sequence ~2.2s, JS-phase-driven with CSS opacity transitions (same ease-in-out curve as the
+  build's breathe/callout motion): veil solid from first paint → logo fades in → hold → whole veil
+  fades out (1800ms) → unmount (2200ms). Deliberately NOT a CSS keyframe applied at SSR — that
+  decouples the animation start (first paint) from the unmount timer (mount) and the visible phase
+  drifted run-to-run; phases now all start at mount.
+- Board not delayed: `{children}` (the board) renders + runs UNDERNEATH from first paint — verified
+  the header + board content (Meridian/FLEET BURN) are in the DOM while the veil is up, so it's
+  already live when the veil clears (no second load; the solid cover hides the brief loading state →
+  no flash of empty state).
+- prefers-reduced-motion: a CSS media query zeroes the transitions (`.launch-veil`/`.launch-logo`)
+  so the mark shows solid then cuts (~700ms) — verified logo opacity 1 + transition 0s, cut by 950ms.
+- Header untouched (no logo added to the top-left "OCEANUS FLEET" strip). Palette: white mark on
+  dark base, no green/new accent.
+
+## Notes
+- Logo INLINED (not <img>): an `<img>` of the SVG reported naturalWidth 0 → zero-height render;
+  inlining renders synchronously with the viewBox preserving aspect. Verification needed an
+  extended-hold capture — the veil is a transient ~2.2s overlay and Playwright's screenshot raced
+  the compositor against its short life; a temporarily-lengthened hold gave a clean steady frame
+  (then reverted to 1800/2200). The feature itself was correct throughout.
+- HEADS-UP (not fixed, out of scope): the glyphs prebuild (`scripts/glyphs.ts`) scans ALL svgs in
+  `docs/glyphs-import/`, so the new `oceanus.logo.svg` / `oceanus.barlogo.svg` get picked up as
+  Glyph entries in `glyphs.generated.ts` (harmless — nothing renders them as glyphs). If undesired,
+  move the logo assets out of glyphs-import or filter the scan. The launch screen does NOT depend on
+  them (path is inlined); the two svgs are left untracked.
+
+## Verify
+Shows once on mount; ~2.2s fade-in/hold/fade-out to the live board; no re-trigger on scenario/view
+switch; full-viewport veil on the base surface; centered white mark ~280px, logo only; board live
+underneath (no flash); reduced-motion cuts; header has no logo. TSC-OK · LINT-CLEAN · verify PASSED
+· offline build OK.
+
+---
+
 # PROGRESS — 2026-06-17 (Session 121: ROUND 135 — Engine Twins rows: TWO side-by-side stacked pairs (R134 correction))
 
 ## The correction
