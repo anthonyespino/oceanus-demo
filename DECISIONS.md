@@ -1456,3 +1456,16 @@ originals.*
   flagging onto the operator surface in the earned severity color — removed from the main view for
   all scenarios; a NEUTRAL synthetic marker now lives in the D-panel scenario section only. Demo path
   intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 132 (DECISION, no code — Anthony's call): voyage fuel-out marker NOT added (substantiation).**
+  Investigated adding a fuel-out marker + caution-styled unreachable segment to the voyage bar.
+  **Finding:** for the only firing candidate (Marlin Ridge, scenario 2) endurance 52h reaches
+  ≈620 nm at 11.9 kn, while the displayed next port (Freeport) is 100 nm away — so fuel does NOT run
+  out on the displayed leg; it would run out ≈520 nm PAST the destination. The "78h required" is a
+  return+reserve mission figure, not the next-leg distance. No underway vessel in the seed has
+  reachable < distance-to-next-port. The brief's premise that `endurance < required ⟺ reachable <
+  distance-to-destination` does not hold against the data (the gauge fires on the reserve shortfall;
+  the leg is still reachable). Marking a fuel-out point on the voyage bar would be decorative/false —
+  a substantiation violation. **Resolution:** keep the endurance shortfall on the gauge required-
+  threshold + caution text only (already single-sourced, R129); no voyage-bar change. (Revisit only
+  if scenario 2 is redesigned so the displayed leg is genuinely unreachable.)
