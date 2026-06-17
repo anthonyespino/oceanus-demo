@@ -125,7 +125,14 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
   const endurance = Math.min(2400, Math.max(12, d.endurance_hours));
   const still = now.mode === 'PORT' && sog < 0.5;
   const effVital = still ? 'still' : d.efficiency_delta_pct > EFF_DELTA_CAUTION_PCT ? 'watch' : 'nominal';
-  const endVital = still ? 'still' : d.endurance_hours < BUNKER_SOON_H ? 'watch' : 'nominal';
+  // ROUND 129: mission-relative endurance requirement, single-sourced from derived
+  // (d.endurance_required_hours — the SAME value the ENDURANCE caution cites; null in PORT →
+  // no requirement → plain gauge). The threshold mark shows when a requirement exists; the
+  // caution-colored deficit band shows only when the needle is below it (earned).
+  const endReqH = d.endurance_required_hours;
+  const endReqClamped = endReqH !== null ? Math.min(2400, Math.max(12, endReqH)) : null;
+  const endShortfall = endReqH !== null && d.endurance_hours < endReqH;
+  const endVital = still ? 'still' : (endShortfall || d.endurance_hours < BUNKER_SOON_H) ? 'watch' : 'nominal';
   const aliveVital = still ? 'still' : 'nominal';
 
   // mission clock (mode-aware, round 22; countdown lives HERE only). Round
@@ -418,10 +425,11 @@ export function VesselCommandBand({ vessel }: { vessel: VesselState }) {
                 display={`${d.efficiency_delta_pct > 0 ? '+' : ''}${d.efficiency_delta_pct.toFixed(1)}%`} vital={effVital} minMaxLabels={['-20', '+20']}
                 band={{ from: EFF_DELTA_CAUTION_PCT, to: 20, color: 'var(--color-alert-caution)' }} />
             </div>
-            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / endurance.chart', 'Gauge primitive · log dial · caution band <72h (alert-backed)', '{derived.endurance_hours}')}>
+            <div style={{ display: 'contents' }} {...layer('VesselCommandBand / gaugeRail / endurance.chart', 'Gauge primitive · log dial · required-hours threshold mark (neutral reference, single-sourced from the ENDURANCE caution) · caution deficit band below it when the needle is short (alert-backed)', '{derived.endurance_hours} · required {requiredEnduranceH().hours}')}>
               <Gauge size={116} label="endurance" value={Math.log10(endurance)} min={LOG_MIN} max={LOG_MAX}
                 display={`${d.endurance_hours} h`} vital={endVital} minMaxLabels={['12', '2.4k']}
-                band={{ from: LOG_MIN, to: Math.log10(BUNKER_SOON_H), color: 'var(--color-alert-caution)' }} />
+                threshold={endReqClamped !== null ? Math.log10(endReqClamped) : undefined}
+                band={endShortfall ? { from: LOG_MIN, to: Math.log10(endReqClamped!), color: 'var(--color-alert-caution)' } : undefined} />
             </div>
           </div>
         </div>

@@ -1412,3 +1412,18 @@ originals.*
   efficiency is the fleet-board symptom you open the vessel for; the EGT/engine gap is the cause you
   drill into. No data change; earned color only (no green); styling matched to the EGT-gap chart.
   TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 129: endurance gauge — required-hours threshold marker (single-sourced).** Endurance is
+  the one gauge judged against a mission-relative requirement (required hours for this trip), so it
+  earns a reference mark the fixed-range gauges (speed/burn/EFF Δ) do not. Added `endurance_required_hours`
+  to DERIVED as the single source both the ENDURANCE caution and the gauge read (base: computed via
+  the now-exported `requiredEnduranceH`, null in PORT; scenario overrides patch it from the same
+  `reqH` const their caution message cites). This fixed a latent disagreement: the gauge's old band
+  was anchored to BUNKER_SOON_H (72h) while the caution fires on the mission requirement (e.g. 78h).
+  Gauge: new neutral `threshold` reference line (severity is the needle below it, not the mark) +
+  caution-colored deficit band shown only when the needle is short (earned). Shown only when a
+  requirement exists (mode != PORT); PORT stays plain. Other gauges unchanged. Expert keeps value +
+  threshold + band, strips only the label. Verified: S2 Marlin Ridge 52h (yellow) with the needle
+  inside the deficit zone below the 78h mark; base Meridian neutral mark at 40h with the needle well
+  above (no deficit). No change to existing demo numbers. TSC-OK · LINT-CLEAN · verify PASSED ·
+  offline build OK.

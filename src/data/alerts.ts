@@ -122,7 +122,9 @@ export function evaluateAlerts(v: VesselStatic, history: VesselHistory, d: Deriv
   return alerts;
 }
 
-function requiredEnduranceH(v: VesselStatic, history: VesselHistory): { hours: number; basis: string } {
+// ROUND 129: exported so the endurance gauge's required-hours threshold mark reads the
+// SAME value the CAUTION text cites — gauge and alert are single-sourced, can't disagree.
+export function requiredEnduranceH(v: VesselStatic, history: VesselHistory): { hours: number; basis: string } {
   const next = history.nextPortCalls[0];
   if (!next) return { hours: 36, basis: '36 h minimum, no port call in horizon' };
   const pos = history.minutes[history.minutes.length - 1].position;

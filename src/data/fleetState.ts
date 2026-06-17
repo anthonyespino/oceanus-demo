@@ -111,7 +111,7 @@ export function fleetBurnSeries24h(states: VesselState[]): number[] {
 }
 
 function toState(rt: VesselRuntime): VesselState {
-  const derived = computeDerived(rt.history);
+  const derived = computeDerived(rt.history, rt.v);
   return {
     static: rt.v,
     history: rt.history,

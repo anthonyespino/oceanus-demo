@@ -132,6 +132,11 @@ export interface DerivedVesselMetrics {
   mode_agreement_pct: number; // reported mode vs fallback derivation, last 24h (v2 §2 cross-check)
   endurance_hours: number;
   endurance_nm: number | null; // null when not underway
+  // ROUND 129: the mission-relative required endurance (hours) this vessel/mode is judged
+  // against — the SAME value the ENDURANCE caution cites. null when no requirement (PORT).
+  // Single source for both the caution text and the gauge's required-threshold mark, so they
+  // can't disagree (scenario overrides patch this alongside the caution message).
+  endurance_required_hours: number | null;
   sparkline_24h: number[]; // hourly efficiency_delta, fleet-card sparkline data
   daily_delta_1y: { day: number; delta: number }[]; // for trend charts later
   reconciliation: ReconciliationResult;

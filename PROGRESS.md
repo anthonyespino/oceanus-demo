@@ -1,3 +1,44 @@
+# PROGRESS — 2026-06-16 (Session 116: ROUND 129 — endurance gauge required-hours threshold marker)
+
+## The gap
+- The endurance gauge showed the value (e.g. 48h) + caution color but NOT the threshold that
+  makes it a caution — the operator had to scroll to the caution text to learn "below 78h required."
+- Worse, the gauge's existing band was anchored to BUNKER_SOON_H (72h, the bunker horizon), while
+  the ENDURANCE *caution* fires on `requiredEnduranceH` (the mission requirement) — so the gauge's
+  colored region wasn't even the threshold driving the caution.
+
+## Done (verified docs/screens/r129-base-meridian-threshold.png, r129-s2-marlin-deficit.png, r129-s2-marlin-expert.png)
+- **Single source.** Added `endurance_required_hours` to the DERIVED metrics — the one place both
+  the caution text and the gauge read. Base: `computeDerived` computes it via `requiredEnduranceH`
+  (now exported), null in PORT. Scenario overrides patch it from the SAME `reqH` const their caution
+  message cites (scenario 2: 78h). Confirmed in data: S2 Marlin Ridge derived required = 78 ==
+  caution "below 78 h required"; base Meridian required = 40 (no shortfall); PORT vessel = null.
+  Gauge and caution **can't disagree**.
+- **Gauge.** New optional `threshold` prop (value-space): a NEUTRAL radial reference line (ink/
+  secondary, a touch longer/heavier than a display tick) at the required level — severity is the
+  needle below it, not the mark. The caution-colored DEFICIT band (reused `band` prop) shows the
+  below-threshold danger zone ONLY when the needle is short (earned). Endurance-only — speed/burn/
+  EFF Δ have fixed ranges, no trip threshold, untouched.
+- **VesselCommandBand.** Reads `d.endurance_required_hours`: threshold mark when a requirement
+  exists (mode != PORT); deficit band when `endurance < required`; endVital adds the shortfall.
+  Replaced the old always-on bunker band with the earned mission-required deficit.
+- **Verified on screen:** base Meridian — neutral threshold tick at 40h, needle at 179h well above,
+  no deficit, value white. S2 Marlin Ridge — 52h value YELLOW, yellow deficit zone filling up to
+  the 78h threshold, needle sitting inside the deficit (shortfall reads at a glance). Expert keeps
+  value + threshold + band, strips only the "ENDURANCE" label.
+
+## Verify (against the brief)
+Threshold mark shown; needle-below reads as shortfall; numeric value primary; gauge + caution
+single-sourced (can't disagree); only when a requirement exists (PORT → plain); other gauges
+unchanged; earned color (deficit = caution, mark = neutral); Expert keeps value + threshold.
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+## Queued next (from this session's later messages)
+R130 endurance racing-at-60x bug (PRIORITY — data coherence) + sim clock 1x default; vXX internal-ID
+leak audit in operator copy; remove the synthetic-scenario banner from the main view.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 115: ROUND 128 — efficiency/engine panels: Expert strip + live NOW dot + symptom-first order)
 
 ## 1 — Expert orientation-vs-signal strip (the R127 redesign reset it; applied to BOTH panels)

@@ -5,6 +5,7 @@
 
 import { DAY_MS } from './rng';
 import { PORTS, distanceNm } from './fleet';
+import { requiredEnduranceH } from './alerts'; // round 129: single-source the required endurance (gauge + caution read it)
 import type {
   DerivedVesselMetrics,
   Freshness,
@@ -13,6 +14,7 @@ import type {
   StreamTimestamps,
   VesselHistory,
   VesselSample,
+  VesselStatic,
 } from './types';
 
 const STALE_AFTER_MS = 30 * 60_000; // global rule: >30 min → STALE
@@ -173,7 +175,7 @@ function reconcile(history: VesselHistory): ReconciliationResult {
   };
 }
 
-export function computeDerived(history: VesselHistory): DerivedVesselMetrics {
+export function computeDerived(history: VesselHistory, v: VesselStatic): DerivedVesselMetrics {
   const baselines = buildBaselines(history);
   const ms = history.minutes;
   const now = ms[ms.length - 1];
@@ -239,6 +241,9 @@ export function computeDerived(history: VesselHistory): DerivedVesselMetrics {
     mode_agreement_pct: Math.round((agree / ms.length) * 1000) / 10,
     endurance_hours: Math.round(enduranceH),
     endurance_nm: mode === 'TRANSIT' ? Math.round(enduranceH * now.position.speed_over_ground_kn) : null,
+    // ROUND 129: required endurance for this leg (same fn the ENDURANCE caution uses). null in
+    // PORT (no mission requirement → gauge stays plain). Scenario overrides re-patch this.
+    endurance_required_hours: mode !== 'PORT' ? Math.round(requiredEnduranceH(v, history).hours) : null,
     sparkline_24h: sparkline,
     daily_delta_1y: dailyDelta,
     reconciliation: reconcile(history),

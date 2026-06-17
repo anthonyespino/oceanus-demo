@@ -112,6 +112,9 @@ function marlinEndurance(v: VesselState): VesselState {
   ], {
     endurance_hours: enduranceH,
     endurance_nm: Math.round(enduranceH * sog),
+    // ROUND 129: same reqH the caution message cites → the gauge's required-threshold mark and
+    // the caution can't disagree (single source within the scenario).
+    endurance_required_hours: reqH,
     egt_twin_gap_f: 0, // engines clean — the cause is NOT mechanical
   });
 }

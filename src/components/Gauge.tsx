@@ -53,6 +53,7 @@ export function Gauge({
   unit = '',
   band,
   displayLimits = [],
+  threshold,
   off = false,
   size = 86,
   vital = 'nominal',
@@ -68,6 +69,10 @@ export function Gauge({
   band?: GaugeBand;
   /** display-only limits — neutral ink ticks, never color */
   displayLimits?: number[];
+  /** ROUND 129: a required-level REFERENCE mark (value-space). Neutral styling — it is a
+      reference line, not severity (the severity is the needle sitting below it, conveyed by
+      the deficit `band`). Used where a value is judged against a requirement (endurance). */
+  threshold?: number;
   off?: boolean;
   size?: number;
   vital?: Vital;
@@ -123,6 +128,14 @@ export function Gauge({
             {band && (
               <path {...layer('Gauge / dial / band.line', 'alert color — alert-backed ONLY (ruling 11)', '{band.from→band.to}')} d={arcPath(cx, cy, angle(band.from), angle(band.to), r)} fill="none" stroke={band.color} strokeWidth={2.5 * k} strokeLinecap="butt" />
             )}
+            {/* ROUND 129: required-level REFERENCE mark — neutral radial line crossing the arc,
+                a touch longer/heavier than a display tick so it reads as THE requirement, never
+                colored (severity = the needle below it). SIGNAL → kept in Expert. */}
+            {threshold !== undefined && (() => {
+              const t1 = polar(cx, cy, angle(threshold), r - 5 * k);
+              const t2 = polar(cx, cy, angle(threshold), r + 5 * k);
+              return <line {...layer('Gauge / dial / threshold.line', 'ink/secondary · neutral required-level reference (round 129) — severity is the needle below it, not this mark', '{required threshold, value-space}')} x1={t1.x} y1={t1.y} x2={t2.x} y2={t2.y} stroke={NEUTRAL.inkSecondary} strokeWidth={1.5} strokeLinecap="round" />;
+            })()}
             {/* needle: ink/primary, always; the hub is the dial's only interior mark */}
             <line {...layer('Gauge / dial / needle.line', 'ink/primary — ALWAYS (round 19, amends ruling 14)', '{value→angle(min,max)}')} x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke={NEUTRAL.ink} strokeWidth={1.5} />
             <circle {...layer('Gauge / dial / hub.dot', 'ink/primary', '—')} cx={cx} cy={cy} r={2.2 * k} fill={NEUTRAL.ink} />
