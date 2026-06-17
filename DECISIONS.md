@@ -1550,3 +1550,18 @@ originals.*
   header/product); not switched to the company name "Oceanus — Modern Technologies" — Anthony to
   override if the company name is intended in the tab. Header + launch screen untouched; palette only
   (#101010 + white). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 139: splash water-fill + smaller mark; favicon transparent.** (a) **Splash:** mark scaled
+  down (max 280→190); it now FILLS like a glass of water as it loads — the mark is a static CSS mask
+  over a dim "empty glass" base + a solid-white block rising via `translateY(100%→0)`, masked to the
+  mark shape (fills bottom-up). Implemented with **transform (compositor-accelerated), not clip-path**:
+  a clip-path `inset()` fill STALLED to ~empty because clip-path transitions are main-thread and the
+  splash slams it (WebGL + fleet gen + hydration); transform animates on the compositor thread, smooth
+  under load. Verified visually empty/half/full (screenshots — getComputedStyle can't see a compositor
+  animation from a starved main thread). It's a timed decorative fill (~1.5s synced to the splash),
+  NOT real load progress (board is live in ~30ms underneath). Phases mount-relative so the fill always
+  finishes before the fade; reduced-motion → solid + cut. (b) **Favicon:** per Anthony, transparent —
+  dropped the #101010 tile, `icon.svg`/`icon.png` are now the white mark on transparent (no re-export
+  needed; PNG corner alpha 0). Caveat noted: white-on-transparent vanishes on light browser themes
+  (fine for a dark tab; dark-tile fallback is one line if wanted). Header untouched; palette only.
+  TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

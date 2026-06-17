@@ -191,7 +191,7 @@ textarea,
    breathe/callout animations above. */
 @media (prefers-reduced-motion: reduce) {
   .launch-veil,
-  .launch-logo {
+  .launch-fill {
     transition: none !important;
   }
 }

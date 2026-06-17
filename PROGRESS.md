@@ -1,3 +1,38 @@
+# PROGRESS — 2026-06-17 (Session 124: ROUND 139 — splash water-fill + smaller mark; favicon transparent)
+
+## Splash (LaunchScreen)
+- **Smaller mark:** 25vw/max 280 → **18vw/max 190**.
+- **Water-fill:** the mark now fills like a glass of water as it loads. The Oceanus mark is a static
+  CSS mask over (a) a dim "empty glass" background and (b) a solid-white block that rises from
+  `translateY(100%)` (empty) to `translateY(0)` (full) — the mask clips it to the mark shape, so the
+  white fills bottom-to-top. Verified visually at empty / half / full (docs/screens/r139-splash-waterfill.png
+  shows the bottom half filled, top half dim).
+  - **Why transform, not clip-path:** first attempt used an animated `clip-path: inset()` — it
+    STALLED to ~empty because clip-path transitions run on the MAIN thread, which is slammed during
+    the splash (WebGL sea + fleet gen + hydration). Switched to a compositor-accelerated `transform`
+    (rising white block behind a static mask) → animates smoothly under that load. (getComputedStyle
+    can't observe a compositor animation mid-flight from a starved main thread — confirmed via
+    screenshots, the real compositor output.)
+  - Timed decorative fill (~1.5s), synced to the splash — NOT bound to real load progress (board is
+    live in ~30ms underneath; nothing genuine to track). Honest about that in the brief reply.
+- Sequence ~2.3s (fill done ~1.5s after mount, veil fade-out 1900, unmount 2300 — all mount-relative
+  so the fill always completes before the fade). prefers-reduced-motion: transition removed → solid
+  mark, cut ~0.7s (verified transition 0s, cut by 950ms). Veil clears to a live board, no errors.
+
+## Favicon — transparent (was a dark tile)
+- Per Anthony: dropped the #101010 tile; `icon.svg` is now just the white mark on transparent. No
+  re-export needed (regenerated from the same path). `icon.png` re-rendered transparent (RGBA,
+  corner alpha 0; 708 white px confirm the mark is present). Caveat (told Anthony): white-on-
+  transparent vanishes on light browser themes — fine for his dark-tab setup; the dark-tile fallback
+  is one line away if needed.
+
+## Verify
+Smaller mark; water fills bottom-up smoothly under load; reduced-motion solid+cut; veil clears to
+live board; favicon transparent (white mark). Header untouched; palette only (white + #101010).
+TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-17 (Session 123: ROUND 138 — favicon + tab title)
 
 ## Done (verified in served HTML + assets)
