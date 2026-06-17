@@ -1507,3 +1507,17 @@ originals.*
   2/3 where Meridian is a cleaned bystander (single-outlier board) — not a bug. Gauges + toggle
   untouched (R133 intact); Expert/Default/Learn preserved. TSC-OK · LINT-CLEAN · verify PASSED ·
   offline build OK.
+
+- **ROUND 136 (DECISION, no code — Anthony's call): per-tank "low" highlight NOT added (substantiation,
+  same reasoning as R132).** Audited Marlin Ridge (scenario 2) fuel state before building. Tanks are
+  matched but ABOVE the low-fuel alert thresholds: ST1 = ST2 = 16.5% (4,934 gal each), FD1 ≈ FD2 ≈
+  38.8% (~2,3xx gal each), total 14,521 gal — vs `TANK_CRITICAL < 5%` and `FEEDER_LOW < 20%`, so no
+  tank registers as "low" and no TANK_LOW alert fires. The shortfall is a COMPUTED-ENDURANCE
+  condition (`endurance_hours 52 < endurance_required_hours 78`, i.e. total fuel ÷ operating burn vs
+  the mission requirement), not a per-tank low condition — it's a whole-fuel-system/total quantity,
+  not localized to any tank. Therefore a per-tank "low" highlight (earned TANK_LOW color) would
+  contradict the alert model (the tanks aren't low) — the same false-marking / substantiation problem
+  as the R132 voyage fuel-out marker. **Resolution:** build nothing; the endurance shortfall stays on
+  the endurance gauge required-threshold (R129) + the ENDURANCE caution text, which already agree
+  (single-sourced from `endurance_required_hours`). (Revisit only if "low" is redefined or the
+  scenario is redrawn so tanks genuinely cross the low thresholds.)
