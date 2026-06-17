@@ -1427,3 +1427,16 @@ originals.*
   inside the deficit zone below the 78h mark; base Meridian neutral mark at 40h with the needle well
   above (no deficit). No change to existing demo numbers. TSC-OK · LINT-CLEAN · verify PASSED ·
   offline build OK.
+
+- **ROUND 130: endurance racing-at-60x fix (data coherence) + sim clock 1x default.** (a) **Bug:**
+  `endurance = usableGal / burnNow` divided a full (just-bunkered) tank by the idle PORT hotel load
+  (~7 gph), so a vessel cycling into port at 60x showed endurance climbing to ~8,900 h — a value
+  the interface should never display (substantiation: the number wasn't physically real). Underway
+  it was already correct. **Fix:** divide by the OPERATING burn (mean of recent TRANSIT/STATION
+  samples; spec-based transit burn fallback), `max(burnNow, operatingBurn)` — underway is unchanged
+  and still counts down; idle is bounded to realistic operating-hours-remaining. Fleet-wide max over
+  15 sim-days dropped 8,947 h → 427 h (~18 days). Correct at 1x and 60x (computeDerived is per-tick,
+  clock-rate-independent). (b) **1x default:** startup speed 60x → 1x (real-time) — calmer + more
+  honest for presenting, no fast-forward artifacts; 60x stays a deliberate D-panel choice (pause +
+  reset intact). Demo numbers unchanged (endurance is printed, not asserted, by verify). TSC-OK ·
+  LINT-CLEAN · verify PASSED · offline build OK.

@@ -1,3 +1,35 @@
+# PROGRESS — 2026-06-16 (Session 117: ROUND 130 — endurance racing-at-60x bug fix + sim clock 1x default)
+
+## 1 — Endurance racing upward at 60x (data-coherence bug, PRIORITY)
+- **Repro:** advancing the sim, a vessel cycling into PORT showed endurance climbing to **8,947 h**
+  (~370 days). Underway it counted DOWN correctly (179→161h over 24h); the explosion was PORT-only.
+- **Root cause:** `endurance = usableGal / burnNow`, and in PORT burnNow is the idle hotel load
+  (~7 gph) while bunkering refills the tanks (→ ~66k gal). A full tank ÷ a near-zero divisor =
+  thousands of hours. Not a tank/loop bug (depletion + bunkering are correct physics) — it's the
+  divisor: instantaneous idle burn isn't the rate the vessel OPERATES at.
+- **Fix (`derived.ts`):** divide by the **operating burn** — the rate the vessel sustains while
+  underway (mean of TRANSIT/STATION samples in the 24h window; spec-based transit burn as fallback
+  for a long-moored vessel), `max(burnNow, operatingBurn)`. Underway, burnNow already exceeds the
+  floor → value unchanged and still counts down as fuel depletes; idle, it's bounded to a realistic
+  "operating-hours-remaining" figure. Verified over 15 sim-days: fleet-wide max endurance now
+  **427 h (~17.8 days)** vs 8,947 h before; all modes realistic (TRANSIT 54–217, PORT 92–321,
+  STATION 93–328 for Meridian). 1x and 60x identical (computeDerived runs per-tick regardless of
+  clock rate); base Meridian unchanged at 179 h. verify still PASSES (endurance is printed, not
+  asserted; demo numbers intact).
+
+## 2 — Sim clock defaults to 1x on startup
+- Startup speed 60x → **1x** (real-time) in FleetProvider. Real-time is calmer + more honest for
+  presenting and avoids fast-forward artifacts; 60x stays a deliberate choice in the D-panel clock
+  section (LiveControls: 1x/60x + pause/resume + reset all intact). Confirmed: 1x button active
+  (IKB accent) on load, 60x available.
+
+## Verify (against the brief)
+Endurance decreases as fuel burns, realistic range (hours/days), correct at 1x and 60x (no upward
+racing — fleet max ~18 days); sim clock starts at 1x; 60x reachable in D-panel; pause/reset work;
+demo path intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 116: ROUND 129 — endurance gauge required-hours threshold marker)
 
 ## The gap

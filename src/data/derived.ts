@@ -210,9 +210,21 @@ export function computeDerived(history: VesselHistory, v: VesselStatic): Derived
     sparkline.push(ds.length ? Math.round(mean(ds) * 10) / 10 : 0);
   }
 
-  // Endurance: usable fuel ÷ current burn.
+  // Endurance: usable fuel ÷ OPERATING burn. ROUND 130: the divisor is the burn this vessel
+  // sustains while UNDERWAY, not the instantaneous load. Dividing a full (just-bunkered) tank by
+  // an idle PORT/STANDBY hotel load (≈7 gph) produced thousands of implausible hours, and at 60x
+  // a vessel cycling into port made endurance "race upward" (8900h seen). Underway, burnNow
+  // already exceeds the operating floor, so the value is unchanged and still counts DOWN as fuel
+  // depletes; idle, it's bounded to a realistic operating-hours-remaining figure (fuel ÷ the burn
+  // it will resume). The floor falls back to a spec-based transit burn when the 24h window holds
+  // no underway samples (a long-moored vessel).
   const usableGal = now.tanks.reduce((a, t) => a + t.level_gal, 0) * 0.95;
-  const enduranceH = burnNow > 0 ? usableGal / burnNow : Infinity;
+  const activeBurns = ms.filter((s) => s.mode === 'TRANSIT' || s.mode === 'STATION').map(burnGph);
+  const operatingBurn = activeBurns.length >= 30
+    ? mean(activeBurns)
+    : 2 * v.main_max_gph * 0.62 + v.gen_max_gph * 0.36; // representative transit burn from spec
+  const enduranceDivisor = Math.max(burnNow, operatingBurn);
+  const enduranceH = enduranceDivisor > 0 ? usableGal / enduranceDivisor : Infinity;
 
   // Twin comparison: MAIN E2 − E1 EGT at matched load, 24h average (§6
   // Machine bucket signature).

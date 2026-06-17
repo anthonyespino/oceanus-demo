@@ -91,11 +91,14 @@ const FleetContext = createContext<FleetContextValue | null>(null);
 
 export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [fleet, setFleet] = useState<VesselState[] | null>(null);
-  // ROUND 108: demo-ready startup — live ticking ON at 60x so the app comes up
-  // animating (sea breath + sim clock) with no manual setup. Sim still advances
-  // 1-min ticks from the pinned DEMO_EPOCH (determinism + verify untouched).
+  // ROUND 108: demo-ready startup — live ticking ON so the app comes up animating
+  // (sea breath + sim clock) with no manual setup. Sim advances 1-min ticks from the
+  // pinned DEMO_EPOCH (determinism + verify untouched).
+  // ROUND 130: startup speed is 1x (real-time), not 60x. Real-time is calmer and more
+  // honest for presenting and avoids fast-forward artifacts; 60x is a deliberate choice
+  // in the D-panel (voyage motion / fast-forwarding a degradation), with pause + reset.
   const [live, setLive] = useState(true);
-  const [speed, setSpeed] = useState<TickSpeed>(60);
+  const [speed, setSpeed] = useState<TickSpeed>(1);
   const [density, setDensity] = useState<TileDensity>('standard');
   // Round 44: startup defaults set from Anthony's dev-panel screenshot.
   // COLOR → quiet (dark-cockpit): this supersedes round 38's automotive
