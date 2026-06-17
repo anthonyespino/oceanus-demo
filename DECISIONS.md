@@ -1537,3 +1537,16 @@ originals.*
   glyphs prebuild scans all of docs/glyphs-import, so the logo svgs get picked up as (unused) Glyph
   entries — harmless; move/filter if undesired (launch screen doesn't depend on them). TSC-OK ·
   LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 138: favicon + tab title.** Browser chrome, not the interface — the earned-attention rule
+  doesn't apply (it's the tab identifying the app). Added `src/app/icon.svg` (the compass-star mark
+  on a #101010 rounded tile, white as drawn) → Next emits the primary `type="image/svg+xml"` icon
+  link; added `src/app/icon.png` (32×32, rendered from the SVG) → PNG fallback link; removed the
+  scaffold `favicon.ico`. Verified served head has both links + `<title>Oceanus Fleet</title>`,
+  assets 200 with correct MIME. **Background = dark #101010 tile, NOT transparent:** the reference is
+  "white mark on dark" and white-on-transparent vanishes on light browser themes — the baked tile
+  matches the reference on dark themes and stays legible on light ones (the brief's sanctioned
+  fallback). **Title = "Oceanus Fleet"** (already the metadata title, consistent with the in-app
+  header/product); not switched to the company name "Oceanus — Modern Technologies" — Anthony to
+  override if the company name is intended in the tab. Header + launch screen untouched; palette only
+  (#101010 + white). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

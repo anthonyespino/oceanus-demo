@@ -1,3 +1,32 @@
+# PROGRESS — 2026-06-17 (Session 123: ROUND 138 — favicon + tab title)
+
+## Done (verified in served HTML + assets)
+- Added `src/app/icon.svg` (Next file-convention) — the Oceanus compass-star mark (same path the
+  launch screen inlines) on a #101010 rounded tile, white as drawn. Next auto-emits
+  `<link rel="icon" type="image/svg+xml" sizes="any" href="/icon.svg">` (primary).
+- Added `src/app/icon.png` — 32×32 PNG fallback rendered from the SVG (Playwright, deviceScaleFactor 1)
+  for browsers that don't take SVG favicons. Next auto-emits
+  `<link rel="icon" type="image/png" sizes="32x32" href="/icon.png">`.
+- Removed the scaffold `src/app/favicon.ico` (the default Next mark); /favicon.ico now 404s and the
+  link tags govern. (Brief asked for SVG + PNG; no .ico needed.)
+- Verified: served HTML has `<title>Oceanus Fleet</title>` + both icon links; both assets return 200
+  with correct content-types (image/svg+xml, image/png).
+
+## Decisions
+- **Background = dark base #101010 tile (not transparent).** The reference is "white mark on dark";
+  white-on-transparent vanishes on light browser themes. Baking the dark tile matches the reference
+  on dark themes AND stays legible on light ones — the brief's sanctioned fallback.
+- **Title kept "Oceanus Fleet"** (already the metadata title; consistent with the in-app header and
+  the product). Did NOT switch to the company name "Oceanus — Modern Technologies" — flagged for
+  Anthony to override if the company name is intended in the tab.
+
+## Untouched / notes
+In-app header + launch screen unchanged. Palette only (#101010 + white). Favicon mechanism verified
+via served head + asset MIME (browser-chrome tab render can't be screenshotted). TSC-OK · LINT-CLEAN
+· verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-17 (Session 122: ROUND 137 — startup launch screen with the centered Oceanus mark)
 
 ## Done (verified docs/screens/r137-launch-screen.png)
