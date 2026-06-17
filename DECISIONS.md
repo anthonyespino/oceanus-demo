@@ -1495,3 +1495,15 @@ originals.*
   Layout-only: per-value treatment unchanged (no severity on these rows — divergence lives in the
   hero + gph delta), and the sensor gauges + E1/E2/G1/G2 toggle below are untouched (R133 per-sensor
   coloring intact). Expert/Default/Learn preserved. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 135: Engine Twins rows — TWO side-by-side stacked pairs (R134 correction).** R134 stacked
+  all four rows into one column; the intent was two parallel twin-stacks: mains LEFT (E1 directly
+  above E2), generators RIGHT (G1 above G2), each internally column-aligned so the burn gap reads
+  straight down the pair. Reworked to a flex row of two half-width columns, each pair sharing one
+  grid template (label · status · load% · gph). Verified: E1/E2 left, G1/G2 right beside them, gph
+  right-aligned within each pair. Also confirmed (per Anthony's flag) the Meridian anomaly is intact
+  and sustained on the demo scenario (E2 +28.9% at epoch, stays divergent as the 1x sim runs —
+  `anomalyRamp` plateaus at 1.0); near-equal mains burn only appears on clean vessels or scenarios
+  2/3 where Meridian is a cleaned bystander (single-outlier board) — not a bug. Gauges + toggle
+  untouched (R133 intact); Expert/Default/Learn preserved. TSC-OK · LINT-CLEAN · verify PASSED ·
+  offline build OK.

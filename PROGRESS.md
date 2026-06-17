@@ -1,3 +1,30 @@
+# PROGRESS — 2026-06-17 (Session 121: ROUND 135 — Engine Twins rows: TWO side-by-side stacked pairs (R134 correction))
+
+## The correction
+- R134 stacked all four rows into ONE column (E1/E2/G1/G2). Anthony's intent was TWO side-by-side
+  stacked pairs: mains on the LEFT (E1 directly above E2), generators on the RIGHT (G1 above G2) —
+  two parallel twin-stacks, each internally column-aligned.
+- Reworked to a flex row of two half-width columns; each pair's two rows share one grid template
+  (`84px 76px 44px 1fr` = label · status · load% · gph) so status/%/gph align vertically within the
+  pair and the burn gap reads straight down. Verified positions: E1/E2 left (x=224, gph right-edge
+  798), G1/G2 right (x=822, beside them, same top rows); mains gph and gens gph are independent
+  half-width columns (two parallel stacks). Hairline above each pair's top row, rows tight within.
+
+## Divergence confirmed (Anthony's flag)
+- He saw near-equal mains burn (~128 vs ~125 @ 81%) and asked whether the Meridian anomaly still
+  shows. Confirmed it does: Meridian (demo scenario) at the epoch = E1 124.53 / E2 160.46 gph
+  (**+28.9%**), and it PERSISTS as the 1x sim runs (+6h → +32.2%, +54h → +25.8%; `anomalyRamp`
+  clamps to 1.0 and never decays). The near-equal numbers come from a clean vessel or scenarios 2/3,
+  where Meridian is intentionally a cleaned bystander (E1 = E2 exactly — the single-outlier board).
+  No bug.
+
+## Untouched
+Sensor gauges + E1/E2/G1/G2 toggle unchanged (R133 per-sensor color intact — E2 EGT yellow, oil
+band, others white). Hero verdict + EGT-gap chart unchanged. Expert/Default/Learn preserved
+(verified Expert keeps the side-by-side pairs). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-17 (Session 120: ROUND 134 — Engine Twins status rows: side-by-side → stacked, column-aligned pairs)
 
 ## The change

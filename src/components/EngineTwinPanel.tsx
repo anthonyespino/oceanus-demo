@@ -135,31 +135,35 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
           )}
         </div>
       </div>
-      {/* ROW 2 — ROUND 134: twins STACKED & column-aligned (was side-by-side). E1 sits directly
-          above E2, G1 above G2; the status / load% / gph columns line up vertically (identical grid
-          template per row), so the twin gap — e.g. E1 124.53 gph above E2 160.46 gph — reads by
-          scanning straight DOWN the column, no toggling. Mains pair, then gens pair (hairline +
-          gap between the pairs; rows within a pair stay tight). State/load/fuel live HERE only.
-          Per-value treatment unchanged: running = ink, off = ink/muted, tabular — no severity. */}
-      <div style={{ marginTop: 'var(--pad-section)', fontFamily: FONT.data, fontSize: 'var(--type-context)' }}>
-        {now.engines.map((e, i) => {
-          const val = e.running ? NEUTRAL.ink : NEUTRAL.inkMuted;
-          const num: React.CSSProperties = { color: val, fontVariantNumeric: 'tabular-nums', textAlign: 'right' };
-          return (
-            <span key={e.engine_id} {...layer('EngineTwinPanel / rows / engine.text', 'font/data 12 · id+role ink/muted · status/load%/gph column-aligned (round 134: twins stacked for straight-down comparison) · tabular · hairline between pairs', '{id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only')}
-              style={{
-                display: 'grid', gridTemplateColumns: '96px 80px 48px 1fr', columnGap: 'var(--pad-card)', alignItems: 'baseline',
-                borderTop: i === 0 || i === 2 ? '1px solid var(--color-line-hairline)' : undefined,
-                marginTop: i === 2 ? 'var(--pad-section)' : 0,
-                padding: '5px 0',
-              }}>
-              <span style={{ color: NEUTRAL.inkMuted }}>{ids[i]} {e.role}</span>
-              <span style={{ color: val }}>{e.running ? 'RUNNING' : 'OFF'}</span>
-              <span style={num}>{e.running ? `${Math.round(e.load_pct)}%` : ''}</span>
-              <span style={num}>{e.running ? `${e.fuel_rate_gph} gph` : ''}</span>
-            </span>
-          );
-        })}
+      {/* ROW 2 — ROUND 135: TWO side-by-side stacked twin-pairs. LEFT = mains (E1 directly above
+          E2), RIGHT = generators (G1 above G2) — a separate parallel stack. Within each pair the two
+          rows share one grid template, so status / load% / gph align vertically and the burn gap
+          reads straight DOWN the pair (E1 124.53 gph above E2 160.46 gph). The two pairs are
+          independent half-width columns side by side (wrap on narrow widths). State/load/fuel live
+          HERE only; per-value treatment unchanged (running = ink, off = ink/muted, tabular; no
+          severity — the divergence is the hero +°F and the gph delta). */}
+      <div style={{ display: 'flex', gap: 'calc(var(--pad-card) * 2)', marginTop: 'var(--pad-section)', flexWrap: 'wrap', fontFamily: FONT.data, fontSize: 'var(--type-context)' }}>
+        {[[0, 1], [2, 3]].map((pair, p) => (
+          <div key={p} style={{ flex: '1 1 300px', minWidth: 0 }}>
+            {pair.map((i, k) => {
+              const e = now.engines[i];
+              const val = e.running ? NEUTRAL.ink : NEUTRAL.inkMuted;
+              const num: React.CSSProperties = { color: val, fontVariantNumeric: 'tabular-nums', textAlign: 'right' };
+              return (
+                <span key={e.engine_id} {...layer('EngineTwinPanel / rows / engine.text', 'font/data 12 · id+role ink/muted · status/load%/gph column-aligned within the pair (round 135: mains-stack | gens-stack, twin burn gap reads straight down) · tabular', '{id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only')}
+                  style={{
+                    display: 'grid', gridTemplateColumns: '84px 76px 44px 1fr', columnGap: 'var(--pad-card)', alignItems: 'baseline',
+                    borderTop: k === 0 ? '1px solid var(--color-line-hairline)' : undefined, padding: '5px 0',
+                  }}>
+                  <span style={{ color: NEUTRAL.inkMuted }}>{ids[i]} {e.role}</span>
+                  <span style={{ color: val }}>{e.running ? 'RUNNING' : 'OFF'}</span>
+                  <span style={num}>{e.running ? `${Math.round(e.load_pct)}%` : ''}</span>
+                  <span style={num}>{e.running ? `${e.fuel_rate_gph} gph` : ''}</span>
+                </span>
+              );
+            })}
+          </div>
+        ))}
       </div>
       {/* ROW 3 — sensor cluster (verdict 13: gauges won), internals ONLY.
           ROUND 99: bottom divider removed — separation by spacing alone (consistent
