@@ -1,3 +1,49 @@
+# PROGRESS — 2026-06-16 (Session 114: ROUND 127 — EFFICIENCY panel redesign: cut the envelope, one time-based chart)
+
+## The change
+- The speed-vs-efficiency ENVELOPE chart is **cut**. It read as time but its X was speed, and
+  its "12-MO NORMAL" band collided with the panel's "30D TREND" framing — two timeframes, two
+  readings, in one card.
+- Replaced with ONE over-time view: **efficiency delta vs baseline across 30 days** — X = time
+  (−30D → NOW), Y = % vs baseline. The **normal range** is a subtle shaded band behind the line
+  (±EFF_DELTA_CAUTION_PCT = ±8%, top edge = the caution threshold, single-sourced from alerts),
+  labeled simply "normal range". "Above normal" reads as the line breaching the band's top —
+  no second chart. One timeframe, one reading: "how far above normal, over the last 30 days."
+
+## Done (verified docs/screens/r127-efficiency-trend.png — default + expert)
+- `TrendChartFill` gained an optional `band` prop — the tile (`VesselTile`) still calls it with
+  only `values` and renders byte-identically (fill-to-zero, no band). When `band` is passed it
+  becomes the panel's single chart: shaded band + faint edges + "normal range" label; the domain
+  always frames the band; the line stands alone (no fill-to-zero competing with the band); NO
+  end-of-line marker — like GapTrend the line just ends at NOW. Styling matched to the EGT-gap
+  chart (8px-floor ticks, line/strong zero, −30D/NOW endpoints, ink/secondary 1.2px line).
+- `EfficiencyPanel`: removed `EfficiencyCurve` + the two-column chart row; one full-width chart
+  (height 220) + "EFFICIENCY · 30D" caption. Header summary numbers (30D TREND, NOW VS BASELINE)
+  and the 24h baseline strip KEPT; the Learn reveal (90d/1y/expected range) unchanged.
+- **Earned color placed correctly:** the data shows the 30d *daily* series is noisy and its last
+  daily point is **+3.15%** (inside the band) while the live **NOW VS BASELINE is +13.7%** — two
+  different metrics. A yellow dot on the line's end would have been doubly wrong (contradictory
+  color, mismatched with the header). So the earned yellow lives on the **NOW VS BASELINE** stat
+  (the current delta, caution-level), tinted only when the vessel carries the EFF_DELTA caution —
+  same treatment as the EngineTwinPanel sustained-gap hero (numeral inherits, label stays neutral).
+- **Orphan cleanup:** the VesselInspector efficiency-section summary dropped its "· X% vs envelope"
+  suffix (the envelope it referenced is gone); removed the now-unused `envelopeDeltaPct` import.
+
+## Verify (against the brief)
+Envelope gone (both modes); single time-based efficiency trend with normal-range band; intuitive
+time X-axis; header numbers + 24h strip kept; one consistent timeframe; styling matches GapTrend;
+yellow only where earned (current delta, caution-level). TSC-OK · LINT-CLEAN · verify PASSED ·
+offline build OK.
+
+## DEV DECISION (pending Anthony)
+`EfficiencyCurve.tsx` + `src/data/curve.ts` are now DEAD (only the barrel export remains; no live
+render path). They were NOT deleted — `index.ts` is the locked Figma-matched §8 names barrel and
+removals must be mirrored in Figma in the same sitting (the bridge is read-only here). **Decision
+needed:** remove EfficiencyCurve from the barrel + delete curve.ts in a coordinated Figma rename
+pass, or keep the component for another surface. Flagged, not silently dropped.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 113: ROUND 126 — reconcile engine/generator node labels across panels)
 
 ## Part A — audit (reported before fixing)

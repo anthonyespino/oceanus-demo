@@ -4,6 +4,14 @@
 // box with a ResizeObserver and scales the PLOT, never a fixed pixel height.
 // At tile-hero size it earns real axes: labeled zero baseline + y ticks under
 // the min-gap rule.
+//
+// ROUND 127: optional NORMAL-RANGE band (efficiency panel). The tile keeps
+// calling this with just `values` → renders exactly as before. When `band` is
+// passed the chart becomes the efficiency panel's single over-time view: a
+// subtle shaded "normal range" behind the line, so "above normal" reads (the
+// line breaching the band's top) without a second chart. No end-of-line marker
+// — like GapTrend, the line simply ends at NOW; the panel header carries the
+// precise current delta. Styling stays matched to the EGT-gap chart (GapTrend).
 
 import { useEffect, useRef, useState } from 'react';
 import { FONT, NEUTRAL } from './probeTokens';
@@ -20,7 +28,14 @@ function yTickStep(span: number, pxPerUnit: number): number {
   return steps.find((st) => st * pxPerUnit >= 22) ?? steps[steps.length - 1];
 }
 
-export function TrendChartFill({ values }: { values: number[] }) {
+export function TrendChartFill({
+  values,
+  band,
+}: {
+  values: number[];
+  /** ROUND 127: normal-range envelope (% vs baseline), shaded behind the line. */
+  band?: { lo: number; hi: number };
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 300, h: 110 });
 
@@ -35,8 +50,14 @@ export function TrendChartFill({ values }: { values: number[] }) {
   }, []);
 
   const { w, h } = size;
-  const lo = Math.min(...values, 0) - Math.max(0.4, (Math.max(...values) - Math.min(...values)) * 0.08);
-  const hi = Math.max(...values, 0) + Math.max(0.4, (Math.max(...values) - Math.min(...values)) * 0.08);
+  // ROUND 127: the domain spans the data, the zero baseline AND the normal band (when
+  // present), so the band's edges are always in frame — "above normal" is the line
+  // breaking out the top of the shaded zone.
+  const domMin = Math.min(...values, 0, band ? band.lo : 0);
+  const domMax = Math.max(...values, 0, band ? band.hi : 0);
+  const pad = Math.max(0.4, (domMax - domMin) * 0.08);
+  const lo = domMin - pad;
+  const hi = domMax + pad;
   const x = (i: number) => ML + (i / Math.max(1, values.length - 1)) * (w - ML - MR);
   const y = (v: number) => MT + (1 - (v - lo) / (hi - lo)) * (h - MT - MB);
   const step = yTickStep(hi - lo, (h - MT - MB) / (hi - lo));
@@ -50,6 +71,19 @@ export function TrendChartFill({ values }: { values: number[] }) {
     <div ref={ref} style={{ width: '100%', height: '100%', minHeight: 90 }}>
       {values.length > 1 && (
         <svg width={w} height={h} style={{ display: 'block' }}>
+          {/* ROUND 127: normal-range band behind everything — subtle fill + faint edges,
+              its TOP edge is the EFF_DELTA caution threshold (sourced by the caller). */}
+          {band && (
+            <g>
+              <rect x={ML} y={y(band.hi)} width={Math.max(0, w - ML - MR)} height={Math.max(0, y(band.lo) - y(band.hi))}
+                fill="var(--color-fill-level)" />
+              <line x1={ML} y1={y(band.hi)} x2={w - MR} y2={y(band.hi)} stroke="var(--color-line-subtle)" strokeWidth={1} />
+              <line x1={ML} y1={y(band.lo)} x2={w - MR} y2={y(band.lo)} stroke="var(--color-line-subtle)" strokeWidth={1} />
+              <text x={ML + 4} y={y(band.hi) + 11} style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro-floor)', letterSpacing: 0.5 }} fill={NEUTRAL.inkMuted}>
+                normal range
+              </text>
+            </g>
+          )}
           {ticks.map((v) => (
             <g key={v}>
               {/* gridlines match GapTrend: line/strong at zero, line/subtle elsewhere, 1px */}
@@ -61,8 +95,12 @@ export function TrendChartFill({ values }: { values: number[] }) {
               </text>
             </g>
           ))}
-          {/* fill/level area to the zero baseline, then the line — same treatment as the EGT-gap chart */}
-          <polygon points={`${ML},${y(0).toFixed(1)} ${linePts} ${x(values.length - 1).toFixed(1)},${y(0).toFixed(1)}`} fill="var(--color-fill-level)" />
+          {/* ROUND 127: when a band is shown the band IS the reference plane, so the line
+              stands alone (no fill-to-zero competing with the shaded band). The tile path
+              (no band) keeps its fill/level area to zero — unchanged. */}
+          {!band && (
+            <polygon points={`${ML},${y(0).toFixed(1)} ${linePts} ${x(values.length - 1).toFixed(1)},${y(0).toFixed(1)}`} fill="var(--color-fill-level)" />
+          )}
           <polyline points={linePts} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.2} />
           {/* X-span endpoints, parallel to the EGT-gap chart's −30D / NOW */}
           <text x={ML} y={h - 4} style={tick} fill={NEUTRAL.inkMuted}>−30D</text>

@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 import type { VesselState, Alert } from '../data/types';
 import { alertTarget, type AlertTarget } from '../data/alerts';
 import { type ColorTreatment } from '../state/FleetProvider';
-import { envelopeDeltaPct } from '../data/curve';
 import { vesselEvents, EVENT_WINDOW_24H } from '../data/events';
 import { PORTS, distanceNm } from '../data/fleet';
 import { Collapse } from './Collapse';
@@ -55,7 +54,6 @@ export function VesselInspector({
   const nearest = PORTS.reduce((a, b) => (distanceNm(now.position, a) < distanceNm(now.position, b) ? a : b));
   const crewDays = Math.floor((now.t - vessel.history.crew[0].onboard_since) / 86_400_000);
   const lastEvent = vesselEvents(vessel, now.t - EVENT_WINDOW_24H)[0];
-  const envDelta = envelopeDeltaPct(vessel.history);
 
   // ROUND 100: route each alert to the panel that substantiates it (its
   // evidence), or to the compact GENERAL area when nothing does. Routing is by
@@ -94,7 +92,7 @@ export function VesselInspector({
         {/* round 34: ONE efficiency card (burn-vs-speed merged in) */}
         <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
           alerts={routed.efficiency}
-          summary={`now ${fmtPct(d.efficiency_delta_pct)}${envDelta === null ? '' : ` · ${fmtPct(envDelta)} vs envelope`}`}>
+          summary={`now ${fmtPct(d.efficiency_delta_pct)}`}>
           <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
         </Collapse>
         <Collapse k={`${id}:fuel`} glyph="tank" title="fuel"

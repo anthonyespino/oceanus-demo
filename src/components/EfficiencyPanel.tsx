@@ -1,17 +1,18 @@
 'use client';
 // ROUND 34: ONE efficiency card — the burn-vs-speed card merged in.
-// header → hero row (30d trend · now vs baseline) → chart row (envelope
-// left ~60% + 30d trend right ~40%, equal height) → footer (baseline ·
-// 24h strip). Dedup: "vs envelope" stays on the envelope chart — a
-// speed-specific comparison, distinct from the mode-wide vs-baseline
-// number (both labeled). Burn gph left the footer — the band gauge owns
-// it. trend_90d / 1y history / baseline band stay behind the reveal.
+// ROUND 127: ONE chart, ONE timeframe, ONE reading. The speed-vs-efficiency
+// ENVELOPE is cut — it read as time but its X was speed, and its "12-MO NORMAL"
+// band fought the panel's "30D TREND" framing. Replaced by a single
+// efficiency-over-time view: efficiency delta vs baseline across 30 days
+// (X = time −30D→NOW, Y = % vs baseline), with the normal range as a subtle
+// shaded band behind the line so "above normal" reads without a second chart.
+// header summary numbers (30D TREND · NOW VS BASELINE) + 24h baseline strip kept.
 
 import type { VesselState } from '../data/types';
+import { EFF_DELTA_CAUTION_PCT } from '../data/alerts'; // round 127: the band's top edge = this caution threshold (single source)
 import { Field } from './Field';
 import { Sparkline } from './Sparkline';
 import { TrendChartFill } from './TrendChartFill';
-import { EfficiencyCurve } from './EfficiencyCurve';
 import { Stat } from './Stat';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
@@ -21,6 +22,9 @@ import { useLearn } from '../learn/LearnProvider'; // round 112: default-show / 
 export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
   const d = vessel.derived;
   const { expertOn } = useLearn();
+  // ROUND 127: the NOW point earns yellow only when the vessel actually carries the
+  // efficiency caution (current delta caution-level + sustained) — not on any momentary poke.
+  const nowCaution = vessel.alerts.some((a) => a.code === 'EFF_DELTA' && a.level === 'CAUTION');
   return (
     // round 37: header floats above the fill
     <div style={{ marginBottom: 'var(--pad-stack)' }}>
@@ -34,23 +38,27 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           </div>
         </Field>
         <Field level="vessel" field="efficiency_delta_vs_mode_baseline">
-          <div {...layer('EfficiencyPanel / heroRow / baselineDelta.text', 'Stat: micro-caps label · type/hero numeral tabular', '{derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison')}>
+          {/* ROUND 127: earned yellow lives HERE — the current delta (NOW VS BASELINE),
+              tinted caution when the vessel carries the EFF_DELTA caution. Same treatment as
+              the EngineTwinPanel sustained-gap hero; the numeral inherits, the label stays
+              neutral. The chart shows "above normal" by the line breaching the band's top. */}
+          <div {...layer('EfficiencyPanel / heroRow / baselineDelta.text', 'Stat: micro-caps label · type/hero numeral tabular · severity yellow when caution-level (round 127)', '{derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison')} style={{ color: nowCaution ? 'var(--color-alert-caution)' : undefined }}>
             <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
           </div>
         </Field>
       </div>
-      {/* chart row: envelope (left) + 30d trend (right), equal height */}
-      <div style={{ display: 'flex', gap: 'var(--pad-card)', marginTop: 10, alignItems: 'stretch', flexWrap: 'wrap' }}>
-        <div {...layer('EfficiencyPanel / charts / envelope.chart', 'IQR band surface/overlay · median ink/secondary · live point accent ring', '{1y transit envelope: gal/nm vs kn} — speed-specific comparison')} style={{ flex: '3 1 380px', minWidth: 0 }}>
-          <EfficiencyCurve vessel={vessel} />
+      {/* ROUND 127: the single chart — efficiency delta vs baseline over 30 days, time on X,
+          normal-range band behind the line. One timeframe, one reading: "how far above
+          normal, over the last 30 days." Styling matched to the EGT-gap chart (GapTrend). */}
+      <div {...layer('EfficiencyPanel / chart / trend30.chart', 'time-series · X −30D→NOW · Y % vs baseline · subtle normal-range band behind the line · zero ref · NOW point (yellow when caution) — the over-time efficiency read', '{daily_delta_1y[-30d]} % vs baseline · normal range ±{EFF_DELTA_CAUTION_PCT}%')} style={{ marginTop: 10, height: 220, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <TrendChartFill
+            values={d.daily_delta_1y.slice(-30).map((x) => x.delta)}
+            band={{ lo: -EFF_DELTA_CAUTION_PCT, hi: EFF_DELTA_CAUTION_PCT }}
+          />
         </div>
-        <div {...layer('EfficiencyPanel / charts / trend30.chart', 'fill/level area · ink/secondary line · zero ref · −30D→NOW · % vs baseline — the 30d delta TREND (round 124: labeled to match the EGT-gap chart) · distinct from the envelope (vs-speed)', '{daily_delta_1y[-30d]} % vs baseline')} style={{ flex: '2 1 260px', minWidth: 0, height: 250, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ flex: 1, minHeight: 0 }}><TrendChartFill values={d.daily_delta_1y.slice(-30).map((x) => x.delta)} /></div>
-          {/* ROUND 124: title parallel to the EGT-gap chart's "EGT GAP · 30D" — identifies
-              this as the over-time trend (the envelope is the vs-speed view). Same caption
-              treatment (micro · letterSpacing 1 · ink/muted · centered). */}
-          <div style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1, color: 'var(--color-ink-muted)', marginTop: 2, textAlign: 'center' }}>EFFICIENCY · 30D</div>
-        </div>
+        {/* caption parallel to the EGT-gap chart's "EGT GAP · 30D" */}
+        <div style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1, color: 'var(--color-ink-muted)', marginTop: 2, textAlign: 'center' }}>EFFICIENCY · 30D</div>
       </div>
       {/* footer: baseline context + 24h strip (burn gph lives in the band) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>

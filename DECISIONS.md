@@ -1370,3 +1370,26 @@ originals.*
   → RECON OK); yellow earned only on the diverging main (E2), gens neutral; compact + contained
   proportions unchanged. No data change (labels display-only). TSC-OK · LINT-CLEAN · verify PASSED
   · offline build OK.
+
+- **ROUND 127: EFFICIENCY panel redesign — cut the speed-vs-efficiency envelope, one time-based
+  chart.** The envelope read as time but its X was speed, and its "12-MO NORMAL" band fought the
+  panel's "30D TREND" framing (two timeframes in one card). Replaced with a single over-time view:
+  efficiency delta vs baseline across 30 days (X = time −30D→NOW, Y = % vs baseline), with the
+  normal range as a subtle shaded band behind the line (±EFF_DELTA_CAUTION_PCT = ±8%, top edge =
+  the caution threshold, single-sourced from `alerts.ts`) labeled "normal range" — "above normal"
+  reads as the line breaching the band's top, no second chart. Header numbers (30D TREND, NOW VS
+  BASELINE) + 24h strip kept; one timeframe, one reading. `TrendChartFill` took an OPTIONAL `band`
+  prop so the fleet tile (`VesselTile`, no band) stays byte-identical; styling matched to the
+  EGT-gap chart (GapTrend). Earned color: the 30d *daily* series is noisy (last daily point +3.15%,
+  inside the band) while the live NOW VS BASELINE is +13.7% — different metrics, so a dot on the
+  line's end would be contradictory; the earned yellow instead tints the NOW VS BASELINE stat (the
+  current delta) only when the vessel carries the EFF_DELTA caution (same treatment as the
+  EngineTwinPanel hero). VesselInspector's efficiency-section summary dropped its now-orphaned
+  "· X% vs envelope" suffix. No data change. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **DEV DECISION (pending Anthony) — ROUND 127: EfficiencyCurve + curve.ts now dead.** Cutting the
+  envelope leaves `EfficiencyCurve.tsx` + `src/data/curve.ts` with no live render path (only the
+  barrel export remains). NOT deleted: `index.ts` is the locked Figma-matched §8 names barrel and a
+  removal must be mirrored in Figma in the same sitting (read-only bridge here). Anthony to call:
+  remove from the barrel + delete curve.ts in a coordinated Figma rename pass, or keep the
+  component for another surface. Flagged, never silently dropped (ledger hygiene).
