@@ -1,3 +1,45 @@
+# PROGRESS — 2026-06-16 (Session 115: ROUND 128 — efficiency/engine panels: Expert strip + live NOW dot + symptom-first order)
+
+## 1 — Expert orientation-vs-signal strip (the R127 redesign reset it; applied to BOTH panels)
+- The rebuilt EFFICIENCY panel was nearly identical in Default vs Expert (only the 90d reveal
+  dropped) — the orientation-vs-signal strip never got re-applied to the new markup.
+- Audited the reference EGT-gap panel: in Expert it stripped ONLY its section header + gauge
+  captions, but KEPT its "EGT GAP · 30D" chart caption and "E2 VS E1 EGT · SUSTAINED" sub-label —
+  so it wasn't fully following the rule either. **Anthony's call: strip BOTH panels fully.**
+- **EfficiencyPanel — dropped in Expert (orientation):** "30D TREND"/"NOW VS BASELINE" stat
+  captions (Stat `label` → undefined), "normal range" band label (new `bandLabel` prop → undefined),
+  "EFFICIENCY · 30D" caption, "baseline … gal/nm". Header already stripped via `Label`. **Kept
+  (signal):** the values (+7.6%, +13.7% with earned yellow), trend line, normal-range BAND, zero
+  line, axis ticks, −30D/NOW endpoints, 24h sparkline, and the NOW dot.
+- **EngineTwinPanel — dropped in Expert:** "EGT GAP · 30D" caption + "E2 VS E1 EGT · SUSTAINED"
+  sub-label (added `useLearn`). Kept the +58°F value, live line, rows, gauges. Both panels now use
+  the same drop treatment as the Gauge captions (no glyph swap) — consistent across Expert.
+
+## 2 — Live NOW dot on the efficiency trend (restores real-time feel; de-twins it from EGT-gap)
+- Added an emphasized live dot (outer ring + filled core) at the right edge (NOW on a time axis),
+  positioned at the **TRUE current delta** (`efficiency_delta_pct` = +13.7%), NOT the noisy daily
+  series endpoint (+3.15%) — same posture as the EngineTwin hero (report the real figure, not the
+  jittery sample). It sits above the daily line, visibly breaching the normal-range band. Earns
+  yellow at caution (matches the NOW VS BASELINE value's color); neutral otherwise. Domain now
+  includes `nowValue` so the dot always has headroom (axis tops at +15%). SIGNAL → kept in Expert.
+- This is also what makes the efficiency chart read distinct from the EGT-gap trend at a glance
+  (they were reading as twins). DOM-verified: exactly one dot, at the right edge.
+
+## 3 — Symptom-first order: efficiency ABOVE engine-twins (VesselInspector)
+- Efficiency is the symptom (what's on the fleet board, why you open the vessel); the EGT/engine
+  gap is the mechanical cause you drill into. Reordered the inspector Collapses so efficiency leads,
+  engine-twins follows. Symptom → cause.
+
+## Verify (against the brief)
+Expert strips orientation on both panels (headers, captions, "normal range", axis titles, baseline)
+and keeps values/line/band/ticks/endpoints/NOW dot; live NOW dot at the right edge at the true
+current delta, yellow at caution, breaching the band; efficiency chart now visually distinct from
+EGT-gap; efficiency panel sits above engine-twins; earned color only (no green); styling matched to
+the EGT-gap chart. Default + Expert verified (docs/screens/r128-default-order.png, r128-expert-strip.png,
+r128-now-dot.png). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-16 (Session 114: ROUND 127 — EFFICIENCY panel redesign: cut the envelope, one time-based chart)
 
 ## The change

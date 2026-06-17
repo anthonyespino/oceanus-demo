@@ -19,6 +19,7 @@ import { FONT, NEUTRAL } from './probeTokens';
 import { gb, fmtPct } from './gb';
 import { Label } from './Glyph';
 import { layer } from '../learn/layer'; // LEARN MODE — strip before demo week
+import { useLearn } from '../learn/LearnProvider'; // round 128: Expert drops the verdict caption + chart caption (orientation)
 
 /** Daily mean E2−E1 EGT gap (both mains running), last 30 days. */
 function gapTrend30d(vessel: VesselState): number[] {
@@ -79,6 +80,7 @@ function GapTrend({ values }: { values: number[] }) {
 }
 
 export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
+  const { expertOn } = useLearn();
   const now = vessel.history.minutes.at(-1)!;
   const [m1, m2] = now.engines.filter((e) => e.role === 'MAIN');
   const mainsRunning = m1.running && m2.running;
@@ -105,7 +107,12 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
       <div style={{ display: 'flex', gap: 'var(--pad-card)', alignItems: 'center', flexWrap: 'wrap' }}>
         <Field level="vessel" field="twin_comparison_delta">
           <div style={{ flex: '0 1 30%', minWidth: 210 }}>
-            <div {...layer('EngineTwinPanel / verdict / label.text', 'gb.label micro-caps · ink/muted · SUSTAINED qualifier (round 118)', 'E2 VS E1 EGT · SUSTAINED')} style={{ ...gb.label, marginBottom: 4 }}>E2 vs E1 EGT · sustained</div>
+            {/* ROUND 128: the verdict caption is ORIENTATION — dropped in Expert (the value
+                +58°F below is the signal, and it earns its own color). Matches the Gauge /
+                EGT-cluster caption drop and the efficiency panel's stat-caption drop. */}
+            {!expertOn && (
+              <div {...layer('EngineTwinPanel / verdict / label.text', 'gb.label micro-caps · ink/muted · SUSTAINED qualifier · dropped in expert (round 128)', 'E2 VS E1 EGT · SUSTAINED')} style={{ ...gb.label, marginBottom: 4 }}>E2 vs E1 EGT · sustained</div>
+            )}
             {/* ROUND 118: HERO = sustained divergence (24h-avg gap), severity-YELLOW when
                 caution-level — this is the number the caution is about, no longer the
                 quietest element. Never the raw live gap (0 when mains off → false all-clear). */}
@@ -121,7 +128,11 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
         </Field>
         <div {...layer('EngineTwinPanel / gapTrend / area.chart', 'fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)', '{daily mean E2−E1 EGT, 30d, both running} — the "three weeks early" graphic')} style={{ flex: '1 1 320px', minWidth: 0 }}>
           <GapTrend values={gapTrend30d(vessel)} />
-          <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro)', letterSpacing: 1, color: NEUTRAL.inkMuted, marginTop: 2, textAlign: 'center' }}>EGT GAP · 30D</div>
+          {/* ROUND 128: chart caption is ORIENTATION — dropped in Expert (parallel to the
+              efficiency panel's "EFFICIENCY · 30D"); the trend itself is the signal. */}
+          {!expertOn && (
+            <div style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro)', letterSpacing: 1, color: NEUTRAL.inkMuted, marginTop: 2, textAlign: 'center' }}>EGT GAP · 30D</div>
+          )}
         </div>
       </div>
       {/* ROW 2 — mains and gens share ONE grammar, two columns wide.

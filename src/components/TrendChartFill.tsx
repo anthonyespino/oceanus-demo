@@ -9,9 +9,17 @@
 // calling this with just `values` → renders exactly as before. When `band` is
 // passed the chart becomes the efficiency panel's single over-time view: a
 // subtle shaded "normal range" behind the line, so "above normal" reads (the
-// line breaching the band's top) without a second chart. No end-of-line marker
-// — like GapTrend, the line simply ends at NOW; the panel header carries the
-// precise current delta. Styling stays matched to the EGT-gap chart (GapTrend).
+// line breaching the band's top) without a second chart. Styling stays matched
+// to the EGT-gap chart (GapTrend).
+//
+// ROUND 128: a live NOW dot (`nowValue`) sits at the right edge (NOW on a time
+// axis) at the TRUE CURRENT delta — the live efficiency value, NOT the noisy
+// daily series endpoint (same posture as the EngineTwin hero: report the real
+// current figure, not the jittery sample). It's emphasized + earns yellow at
+// caution level, so it reads as "this instant" and visibly breaches the band.
+// SIGNAL → kept in Expert; the "normal range" label is ORIENTATION → the caller
+// drops it in Expert via `bandLabel`. The live dot is also what differentiates
+// this chart from the EGT-gap trend at a glance (they were reading as twins).
 
 import { useEffect, useRef, useState } from 'react';
 import { FONT, NEUTRAL } from './probeTokens';
@@ -31,10 +39,21 @@ function yTickStep(span: number, pxPerUnit: number): number {
 export function TrendChartFill({
   values,
   band,
+  bandLabel,
+  nowValue,
+  nowCaution = false,
 }: {
   values: number[];
   /** ROUND 127: normal-range envelope (% vs baseline), shaded behind the line. */
   band?: { lo: number; hi: number };
+  /** ROUND 128: the band's text label ("normal range") — ORIENTATION, so the caller
+      drops it in Expert (undefined) while the band itself, SIGNAL, always stays. */
+  bandLabel?: string;
+  /** ROUND 128: live NOW value (% vs baseline) — the TRUE current delta, drawn as an
+      emphasized dot at the right edge. Distinct from the daily series endpoint. */
+  nowValue?: number;
+  /** ROUND 128: earn yellow on the NOW dot only when the current delta is caution-level. */
+  nowCaution?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 300, h: 110 });
@@ -53,8 +72,10 @@ export function TrendChartFill({
   // ROUND 127: the domain spans the data, the zero baseline AND the normal band (when
   // present), so the band's edges are always in frame — "above normal" is the line
   // breaking out the top of the shaded zone.
-  const domMin = Math.min(...values, 0, band ? band.lo : 0);
-  const domMax = Math.max(...values, 0, band ? band.hi : 0);
+  // ROUND 128: include the live NOW value in the domain so the dot — which sits at the
+  // true current delta, above the daily line — is always in frame with headroom.
+  const domMin = Math.min(...values, 0, band ? band.lo : 0, nowValue ?? 0);
+  const domMax = Math.max(...values, 0, band ? band.hi : 0, nowValue ?? 0);
   const pad = Math.max(0.4, (domMax - domMin) * 0.08);
   const lo = domMin - pad;
   const hi = domMax + pad;
@@ -79,9 +100,12 @@ export function TrendChartFill({
                 fill="var(--color-fill-level)" />
               <line x1={ML} y1={y(band.hi)} x2={w - MR} y2={y(band.hi)} stroke="var(--color-line-subtle)" strokeWidth={1} />
               <line x1={ML} y1={y(band.lo)} x2={w - MR} y2={y(band.lo)} stroke="var(--color-line-subtle)" strokeWidth={1} />
-              <text x={ML + 4} y={y(band.hi) + 11} style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro-floor)', letterSpacing: 0.5 }} fill={NEUTRAL.inkMuted}>
-                normal range
-              </text>
+              {/* ROUND 128: the text is ORIENTATION — dropped in Expert (bandLabel undefined). */}
+              {bandLabel && (
+                <text x={ML + 4} y={y(band.hi) + 11} style={{ fontFamily: FONT.data, fontSize: 'var(--type-micro-floor)', letterSpacing: 0.5 }} fill={NEUTRAL.inkMuted}>
+                  {bandLabel}
+                </text>
+              )}
             </g>
           )}
           {ticks.map((v) => (
@@ -102,6 +126,19 @@ export function TrendChartFill({
             <polygon points={`${ML},${y(0).toFixed(1)} ${linePts} ${x(values.length - 1).toFixed(1)},${y(0).toFixed(1)}`} fill="var(--color-fill-level)" />
           )}
           <polyline points={linePts} fill="none" stroke="var(--color-ink-secondary)" strokeWidth={1.2} />
+          {/* ROUND 128: live NOW dot at the right edge (NOW), at the TRUE current delta —
+              above the daily line, visibly breaching the band. Emphasized (outer ring +
+              filled core) so it reads as "this instant"; earns yellow at caution. This is
+              the chart's live signal and what distinguishes it from the EGT-gap trend. */}
+          {nowValue !== undefined && (() => {
+            const c = nowCaution ? 'var(--color-alert-caution)' : 'var(--color-ink-secondary)';
+            return (
+              <g>
+                <circle cx={w - MR} cy={y(nowValue)} r={6} fill="none" stroke={c} strokeWidth={1} opacity={0.4} />
+                <circle cx={w - MR} cy={y(nowValue)} r={3.5} fill={c} />
+              </g>
+            );
+          })()}
           {/* X-span endpoints, parallel to the EGT-gap chart's −30D / NOW */}
           <text x={ML} y={h - 4} style={tick} fill={NEUTRAL.inkMuted}>−30D</text>
           <text x={w - MR} y={h - 4} textAnchor="end" style={tick} fill={NEUTRAL.inkMuted}>NOW</text>

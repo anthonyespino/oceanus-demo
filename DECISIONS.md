@@ -1393,3 +1393,22 @@ originals.*
   removal must be mirrored in Figma in the same sitting (read-only bridge here). Anthony to call:
   remove from the barrel + delete curve.ts in a coordinated Figma rename pass, or keep the
   component for another surface. Flagged, never silently dropped (ledger hygiene).
+
+- **ROUND 128: efficiency/engine panels — Expert strip (both), live NOW dot, symptom-first order.**
+  (a) **Expert orientation-vs-signal strip.** The R127 redesign reset the strip (Default ≈ Expert).
+  Audit found the reference EGT-gap panel itself kept its chart caption + verdict sub-label in
+  Expert — so it wasn't fully compliant either. Anthony's call: strip BOTH fully. EfficiencyPanel
+  drops in Expert the stat captions (30D TREND / NOW VS BASELINE), the "normal range" band label
+  (new `bandLabel` prop, undefined in Expert), the "EFFICIENCY · 30D" caption, and the baseline
+  label; EngineTwinPanel drops "EGT GAP · 30D" + "E2 VS E1 EGT · SUSTAINED". Both keep values,
+  trends, bands, ticks, endpoints, gauges — same drop treatment as the Gauge captions (no glyph
+  swap), consistent across Expert. (b) **Live NOW dot** (reverses R127's dot removal, with the fix
+  R127 lacked): the dot sits at the **TRUE current delta** (`efficiency_delta_pct`, +13.7%), NOT
+  the noisy daily endpoint (+3.15%) — same posture as the EngineTwin hero — at the right edge (NOW
+  on a time axis), emphasized (ring + core), earning yellow at caution, visibly breaching the
+  normal-range band. SIGNAL → kept in Expert. It also de-twins the efficiency chart from the EGT-gap
+  trend (they were reading as the same chart). Domain includes the NOW value for headroom (axis tops
+  ~+15%). (c) **Symptom-first order:** efficiency panel moved ABOVE engine-twins in VesselInspector —
+  efficiency is the fleet-board symptom you open the vessel for; the EGT/engine gap is the cause you
+  drill into. No data change; earned color only (no green); styling matched to the EGT-gap chart.
+  TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.

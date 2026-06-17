@@ -84,16 +84,19 @@ export function VesselInspector({
             ))}
           </section>
         )}
-        <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
-          alerts={routed['engine-twins']}
-          summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
-          <Annotated name="EngineTwinPanel" node="engine-twin"><EngineTwinPanel vessel={vessel} /></Annotated>
-        </Collapse>
-        {/* round 34: ONE efficiency card (burn-vs-speed merged in) */}
+        {/* ROUND 128: SYMPTOM-FIRST ordering. Efficiency is the symptom — what's on the
+            fleet board and why you opened the vessel — so it leads. The engine-twins/EGT
+            gap is the mechanical CAUSE you drill into next. Symptom → cause.
+            (round 34: ONE efficiency card — burn-vs-speed merged in.) */}
         <Collapse k={`${id}:efficiency`} glyph="chart" title="efficiency"
           alerts={routed.efficiency}
           summary={`now ${fmtPct(d.efficiency_delta_pct)}`}>
           <Annotated name="EfficiencyPanel"><EfficiencyPanel vessel={vessel} /></Annotated>
+        </Collapse>
+        <Collapse k={`${id}:twins`} glyph="engine" title="engine twins"
+          alerts={routed['engine-twins']}
+          summary={`gap ${d.egt_twin_gap_f}°F · fuel Δ ${fmtPct(fuelGapPct)}`}>
+          <Annotated name="EngineTwinPanel" node="engine-twin"><EngineTwinPanel vessel={vessel} /></Annotated>
         </Collapse>
         <Collapse k={`${id}:fuel`} glyph="tank" title="fuel"
           alerts={routed.fuel}

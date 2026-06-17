@@ -33,17 +33,19 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
       {/* hero row */}
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
         <Field level="vessel" field="trend_30d">
-          <div {...layer('EfficiencyPanel / heroRow / trend30.text', 'Stat: micro-caps label · type/hero numeral tabular', '{derived.trend_30d} %/30d — the primary fleet signal (ruling 13)')}>
-            <Stat label="30d trend" value={fmtPct(d.trend_30d)} />
+          {/* ROUND 128: the caption is ORIENTATION — dropped in Expert (label undefined),
+              the value stays. Same drop treatment as the Gauge captions / EGT-gap panel. */}
+          <div {...layer('EfficiencyPanel / heroRow / trend30.text', 'Stat: micro-caps label (dropped in expert) · type/hero numeral tabular', '{derived.trend_30d} %/30d — the primary fleet signal (ruling 13)')}>
+            <Stat label={expertOn ? undefined : '30d trend'} value={fmtPct(d.trend_30d)} />
           </div>
         </Field>
         <Field level="vessel" field="efficiency_delta_vs_mode_baseline">
           {/* ROUND 127: earned yellow lives HERE — the current delta (NOW VS BASELINE),
               tinted caution when the vessel carries the EFF_DELTA caution. Same treatment as
               the EngineTwinPanel sustained-gap hero; the numeral inherits, the label stays
-              neutral. The chart shows "above normal" by the line breaching the band's top. */}
-          <div {...layer('EfficiencyPanel / heroRow / baselineDelta.text', 'Stat: micro-caps label · type/hero numeral tabular · severity yellow when caution-level (round 127)', '{derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison')} style={{ color: nowCaution ? 'var(--color-alert-caution)' : undefined }}>
-            <Stat label="now vs baseline" value={fmtPct(d.efficiency_delta_pct)} />
+              neutral. ROUND 128: the caption drops in Expert; the value (signal) stays. */}
+          <div {...layer('EfficiencyPanel / heroRow / baselineDelta.text', 'Stat: micro-caps label (dropped in expert) · type/hero numeral tabular · severity yellow when caution-level', '{derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison')} style={{ color: nowCaution ? 'var(--color-alert-caution)' : undefined }}>
+            <Stat label={expertOn ? undefined : 'now vs baseline'} value={fmtPct(d.efficiency_delta_pct)} />
           </div>
         </Field>
       </div>
@@ -52,13 +54,21 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
           normal, over the last 30 days." Styling matched to the EGT-gap chart (GapTrend). */}
       <div {...layer('EfficiencyPanel / chart / trend30.chart', 'time-series · X −30D→NOW · Y % vs baseline · subtle normal-range band behind the line · zero ref · NOW point (yellow when caution) — the over-time efficiency read', '{daily_delta_1y[-30d]} % vs baseline · normal range ±{EFF_DELTA_CAUTION_PCT}%')} style={{ marginTop: 10, height: 220, display: 'flex', flexDirection: 'column' }}>
         <div style={{ flex: 1, minHeight: 0 }}>
+          {/* ROUND 128: the live NOW dot sits at the TRUE current delta (efficiency_delta_pct),
+              not the daily series endpoint — earns yellow at caution. The "normal range" label
+              is orientation (dropped in Expert); the band, line, ticks, dot are signal (kept). */}
           <TrendChartFill
             values={d.daily_delta_1y.slice(-30).map((x) => x.delta)}
             band={{ lo: -EFF_DELTA_CAUTION_PCT, hi: EFF_DELTA_CAUTION_PCT }}
+            bandLabel={expertOn ? undefined : 'normal range'}
+            nowValue={d.efficiency_delta_pct}
+            nowCaution={nowCaution}
           />
         </div>
-        {/* caption parallel to the EGT-gap chart's "EGT GAP · 30D" */}
-        <div style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1, color: 'var(--color-ink-muted)', marginTop: 2, textAlign: 'center' }}>EFFICIENCY · 30D</div>
+        {/* caption parallel to the EGT-gap chart's "EGT GAP · 30D" — ORIENTATION, dropped in Expert */}
+        {!expertOn && (
+          <div style={{ fontFamily: 'var(--font-data)', fontSize: 'var(--type-micro)', letterSpacing: 1, color: 'var(--color-ink-muted)', marginTop: 2, textAlign: 'center' }}>EFFICIENCY · 30D</div>
+        )}
       </div>
       {/* footer: baseline context + 24h strip (burn gph lives in the band) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10, flexWrap: 'wrap' }}>
@@ -66,9 +76,13 @@ export function EfficiencyPanel({ vessel }: { vessel: VesselState }) {
         <span {...layer('EfficiencyPanel / footer / spark24.chart', 'ink/secondary 1px · line/subtle frame', '{derived.sparkline_24h — hourly efficiency_delta}')}>
           <Sparkline values={d.sparkline_24h} width={140} height={20} />
         </span>
-        <span {...layer('EfficiencyPanel / footer / baseline.text', 'font/data 12 · ink/secondary', '{derived.baseline_value} {baseline_metric}')} style={{ ...gb.dim, fontSize: 'var(--type-context)' }}>
-          baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
-        </span>
+        {/* ROUND 128: baseline reference label — ORIENTATION, dropped in Expert. The 24h
+            strip's data (sparkline) stays; a trained operator reads it without the legend. */}
+        {!expertOn && (
+          <span {...layer('EfficiencyPanel / footer / baseline.text', 'font/data 12 · ink/secondary · dropped in expert', '{derived.baseline_value} {baseline_metric}')} style={{ ...gb.dim, fontSize: 'var(--type-context)' }}>
+            baseline {d.baseline_value} {d.baseline_metric === 'gal_per_nm' ? 'gal/nm' : 'gph'}
+          </span>
+        )}
       </div>
       {/* ROUND 112: the reveal CHEVRON is removed — the deeper efficiency context
           (90d trend · 1y history · baseline band) is shown by DEFAULT and stripped
