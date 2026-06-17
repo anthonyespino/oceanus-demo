@@ -135,17 +135,31 @@ export function EngineTwinPanel({ vessel }: { vessel: VesselState }) {
           )}
         </div>
       </div>
-      {/* ROW 2 — mains and gens share ONE grammar, two columns wide.
-          State/load/fuel live here and nowhere else. */}
-      <div style={{ display: 'flex', gap: '0 var(--pad-card)', marginTop: 'var(--pad-section)', flexWrap: 'wrap', fontFamily: FONT.data, fontSize: 'var(--type-context)' }}>
-        {now.engines.map((e, i) => (
-          <span key={e.engine_id} {...layer('EngineTwinPanel / rows / engine.text', 'font/data 12 · id+role ink/muted left · state tabular right · hairline divider', '{id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only')} style={{ flex: '1 1 40%', minWidth: 280, display: 'flex', justifyContent: 'space-between', gap: 8, borderTop: '1px solid var(--color-line-hairline)', padding: '6px 0' }}>
-            <span style={{ color: NEUTRAL.inkMuted }}>{ids[i]} {e.role}</span>
-            <span style={{ color: e.running ? NEUTRAL.ink : NEUTRAL.inkMuted, fontVariantNumeric: 'tabular-nums' }}>
-              {e.running ? `RUNNING · ${Math.round(e.load_pct)}% · ${e.fuel_rate_gph} gph` : 'OFF'}
+      {/* ROW 2 — ROUND 134: twins STACKED & column-aligned (was side-by-side). E1 sits directly
+          above E2, G1 above G2; the status / load% / gph columns line up vertically (identical grid
+          template per row), so the twin gap — e.g. E1 124.53 gph above E2 160.46 gph — reads by
+          scanning straight DOWN the column, no toggling. Mains pair, then gens pair (hairline +
+          gap between the pairs; rows within a pair stay tight). State/load/fuel live HERE only.
+          Per-value treatment unchanged: running = ink, off = ink/muted, tabular — no severity. */}
+      <div style={{ marginTop: 'var(--pad-section)', fontFamily: FONT.data, fontSize: 'var(--type-context)' }}>
+        {now.engines.map((e, i) => {
+          const val = e.running ? NEUTRAL.ink : NEUTRAL.inkMuted;
+          const num: React.CSSProperties = { color: val, fontVariantNumeric: 'tabular-nums', textAlign: 'right' };
+          return (
+            <span key={e.engine_id} {...layer('EngineTwinPanel / rows / engine.text', 'font/data 12 · id+role ink/muted · status/load%/gph column-aligned (round 134: twins stacked for straight-down comparison) · tabular · hairline between pairs', '{id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only')}
+              style={{
+                display: 'grid', gridTemplateColumns: '96px 80px 48px 1fr', columnGap: 'var(--pad-card)', alignItems: 'baseline',
+                borderTop: i === 0 || i === 2 ? '1px solid var(--color-line-hairline)' : undefined,
+                marginTop: i === 2 ? 'var(--pad-section)' : 0,
+                padding: '5px 0',
+              }}>
+              <span style={{ color: NEUTRAL.inkMuted }}>{ids[i]} {e.role}</span>
+              <span style={{ color: val }}>{e.running ? 'RUNNING' : 'OFF'}</span>
+              <span style={num}>{e.running ? `${Math.round(e.load_pct)}%` : ''}</span>
+              <span style={num}>{e.running ? `${e.fuel_rate_gph} gph` : ''}</span>
             </span>
-          </span>
-        ))}
+          );
+        })}
       </div>
       {/* ROW 3 — sensor cluster (verdict 13: gauges won), internals ONLY.
           ROUND 99: bottom divider removed — separation by spacing alone (consistent

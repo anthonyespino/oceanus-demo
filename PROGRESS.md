@@ -1,3 +1,31 @@
+# PROGRESS — 2026-06-17 (Session 120: ROUND 134 — Engine Twins status rows: side-by-side → stacked, column-aligned pairs)
+
+## The change
+- The four engine status rows were a 2×2 grid (E1 beside E2, G1 beside G2) — the twin comparison
+  read horizontally and the fuel gap was hard to scan. Realigned to two STACKED, column-aligned
+  pairs: E1 directly above E2, G1 above G2.
+- Each row now uses an identical CSS grid template (`96px 80px 48px 1fr` = label · status · load% ·
+  gph), so the status / % / gph columns line up vertically across rows. Verified: the three running
+  engines' gph cells share the exact same right edge (124.53 / 160.46 / 9.93 gph all right-align),
+  so E1 124.53 sits directly above E2 160.46 — the +36 gph twin gap reads by scanning straight DOWN
+  the column, no toggling.
+- Pairs grouped: hairline above each pair (E1, G1), a `--pad-section` gap before the gens pair, rows
+  tight within a pair. Per-value treatment unchanged (running = ink, off = ink/muted, tabular; no
+  severity on these rows — the divergence lives in the hero +58°F and the gph delta).
+
+## Untouched (as required)
+The sensor gauges + E1/E2/G1/G2 toggle below are unchanged (still one set driven by the toggle;
+R133 per-sensor coloring intact — E2 EGT yellow, etc.). Hero verdict + EGT-gap chart unchanged.
+Expert/Default/Learn preserved (rows have no mode gating; verified the realigned rows + column
+alignment render identically in Expert).
+
+## Verify
+E1 above E2 and G1 above G2 with %/gph/status column-aligned (gph right edges identical); twin gap
+reads down the column; gauges + toggle unchanged; styling consistent (type/stroke/greyscale/earned
+color). TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+---
+
 # PROGRESS — 2026-06-17 (Session 119: ROUND 133 — four fixes: per-sensor color, alerting-engine chip tint, Learn-on-header, LayerLens toggle)
 
 ## 1 — CRITICAL: per-sensor severity color (the "all gauges yellow" bug)

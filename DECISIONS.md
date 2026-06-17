@@ -1485,3 +1485,13 @@ originals.*
   data-layer click, hijacking its own off-toggle; marked the panel `data-devpanel` and made the lens
   skip that subtree (the lens is for the product surface, not the dev panel). Default/Expert/Learn
   preserved; demo path intact. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 134: Engine Twins status rows — side-by-side → stacked, column-aligned pairs.** The four
+  status rows were a 2×2 grid (E1 beside E2, G1 beside G2), so the twin fuel gap read horizontally
+  and poorly. Realigned to two stacked pairs — E1 directly above E2, G1 above G2 — each row using an
+  identical grid template (label · status · load% · gph), so the columns line up vertically and the
+  gap (E1 124.53 gph above E2 160.46 gph) reads by scanning straight down (verified: running engines'
+  gph cells share an identical right edge). Hairline + gap between pairs; rows tight within a pair.
+  Layout-only: per-value treatment unchanged (no severity on these rows — divergence lives in the
+  hero + gph delta), and the sensor gauges + E1/E2/G1/G2 toggle below are untouched (R133 per-sensor
+  coloring intact). Expert/Default/Learn preserved. TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
