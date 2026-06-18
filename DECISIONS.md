@@ -1565,3 +1565,15 @@ originals.*
   needed; PNG corner alpha 0). Caveat noted: white-on-transparent vanishes on light browser themes
   (fine for a dark tab; dark-tile fallback is one line if wanted). Header untouched; palette only.
   TSC-OK · LINT-CLEAN · verify PASSED · offline build OK.
+
+- **ROUND 141: launch-veil failsafe (stuck-splash robustness).** Anthony hit a "stuck on the loading
+  page" on a vessel-page refresh. Could NOT reproduce on a clean build (prod + dev, direct load AND
+  reload of /vessel/v01 → veil clears, content renders, no errors/4xx/5xx) — almost certainly a
+  stale dev-server / stale-chunk state on refresh (same class seen earlier). But the launch veil is
+  SSR-rendered and ONLY client JS removes it, so a stalled/broken hydration could trap the user on
+  the splash with no escape. Added a CSS FAILSAFE: a 0s-duration animation with a 4s delay that flips
+  the veil to `visibility:hidden; pointer-events:none` from first paint, independent of JS (no motion,
+  no conflict with the JS-driven opacity). Normal op unmounts the component at ~2.3s, well before it
+  fires; verified JS-OFF → veil auto-hides by ~4s (visibility hidden, pointer-events none), and JS-ON
+  normal sequence unchanged (gone by 2.8s). Also clean-rebuilt (rm -rf .next) the running server.
+  TSC-OK · LINT-CLEAN · offline build OK.

@@ -196,6 +196,18 @@ textarea,
   }
 }
 
+/* ROUND 141: FAILSAFE — the veil is SSR-rendered and only client JS removes it, so if hydration
+   stalls (slow device, or a stale/broken chunk on refresh) the splash could trap the user. This
+   CSS auto-hides it after 4s from first paint, independent of JS (0s-duration animation = a delayed
+   state flip, no motion, no conflict with the JS-driven opacity). In normal operation the component
+   unmounts at ~2.3s, well before this fires, so it only matters when JS is dead or very slow. */
+.launch-veil {
+  animation: launch-failsafe 0s linear 4s forwards;
+}
+@keyframes launch-failsafe {
+  to { visibility: hidden; pointer-events: none; }
+}
+
 /* ROUND 50: Calm Sea is a WebGL canvas (src/components/AmbientSea.tsx) with a
    CSS-gradient static still for reduced-motion / WebGL fallback — no global
    classes needed. The round-46 SVG paper-wave CSS was removed here. */
