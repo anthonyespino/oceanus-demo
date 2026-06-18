@@ -65,7 +65,10 @@ export function LaunchScreen() {
       aria-hidden
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
-        background: 'var(--color-surface-base)',
+        // ROUND 144: hex FALLBACK so the veil is dark from FIRST PAINT even before globals.css/@theme
+        // loads (cold cache). Without it, the unresolved var → transparent bg → the browser's grey
+        // showed through for the ~1s the CSS took to apply on a cold load ("grey screen till it opens").
+        background: 'var(--color-surface-base, #101010)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}
     >
@@ -80,7 +83,10 @@ export function LaunchScreen() {
           ...MASK,
         }}
       >
-        <div className="launch-fill" style={{ position: 'absolute', inset: 0, background: '#ffffff', willChange: 'transform' }} />
+        {/* ROUND 144: inline transform:translateY(100%) = the EMPTY base, so before globals.css's
+            launch-water keyframe applies (cold cache) the block sits below the mark (empty glass)
+            rather than defaulting to full white; the keyframe then overrides it to rise + hold full. */}
+        <div className="launch-fill" style={{ position: 'absolute', inset: 0, background: '#ffffff', transform: 'translateY(100%)', willChange: 'transform' }} />
       </div>
     </div>
   );
