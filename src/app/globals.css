@@ -186,37 +186,19 @@ textarea,
   50% { opacity: 0.45; }
 }
 
-/* ROUND 143: launch splash sequence (src/components/LaunchScreen.tsx) — PURE CSS from FIRST PAINT,
-   not a JS rAF/state trigger. The heavy splash main thread (WebGL + fleet gen + hydration) starved
-   the old JS trigger, so the fill snapped instead of rising. CSS transform/opacity animations run on
-   the COMPOSITOR thread, so they animate reliably under that load.
-   - .launch-fill: a white block rises translateY(100%→0), masked to the mark → water fills bottom-up.
-   - .launch-veil: holds opaque, then fades out (opacity) and drops pointer-events near the end.
-   The 0s-delay `launch-failsafe` (round 141) is the JS-dead backstop (hides the veil at 4s).
-   JS only unmounts the already-faded node (~2.7s). */
-.launch-fill {
-  animation: launch-water 1.5s ease-out forwards;
+/* ROUND 145: CLICK-TO-START splash (src/components/LaunchScreen.tsx). The fill + veil fade are
+   JS-driven inline transitions that fire ON CLICK — post-load, main thread idle — so they play
+   smoothly every time (no cold-load timing race). The only CSS here is the IDLE pulse that invites
+   the click; reduced-motion drops it (and the click cuts straight to the board in JS). */
+.launch-pulse {
+  animation: launch-pulse 2.4s ease-in-out infinite;
 }
-@keyframes launch-water {
-  from { transform: translateY(100%); } /* empty — block below the mark */
-  to { transform: translateY(0); }      /* full — block covers the mark */
+@keyframes launch-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
-.launch-veil {
-  animation:
-    launch-reveal 2.4s ease-in-out forwards,
-    launch-failsafe 0s linear 4s forwards;
-}
-@keyframes launch-reveal {
-  0%, 83% { opacity: 1; }                       /* cover solid through ~2.0s */
-  100% { opacity: 0; pointer-events: none; }    /* fade out ~2.0–2.4s, stop blocking */
-}
-@keyframes launch-failsafe {
-  to { visibility: hidden; pointer-events: none; }
-}
-/* reduced motion: no fill rise, no fade — solid full mark, then JS cuts (~0.7s). Failsafe stays. */
 @media (prefers-reduced-motion: reduce) {
-  .launch-fill { animation: none !important; transform: translateY(0); }
-  .launch-veil { animation: launch-failsafe 0s linear 4s forwards !important; opacity: 1; }
+  .launch-pulse { animation: none; opacity: 1; }
 }
 
 /* ROUND 50: Calm Sea is a WebGL canvas (src/components/AmbientSea.tsx) with a

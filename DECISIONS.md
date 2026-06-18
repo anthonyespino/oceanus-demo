@@ -1590,3 +1590,24 @@ originals.*
   failsafe still backstops. Verified the rise via slow-capture (8s fill → clean half-filled frame at
   4s) and the end-to-end clear/board/reduced-motion at production timing. TSC-OK · LINT-CLEAN ·
   offline build OK.
+
+- **ROUND 144: cold-load grey-flash fix (inline hex fallback).** On a cold cache the SSR'd veil
+  painted before globals.css applied, so `var(--color-surface-base)` was unresolved → transparent bg
+  → browser grey for ~1s ("grey screen till it opens"; fine on refresh = cached CSS). Fixed with
+  `var(--color-surface-base, #101010)` on the veil + an inline empty-state on the fill, so the splash
+  is dark from first paint regardless of CSS timing. Verified veil bg = rgb(16,16,16) from ~300ms in a
+  throttled cold load. TSC-OK · LINT-CLEAN · offline build OK.
+
+- **ROUND 145: CLICK-TO-START splash (foolproof for presenting) + auto-start server.** Anthony wanted
+  a presentation that "just works" by typing localhost:3000 with no npm commands, and a splash that's
+  reliable. (a) **Click-to-start:** the splash now shows a static, gently pulsing mark and WAITS for a
+  click/Enter; the click runs the water-fill then fades to the board. This sidesteps every cold-load
+  timing race (auto-play fought a busy first-paint main thread) — the animation runs post-load with an
+  idle main thread, so it plays smoothly every time, and the presenter controls when it opens. Fill +
+  fade are inline transitions (reliable post-click); idle pulse is the only CSS; reduced-motion → click
+  cuts straight to the board. No auto-dismiss + no failsafe (it intentionally waits; the app needs JS
+  regardless). (b) **Auto-start server:** installed a macOS LaunchAgent
+  `~/Library/LaunchAgents/com.oceanus.demo.plist` (copy in `scripts/`) that runs `next start -p 3000`
+  with RunAtLoad + KeepAlive — serves on every login, restarts if it crashes, no terminal. Verified
+  200 on :3000 via the agent. To remove later: `launchctl unload ~/Library/LaunchAgents/com.oceanus.demo.plist
+  && rm ~/Library/LaunchAgents/com.oceanus.demo.plist`. TSC-OK · LINT-CLEAN · offline build OK.
