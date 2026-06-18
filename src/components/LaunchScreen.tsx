@@ -14,7 +14,7 @@
 // (WebGL sea + fleet gen + hydration), so a clip-path fill stalled to ~empty; a transform animates
 // on the compositor thread, smooth under that load. It is a TIMED decorative fill synced to the
 // splash (~1.5s), not bound to real load progress (the board is live in ~30ms underneath). Mark
-// scaled down (round 139 max 190 → round 140 max 150).
+// scaled down (round 139 max 190 → 140 max 150 → 142 max 120).
 //
 // Motion is JS-phase-driven (phases start at MOUNT — deliberately not a CSS keyframe applied at SSR,
 // which decoupled the animation start from the unmount timer and made the phase drift). Sequence
@@ -76,7 +76,7 @@ export function LaunchScreen() {
         aria-label="Oceanus"
         style={{
           position: 'relative', overflow: 'hidden',
-          width: '14vw', maxWidth: 150, aspectRatio: '100 / 101',
+          width: '11vw', maxWidth: 120, aspectRatio: '100 / 101',
           background: 'rgba(255,255,255,0.16)',
           ...MASK,
         }}
