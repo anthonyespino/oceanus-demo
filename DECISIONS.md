@@ -1577,3 +1577,16 @@ originals.*
   fires; verified JS-OFF → veil auto-hides by ~4s (visibility hidden, pointer-events none), and JS-ON
   normal sequence unchanged (gone by 2.8s). Also clean-rebuilt (rm -rf .next) the running server.
   TSC-OK · LINT-CLEAN · offline build OK.
+
+- **ROUND 143: splash water-fill rewritten to PURE CSS keyframes (was snapping, not rising).** Anthony
+  reported the splash showed a static grey mark then opened — the fill never rose. Root cause: the
+  fill was triggered by a JS rAF/state flip after mount, and the splash's main thread is slammed
+  (WebGL + fleet gen + hydration), so rAF fired late and the transform snapped to full instead of
+  animating. Fix: drive the ENTIRE visual sequence with CSS @keyframes from FIRST PAINT (SSR), no JS
+  trigger — `.launch-fill` rises `translateY(100%→0)` (1.5s) masked to the mark; `.launch-veil` holds
+  then fades opacity + drops pointer-events (`launch-reveal` 2.4s). CSS transform/opacity run on the
+  COMPOSITOR thread, immune to main-thread load, so the fill reliably rises on startup. JS now only
+  unmounts the already-faded node (~2.7s); reduced-motion → solid full mark, cut ~0.7s; the R141
+  failsafe still backstops. Verified the rise via slow-capture (8s fill → clean half-filled frame at
+  4s) and the end-to-end clear/board/reduced-motion at production timing. TSC-OK · LINT-CLEAN ·
+  offline build OK.

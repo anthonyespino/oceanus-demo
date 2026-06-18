@@ -16,11 +16,15 @@
 // splash (~1.5s), not bound to real load progress (the board is live in ~30ms underneath). Mark
 // scaled down (round 139 max 190 → 140 max 150 → 142 max 120).
 //
-// Motion is JS-phase-driven (phases start at MOUNT — deliberately not a CSS keyframe applied at SSR,
-// which decoupled the animation start from the unmount timer and made the phase drift). Sequence
-// (~2.3s): veil covers solid from first paint (no board flash) → the mark fills → holds → the whole
-// veil fades out to reveal the board → unmounts. prefers-reduced-motion: transitions removed (CSS) →
-// the mark shows solid (full), then cuts.
+// ROUND 143: the whole VISUAL sequence is now pure CSS @keyframes (globals.css), running from FIRST
+// PAINT (SSR) — NOT a JS rAF/state trigger. The earlier JS trigger got starved by the splash's busy
+// main thread (rAF fired late), so the transform snapped to full instead of rising — you'd see a
+// static grey mark, then it opened, never the fill. CSS transform/opacity animations run on the
+// compositor thread regardless of main-thread load, so the fill reliably rises on startup. Sequence
+// (~2.4s): veil covers solid → the mark fills bottom-up (1.5s) → holds → veil fades out (opacity,
+// drops pointer-events) → JS unmounts the already-faded node (~2.7s). prefers-reduced-motion: no
+// fill/fade — the mark shows solid (full), then cuts (~0.7s). CSS failsafe (round 141) still hides
+// the veil at 4s if JS never unmounts.
 
 import { useEffect, useState } from 'react';
 
@@ -42,19 +46,16 @@ const MASK: React.CSSProperties = {
 
 export function LaunchScreen() {
   const [shown, setShown] = useState(true);
-  const [filled, setFilled] = useState(false);
-  const [fadingOut, setFadingOut] = useState(false);
 
+  // The VISUAL sequence is pure CSS (globals.css `.launch-veil` / `.launch-fill`), running from
+  // first paint (SSR) on the compositor thread — so the water-fill + fade are immune to the heavy
+  // splash main-thread load (WebGL + fleet gen + hydration), which previously starved the JS-driven
+  // trigger and made the fill snap instead of rise. JS only UNMOUNTS the (already CSS-faded) veil
+  // after the sequence; reduced-motion cuts early.
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const rIn = requestAnimationFrame(() => setFilled(true)); // start the water rising (instant if reduced)
-    if (reduced) {
-      const t = setTimeout(() => setShown(false), 700); // brief solid hold, then cut
-      return () => { cancelAnimationFrame(rIn); clearTimeout(t); };
-    }
-    const tOut = setTimeout(() => setFadingOut(true), 1900); // begin the ~0.4s veil fade-out (after the fill)
-    const tEnd = setTimeout(() => setShown(false), 2300);    // unmount once faded
-    return () => { cancelAnimationFrame(rIn); clearTimeout(tOut); clearTimeout(tEnd); };
+    const t = setTimeout(() => setShown(false), reduced ? 700 : 2700);
+    return () => clearTimeout(t);
   }, []);
 
   if (!shown) return null;
@@ -66,8 +67,6 @@ export function LaunchScreen() {
         position: 'fixed', inset: 0, zIndex: 1000,
         background: 'var(--color-surface-base)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        opacity: fadingOut ? 0 : 1,
-        transition: 'opacity 0.4s ease-in-out',
       }}
     >
       {/* the mark, as a mask. The dim background = empty glass; the rising white block = water. */}
@@ -81,15 +80,7 @@ export function LaunchScreen() {
           ...MASK,
         }}
       >
-        <div
-          className="launch-fill"
-          style={{
-            position: 'absolute', inset: 0, background: '#ffffff',
-            transform: filled ? 'translateY(0)' : 'translateY(100%)',
-            transition: 'transform 1.5s ease-in-out',
-            willChange: 'transform',
-          }}
-        />
+        <div className="launch-fill" style={{ position: 'absolute', inset: 0, background: '#ffffff', willChange: 'transform' }} />
       </div>
     </div>
   );
