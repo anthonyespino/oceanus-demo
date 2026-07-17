@@ -1,3 +1,35 @@
+# PROGRESS — 2026-07-17 (Housekeeping: branch consolidation + repo docs)
+
+## Done
+- **`main` is now the source of truth.** The full redesign and launch splash lived on a long-lived
+  `layout-probe` branch (145 "Round" commits past the Session-3 merge-base) while `main` held only the
+  early greybox plus one housekeeping commit — so a fresh clone of the default branch rendered a
+  very early iteration and the splash appeared "missing." Merged `layout-probe` into `main`
+  (`--no-ff`); resolved two trivial conflicts (`.gitignore`: kept both `PM_BRIEF.md` and
+  `SYSTEM_NODES*.md`; `CLAUDE.md` auto-merged). No source conflicts.
+- Verified the merged `main` end-to-end: `npm run verify` PASSED (one CAUTION = Meridian, byte-identical
+  determinism), dev server Ready, all routes 200 (`/`, `/vessel/v01`, `/inspect`), splash renders.
+- **README.md filled out** (was still create-next-app boilerplate): what the repo is, a path/file map,
+  prerequisites, how to run (npm + the `.command` launcher), routes, verify, the determinism contract,
+  and the branch model (work on `main`).
+- Recorded the environment gotcha behind the original "missing content": the machine had **no Node.js
+  on `PATH`**, so the app never ran. Installed Node 24 LTS locally and added it to `PATH` (persists in
+  `~/.zshrc`), which also lets the double-click `.command` launcher find `node`/`npm`.
+
+## Decisions Made
+- Consolidated via a merge commit (not a rebase/force-push) — preserves both histories and the one
+  housekeeping commit; no rewrite of already-pushed `main`.
+- Left `layout-probe` in place for now (not deleted) — it is fully contained in `main` after the merge
+  and can be pruned once confirmed unneeded.
+
+## Questions / Objections for Anthony
+1. OK to delete the `layout-probe` branch (local + remote) now that `main` contains all of it?
+2. Round 145 added a `scripts/com.oceanus.demo.plist` LaunchAgent for auto-start — NOT installed on this
+   machine (system-level, runs on login). Say the word if you want it wired up; the `.command` launcher
+   covers manual start today.
+
+---
+
 # PROGRESS — 2026-06-17 (Session 124: ROUND 139 — splash water-fill + smaller mark; favicon transparent)
 
 ## Splash (LaunchScreen)

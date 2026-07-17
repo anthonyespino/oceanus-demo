@@ -83,6 +83,10 @@ Determinism contract: same `SEED` → identical fleet and timeline. "Now" is the
 
 ## Session discipline
 
+- **Branch model: `main` is the source of truth.** It holds the full redesign + launch splash
+  (the old `layout-probe` was merged in on 2026-07-17). Work on `main` or short-lived branches
+  merged straight back — never let a long-lived side branch outrun `main` again, or fresh clones
+  render a stale early build.
 - Current session scope only — do not build ahead of the active kickoff brief.
 - No new dependencies without logging the reason in PROGRESS.md.
 - Update PROGRESS.md before the session ends (Done / In Progress / Decisions Made / Questions for Anthony / Next Session Plan). The PM reviews raw files on GitHub; write decisions for a skeptical CTO reviewer.
