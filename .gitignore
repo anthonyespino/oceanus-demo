@@ -40,3 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 PM_BRIEF.md
+SYSTEM_NODES*.md

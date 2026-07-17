@@ -1,16 +1,18 @@
 'use client';
-// Route: /vessel/[id] = vessel view. Drill-down is a route, not component
-// state — browser back returns to the fleet view.
+// Route: /vessel/[id] — LAYOUT PROBE round 2: single-surface expand model.
+// Same URL-driven route state as main (browser back = minimize); only the
+// render mode changed: VesselInspector takes the main area, the fleet
+// compresses into a persistent rail, the alert context strip persists.
 
 import { use } from 'react';
 import Link from 'next/link';
-import { VesselView } from '../../../components';
+import { FleetRail, VesselInspector } from '../../../components';
 import { useFleet } from '../../../state/FleetProvider';
 
 export default function VesselPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { fleet } = useFleet();
-  if (!fleet) return <main style={{ padding: 12 }}>Generating deterministic fleet (seeded, ~2s)…</main>;
+  const { fleet, treatment } = useFleet();
+  if (!fleet) return <main style={{ padding: 12 }}>Loading fleet telemetry…</main>;
   const vessel = fleet.find((v) => v.static.id === id);
   if (!vessel) {
     return (
@@ -19,5 +21,15 @@ export default function VesselPage({ params }: { params: Promise<{ id: string }>
       </main>
     );
   }
-  return <VesselView vessel={vessel} />;
+  return (
+    <main style={{ padding: 12, maxWidth: 1400, margin: '0 auto' }}>
+      {/* alert dedup (round 11): the inspector's alerts card shows only
+          this-vessel lines; fleet-wide alerts live in the summoned sheet
+          (round 33) */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <FleetRail fleet={fleet} selectedId={id} treatment={treatment} />
+        <VesselInspector vessel={vessel} fleet={fleet} treatment={treatment} />
+      </div>
+    </main>
+  );
 }

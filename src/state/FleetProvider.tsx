@@ -8,10 +8,32 @@
 // demo epoch is pinned, so the browser regenerates the identical world.
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { advanceFleet, getFleet } from '../data/fleetState';
+import { advanceFleet, getFleet, resetFleet } from '../data/fleetState';
+import { vesselStatus, type StatusLevel } from '../data/alerts';
 import type { VesselState } from '../data/types';
+import { scenarioById } from './scenarios';
 
 export type TickSpeed = 1 | 60;
+// Layout-probe toggles (branch-only): tile density, status-color treatment,
+// motion variant (addendum item 7 — one item max, both testable).
+export type TileDensity = 'minimal' | 'standard';
+export type ColorTreatment = 'automotive' | 'dark-cockpit';
+export type MotionVariant = 'off' | 'breathe'; // round 108: ripple option removed (not meaningfully distinct from breathe)
+// round 68: LayoutVariant retired — chart-band is the sole FleetView layout
+// (board-first removed); the chart band gains a transient maximize control.
+// round 61: ⚖14 resolved — the meter strip is the sole expand affordance.
+// round 66: the severity-placement experiment is RESOLVED to STRIP fleet-wide
+// (edge/both retired, toggle removed). Severity now lives on the strip + name
+// tint + value tint; the tile carries no severity outline at all.
+// round 115: RailMode toggle removed — the rail treatment is now permanent + combined
+// (every row shows its mode glyph; transit rows add a subtle reinforcing accent). Baked
+// into FleetRail, no longer state.
+// round 108: WaterMode selector REMOVED — gradient is the locked, baked-in water
+// treatment (constants live in AmbientSea); the particle/matrix shaders are retired
+// from the UI. No water-styling controls remain.
+export type TileSize = 'mini' | 'standard' | 'expanded'; // round 17 manual sizing
+// round 95: status-cluster type-size under evaluation — PRIMARY 16 vs CONTEXT 13
+export type ClusterType = 'primary' | 'context';
 
 interface FleetContextValue {
   fleet: VesselState[] | null; // null while generating
@@ -19,16 +41,105 @@ interface FleetContextValue {
   live: boolean;
   speed: TickSpeed;
   setLive: (on: boolean) => void;
+  // round 120: presenter transport — snap the sim + all derived/live data back to the
+  // seed starting state (the fresh-load state) WITHOUT a page reload. Preserves the
+  // active scenario (the overlay re-applies on the fresh seed base) + mode + settings.
+  resetSim: () => void;
   setSpeed: (s: TickSpeed) => void;
+  density: TileDensity;
+  setDensity: (d: TileDensity) => void;
+  treatment: ColorTreatment;
+  setTreatment: (t: ColorTreatment) => void;
+  motion: MotionVariant;
+  setMotion: (m: MotionVariant) => void;
+  bearingLine: boolean; // round 23: dashed BRG ray vs voyage-card-only
+  setBearingLine: (b: boolean) => void;
+  autoPromote: boolean; // round 26: auto-2x disabled by default, flag kept
+  setAutoPromote: (b: boolean) => void;
+  stateMarks: boolean; // round 21 B4: state silhouettes beside port names
+  setStateMarks: (b: boolean) => void;
+  /** round 21 B3: collapsed panel keys (`vesselId:panelId`), session-scoped */
+  collapsedPanels: Record<string, boolean>;
+  togglePanel: (key: string) => void;
+  scenario: string; // round 45: scenario library — synthetic overlay id ('demo' = base seed)
+  setScenario: (id: string) => void;
+  ambientSea: boolean; // round 46: Calm Sea ambient wave (default on)
+  setAmbientSea: (b: boolean) => void;
+  // round 108: water/texture controls REMOVED from state — gradient + Anthony's
+  // tuned values are baked as constants in AmbientSea (TEXTURE locked ON).
+  // round 95: global status-cluster type-size toggle (PRIMARY 16 vs CONTEXT 13),
+  // default PRIMARY — pending Anthony's pixel verdict
+  clusterType: ClusterType; setClusterType: (t: ClusterType) => void;
+  // round 97: SURFACE GLASS dev toggle (attempt #5) on the floating sections —
+  // default OFF (plain float on gradient); ON = near-opaque fill + subtle blur
+  surfaceGlass: boolean; setSurfaceGlass: (b: boolean) => void;
+  // round 117: LayerLens (builder/handoff provenance inspector — LAYER/TOKENS/BINDS +
+  // copy) decoupled from operator Learn; its own dev toggle, default OFF. Not an
+  // operator mode; the three operator modes stay exactly three.
+  layerLens: boolean; setLayerLens: (b: boolean) => void;
+  censusFilter: StatusLevel | null; // round 12: band census → tile highlight
+  setCensusFilter: (s: StatusLevel | null) => void;
+  /** round 17: manual per-tile size — persists and overrides auto-promotion
+      in BOTH directions; the engineer outranks the layout */
+  tileSizes: Record<string, TileSize>;
+  setTileSize: (id: string, size: TileSize) => void;
+  /** vessel id → epoch ms of its last status threshold-cross during live mode */
+  crossings: Record<string, number>;
 }
 
 const FleetContext = createContext<FleetContextValue | null>(null);
 
 export function FleetProvider({ children }: { children: React.ReactNode }) {
   const [fleet, setFleet] = useState<VesselState[] | null>(null);
-  const [live, setLive] = useState(false);
-  const [speed, setSpeed] = useState<TickSpeed>(60);
+  // ROUND 108: demo-ready startup — live ticking ON so the app comes up animating
+  // (sea breath + sim clock) with no manual setup. Sim advances 1-min ticks from the
+  // pinned DEMO_EPOCH (determinism + verify untouched).
+  // ROUND 130: startup speed is 1x (real-time), not 60x. Real-time is calmer and more
+  // honest for presenting and avoids fast-forward artifacts; 60x is a deliberate choice
+  // in the D-panel (voyage motion / fast-forwarding a degradation), with pause + reset.
+  const [live, setLive] = useState(true);
+  const [speed, setSpeed] = useState<TickSpeed>(1);
+  const [density, setDensity] = useState<TileDensity>('standard');
+  // Round 44: startup defaults set from Anthony's dev-panel screenshot.
+  // COLOR → quiet (dark-cockpit): this supersedes round 38's automotive
+  // default as the boot treatment; automotive stays available behind the
+  // toggle. (The "dies at token lock" framing no longer applies — quiet is
+  // now the chosen look.)
+  const [treatment, setTreatment] = useState<ColorTreatment>('dark-cockpit');
+  const [motion, setMotion] = useState<MotionVariant>('breathe'); // round 108: Breathe locked as startup
+  const [bearingLine, setBearingLine] = useState(true); // round 108: BRG ray on at startup (toggle kept)
+  // round 108: auto-2x ON at startup (legacy); FleetView forces it OFF in Expert
+  // (officer sizes) regardless of this default.
+  const [autoPromote, setAutoPromote] = useState(true);
+  const [stateMarks, setStateMarks] = useState(true); // round 44: state marks on
+  const [collapsedPanels, setCollapsedPanels] = useState<Record<string, boolean>>({});
+  const togglePanel = (key: string) => setCollapsedPanels((m) => ({ ...m, [key]: !m[key] }));
+  const [scenario, setScenario] = useState('demo');
+  const [ambientSea, setAmbientSea] = useState(true); // round 46/108: always on (toggle removed)
+  // ROUND 108: water/texture values are now BAKED as constants in AmbientSea
+  // (gradient, Anthony's round-80 tuned amp/texture, texture ON). The state +
+  // sliders + mode selector that lived here are removed; the look is locked.
+  const [clusterType, setClusterType] = useState<ClusterType>('context'); // round 105/108: locked CONTEXT 13 (toggle removed)
+  const [surfaceGlass, setSurfaceGlass] = useState(true); // round 108: glass locked ON (toggle removed — decided top-bar treatment)
+  const [layerLens, setLayerLens] = useState(false); // round 117: builder layer-lens, off by default (not an operator feature)
+  const [censusFilter, setCensusFilter] = useState<StatusLevel | null>(null);
+  const [tileSizes, setTileSizes] = useState<Record<string, TileSize>>({});
+  const setTileSize = (id: string, size: TileSize) => setTileSizes((m) => ({ ...m, [id]: size }));;
+  const [crossings, setCrossings] = useState<Record<string, number>>({});
+  const prevStatus = useRef<Map<string, string>>(new Map());
   const generating = useRef(false);
+
+  // ROUND 120: presenter RESET — drop the live-advanced runtimes and re-snapshot the
+  // deterministic seed (identical to a fresh page load, but in-place: scenario / mode /
+  // dev settings + the master wall clock are untouched). Clears the crossing/prev-status
+  // bookkeeping too. Yields one frame (brief regenerating beat) for the ~2s rebuild.
+  const resetSim = () => {
+    resetFleet();
+    prevStatus.current = new Map();
+    setCrossings({});
+    setFleet(null);
+    setTimeout(() => setFleet(getFleet()), 30);
+  };
 
   useEffect(() => {
     if (generating.current) return; // strict-mode double mount
@@ -41,15 +152,53 @@ export function FleetProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!live || !fleet) return;
     // 1x: one 1-min tick per real minute; 60x: one tick per second.
-    const interval = setInterval(() => setFleet(advanceFleet(1)), speed === 60 ? 1000 : 60_000);
+    const interval = setInterval(() => {
+      const next = advanceFleet(1);
+      // Threshold-cross detection for the ripple variant: a crossing is a
+      // change in vesselStatus (same constants as alerts/color/tiers).
+      const fired: Record<string, number> = {};
+      for (const v of next) {
+        const s = vesselStatus(v.alerts);
+        const prev = prevStatus.current.get(v.static.id);
+        if (prev !== undefined && prev !== s) fired[v.static.id] = Date.now();
+        prevStatus.current.set(v.static.id, s);
+      }
+      if (Object.keys(fired).length) setCrossings((c) => ({ ...c, ...fired }));
+      setFleet(next);
+    }, speed === 60 ? 1000 : 60_000);
     return () => clearInterval(interval);
   }, [live, speed, fleet !== null]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const simTime = fleet ? fleet[0].history.minutes[fleet[0].history.minutes.length - 1].t : null;
+  // ROUND 45 scenario library: synthetic overlays so performative states can
+  // be designed/rehearsed against real pixels. Never the demo path; demo seed
+  // and generated telemetry untouched — only alert/derived/staleness/mode on
+  // clones. 'demo' = identity (the canonical Meridian story).
+  const active = scenarioById(scenario);
+  const viewFleet = fleet ? active.apply(fleet) : fleet;
 
   return (
-    <FleetContext.Provider value={{ fleet, simTime, live, speed, setLive, setSpeed }}>
+    <FleetContext.Provider
+      value={{
+        fleet: viewFleet, simTime, live, speed, setLive, setSpeed, resetSim,
+        density, setDensity, treatment, setTreatment,
+        motion, setMotion, crossings,
+        stateMarks, setStateMarks,
+        bearingLine, setBearingLine, autoPromote, setAutoPromote,
+        collapsedPanels, togglePanel, scenario, setScenario, ambientSea, setAmbientSea,
+        clusterType, setClusterType,
+        surfaceGlass, setSurfaceGlass,
+        layerLens, setLayerLens,
+        censusFilter, setCensusFilter,
+        tileSizes, setTileSize,
+      }}
+    >
       {children}
+      {/* ROUND 131: the synthetic-scenario banner is REMOVED from the main/presentation view.
+          It was build-time/dev info (synthetic-data flagging) leaking onto the operator surface,
+          and it used yellow (the earned severity color) for a dev label — competing with real
+          cautions. Scenario identity + the synthetic marker now live in the D-panel only (neutral),
+          where presenter-facing info belongs. (Same principle as the v01 fix / Learn-vs-IA split.) */}
     </FleetContext.Provider>
   );
 }

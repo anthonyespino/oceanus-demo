@@ -18,41 +18,29 @@ export function Field({
   field,
   label,
   children,
+  revealed = false,
 }: {
   level: UiLevel;
   field: string;
   label?: string; // Contextual reveal label; defaults to the field name
   children?: React.ReactNode;
+  /** true when already inside a RevealZone's reveal block (round 14) —
+      CONTEXTUAL renders plain; the zone provides the one interaction */
+  revealed?: boolean;
 }) {
   const d = getDisposition(level, field);
-  // Unregistered = unclassified: surface loudly rather than guessing.
-  if (!d) return <UndefinedField field={`${field} (NOT IN REGISTRY)`} />;
+  // Round 9: unresolved/unregistered fields simply don't render — they are
+  // tracked in the registry and PROGRESS.md, not in the interface.
+  if (!d) return null;
   switch (d.disposition) {
     case 'HIDDEN':
       return null;
     case 'UNDEFINED':
-      return <UndefinedField field={d.field} note={d.note} />;
+      return null;
     case 'CONTEXTUAL':
+      if (revealed) return <>{children}</>;
       return <Contextual label={label ?? d.field}>{children}</Contextual>;
     case 'VISIBLE':
       return <>{children}</>;
   }
-}
-
-export function UndefinedField({ field, note }: { field: string; note?: string }) {
-  return (
-    <span
-      title={note}
-      style={{
-        display: 'inline-block',
-        background: '#e0e0e0',
-        border: '1px dashed #999',
-        color: '#555',
-        padding: '2px 6px',
-        fontSize: 11,
-      }}
-    >
-      UNDEFINED: {field}
-    </span>
-  );
 }

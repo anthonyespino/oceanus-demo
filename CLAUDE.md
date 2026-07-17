@@ -4,6 +4,23 @@ Fleet fuel-efficiency monitoring dashboard for shore-side maritime engineers —
 
 **Spec of record: [DATA_MODEL.md](DATA_MODEL.md).** It is authoritative. **[FIGMA_STANDARD.md](FIGMA_STANDARD.md) is binding for all UI/styling sessions:** Figma and code are the same system described twice — component names match `src/components/index.ts` character for character, variant properties = React props (camelCase), tokens are semantic and mirrored in Tailwind, data-bound text uses `{field}` names from the disposition registry. Renames happen in both places in the same sitting or not at all. At the start of any Figma-connected session, pull current Figma MCP setup from official docs (don't trust memory) and diff the `02 · Components` page against the barrel as the drift check. If something in it looks wrong or unbuildable, log an objection in PROGRESS.md and ask Anthony — never silently deviate. Session briefs live in KICKOFF_PROMPT.md. Also read AGENTS.md: the installed Next.js is newer than training data; check `node_modules/next/dist/docs/` before leaning on memory of its APIs.
 
+## Figma MCP bridge (Sketchpad → probe, one-way) — round 40
+
+The Figma Dev Mode MCP server is connected and authenticates via OAuth on Anthony's own account (`whoami` confirms). It reads any file his account can open; it needs only the **file key** from the URL (`figma.com/design/:fileKey/...`) — no PAT, nothing in `.env` (the repo is public; we keep no Figma secret). Setup + scope guardrails: [docs/FIGMA_MCP.md](docs/FIGMA_MCP.md).
+
+**The bridge is one-way: Figma → code. Never write back to Anthony's file** — use only `get_metadata` / `get_design_context` / `get_screenshot` / `whoami`, never a `create_*` / `use_figma` / write tool against it. The probe is the rendered preview; the file stays his.
+
+**`scrape {frame name}` workflow:** read that frame's layer tree → match each *named* layer against `docs/atlas.json` (exact path, or `region / role.kind` inside a component-named frame) → report a translation diff **without applying** (recognized+changed / recognized+unchanged / unrecognized = "noted, no binding yet") → Anthony approves → apply to `layout-probe`, verify, push. Unnamed layers are ignored; unrecognized names never block. `docs/LAYER_ATLAS_FIGMA.md` is his "what can I name today" cheat sheet.
+
+**Inference mode (round 47):** Anthony draws ONE `VesselTile` instance in Figma, never fifteen. A `scrape VesselTile` treats that instance as canonical and the translation applies to the single VesselTile component — which the build already maps over all 15 vessels with prop variation (name, status → dot + border tint, trend, mode glyph, sparkline) pulled from the live data layer, and over the mini/standard/expanded size variants per the elastic ruling. Never expect per-vessel or per-size artwork.
+
+**Glyph import (round 47):** Anthony drops drawn SVGs into `docs/glyphs-import/{name}.svg` (named per the atlas — see that folder's README). `scripts/glyphs.ts` (prebuild hook, before the atlas) reads them into `src/components/glyphs.generated.ts`; the `Glyph` primitive prefers a drawn glyph over its placeholder path. Pure drop-in — names already match, no atlas regeneration, every render site updates at once.
+
+**Stale-sketch rule (round 41):** a sketch frame may contain pre-ruling exploration that contradicts a shipped decision. Flag such a divergence from current rulings **once**, then treat it as STALE — do not re-surface it as a proposed change on later scrapes unless Anthony explicitly re-opens it. Standing STALE dispositions (round 40 first scrape, confirmed round 41):
+- **Census / nominal colors** — automotive is canonical (green nominal, amber watch, red degraded, ruling 14 + round 38). Sketch frames showing white/amber-only census are stale, not a revert.
+- **Inter font** — sketch placeholder; the faces are D-DIN / IBM Plex Mono / Barlow (round 26/22). Never a token change.
+- **Borderless fills** — already shipped (round 37); a sketch confirming it is agreement, not a change to apply.
+
 ## Component naming rule
 
 UI component names exactly match Anthony's Figma component names (e.g. `VesselCard`, `EngineTwinPanel`, `TankSchematic`, `FleetMap`, `AlertRail`). Never rename, "improve," or alias them.
@@ -69,3 +86,4 @@ Determinism contract: same `SEED` → identical fleet and timeline. "Now" is the
 - Current session scope only — do not build ahead of the active kickoff brief.
 - No new dependencies without logging the reason in PROGRESS.md.
 - Update PROGRESS.md before the session ends (Done / In Progress / Decisions Made / Questions for Anthony / Next Session Plan). The PM reviews raw files on GitHub; write decisions for a skeptical CTO reviewer.
+- Ledger hygiene: dev-proposed design choices are logged as "DEV DECISION (pending Anthony)" — never folded into a numbered PM ruling's text in DECISIONS.md.

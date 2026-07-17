@@ -3,23 +3,43 @@
 // rename pass should only touch this file plus mechanical references.
 
 export { FleetView } from './FleetView';
-export { FleetTrend } from './FleetTrend'; // Figma: FleetView/FleetTrend
+export { FleetHealthBand } from './FleetHealthBand'; // ROUND 12: FleetTrend evolved + renamed (recorded for Figma library)
 export { VesselCard } from './VesselCard';
+export { VesselTile } from './VesselTile'; // LAYOUT PROBE only (branch: layout-probe)
+export { FleetRail } from './FleetRail'; // LAYOUT PROBE only
+export { VesselInspector } from './VesselInspector'; // LAYOUT PROBE only
+export { NauticalChart } from './NauticalChart'; // LAYOUT PROBE only (chart core)
+export { InspectorChart } from './InspectorChart'; // LAYOUT PROBE only
+export { DataRow } from './DataRow'; // LAYOUT PROBE only (label-left / numeral-right primitive)
+export { Stat } from './Stat'; // ROUND 4: instrument-stat primitive (label above numeral)
+// ROUND 5 components:
+export { EfficiencyCurve } from './EfficiencyCurve'; // inspector hero: burn-vs-speed envelope
+export { StatusHeader } from './AlertSheet'; // ROUND 33: SystemStatusStrip + AlertRail merged — micro header + summoned alert sheet
+export { DevPanel } from './DevPanel'; // probe toggles, press D
+export { PortCallsTimeline } from './PortCallsTimeline'; // ROUND 6: 72h arrivals board (final probe component)
+export { VesselSitrep } from './VesselSitrep'; // ROUND 7: reserved slot — designed in Figma, templated after
+export { Collapse } from './Collapse'; // ROUND 21 B3: collapsible panels
+export { DetailChip } from './DetailChip'; // ROUND 43: chip affordance — hairline chip → anchored popover
+export { AmbientSea } from './AmbientSea'; // ROUND 46: Calm Sea ambient wave (fleet-metric bound)
+export { StateMark } from './StateMark'; // ROUND 21 B4: state silhouettes (trial)
+export { VesselSynoptic } from './VesselSynoptic'; // ROUND 30: THE fuel card — synoptic + dot quartet (⚖9, ⚖11 resolved; TankSchematic + FuelViewSwitch retired)
+export { CrewLogPanel } from './CrewLogPanel'; // ROUND 30: CrewPanel + EventLog merged; VoyagePanel died into VesselCommandBand
+export { Gauge } from './Gauge'; // ROUND 11: shared radial gauge primitive
+export { TrendChartFill } from './TrendChartFill'; // ROUND 13: fill-parent tile trend chart
+export { Glyph, Label } from './Glyph'; // ROUND 16: glyph contract (Figma icon library 1:1)
+export { VesselCommandBand } from './VesselCommandBand'; // ROUND 27: VesselHeader + TelemetryBand merged (renames recorded for Figma)
+export { InstrumentCluster } from './InstrumentCluster'; // ROUND 11: DP-console dials (verdict 13)
+export { ReconChip } from './FlowReconciliation'; // ROUND 11: recon dissolved into fuel card header
 export { FleetMap } from './FleetMap';
-export { AlertRail } from './AlertRail';
 export { VesselView } from './VesselView';
-export { VesselHeader } from './VesselHeader';
 export { EfficiencyPanel } from './EfficiencyPanel';
-export { EngineTwinPanel } from './EngineTwinPanel';
-export { EngineCard } from './EngineCard';
-export { TankSchematic } from './TankSchematic';
+export { EngineTwinPanel } from './EngineTwinPanel'; // ROUND 31: hero + one-line rows + cluster (EngineCard retired)
 export { FlowReconciliation } from './FlowReconciliation';
 export { WeatherPanel } from './WeatherPanel';
-export { CrewPanel } from './CrewPanel';
 export { RoutePanel } from './RoutePanel';
 export { ModeTimeline } from './ModeTimeline';
 export { Contextual } from './Contextual';
 // Primitives not in the locked list (logged in PROGRESS.md):
-export { Field, UndefinedField, getDisposition } from './Field';
+export { Field, getDisposition } from './Field';
 export { Sparkline } from './Sparkline';
 export { LiveControls, AppHeader } from './LiveControls';

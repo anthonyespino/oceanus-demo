@@ -1,0 +1,535 @@
+# LAYER ATLAS
+
+**Auto-generated on every build from the `layer()` instrumentation — do not edit.**
+Per component: the layer tree with tokens + bindings, exactly as the learn-mode
+hover cards report. Naming: `Component / region(camelCase) / role.kind`;
+kinds: text · line · shape · chart · glyph · chip · status. Click any element
+in learn mode (L) to copy its layer path for the Figma layer-name field.
+
+## AppHeader
+
+*source: src/components/LiveControls.tsx*
+
+- `clock / master.clock.text`
+  - TOKENS — UTC/Zulu SIM clock (round 122: simulation time, not system time) · font/data tabular · DATE subordinate (context, lighter) + TIME hero (round 91) · pauses/resumes/resets with the sim · distinct from the per-vessel mission clock
+  - BINDS — {simTime} — sim now
+- `transport / pause.glyph`
+  - TOKENS — presenter sim transport · pause/resume (rides {live}) · neutral utility · reflects state (pause glyph running, play glyph paused)
+  - BINDS — {live} → freeze/continue sim clock
+- `transport / reset.glyph`
+  - TOKENS — presenter sim transport · reset to seed state (no page reload; scenario/mode preserved) · neutral utility
+  - BINDS — → resetSim()
+
+## CrewLogPanel
+
+*source: src/components/CrewLogPanel.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · crew glyph · glyph-only in expert mode
+  - BINDS — CREW & LOG
+- `log / entry.text`
+  - TOKENS — font/data 12 terminal grammar · alert lines tint by level (advisory muted, A6)
+  - BINDS — {stamp · type · text} newest first
+- `log / filter.chip`
+  - TOKENS — chip — accent when active (interaction voice)
+  - BINDS — {event type visibility toggle}
+- `log / modeStrip.chart`
+  - TOKENS — MODE_COLOR segments · line/subtle dividers — recent memory, same family as the log (round 30)
+  - BINDS — {24h minute modes → segments}
+- `roster / name.text`
+  - TOKENS — font/ui 13
+  - BINDS — {crew.name}
+- `roster / role.text`
+  - TOKENS — font/ui 13
+  - BINDS — {crew.role}
+- `roster / since.text`
+  - TOKENS — font/data 12 · ink/muted — collapses to one footer when whole crew rotated together (round 19)
+  - BINDS — {crew.onboard_since shared date + days}
+
+## EfficiencyCurve
+
+*source: src/components/EfficiencyCurve.tsx*
+
+- `plot / delta.text`
+  - TOKENS — font/data 10 · status tint (earned) — labeled: speed-specific, distinct from vs-baseline
+  - BINDS — {live gal/nm / envelope median − 1} vs envelope
+- `plot / drop.line`
+  - TOKENS — ink/muted dashed — degradation as geometry
+  - BINDS — {live point → envelope median at same speed}
+- `plot / envelope.shape`
+  - TOKENS — surface/overlay fill — 12-mo IQR band
+  - BINDS — {transit envelope p25→p75 by speed bin}
+- `plot / median.line`
+  - TOKENS — ink/secondary 1.25px
+  - BINDS — {envelope median by speed bin}
+- `plot / now.dot`
+  - TOKENS — accent ring (identity) · status fill when watch/degraded (status outranks accent)
+  - BINDS — {live gal/nm @ speed_over_ground}
+
+## EfficiencyPanel
+
+*source: src/components/EfficiencyPanel.tsx*
+
+- `charts / envelope.chart`
+  - TOKENS — IQR band surface/overlay · median ink/secondary · live point accent ring
+  - BINDS — {1y transit envelope: gal/nm vs kn} — speed-specific comparison
+- `charts / trend30.chart`
+  - TOKENS — fill/level area · ink/secondary line · zero ref · −30D→NOW · % vs baseline — the 30d delta TREND (round 124: labeled to match the EGT-gap chart) · distinct from the envelope (vs-speed)
+  - BINDS — {daily_delta_1y[-30d]} % vs baseline
+- `footer / baseline.text`
+  - TOKENS — font/data 12 · ink/secondary
+  - BINDS — {derived.baseline_value} {baseline_metric}
+- `footer / spark24.chart`
+  - TOKENS — ink/secondary 1px · line/subtle frame
+  - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
+- `header / header.glyph`
+  - TOKENS — section header · chart.efficiency (curve motif) · glyph-only in expert mode
+  - BINDS — EFFICIENCY · {mode}
+- `heroRow / baselineDelta.text`
+  - TOKENS — Stat: micro-caps label · type/hero numeral tabular
+  - BINDS — {derived.efficiency_delta_pct} vs mode_baseline — mode-wide comparison
+- `heroRow / trend30.text`
+  - TOKENS — Stat: micro-caps label · type/hero numeral tabular
+  - BINDS — {derived.trend_30d} %/30d — the primary fleet signal (ruling 13)
+
+## EngineTwinPanel
+
+*source: src/components/EngineTwinPanel.tsx*
+
+- `gapTrend / area.chart`
+  - TOKENS — fill/level area · ink/secondary line · zero line · y floors ±20°F (calm-not-empty)
+  - BINDS — {daily mean E2−E1 EGT, 30d, both running} — the "three weeks early" graphic
+- `header / header.glyph`
+  - TOKENS — section header · engine glyph · glyph-only in expert mode
+  - BINDS — ENGINE TWINS
+- `rows / engine.text`
+  - TOKENS — font/data 12 · id+role ink/muted left · state tabular right · hairline divider
+  - BINDS — {id role · RUNNING load% fuel gph | OFF} — state/load/fuel live HERE only
+- `verdict / gap.text`
+  - TOKENS — type/hero · font/data tabular — largest type in the section · severity yellow when divergent (round 118)
+  - BINDS — {derived.egt_twin_gap_f} — sustained 24h-avg gap at matched load
+- `verdict / label.text`
+  - TOKENS — gb.label micro-caps · ink/muted · SUSTAINED qualifier (round 118)
+  - BINDS — E2 VS E1 EGT · SUSTAINED
+- `verdict / live.text`
+  - TOKENS — font/data 12 · ink/dim · live instantaneous gap + fuel Δ, or "mains off" when neither main runs (round 118)
+  - BINDS — {E2.egt − E1.egt} live · {fuel Δ at matched load} | mains off
+
+## FleetHealthBand
+
+*source: src/components/FleetHealthBand.tsx*
+
+- `arrivals / bunker.text`
+  - TOKENS — descriptor: TEXT label (default/learn) | placeholder glyph (expert), centered · count advisory tint when >0 else ink/muted · name from ia-model
+  - BINDS — {# bunker-flagged calls in next 24h}
+- `arrivals / value.text`
+  - TOKENS — type/hero · font/data tabular · ink/primary · links to #port-calls
+  - BINDS — {# port calls in next 24h}
+- `burn / spark.chart`
+  - TOKENS — ink/secondary 1px · auto-ranged (never approaches 0)
+  - BINDS — {fleet total burn, 24h hourly}
+- `burn / value.text`
+  - TOKENS — type/hero · font/data tabular · ink/primary · gph (blue is water-only, never here)
+  - BINDS — {sum of live fleet burn} gph
+- `census / degraded.status`
+  - TOKENS — STATUS_COLOR.degraded (red) · count · click filters board
+  - BINDS — {# vessels degraded}
+- `census / nominal.status`
+  - TOKENS — green (automotive) | ink/secondary (quiet) · count · click filters board
+  - BINDS — {# vessels nominal}
+- `census / watch.status`
+  - TOKENS — STATUS_COLOR.watch (amber) · count · click filters board
+  - BINDS — {# vessels watch}
+- `mean / trend.chart`
+  - TOKENS — ink/secondary line · surface/overlay p10–p90 band · zero ref line — census and mean never separate (component rule) · round 109: default/learn add a 0 + span label, Expert bare
+  - BINDS — {rolling-mean daily fleet delta over range} + {p10/p90 envelope}
+- `mean / value.text`
+  - TOKENS — type/hero · font/data tabular · ink/primary (round 108: IKB fill removed entirely)
+  - BINDS — {30d fleet mean delta %}
+
+## FleetMap
+
+*source: src/components/FleetMap.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · chart.fleet · round 88: LEARN-ONLY (redundant location restatement; the map self-identifies + carries the GULF OF MEXICO furniture label)
+  - BINDS — FLEET PLOT — GULF OF MEXICO
+
+## FleetRail
+
+*source: src/components/FleetRail.tsx*
+
+- `nav / back.glyph`
+  - TOKENS — back link · glyph-only in expert mode
+  - BINDS — → /
+- `row / dot.status`
+  - TOKENS — status color | ink/muted nominal (treatment B)
+  - BINDS — {vesselStatus(alerts)}
+- `row / mode.glyph`
+  - TOKENS — MODE_GLYPH · ink/muted · learn/title = full mode name (round 43) · always shown (round 115)
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
+- `row / name.text`
+  - TOKENS — font/ui 13 · status tint when alerted · 45% dim idle nominal (round 24 layers)
+  - BINDS — {vessel.static.name}
+
+## FleetView
+
+*source: src/components/FleetView.tsx*
+
+- `chartBand / maximize.glyph`
+  - TOKENS — transient resize (hover-shown) — grows the chart band, tiles hold + reflow down (one-elastic-element) · not persisted
+  - BINDS — {chartMax} toggle
+- `status / sort.docent`
+  - TOKENS — Learn-only docent · CONTEXT dimmed (gb.label) · the consequence-sort thesis, inline with the status bar (round 105, from ia-model)
+  - BINDS — {IA_SORT_THESIS}
+
+## Gauge
+
+*source: src/components/Gauge.tsx*
+
+- `dial / arc.line`
+  - TOKENS — line/strong · 2.5×k
+  - BINDS — {min→max, 270° sweep}
+- `dial / band.line`
+  - TOKENS — alert color — alert-backed ONLY (ruling 11)
+  - BINDS — {band.from→band.to}
+- `dial / hub.dot`
+  - TOKENS — ink/primary
+  - BINDS — —
+- `dial / limit.line`
+  - TOKENS — ink/secondary · neutral tick (ruling 11)
+  - BINDS — {displayLimits[]}
+- `dial / maxLabel.text`
+  - TOKENS — font/data micro · ink/muted
+  - BINDS — {minMaxLabels?.[1] ?? max}
+- `dial / minLabel.text`
+  - TOKENS — font/data micro · ink/muted
+  - BINDS — {minMaxLabels?.[0] ?? min}
+- `dial / needle.line`
+  - TOKENS — ink/primary — ALWAYS (round 19, amends ruling 14)
+  - BINDS — {value→angle(min,max)}
+- `dial / tick.line`
+  - TOKENS — ink/muted · 1px
+  - BINDS — {25 / 50 / 75 %}
+- `label / label.text`
+  - TOKENS — font/data 9 caps letterspaced · ink/muted · hidden in expert mode
+  - BINDS — {label}
+- `readout / value.text`
+  - TOKENS — font/data tabular · type/HERO (var --type-hero) · earned color (ruling 14)
+  - BINDS — {display ?? round(value)+unit}
+
+## InspectorChart
+
+*source: src/components/InspectorChart.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · route glyph · glyph-only in expert mode
+  - BINDS — POSITION
+- `track / projection.line`
+  - TOKENS — forward projection — dim/sparse/fading, heading+speed-bounded (~3h), honestly an estimate (round 87)
+  - BINDS — {pos.heading_deg + speed_over_ground_kn → short extrapolation}
+
+## InstrumentCluster
+
+*source: src/components/InstrumentCluster.tsx*
+
+- `cell / trace.chart`
+  - TOKENS — fill/level area · ink/muted line · gauge-cell width · dims with dormant dial
+  - BINDS — {selected engine sensor, 24h minutes → ~96 pts}
+- `selector / engine.chip`
+  - TOKENS — toggleStyle — accent when active (interaction voice)
+  - BINDS — {engine index → cluster binding}
+
+## NauticalChart
+
+*source: src/components/NauticalChart.tsx*
+
+- `base / land.shape`
+  - TOKENS — chart/land fill · hairline coastline — ONE polygon shared with the generator + verify (round 23) · omitted at zoomed inspector extent (round 84)
+  - BINDS — {LAND polygon from src/data/coast.ts}
+- `base / seaLabel.text`
+  - TOKENS — font/ui letterspaced · near-water contrast — furniture, not data
+  - BINDS — GULF OF MEXICO (static)
+- `base / water.shape`
+  - TOKENS — chart/water #0d1924 — the ONLY navy (round 23)
+  - BINDS — {chart frame}
+- `furniture / compass.glyph`
+  - TOKENS — chart ink · ring + needle + N
+  - BINDS — north-up (static)
+- `furniture / scale.line`
+  - TOKENS — chart ink · end + mid ticks
+  - BINDS — {bar length adapts: 10–200 nm at mid-latitude}
+- `graticule / meridian.line`
+  - TOKENS — grid faint 0.5px · frame ticks · 9px labels
+  - BINDS — {longitude grid at adaptive step}
+- `graticule / parallel.line`
+  - TOKENS — grid faint 0.5px · frame ticks · 9px labels
+  - BINDS — {latitude grid at adaptive step}
+
+## PortCallsTimeline
+
+*source: src/components/PortCallsTimeline.tsx*
+
+- `header / header.glyph`
+  - TOKENS — section header · anchor glyph · round 88: LEARN-ONLY (the +72H axis + chips self-identify the timeline)
+  - BINDS — PORT CALLS — 72H
+
+## SettingsSheet
+
+*source: src/components/DevPanel.tsx*
+
+- `ia / ia.link`
+  - TOKENS — IA system map link · opens the shared ia-model as a navigable page
+  - BINDS — → /ia
+- `mode / mode.chip`
+  - TOKENS — mode chip · default / learn (L) / expert (E) · mutually exclusive
+  - BINDS — {ui mode}
+- `scenario / scenario.chip`
+  - TOKENS — scenario selector · 1/2/3 whole-fleet state · accent when active · default S1 (Meridian, base seed); S2/S3 synthetic
+  - BINDS — {scenario id} → reloads fleet + inspector
+- `sheet / settings.sheet`
+  - TOKENS — gear-summoned settings sheet · collapsible sections (round 108)
+  - BINDS — —
+
+## StatusHeader
+
+*source: src/components/AlertSheet.tsx*
+
+- `alerts / alertcount.chip`
+  - TOKENS — counts in severity colors · click → alert sheet (round 33)
+  - BINDS — {fleet alert counts by level}
+- `alerts / line.text`
+  - TOKENS — round-33 grammar: [LEVEL] tag = the one severity color · name accent link · message ink/secondary
+  - BINDS — {alert.level · vessel.name → /vessel/id · alert.message}
+- `datalink / datalink.chip`
+  - TOKENS — font/data 11 · ink/secondary | advisory when degraded · click → stale-feed breakdown
+  - BINDS — {stale stream census → FRESH | DEGRADED | STALE}
+- `sync / lastsync.chip`
+  - TOKENS — font/data 11 · ink/secondary · click → per-vessel sync ages
+  - BINDS — {simTime − oldest stream timestamp}
+
+## VesselCommandBand
+
+*source: src/components/VesselCommandBand.tsx*
+
+- `centerStack / anchor.glyph`
+  - TOKENS — glyph/anchor slot (placeholder until scraped) · ink/secondary — prefixes the place
+  - BINDS — place
+- `centerStack / clock.text`
+  - TOKENS — type/hero×0.6 · font/data tabular · mode-aware prefix (carries mode after the glyph removal, round 73) · white when still (ruling 14)
+  - BINDS — {T−(eta−now) transit | ON STATION/IN PORT/STANDBY + elapsed} · countdown lives HERE only
+- `centerStack / crew.glyph`
+  - TOKENS — glyph/crew slot (placeholder until scraped) · ink/secondary — replaces the word "master"
+  - BINDS — crew Master
+- `centerStack / current.text`
+  - TOKENS — glyph/current = WATER MOVEMENT (round 112, distinct from wind/wave) · font/data 15 tabular · speed + set-direction as one value · glyph ink/MUTED · stale tint when WX stale · live signal, kept in Expert (round 114)
+  - BINDS — {weather.current_kn} kn {weather.current_dir_deg}°
+- `centerStack / location.text`
+  - TOKENS — font/data 12 · ink/secondary · place as value
+  - BINDS — {destination | moored port | work site}
+- `centerStack / master.name.text`
+  - TOKENS — font/data 12 · ink/secondary · name as value (no label, no stroke)
+  - BINDS — {crew Master.name}
+- `centerStack / mode.glyph`
+  - TOKENS — boxTight chip · line/strong · glyph 1.4x, text label dropped (round 43) · learn/title = full mode name
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
+- `centerStack / name.text`
+  - TOKENS — type/hero · font/display caps · ink/primary
+  - BINDS — {vessel.static.name}
+- `centerStack / waves.text`
+  - TOKENS — glyph/wave = SEA STATE (weather wave height) — round 103: endurance no longer shares this glyph · font/data 15 tabular · glyph ink/MUTED (round 79) · stale tint when WX stale · live signal, kept in Expert (round 114)
+  - BINDS — {weather.wave_height_ft} ft
+- `centerStack / wind.text`
+  - TOKENS — glyph/wind = AIR speed (round 112: distinct from current) · font/data 15 tabular · glyph ink/secondary · stale tint when WX stale · live signal, kept in Expert (round 114)
+  - BINDS — {weather.wind_speed_kn} kn
+- `destCol / eta.text`
+  - TOKENS — font/data 15 · ink/muted · absolute ETA + Z — SIGNAL, kept in Expert (round 116); only the "ETA" label strips
+  - BINDS — {next_port_calls[0].eta}
+- `destCol / toGo.text`
+  - TOKENS — font/data 15 · ink/muted · distance remaining — SIGNAL (endurance-vs-distance), kept in Expert (round 116); only "TO GO" label strips
+  - BINDS — {nm to destination}
+- `gaugeRail / burn.chart`
+  - TOKENS — Gauge primitive · 116px (round 79)
+  - BINDS — {derived.burn_rate_gph} / max observed 1y
+- `gaugeRail / effDelta.chart`
+  - TOKENS — Gauge primitive · caution band ≥+8 (alert-backed)
+  - BINDS — {derived.efficiency_delta_pct} vs mode baseline
+- `gaugeRail / endurance.chart`
+  - TOKENS — Gauge primitive · log dial · caution band <72h (alert-backed)
+  - BINDS — {derived.endurance_hours}
+- `gaugeRail / speed.chart`
+  - TOKENS — Gauge primitive · 116px (round 79)
+  - BINDS — {position.speed_over_ground_kn} / max {cruise×1.35}
+- `marker / position.text`
+  - TOKENS — font/data 15 · ink/muted · current-position reference (nearest port NOW) below the marker (flips left near 100%, round 88) — relative, never raw lat/lon (ruling 6) · round 107: expert-stripped
+  - BINDS — {nm from nearest port | alongside}
+- `marker / progress.text`
+  - TOKENS — font/data 15 · ink/muted · progress % anchored above the marker (flips left near 100% so it never overlaps the destination, round 88) — bound to real voyage progress
+  - BINDS — {round(frac*100)}%
+- `originCol / spec.text`
+  - TOKENS — font/data 15 · ink/muted · context (no tint)
+  - BINDS — {static.length_ft} ft {static.class}
+- `originCol / speed.text`
+  - TOKENS — font/data 15 · ink/muted · context
+  - BINDS — {position.speed_over_ground_kn} kn
+- `profile / destination.text`
+  - TOKENS — font/data 15 · ink/secondary · endpoint label (name once)
+  - BINDS — {next_port_calls[0].port}
+- `profile / fill.line`
+  - TOKENS — ink/primary 2px · WHITE = distance covered (behind marker) — progress, not identity (round 81, blue removed)
+  - BINDS — {distance covered fraction}
+- `profile / origin.text`
+  - TOKENS — font/data 15 · ink/secondary · endpoint label (name once)
+  - BINDS — {transit-run start}
+- `profile / track.line`
+  - TOKENS — line/strong 2px · GREY = distance remaining (ahead of marker)
+  - BINDS — {origin→destination, remaining}
+- `profile / vessel.glyph`
+  - TOKENS — glyph/vesselMarker 16px · white outline + dark halo for contrast at the white/grey boundary (round 81) · bow along the track
+  - BINDS — {live position on track}
+
+## VesselInspector
+
+*source: src/components/VesselInspector.tsx*
+
+- `generalAlerts / header.text`
+  - TOKENS — compact GENERAL alerts area · only unroutable alerts (no evidence panel)
+  - BINDS — GENERAL
+
+## VesselSynoptic
+
+*source: src/components/VesselSynoptic.tsx*
+
+- `callouts / label.text`
+  - TOKENS — font/data 10 · ink/secondary — ST/FD/E annotation language
+  - BINDS — {ST1 ST2 FD1 FD2 E1–E4}
+- `callouts / leader.line`
+  - TOKENS — line/strong 0.6px
+  - BINDS — {node→label}
+- `engines / node.shape`
+  - TOKENS — running = filled · stopped = outline · status tint only when alert names the engine
+  - BINDS — {engine.engine_id · running}
+- `engines / value.text`
+  - TOKENS — font/data 9
+  - BINDS — {engine.load_pct}% | OFF
+- `flow / engineLine.line`
+  - TOKENS — line/strong 1.2px
+  - BINDS — {flow meter→engine}
+- `flow / feedLine.line`
+  - TOKENS — line/strong 1.2px · dashed when no transfer
+  - BINDS — {storage→feeder · tank.transfer_active}
+- `flow / meterLine.line`
+  - TOKENS — line/strong 1.2px
+  - BINDS — {feeder→flow meter}
+- `header / header.glyph`
+  - TOKENS — section header · tank glyph · glyph-only in expert mode
+  - BINDS — FUEL
+- `hull / hull.line`
+  - TOKENS — ink/secondary 1.5px — neutral, never status
+  - BINDS — {HULL_PATH — Figma hull replaces 1:1}
+- `hull / label.text`
+  - TOKENS — font/data 9 · ink/muted · small superstructure marker (round 123)
+  - BINDS — SUPER (superstructure marker)
+- `hull / superstructure.shape`
+  - TOKENS — surface/overlay fill · line/strong
+  - BINDS — {SUPER_PATH}
+- `meter / meter.shape`
+  - TOKENS — surface/overlay · line/strong · 45° diamond
+  - BINDS — flow meter node
+- `meter / recon.chip`
+  - TOKENS — border + text = recon severity (OK ink/secondary · advisory · watch)
+  - BINDS — {reconciliation.status · error_pct}
+- `meter / value.text`
+  - TOKENS — font/data 11 · ink/primary
+  - BINDS — {flow_gps × 3600} gph
+- `tanks / FD1.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {FD1 level_gal} gal
+- `tanks / FD1.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {FD1 level_pct}%
+- `tanks / FD2.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {FD2 level_gal} gal
+- `tanks / FD2.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {FD2 level_pct}%
+- `tanks / fill.chart`
+  - TOKENS — dot matrix 5×10 · ink/secondary | TANK_LOW tint (⚖9: dots won)
+  - BINDS — {tank.level_pct → filled dots}
+- `tanks / fill.shape`
+  - TOKENS — fill/level · bottom-up vertical (round 20)
+  - BINDS — {tank.level_pct}
+- `tanks / label.text`
+  - TOKENS — gb.label micro-caps · TANK_LOW tint (earned)
+  - BINDS — {tank.tank_id} {tank.type}
+- `tanks / ST1.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {ST1 level_gal} gal
+- `tanks / ST1.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {ST1 level_pct}%
+- `tanks / ST2.gal.value.text`
+  - TOKENS — font/data 12 tabular · ink/secondary · right-aligned subcolumn
+  - BINDS — {ST2 level_gal} gal
+- `tanks / ST2.pct.value.text`
+  - TOKENS — font/data 12 tabular · right-aligned subcolumn · TANK_LOW tint
+  - BINDS — {ST2 level_pct}%
+- `tanks / tank.shape`
+  - TOKENS — surface/base · line/strong | TANK_LOW tint (own alert only, round 20)
+  - BINDS — {tank.tank_id}
+- `tanks / value.text`
+  - TOKENS — font/data 11 · ink/primary | tint
+  - BINDS — {tank.level_pct}%
+
+## VesselTile
+
+*source: src/components/VesselTile.tsx*
+
+- `alert.line`
+  - TOKENS — tag = severity color · message ink/secondary (round 33 grammar) · 2x only
+  - BINDS — {alerts[] level + message}
+- `bg.shape`
+  - TOKENS — surface/raised fill · BORDERLESS — no perimeter outline at all (round 66; the round-37 status border is removed, severity moves to the strip) · 45% dim when idle nominal
+  - BINDS — {derived.mode}
+- `body / trendChart.chart`
+  - TOKENS — ink/secondary line · zero axis
+  - BINDS — {daily_delta_1y[-30d]}
+- `endurance.glyph`
+  - TOKENS — glyph/fuel-drop (round 103: was glyph/wave — endurance is fuel-time, NOT sea state; collision broken) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies endurance
+  - BINDS — endurance
+- `endurance.value.text`
+  - TOKENS — font/data 14 tabular · ink/primary · centered under its glyph (round 63)
+  - BINDS — {derived.endurance_hours} h
+- `footer / deviation.fill`
+  - TOKENS — meters |efficiency Δ| (fill ∝ magnitude, ±20% full scale) · ink/muted fill | status color only when alert-backed + placement=strip/both · surface/overlay track · sole expand affordance
+  - BINDS — {|derived.efficiency_delta_pct|}
+- `mode.glyph`
+  - TOKENS — MODE_GLYPH · ink/muted · rail scale (15) · same single source as the rail (derived.mode) · learn/title = full mode name
+  - BINDS — {derived.mode}: TRANSIT | STATION | STANDBY | PORT
+- `name.text`
+  - TOKENS — type/PRIMARY (var --type-primary, round 90: demoted from DISPLAY — the name is a label, the deviation value is the card hero) · font/display caps 700 · status tint when alerted (earned) · sits on the tile base fill (round 70)
+  - BINDS — {vessel.static.name}
+- `now.glyph`
+  - TOKENS — glyph/pulse (round 104: was glyph/clock — a clock falsely implied time-of-day; this is the LIVE current reading) · NEUTRAL UI ink · placeholder until drawn (round 48 fallback) · identifies now-vs-baseline
+  - BINDS — now vs mode baseline
+- `now.value.text`
+  - TOKENS — font/data 14 tabular · ink/primary · centered under its glyph (round 63)
+  - BINDS — {derived.efficiency_delta_pct} vs mode baseline
+- `spark.baseline.line`
+  - TOKENS — line/subtle 1px · zero axis
+  - BINDS — y = 0
+- `spark.chart`
+  - TOKENS — ink/secondary 1px polyline · the 24h signature
+  - BINDS — {derived.sparkline_24h — hourly efficiency_delta}
+- `spark.container`
+  - TOKENS — full card width in its own lighter fill band (#2b2b2b, no stroke frame) — the 24h signature dock (round 39 / 63 / 66)
+  - BINDS — —
+- `trend.glyph`
+  - TOKENS — glyph/calendar · NEUTRAL UI ink — not a status carrier (round 63) · the SPAN half of the calendar(30d)/pulse(now) pair (round 104) · identifies the 30-day trend
+  - BINDS — 30d trend
+- `trend.value.text`
+  - TOKENS — type/HERO (var --type-hero) · font/data tabular · status tint (earned) · automotive ✓ when nominal
+  - BINDS — {derived.trend_30d} %/30d — the primary board signal (ruling 13)
+
+*142 instrumented leaves · 20 components · generated 2026-06-16T20:48:24.447Z*

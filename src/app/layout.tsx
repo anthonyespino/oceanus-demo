@@ -1,21 +1,58 @@
 import type { Metadata } from 'next';
+import localFont from 'next/font/local';
 import './globals.css';
 import { FleetProvider } from '../state/FleetProvider';
-import { AppHeader } from '../components';
+import { LearnProvider } from '../learn/LearnProvider'; // LEARN MODE — strip before demo week
+import { AppHeader, DevPanel, AmbientSea } from '../components';
+import { LaunchScreen } from '../components/LaunchScreen'; // round 137: one-time startup mark (new app chrome, not a Figma data component — direct import keeps the locked barrel clean)
+
+// Type system (round 26): Barlow = UI, IBM Plex Mono = data/numerals
+// (tabular), D-DIN = display. Self-hosted woff2 (src/fonts/, OFL licenses
+// committed) via next/font/local — zero-network builds.
+const barlow = localFont({
+  src: [
+    { path: '../fonts/barlow-400.woff2', weight: '400' },
+    { path: '../fonts/barlow-500.woff2', weight: '500' },
+    { path: '../fonts/barlow-700.woff2', weight: '700' },
+  ],
+  variable: '--font-ui',
+});
+const plexMono = localFont({
+  src: [
+    { path: '../fonts/ibm-plex-mono-400.woff2', weight: '400' },
+    { path: '../fonts/ibm-plex-mono-500.woff2', weight: '500' },
+  ],
+  variable: '--font-data',
+});
+const dDin = localFont({
+  src: [
+    { path: '../fonts/d-din-400.woff2', weight: '400' },
+    { path: '../fonts/d-din-700.woff2', weight: '700' },
+  ],
+  variable: '--font-display',
+});
 
 export const metadata: Metadata = {
-  title: 'Oceanus Fleet — greybox',
-  description: 'Greybox wireframe: information architecture prototype, not a design',
+  title: 'Oceanus Fleet',
+  description: 'Fleet fuel-efficiency monitoring for shore-side engineers',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${barlow.variable} ${plexMono.variable} ${dDin.variable}`}>
       <body>
         <FleetProvider>
-          <AppHeader />
-          {children}
+          <LearnProvider>
+            {/* round 50: Calm Sea persists across routes (scope eases fleet↔vessel) */}
+            <AmbientSea />
+            <AppHeader />
+            <DevPanel />
+            {children}
+          </LearnProvider>
         </FleetProvider>
+        {/* round 137: one-time startup veil — sits ABOVE the app (z 1000), independent of the
+            providers, so it shows once on initial mount and the board runs live underneath. */}
+        <LaunchScreen />
       </body>
     </html>
   );

@@ -1,17 +1,12 @@
 'use client';
 // 24h mode timeline: contiguous segments from the 1-min history, width
-// proportional to duration. Grey shades only — mode color-coding is a Figma
-// decision; shades here just make the segmentation perceivable.
+// proportional to duration. Round 4: segments use the color/mode/* tokens
+// (muted hues) from the foundation vocabulary.
 
 import type { Mode, VesselState } from '../data/types';
+import { MODE_COLOR } from './probeTokens';
 import { gb } from './gb';
-
-const SHADE: Record<Mode, string> = {
-  PORT: '#f5f5f5',
-  STANDBY: '#e6e6e6',
-  STATION: '#d6d6d6',
-  TRANSIT: '#c2c2c2',
-};
+import { Label } from './Glyph';
 
 export function ModeTimeline({ vessel }: { vessel: VesselState }) {
   const ms = vessel.history.minutes;
@@ -24,18 +19,18 @@ export function ModeTimeline({ vessel }: { vessel: VesselState }) {
 
   return (
     <section style={{ ...gb.box, marginBottom: 8 }}>
-      <div style={gb.label}>mode — last 24 h</div>
-      <div style={{ display: 'flex', width: '100%', border: '1px solid #999', height: 28 }}>
+      <Label g="clock">mode 24h</Label>
+      <div style={{ display: 'flex', width: '100%', border: '1px solid var(--color-line-subtle)', height: 28 }}>
         {segments.map((seg, i) => (
           <div
             key={i}
             title={`${seg.mode} — ${(seg.minutes / 60).toFixed(1)} h`}
             style={{
               width: `${(seg.minutes / ms.length) * 100}%`,
-              background: SHADE[seg.mode],
-              borderRight: '1px solid #999',
+              background: MODE_COLOR[seg.mode],
+              borderRight: '1px solid var(--color-line-subtle)',
               overflow: 'hidden',
-              fontSize: 10,
+              fontSize: 'var(--type-micro)',
               textAlign: 'center',
               lineHeight: '28px',
               whiteSpace: 'nowrap',
@@ -45,7 +40,7 @@ export function ModeTimeline({ vessel }: { vessel: VesselState }) {
           </div>
         ))}
       </div>
-      <div style={{ ...gb.dim, fontSize: 11, marginTop: 2 }}>← 24 h ago · now →</div>
+      <div style={{ ...gb.dim, fontSize: 'var(--type-context)', marginTop: 2 }}>← 24 h ago · now →</div>
     </section>
   );
 }

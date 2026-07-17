@@ -1,10 +1,206 @@
 @import "tailwindcss";
 
-/* Greybox: white background, black text, grey borders, system font stack.
-   No colors, no transitions, no shadows, no radius — design happens in Figma. */
-body {
-  background: #ffffff;
-  color: #000000;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 14px;
+/* ROUND 4 — design foundation (branch layout-probe).
+   First real population of FIGMA_STANDARD §5 token vocabulary, dark/cockpit
+   theme. Values are Anthony's to swap from 01·Foundations; names are the
+   contract. color/line/* is a vocabulary ADDITION (borders/strokes) pending
+   Anthony's blessing — flagged in PROGRESS.md. */
+@theme {
+  /* color/surface — near-black scale */
+  --color-surface-base: #101010; /* round 23: true grey (was blue-cast) */
+  --color-surface-raised: #181818;
+  --color-surface-overlay: #232323;
+  /* color/ink — light scale */
+  --color-ink-primary: #ebebeb;
+  --color-ink-secondary: #b0b0b0;
+  --color-ink-muted: #757575;
+  /* color/line — vocabulary addition, pending ruling */
+  --color-line-subtle: #2b2b2b;
+  --color-line-strong: #454545;
+  /* color/alert — retuned for dark background contrast */
+  --color-alert-warning: #f85149;
+  --color-alert-caution: #e3d141; /* round 43: cooled ~11deg toward green (hue 42->53, same S+L) — single source; tile/synoptic tints + gauge bands consume this token */
+  --color-alert-advisory: #79a8d8;
+  /* color/accent — Yves Klein Blue system (round 5). Interaction & identity
+     ONLY; never encodes health/severity — status tokens always win. */
+  --color-accent-primary: #002fa7; /* IKB — fills, washes, large moments */
+  --color-accent-bright: #4878ff; /* lifted IKB, 4.5:1+ on surface/base — strokes, small UI, focus */
+  --color-accent-wash: rgba(0, 47, 167, 0.22); /* selected-surface tint */
+  /* color/mode — muted hues. transit shifted to desaturated steel/slate
+     (round 5): its old muted blue collided with accent; mode chips must
+     never look interactive. */
+  --color-mode-transit: #475463;
+  --color-mode-station: #3f6052;
+  --color-mode-standby: #55503f;
+  --color-mode-port: #3c434d;
+  /* chart — round 23: water is blue's ONLY job in the system */
+  --color-chart-water: #0d1924; /* deep desaturated navy */
+  --color-chart-land: #1d1d1d; /* land stays neutral grey-dark */
+  /* color/data */
+  --color-data-nominal: #3fb950;
+  --color-data-stale: #5e5e5e;
+  /* ROUND 86 — THE unified five-tier type scale (single source of truth; the
+     probeTokens TYPE sizes are deleted so nothing anchors off a second system).
+     Base 13, ~1.2 ratio, snapped to clean px. */
+  --type-display: 24px; /* D-DIN 700 — vessel name, page titles */
+  --type-hero: 20px; /* Plex 500 — gauge values + big data numbers */
+  --type-primary: 16px; /* Plex — mission clock + between hero and context */
+  --type-context: 13px; /* Plex/UI — ALL reference text */
+  --type-context-mono: 12.5px; /* round 86 optical: Plex (mono) reads larger than
+     UI at equal px, so mono context drops 0.5px to read as the same visual rank */
+  --type-micro: 10px; /* Plex — gauge ticks, axis labels */
+  --type-micro-floor: 8px; /* used ONLY where genuinely required (smallest EngineTwin label) */
+  /* section-header LABEL treatment (all-caps letterspaced) — its own role, NOT a
+     tier-scale size (audit confirmed uniform). Kept separate. */
+  --type-label-size: 11px;
+  --pad-card: 16px; /* generous air — err roomy */
+  --pad-card-dense: 12px; /* round 15: inspector density step */
+  --gap-card: 8px; /* round 21 B5: the one gap between cards */
+  --pad-section: 12px;
+  --pad-stack: 16px; /* round 112: THE single inter-panel gap for the inspector stack — one regular vertical rhythm (Default + Expert); replaces scattered hardcoded marginBottom:8 */
+  --color-line-hairline: rgba(235, 235, 235, 0.12); /* card frames: ink at low alpha */
+  --color-fill-level: rgba(235, 235, 235, 0.1); /* round 20: tank level fill — white at low alpha */
+  --color-scrim: rgba(16, 16, 16, 0.62); /* dims the chart beneath floating cards */
+  /* space — 4px base grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
 }
+
+body {
+  background: var(--color-surface-base);
+  color: var(--color-ink-primary);
+  font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
+  font-size: var(--type-context); /* round 86: document base = context tier (was hardcoded 14) */
+  /* ROUND 64 (landed round 68): the dashboard is a control surface, not a
+     document — click/drag must not leave a blue text-selection smear across
+     tiles, gauges, labels. Disable selection app-wide; re-enable only where
+     copying genuinely matters (form fields + the /inspect data tables). */
+  -webkit-user-select: none;
+  user-select: none;
+}
+input,
+textarea,
+[contenteditable="true"],
+.selectable,
+.selectable * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Round 11: equal-height card rows — row-mates stretch, no orphan
+   whitespace below short cards. */
+.cardrow {
+  display: flex;
+  gap: var(--gap-card);
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.cardrow > * {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.cardrow section {
+  flex: 1;
+  margin-bottom: 0 !important;
+  box-sizing: border-box;
+}
+
+/* Accent owns focus (interaction), everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: 1px;
+}
+
+/* Live-tick indicator: slow pulse while live mode is on. */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+/* ROUND 79: DATALINK breath — slow heartbeat pulse shown ONLY when the link is
+   LIVE (class applied conditionally in StatusHeader). Presence = alive. */
+.datalink-breath {
+  animation: datalink-breath 2.6s ease-in-out infinite;
+}
+@keyframes datalink-breath {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+  .datalink-breath {
+    animation: none; /* freeze the breath — reduced-motion safe */
+  }
+}
+
+/* ROUND 92: Learn-mode hover callout — a subtle, FAST appear (≤100ms opacity
+   fade) so the docent card never fights the data. Strip-before-demo with the
+   rest of the Learn layer. Reduced-motion users get an instant cut. */
+.learn-callout {
+  animation: learn-callout-in 90ms ease-out 1;
+}
+@keyframes learn-callout-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .learn-callout {
+    animation: none;
+  }
+}
+
+/* LAYOUT PROBE motion budget (round 3 addendum). round 108: the ripple variant
+   is removed — Breathe is the locked motion. Reduced-motion users get none of it. */
+.probe-breathe {
+  animation: probe-breathe 2.5s ease-in-out infinite; /* slow breathe, not blink */
+}
+.probe-breathe:hover,
+.probe-breathe:focus {
+  animation-play-state: paused; /* stops on focus */
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .probe-breathe {
+    animation: none !important;
+  }
+}
+@keyframes probe-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* ROUND 145: CLICK-TO-START splash (src/components/LaunchScreen.tsx). The fill + veil fade are
+   JS-driven inline transitions that fire ON CLICK — post-load, main thread idle — so they play
+   smoothly every time (no cold-load timing race). The only CSS here is the IDLE pulse that invites
+   the click; reduced-motion drops it (and the click cuts straight to the board in JS). */
+.launch-pulse {
+  animation: launch-pulse 2.4s ease-in-out infinite;
+}
+@keyframes launch-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-pulse { animation: none; opacity: 1; }
+}
+
+/* ROUND 50: Calm Sea is a WebGL canvas (src/components/AmbientSea.tsx) with a
+   CSS-gradient static still for reduced-motion / WebGL fallback — no global
+   classes needed. The round-46 SVG paper-wave CSS was removed here. */

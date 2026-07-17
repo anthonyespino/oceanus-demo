@@ -10,15 +10,20 @@ export interface Place {
   lon: number;
 }
 
+// Round 23: port nodes sit at their SEA ENTRANCES — the generator does not
+// model inshore channels, so harbors that lie deep inside the coastline
+// polygon (Morgan City, Mobile, Corpus Christi, Venice) anchor at the coast
+// instead. Names unchanged; land avoidance + the no-trail-on-land verify
+// case depend on this.
 export const PORTS: Place[] = [
   { name: 'Port Fourchon, LA', lat: 29.11, lon: -90.2 },
   { name: 'Galveston, TX', lat: 29.31, lon: -94.79 },
-  { name: 'Morgan City, LA', lat: 29.69, lon: -91.21 },
-  { name: 'Mobile, AL', lat: 30.69, lon: -88.04 },
-  { name: 'Corpus Christi, TX', lat: 27.81, lon: -97.4 },
+  { name: 'Morgan City, LA', lat: 29.2, lon: -91.25 },
+  { name: 'Mobile, AL', lat: 30.45, lon: -88.1 },
+  { name: 'Corpus Christi, TX', lat: 27.78, lon: -97.15 },
   { name: 'Pascagoula, MS', lat: 30.34, lon: -88.55 },
   { name: 'Freeport, TX', lat: 28.95, lon: -95.36 },
-  { name: 'Venice, LA', lat: 29.28, lon: -89.35 },
+  { name: 'Venice, LA', lat: 29.15, lon: -89.38 },
 ];
 
 export const SITES: Place[] = [

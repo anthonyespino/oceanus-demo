@@ -4,13 +4,13 @@
 // environment → human factors → operations → mode context.
 
 import type { VesselState } from '../data/types';
-import { VesselHeader } from './VesselHeader';
+import { VesselCommandBand } from './VesselCommandBand';
 import { EfficiencyPanel } from './EfficiencyPanel';
 import { EngineTwinPanel } from './EngineTwinPanel';
-import { TankSchematic } from './TankSchematic';
+import { VesselSynoptic } from './VesselSynoptic';
 import { FlowReconciliation } from './FlowReconciliation';
 import { WeatherPanel } from './WeatherPanel';
-import { CrewPanel } from './CrewPanel';
+import { CrewLogPanel } from './CrewLogPanel';
 import { RoutePanel } from './RoutePanel';
 import { ModeTimeline } from './ModeTimeline';
 import { gb } from './gb';
@@ -18,7 +18,7 @@ import { gb } from './gb';
 export function VesselView({ vessel }: { vessel: VesselState }) {
   return (
     <main style={{ padding: 12, maxWidth: 1100 }}>
-      <VesselHeader vessel={vessel} />
+      <VesselCommandBand vessel={vessel} />
       {vessel.alerts.length > 0 && (
         <section style={{ ...gb.box, marginBottom: 8 }}>
           <div style={gb.label}>active alerts — this vessel</div>
@@ -32,10 +32,10 @@ export function VesselView({ vessel }: { vessel: VesselState }) {
       <ModeTimeline vessel={vessel} />
       <EfficiencyPanel vessel={vessel} />
       <EngineTwinPanel vessel={vessel} />
-      <TankSchematic vessel={vessel} />
+      <VesselSynoptic vessel={vessel} />
       <FlowReconciliation vessel={vessel} />
       <WeatherPanel vessel={vessel} />
-      <CrewPanel vessel={vessel} />
+      <CrewLogPanel vessel={vessel} />
       <RoutePanel vessel={vessel} />
     </main>
   );

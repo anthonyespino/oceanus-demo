@@ -216,3 +216,23 @@ All three Day 1 questions answered by Matthew McMunigle, June 11:
 - 15 vessels (v2), 1 year of hourly history (for trend charts), last 24h at 1-min resolution (for live feel).
 - Deterministic seed + scripted anomaly timeline; demo exactly repeatable.
 - PROGRESS.md maintained per session; DECISIONS.md is the ruling ledger; FIGMA_STANDARD.md binds all UI/styling sessions.
+
+---
+
+## Appendix A — Alert thresholds (v2 addendum, maintained with `alerts.ts` exports)
+
+Added per Session 23 brief so thresholds live in the spec beside the model
+they govern. Single source: the exported constants in `src/data/alerts.ts`;
+this table mirrors them.
+
+| Threshold | Value | Level | Constant |
+|---|---|---|---|
+| Reconciliation caution band | >7% | CAUTION | `RECON_CAUTION_PCT` |
+| Reconciliation warning | >10% | WARNING | `RECON_WARNING_PCT` |
+| Efficiency delta | >8% current + >5% 7d mean | CAUTION | `EFF_DELTA_CAUTION_PCT`, `EFF_SUSTAINED_7D_PCT` |
+| EGT twin divergence | >40°F at matched load | CAUTION | `EGT_GAP_CAUTION_F` |
+| Feeder low (mean, underway) | <10% | WARNING | inline (§7 example) |
+| Feeder low while mains run | <20% per tank | ADVISORY | `FEEDER_LOW_PCT` |
+| Tank critical | <5% any tank | CAUTION | `TANK_CRITICAL_PCT` |
+| Bunkering horizon | <72 h endurance | ADVISORY | `BUNKER_SOON_H` |
+| Endurance requirement | distance-to-port × 1.5 reserve | CAUTION | `ENDURANCE_RESERVE` |

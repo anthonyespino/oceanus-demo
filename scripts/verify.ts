@@ -15,7 +15,10 @@
 import { createHash } from 'node:crypto';
 import { getFleet, advanceFleet, resetFleet } from '../src/data/fleetState';
 import { sustainedDeviation } from '../src/data/derived';
-import { worstLevel } from '../src/data/alerts';
+import { envelopeDeltaPct, transitEnvelope, MIN_TRANSIT_HOURS } from '../src/data/curve';
+import { worstLevel, evaluateAlerts, FEEDER_LOW_PCT, TANK_CRITICAL_PCT } from '../src/data/alerts';
+import { pointInLand } from '../src/data/coast';
+import { PORTS, distanceNm } from '../src/data/fleet';
 import { ANOMALY_START } from '../src/data/generator';
 import { DEMO_EPOCH, DAY_MS } from '../src/data/rng';
 import { undefinedDispositions } from '../src/data/dispositions';
@@ -115,7 +118,23 @@ check(weekly[3].fuelGap > 15, `Engine 2 fuel rate diverged from twin (${pct(week
 check(anomaly.alerts.some((a) => a.code === 'EFF_DELTA'), 'CAUTION EFF_DELTA active');
 check(anomaly.alerts.some((a) => a.code === 'EGT_DIVERGENCE'), 'CAUTION EGT_DIVERGENCE active');
 const egtMsg = anomaly.alerts.find((a) => a.code === 'EGT_DIVERGENCE')?.message ?? '';
-check(egtMsg.includes(`${anomaly.static.id}-E2`), `EGT alert names the diverging engine id (PM ruling 3): "${egtMsg}"`);
+// PM ruling 3: the alert names the diverging engine. ROUND 131: operator-facing copy carries the
+// engine's DISPLAY label (E2), never the internal vessel-prefixed id (v01-E2) — assert both.
+check(egtMsg.includes('E2') && !/v\d\d/.test(egtMsg), `EGT alert names the diverging engine by operator label, no internal id (PM ruling 3 + round 131): "${egtMsg}"`);
+
+// EfficiencyCurve (round 5): the live point's vertical displacement above the
+// vessel's own transit envelope must tell the same story as efficiency_delta.
+const envDelta = envelopeDeltaPct(anomaly.history);
+check(
+  envDelta !== null && Math.abs(envDelta - anomaly.derived.efficiency_delta_pct) <= 5,
+  `EfficiencyCurve: Meridian live point ${envDelta === null ? 'missing' : pct(envDelta)} above own envelope ≈ efficiency_delta ${pct(anomaly.derived.efficiency_delta_pct)} (±5pp)`,
+);
+check(envDelta !== null && envDelta > 8, 'EfficiencyCurve: degradation visible as vertical displacement (> +8%)');
+const meridianEnv = transitEnvelope(anomaly.history);
+check(
+  meridianEnv.transitHours >= MIN_TRANSIT_HOURS && meridianEnv.optimal !== null,
+  `EfficiencyCurve: envelope well-formed (${meridianEnv.transitHours} transit h, ${meridianEnv.bins.length} bins, optimal ${meridianEnv.optimal?.lo.toFixed(1)}-${meridianEnv.optimal?.hi.toFixed(1)} kn)`,
+);
 
 // Bucket exclusions (§6): environment, human factors, operations.
 const windowSamples = anomaly.history.hourly.filter((s) => s.t >= ANOMALY_START);
@@ -145,6 +164,51 @@ const biased = fleet.find((v) => v.static.scripted.flow_meter_bias)!;
 console.log('\n== Checks: reconciliation ==');
 check(disagree.length === 1 && disagree[0] === biased, `exactly one DISAGREE vessel, and it is the scripted one (${biased.static.name})`);
 check(others.filter((v) => !v.static.scripted.flow_meter_bias).every((v) => Math.abs(v.derived.reconciliation.error_pct) < 2), 'all unscripted vessels reconcile within ±2%');
+
+// ----------------------------------------- 3b. TANK_LOW scenario fixture
+// Round 20: drain a feeder synthetically and assert the new alert tiers.
+console.log('\n== Checks: TANK_LOW (scenario fixture, ruling-backed tank color) ==');
+{
+  const base = anomaly; // transit vessel, mains running
+  const last = base.history.minutes[base.history.minutes.length - 1];
+  const drain = (pct: number) => {
+    const tanks = last.tanks.map((t, i) => (i === 2 ? { ...t, level_pct: pct, level_gal: Math.round((t.capacity_gal * pct) / 100) } : t));
+    const sample = { ...last, tanks };
+    const history = { ...base.history, minutes: [...base.history.minutes.slice(0, -1), sample] };
+    return evaluateAlerts(base.static, history, base.derived);
+  };
+  const advisory = drain(FEEDER_LOW_PCT - 5);
+  check(
+    advisory.some((a) => a.code === 'TANK_LOW' && a.level === 'ADVISORY' && a.message.startsWith('FD1')),
+    `feeder at ${FEEDER_LOW_PCT - 5}% with mains running → ADVISORY TANK_LOW names FD1`,
+  );
+  const critical = drain(TANK_CRITICAL_PCT - 1);
+  check(
+    critical.some((a) => a.code === 'TANK_LOW' && a.level === 'CAUTION' && a.message.startsWith('FD1')),
+    `tank at ${TANK_CRITICAL_PCT - 1}% → CAUTION TANK_LOW`,
+  );
+  check(
+    !anomaly.alerts.some((a) => a.code === 'TANK_LOW'),
+    'demo seed unaffected: Meridian carries no TANK_LOW (story stays E2 injector, not fuel starvation)',
+  );
+}
+
+// --------------------------------------------- 3c. nothing sails over land
+console.log('\n== Checks: land avoidance (round 23) ==');
+{
+  let violations = 0;
+  let checked = 0;
+  for (const v of fleet) {
+    for (const s of [...v.history.hourly, ...v.history.minutes]) {
+      if (s.mode === 'PORT') continue; // moored touches the coast by design
+      const nearPort = PORTS.some((p) => distanceNm(s.position, p) < 4);
+      if (nearPort) continue; // approaches exempt (same rule as the fixer)
+      checked++;
+      if (pointInLand(s.position.lat, s.position.lon)) violations++;
+    }
+  }
+  check(violations === 0, `no trail point on land across the demo seed (${checked.toLocaleString()} positions checked)`);
+}
 
 // ------------------------------------------------------ 4. staleness state
 const stale = fleet.find((v) => v.static.scripted.stale_weather)!;
