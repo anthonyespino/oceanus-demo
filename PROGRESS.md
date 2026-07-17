@@ -15,6 +15,10 @@
 - Recorded the environment gotcha behind the original "missing content": the machine had **no Node.js
   on `PATH`**, so the app never ran. Installed Node 24 LTS locally and added it to `PATH` (persists in
   `~/.zshrc`), which also lets the double-click `.command` launcher find `node`/`npm`.
+- **Launcher icon:** gave `Launch Oceanus Demo.command` the Oceanus compass-star mark on a navy tile so
+  it's easy to spot in Finder. Source is `docs/launcher-icon.svg`; `scripts/set-launcher-icon.sh` renders
+  it to `.icns` and attaches it (macOS resource fork — not git-tracked, so the launcher now self-applies
+  it on first run per clone, backgrounded and best-effort).
 
 ## Decisions Made
 - Consolidated via a merge commit (not a rebase/force-push) — preserves both histories and the one

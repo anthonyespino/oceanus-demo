@@ -5,6 +5,13 @@
 set -e
 cd "$(dirname "$0")"
 
+# One-time cosmetic: give this launcher a recognizable Oceanus icon in Finder.
+# The icon lives in the resource fork (not tracked by git), so re-apply it once
+# per clone. Backgrounded and best-effort — it never blocks or fails the launch.
+if ! xattr "$0" 2>/dev/null | grep -q com.apple.ResourceFork; then
+  [ -x ./scripts/set-launcher-icon.sh ] && ./scripts/set-launcher-icon.sh >/dev/null 2>&1 &
+fi
+
 PORT=3000
 URL="http://localhost:$PORT"
 
